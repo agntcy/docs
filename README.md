@@ -28,7 +28,7 @@ To build the documentation locally, you need to install Taskfile.
 
 ### Linux
 
-  1. Install Taskfile using bash:
+1. Install Taskfile using bash:
 
    ```sh
    sh -c '$(curl -fsSL https://taskfile.dev/install.sh)'
