@@ -28,20 +28,26 @@ To build the documentation locally, you need to install Taskfile.
 
 ### Linux
 
-```sh
-sh -c \"$(curl -fsSL https://taskfile.dev/install.sh)\"
+  1. Install Taskfile using bash:
+
+  ```sh
+  sh -c '$(curl -fsSL https://taskfile.dev/install.sh)'
 
 ### Windows
-    ```sh
-    scoop install go-task
+
+1. Install Taskfile using scoop:
+
+  ```sh
+  scoop install go-task
 
 ## Building the Documentation
-To build the documentation, run the following command:
 
-```sh
-    task build:docs
+1. To build the documentation, run the following command:
 
-This will generate the HTML documentation in the .build/docs/html directory.
+  ```sh
+    task docs
+
+2. This will generate the HTML documentation in the .build/docs/html directory.
 
 ## Contributing
 Contributions are welcome! Please follow these steps to contribute:
