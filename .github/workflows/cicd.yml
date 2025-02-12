@@ -54,22 +54,11 @@ jobs:
       pages: write
       id-token: write
     with:
-      # TODO(ramizpolic): Decide on versioning strategy for docs deployment.
-      # We can deploy docs on tag pushes under specific categories (e.g. stable/v1.0.0),
-      # but we would also have to support multi-versioned docs website for this.
-      #
-      # By default, we build all supported triggers and only deploy pushes to "main"
-      # under "v0.0.0-<short hash>" version.
       deploy: ${{ fromJSON(github.ref == 'refs/heads/main' && 'true' || 'false') }}
       version: v0.0.0-${{ needs.prepare.outputs.short_sha }}
-    secrets:
-      vault-phoenix-approle-role-id: ${{ secrets.VAULT_PHOENIX_APPROLE_ROLE_ID }}
-      vault-phoenix-approle-secret-id: ${{ secrets.VAULT_PHOENIX_APPROLE_SECRET_ID }}
 
   success:
     name: Success
-    # https://github.com/actions/runner/issues/2566
-    # https://github.com/actions/toolkit/issues/581
     if: ${{ !cancelled() && !contains(needs.*.result, 'cancelled') && !contains(needs.*.result, 'failure') }}
     needs:
       - prepare

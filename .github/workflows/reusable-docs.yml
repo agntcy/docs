@@ -16,13 +16,6 @@ on:
         required: true
         type: string
         default: dev
-    secrets:
-      vault-phoenix-approle-role-id:
-        description: 'Vault AppRole Role ID for Phoenix'
-        required: true
-      vault-phoenix-approle-secret-id:
-        description: 'Vault AppRole Secret ID for Phoenix'
-        required: true
 
   workflow_dispatch:
     inputs:
@@ -36,14 +29,6 @@ on:
         required: true
         type: string
         default: dev
-      vault-phoenix-approle-role-id:
-        description: 'Vault AppRole Role ID for Phoenix'
-        required: true
-        type: string
-      vault-phoenix-approle-secret-id:
-        description: 'Vault AppRole Secret ID for Phoenix'
-        required: true
-        type: string
 
 permissions:
   contents: read
@@ -100,8 +85,6 @@ jobs:
 
   deploy:
     name: Deploy artifacts
-    # Booleans for call and dispatch are not the same, check:
-    # https://github.com/actions/runner/issues/1483
     if: ${{ inputs.deploy == true || inputs.deploy == 'true' }}
     needs:
       - build
