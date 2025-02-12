@@ -21,7 +21,7 @@ To build the documentation locally, you need to install Taskfile.
 
 ### macOS
 
-1. Install Taskfile using Homebrew:
+- Install Taskfile using Homebrew:
 
    ```sh
    brew install go-task/tap/go-task
