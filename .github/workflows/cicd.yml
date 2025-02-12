@@ -55,7 +55,7 @@ jobs:
       id-token: write
     with:
       deploy: ${{ fromJSON(github.ref == 'refs/heads/main' && 'true' || 'false') }}
-      version: v0.0.0-${{ needs.prepare.outputs.short_sha }}
+      version: v0.1.0-${{ needs.prepare.outputs.short_sha }}
 
   success:
     name: Success
