@@ -45,7 +45,6 @@ jobs:
         with:
           fetch-depth: 0
           submodules: 'recursive'
-          token: ${{ secrets.AGNTCY_BUILD_BOT_GH_TOKEN }}
 
       - name: Setup Pages
         id: pages
