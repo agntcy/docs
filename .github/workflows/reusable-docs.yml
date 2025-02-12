@@ -1,0 +1,117 @@
+# SPDX-FileCopyrightText: Copyright (c) 2025 Cisco and/or its affiliates.
+# SPDX-License-Identifier: Apache-2.0
+
+name: Documentation
+
+on:
+  workflow_call:
+    inputs:
+      deploy:
+        description: 'Deploy documentation artifacts'
+        required: true
+        type: boolean
+        default: false
+      version:
+        description: 'Version to use for documentation artifacts'
+        required: true
+        type: string
+        default: dev
+    secrets:
+      vault-phoenix-approle-role-id:
+        description: 'Vault AppRole Role ID for Phoenix'
+        required: true
+      vault-phoenix-approle-secret-id:
+        description: 'Vault AppRole Secret ID for Phoenix'
+        required: true
+
+  workflow_dispatch:
+    inputs:
+      deploy:
+        description: 'Deploy documentation artifacts'
+        required: true
+        type: boolean
+        default: false
+      version:
+        description: 'Version to use for documentation artifacts'
+        required: true
+        type: string
+        default: dev
+      vault-phoenix-approle-role-id:
+        description: 'Vault AppRole Role ID for Phoenix'
+        required: true
+        type: string
+      vault-phoenix-approle-secret-id:
+        description: 'Vault AppRole Secret ID for Phoenix'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    name: Build artifacts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: 'recursive'
+          token: ${{ env.GITHUB_PAT }}
+
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Setup Golang
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23.1'
+
+      - name: Setup Taskfile
+        shell: bash
+        run: |
+          sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
+
+      - name: Update GITHUB_PATH
+        shell: bash
+        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Build docs
+        shell: bash
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          task docs:build
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          name: docs-website
+          path: ./.build/docs/html
+
+  deploy:
+    name: Deploy artifacts
+    # Booleans for call and dispatch are not the same, check:
+    # https://github.com/actions/runner/issues/1483
+    if: ${{ inputs.deploy == true || inputs.deploy == 'true' }}
+    needs:
+      - build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        with:
+          artifact_name: docs-website

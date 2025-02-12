@@ -1,0 +1,29 @@
+{
+  "name": "extensions.directory.cisco.com/examples/informer",
+  "version": "v1alpha1",
+  "specs": {
+    "purpose": "<purpose-description>",
+    "tasks": [
+      "<task-1>",
+      "<task-2>",
+      "<task-3>"
+    ],
+    "workflows": [
+      "<step-1>",
+      "<step-2>",
+      "<step-3>"
+    ],
+    "runtime": [
+      {
+        "language": "<language-name>",
+        "version": "<language-version>",
+        "packages": [
+          {
+            "name": "<pkg-name>",
+            "version": "<pkg-version>"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "extensions.directory.cisco.com/examples/security",
+  "version": "v1alpha1",
+  "specs": {
+    "authority":  "<authority-name>",
+    "public_key": "<public-key>",
+    "signature":  "<signature>"
+  }
+}

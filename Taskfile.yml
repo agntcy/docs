@@ -1,0 +1,81 @@
+# SPDX-FileCopyrightText: Copyright (c) 2025 Cisco and/or its affiliates.
+# SPDX-License-Identifier: Apache-2.0
+
+version: "3"
+
+interval: '500ms'
+
+dotenv: ['.env']
+
+env:
+  BUILD_DIR: "{{.ROOT_DIR}}/.build"
+  DEPS_DIR:  "{{.ROOT_DIR}}/.dep"
+  VENV_DIR:  "{{.ROOT_DIR}}/.dep/.venv"
+  # Taskfile env does not override the actual shell env, see:
+  # https://github.com/go-task/task/issues/202
+  PATH: "{{.DEPS_DIR}}:{{.VENV_DIR}}/bin:$PATH"
+
+tasks:
+  default:
+    cmds:
+      - task -l
+
+  ##
+  ## Website
+  ##
+  docs:build:
+    desc: Build documentation website
+    deps:
+      - deps/venv
+      - deps/proto-diagrams
+    env:
+      SOURCE_DIR:     "{{.ROOT_DIR}}/docs"
+      SCHEMA_DIR:     "{{.ROOT_DIR}}/schema"
+      BUILD_DOCS_DIR: "{{.BUILD_DIR}}/docs"
+    vars:
+      BUILD_SITE_DIR: "{{.BUILD_DIR}}/docs/html"
+    cmds:
+      - PATH={{.PATH}} ./docs/build-docs.sh
+      - |
+        echo "Docs available at: file://{{.BUILD_SITE_DIR}}/index.html"
+
+  # TODO(ramizpolic): This usually works well to regenerate context, but it's not a real hot-reload.
+  # Note that sometimes it crashes and goes into reload loop. Investigate or find alternative.
+  docs:watch:
+    desc: Hot-reload documentation website
+    watch: true
+    sources:
+      - 'docs/**/*'
+      - 'schema/**/*'
+    vars:
+      BUILD_SITE_DIR: "{{.BUILD_DIR}}/docs/html"
+    cmds:
+      - task: docs:build
+      - |
+        echo "Docs available at: file://{{.BUILD_SITE_DIR}}/index.html"
+
+  ##
+  ## Dependencies
+  ##
+  deps/venv:
+    internal: true
+    cmds:
+      - python3 -m venv {{.VENV_DIR}}
+    status:
+      - test -f {{.VENV_DIR}}
+
+  deps/proto-diagrams:
+    internal: true
+    vars:
+      GIT: "https://github.com/GoogleCloudPlatform/proto-gen-md-diagrams"
+      DIR: "{{.DEPS_DIR}}/git-proto-diagrams"
+      BIN: "{{.DEPS_DIR}}/proto-gen-md-diagrams"
+    cmds:
+      - defer: rm -rf {{.DIR}}
+      - |
+        mkdir -p {{.DIR}}
+        git clone {{.GIT}} {{.DIR}}
+        cd {{.DIR}}
+        go build -o {{.BIN}}
+    status:
+      - test -f {{.BIN}}

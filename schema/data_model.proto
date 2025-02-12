@@ -1,0 +1,64 @@
+// SPDX-FileCopyrightText: Copyright (c) 2025 Cisco and/or its affiliates.
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package schema.model;
+
+// The data model defines a schema for AI agent content representation.
+// The schema provides a way to describe agent's features, constraints, artifact
+// locators, versioning, ownership, or relevant details.
+message AgentDataModel {
+    // Digest defines complete content fingerprint. It can be used as a globally-unique ID of an Agent.
+    string digest = 1;
+
+    // Name of the agent
+    string name = 2;
+
+    // Version of the agent
+    string version = 3;
+
+    // List of agent’s authors in the form of `author-name <author-email>`
+    repeated string authors = 4;
+
+    // Additional metadata associated with this agent
+    map<string, string> annotations = 5;
+
+    // Timestamp of the agent creation time
+    string created_at = 6;
+
+    // Locators provide actual artifact locators of an agent. For example,
+    // this can reference sources such as helm charts, docker images, binaries, etc.
+    message Locator {
+        // Metadata associated with this source locator
+        map<string, string> annotations = 1;
+        // Name of the source locator for this agent
+        string name = 2;
+        // Type of the source locator, e.g. `docker-image, helm-chart`
+        string type = 3;
+        // Location URI where this source locator can be found
+        string url = 4;
+        // Size in bytes of the source locator pointed by the `url` property
+        uint64 size = 5;
+        // Digest of the source locator pointed by the `url` property
+        string digest = 6;
+    }
+    // List of source locators where this agent can be found or used from
+    repeated Locator locators = 7;
+
+    // Extensions provide dynamic descriptors for an agent. For example,
+    // security and categorization features can be described using extensions.
+    message Extension {
+        // Metadata associated with this extension
+        map<string, string> annotations = 1;
+        // Name of the extension attached to this agent
+        string name = 2;
+        // Version of the extension attached to this agent
+        string version = 3;
+        // Generic specification schema of this extension.
+        // Value of this property is JSON-encoded.
+        bytes specs = 4;
+    }
+    // List of extensions that describe this agent and its capabilities more in depth
+    repeated Extension extensions = 8;
+}

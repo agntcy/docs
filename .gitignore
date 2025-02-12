@@ -1,0 +1,7 @@
+# Build
+.build/
+# Dependencies
+.dep/
+
+# Secrets
+.env

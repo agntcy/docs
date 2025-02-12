@@ -1,0 +1,20 @@
+{
+  "name": "extensions.directory.cisco.com/examples/crewai",
+  "version": "v1alpha1",
+  "specs": {
+    "name": "<agent-name>",
+    "role": "<agent-role>",
+    "goal": "<agent-goal>",
+    "backstory": "<agent-backstory>",
+    "llm": "<llm-model>",
+    "tasks": [
+      {
+        "name": "<agent-task-name>",
+        "description": "<agent-task-description>",
+        "context": "<agent-task-context>",
+        "expected_output": "<agent-task-expected-output>",
+        "output_format": "<agent-task-output-format>"
+      }
+    ]
+  }
+}

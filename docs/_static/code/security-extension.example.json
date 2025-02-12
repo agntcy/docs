@@ -1,0 +1,9 @@
+{
+  "name": "extensions.directory.cisco.com/examples/security",
+  "version": "v1alpha1",
+  "specs": {
+    "authority":  "eth-mainnet",
+    "public_key": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+    "signature":  "0xa202db1e8f834eef4f531b8521cd6c603660696f5a32a608bbcff9cd0fd5515874c91eef9e8953029c90c923f09cc84c7a2fd511ff75472bdac25ec70cf9e30b00"
+  }
+}
