@@ -61,11 +61,12 @@ The Agent Manifest must include a list of all sub-agent in the form of a list of
 
 Note that recursive nature of Agent Manifests that can point in turn to other Agent Manifests as dependencies.
 
-## How Agent Manifest relates to Agent Connect Protocol 
+## How Agent Manifest relates to Agent Connect Protocol, Agent Directory, and  Open Agent Schema Framework
 Agent Manifest is part of the specification of Agent Connect Protocol. 
 
-A potential user of an agent needs to access the agent manifest to get all the needed information to interact with the agent.
+A potential user of an agent needs to obtain the corresponding agent manifest to get all the needed information to interact with the agent.
 
-The manifest is available as an "offline" document, e.g. a json file or it can be retrieved directly from a running agent through the Agent Connect Protocol.
-
-## How Agent Manifest relates to Agent Directory and Open Agent Schema Framework
+There are different ways to obtain an Agent Manifest:
+* It could be available as a standalone document, e.g. a json file
+* It can be retrieved directly from a running agent through the [Agent Connect Protocol](connect.md)
+* It can be discovered through the [Agent Directory](dir.md). To achieve this, the Agent Manifest can be embedded as an extension in the [Open Agent Schema Framework](data_model.md) data model.
