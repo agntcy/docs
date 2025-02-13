@@ -11,6 +11,12 @@ The Internet of Agents (IoA) project aims to revolutionize the way AI agents int
 
 ### Core Components
 
+```{image} ../_static/IoA.png
+:alt: Service Layer Composition
+:width: 100%
+:align: center
+```
+
 1. **Multi-Agent Application Composer**: A tool that allows developers to compose and orchestrate complex multi-agent applications, enabling seamless integration and interaction between various AI agents.
 2. **Agent Workflow Server**: A server that manages and executes workflows involving multiple AI agents, ensuring coordinated and efficient task execution.
 3. **Agent Connect Protocol**: A protocol that defines the standards for establishing and managing connections between AI agents, facilitating reliable and secure communication.
