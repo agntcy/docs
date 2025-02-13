@@ -8,7 +8,7 @@ An Agent Manifest is a document that describes in detail:
 * how an agent can be deployed if provided as a deployable artifact
 * what are the dependencies of an agent, i.e. what other agents it relies on
 
-Agent Manifest specification, which is part of the Agent Connect Protocol specification, defines a standard format for Agent Manifests.
+Agent Manifest specification, which is part of the [Agent Connect Protocol](connect.md) specification, defines a standard format for Agent Manifests.
 
 This document describes the main requirements of the Agent Manifest definition.
 
@@ -61,6 +61,11 @@ The Agent Manifest must include a list of all sub-agent in the form of a list of
 
 Note that recursive nature of Agent Manifests that can point in turn to other Agent Manifests as dependencies.
 
-## How Agent Manifest relates to Agent Connect Protocol and Agent Directory
-Agent Connect Protocol is a protocol that defines a standard way for agents to interoperate. 
+## How Agent Manifest relates to Agent Connect Protocol 
+Agent Manifest is part of the specification of Agent Connect Protocol. 
 
+A potential user of an agent needs to access the agent manifest to get all the needed information to interact with the agent.
+
+The manifest is available as an "offline" document, e.g. a json file or it can be retrieved directly from a running agent through the Agent Connect Protocol.
+
+## How Agent Manifest relates to Agent Directory and Open Agent Schema Framework

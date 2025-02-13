@@ -1,4 +1,4 @@
-# Multi-Agent Application Composer Description
+# Multi-Agent Application Composer 
 
 The **Multi-Agent Application Composer** is an agent on its own right meant to automatically compose a Multi-Agent Application starting from user intent.
 
