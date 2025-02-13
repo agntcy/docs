@@ -31,7 +31,7 @@ Agents invoked remotely need to authenticate the caller and make sure they have 
 
 Authorization mechanisms are outside the scope of the ACP specification.
 
-ACP does not enforce a single authentication scheme to be used by all agents. Instead, it defines a list of allowed authentication schemes and let agent declare which one is adopted.
+ACP does not enforce a single authentication scheme to be used by all agents. Instead, it defines a list of allowed authentication schemes and lets agents declare which one is adopted.
 
 For the reason above, ACP must define an endpoint that does not require authentication and returns the specific authentication scheme that is supported by the agent.
 
