@@ -96,7 +96,7 @@ Different agents may implement different parts of the protocol, for example: an 
 
 ACP must define and endpoint that provides details about the specific capabilities that the agent supports.
 
-Schemas, agent capabilities and other essential information that describe an agent are needed also in what we call the [Agent Manifest](manifest.md). For this reason ACP exposes an endpoint that serves the Agent Manifest. 
+Schemas, agent capabilities and other essential information that describe an agent are also needed in what we call the [Agent Manifest](manifest.md). For this reason, ACP exposes an endpoint that serves the Agent Manifest. 
 
 <a id="errors"></a>
 ### Error Definitions
