@@ -1,8 +1,8 @@
 # Abstract
 
-Phoenix project defines a collection of standards and tools that allow publication of information
-about AI agents via standard data model that is AI agent's framework-agnostic. 
-It provides standard interfaces to perform publication,
-discovery based on queries about attributes and constraints, 
-and storage for the data models with basic security
-services such as provenance and ownership.
+The Internet of Agents (IoA) represents a transformative initiative in the field
+of artificial intelligence, designed to create a standardized ecosystem for AI
+agent discovery, interconnection, and collaboration. This comprehensive
+framework addresses the growing need for interoperability and secure
+communication between AI agents developed across different frameworks and
+platforms.
