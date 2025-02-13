@@ -10,7 +10,7 @@ Building the Internet of Agents requires agents built by different parties, pote
 
 While interaction between co-located agents implemented through the same MAS is trivial, it is harder in case the agents are not natively compatible or in case they run in different locations.
 
-We propose a solution where all agents are able to be communicate over the network using a standard protocol to interoperate. We call it the **Agent Connect Protocol**, we also interchangeably use the acronym **ACP** to refer to it.
+We propose a solution where all agents are able to communicate over the network using a standard protocol to interoperate. We call it the **Agent Connect Protocol**, we also interchangeably use the acronym **ACP** to refer to it.
 
 This document describes the main requirements and design principles of ACP.
 
@@ -22,7 +22,7 @@ Agent Connect Protocol needs to formally specify the network interactions needed
 * **Configuration**: Define how to configure a remote agent.
 * **Invocation**: Define how to invoke a remote agent providing input for its execution.
 * **Output retrieval and interrupt Handling**: Define how to retrieve the result of an agent invocation. Different interaction modes should be supported: synchronous, asynchronous, and streaming. This should include interrupt handling, i.e. how agents notify the caller about execution suspension to ask for additional input.
-* **Schema definitions**: retrieve the data structure definitions for input, output and configurations.
+* **Capabilities and Schema definitions**: retrieve information about the capabilities supported by the agents, definitions of the data structure for configuration, input, and output.
 * **Error definitions**: receive error notifications with meaningful error codes and explanations.
 
 
@@ -31,7 +31,7 @@ Agents invoked remotely need to authenticate the caller and make sure they have 
 
 Authorization mechanisms are outside the scope of the ACP specification.
 
-ACP does not enforce a single authentication scheme to be used by all agents. Instead, it defines a list of allowed authentication schemes and lets agent declare which one is adopted.
+ACP does not enforce a single authentication scheme to be used by all agents. Instead, it defines a list of allowed authentication schemes and let agent declare which one is adopted.
 
 For the reason above, ACP must define an endpoint that does not require authentication and returns the specific authentication scheme that is supported by the agent.
 
@@ -87,19 +87,16 @@ Output must carry information about which condition occurred.
 Format of the output data structure is specified through a schema, see [Schema Definitions](#schemas).
 
 <a id="schemas"></a>
-### Schema Definitions
-ACP does not mandate the format of the data structures used to carry information to and from an agent, but it allows agents to provide definitions of those format through ACP.
+### Capabilities and Schema definitions
 
-ACP must define an endpoint that provides schema definitions for the following data structures:
-* Configuration: The data structure used to provide agent configuration (See [Configuration](#configuration))
-* Input: The data structures used to provide agent input (See [Invocation](#invocation)).
-* Output: The data structure used to retrieve agent output (See [Output Retrieval](#output))
+ACP does not mandate the format of the data structures used to carry information to and from an agent, but it allows agents to provide definitions of those formats through ACP.
+ACP must define an endpoint that provides schema definitions for configuration, input, and output.
 
-If an agent supports interrupts, meaning its execution can be interrupted to request additional input and then resumed, the agent needs to declare the types of interrupts that can possibly occur. For each of them:
-* Interrupt Output: The format of the output provided by the specific interrupt
-* Resume Input: The input expected by the agent to resume its execution when this specific interrupt occurs.
+Different agents may implement different parts of the protocol, for example: an agent may support streaming, while another may only support full responses; an agent may support threads while another may not.
 
-All schema definitions must allow to provide natural language description of the data structure, natural language description of each data structure element, and valid examples of correctly populated data structures. 
+ACP must define and endpoint that provides details about the specific capabilities that the agent supports.
+
+Schemas, agent capabilities and other essential information that describe an agent are needed also in what we call the [Agent Manifest](manifest.md). For this reason ACP exposes an endpoint that serves the Agent Manifest. 
 
 <a id="errors"></a>
 ### Error Definitions
@@ -114,8 +111,5 @@ ACP must define errors for the most common error conditions. Each definition mus
 * An optional schema definition of additional information that the error can be associated with.
 
 ACP also allows agents to provide definitions of errors specific for that agent. For this purpose, ACP must define an endpoint that provides schema definitions for all agent specific error that are not included in the ACP specification.
-
-
-
 
 

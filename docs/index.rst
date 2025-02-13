@@ -18,6 +18,18 @@ Internet of Agents Components
    pages/introduction
 
 .. toctree::
+   :caption: Manifest
+   :maxdepth: 2
+
+   pages/manifest
+
+.. toctree::
+   :caption: Agent Connect Protocol
+   :maxdepth: 2
+
+   pages/connect
+
+.. toctree::
    :caption: Multi-Agent Application Toolkit
    :maxdepth: 2
 
@@ -35,12 +47,6 @@ Internet of Agents Components
 
    pages/workflow
 
-
-.. toctree::
-   :caption: Agent Connect Protocol
-   :maxdepth: 2
-
-   pages/connect
 
 .. toctree::
    :caption: Agent Gateway Protocol
