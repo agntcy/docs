@@ -9,22 +9,34 @@ The Internet of Agents (IoA) project aims to revolutionize the way AI agents int
 3. **Scalability**: Design a scalable architecture that can support a growing number of agents and interactions without compromising performance.
 4. **Standardization**: Develop standardized data models and schemas to ensure consistent data representation and validation across the ecosystem.
 
+
 ### Core Components
 
-```{image} ../_static/IoA.png
-:alt: Service Layer Composition
+```{image} ../_static/ioa_stack.png
+:alt: Simplified Internet of Agent Stack
 :width: 100%
 :align: center
 ```
 
-1. **Multi-Agent Application Composer**: A tool that allows developers to compose and orchestrate complex multi-agent applications, enabling seamless integration and interaction between various AI agents.
-2. **Agent Workflow Server**: A server that manages and executes workflows involving multiple AI agents, ensuring coordinated and efficient task execution.
-3. **Agent Connect Protocol**: A protocol that defines the standards for establishing and managing connections between AI agents, facilitating reliable and secure communication.
-4. **Agent Gateway Protocol**: A protocol that defines the standards and guidelines for secure and efficient communication between AI agents. AGP ensures interoperability and seamless data exchange by specifying message formats, transport mechanisms, and interaction patterns.
-5. **Open Agent Schema Framework**: A framework that provides standardized data models and schemas for representing and validating data exchanged between agents. OSF ensures data integrity and consistency across the ecosystem.
-6. **Agent Directory**: A centralized service that stores and manages metadata about AI agents, including their capabilities, attributes, and constraints. This service enables agents to discover and connect with each other based on their advertised capabilities.
-7. **Decentralized Identity**: A system that leverages decentralized technologies to manage and verify the identities of AI agents, ensuring secure and trustworthy interactions.
-8. **Agent Observability**: Tools and techniques for monitoring and analyzing the behavior and performance of AI agents, providing insights into their operations and interactions.
+1. **Multi-Agent Application Toolkit**: A set of agents and software libraries that support seamless creation of Multi-Agent workflows.
+1. **Agent Workflow Server**: A server that manages and executes workflows involving multiple AI agents, ensuring coordinated and efficient task execution.
+1. **Agent Connect Protocol**: A protocol that defines a standard interface to invoke agents, configure them, provide input, retrieve output, and retrieve their manifest.
+1. **Agent Manifest**: A standard format to describes agents, their capabilities, their dependencies, and how to deploy or consume them.
+1. **Agent Gateway Protocol**: A protocol that defines the standards and guidelines for secure and efficient communication between AI agents. AGP ensures interoperability and seamless data exchange by specifying message formats, transport mechanisms, and interaction patterns.
+1. **Open Agent Schema Framework**: A framework that provides standardized data models and schemas for representing and validating data exchanged between agents. OSF ensures data integrity and consistency across the ecosystem.
+1. **Agent Directory**: A centralized service that stores and manages metadata about AI agents, including their capabilities, attributes, and constraints. This service enables agents to discover and connect with each other based on their advertised capabilities.
+1. **Decentralized Identity**: A system that leverages decentralized technologies to manage and verify the identities of AI agents, ensuring secure and trustworthy interactions.
+1. **Agent Observability**: Tools and techniques for monitoring and analyzing the behavior and performance of AI agents, providing insights into their operations and interactions.
+1. **Multi-Agent Application Composer**: A tool that allows developers express their intent and (semi-)automatically select agents and compose them into complex multi-agent applications.
+
+The following diagram a simplified architecture of the core components described above.
+
+
+```{image} ../_static/ioa_arch.png
+:alt: Simplified Internet of Agent Stack
+:width: 100%
+:align: center
+```
 
 ### Benefits
 
