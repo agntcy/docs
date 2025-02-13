@@ -22,7 +22,7 @@ Agent Connect Protocol needs to formally specify the network interactions needed
 * **Configuration**: Define how to configure a remote agent.
 * **Invocation**: Define how to invoke a remote agent providing input for its execution.
 * **Output retrieval and interrupt Handling**: Define how to retrieve the result of an agent invocation. Different interaction modes should be supported: synchronous, asynchronous, and streaming. This should include interrupt handling, i.e. how agents notify the caller about execution suspension to ask for additional input.
-* **Capabilities and Schema definitions**: Retrieve details about the agents' supported capabilities and the data structures for configuration, input, and output definitions.
+* **Capabilities and Schema definitions**: Retrieve details about the agent supported capabilities and the data structures definitions for configuration, input, and output.
 * **Error definitions**: receive error notifications with meaningful error codes and explanations.
 
 

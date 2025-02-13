@@ -3,10 +3,10 @@
 ## Introduction
 
 An Agent Manifest is a document that describes in detail:
-* what an agent is capable of
-* how an agent can be consumed if provided as-a-service
-* how an agent can be deployed if provided as a deployable artifact
-* what are the dependencies of an agent, i.e. which other agents it relies on
+* What an agent is capable of.
+* How an agent can be consumed if provided as-a-service.
+* How an agent can be deployed if provided as a deployable artifact.
+* What are the dependencies of an agent, i.e. which other agents it relies on.
 
 Agent Manifest specification, which is part of the [Agent Connect Protocol](connect.md) specification, defines a standard format for Agent Manifests.
 
@@ -31,13 +31,13 @@ This interface however specifies methods to configure and invoke agents, but it 
 The specification of these data structures is included in the Agent Manifest.
 
 Agent Manifest must include an interface data structure specification section that provides schema definitions for the following data structures:
-* Configuration: The data structure used to provide agent configuration 
-* Input: The data structures used to provide agent input
-* Output: The data structure used to retrieve agent output
+* Configuration: The data structure used to provide agent configuration. 
+* Input: The data structures used to provide agent input.
+* Output: The data structure used to retrieve agent output.
 
 If an agent supports interrupts, meaning its execution can be interrupted to request additional input and then resumed, the Agent Manifest needs to define the types of interrupts that can possibly occur. For each of them:
-   * Interrupt Output: The format of the output provided by the specific interrupt
-   * Resume Input: The input expected by the agent to resume its execution when this specific interrupt occurs.
+* Interrupt Output: The format of the output provided by the specific interrupt
+* Resume Input: The input expected by the agent to resume its execution when this specific interrupt occurs.
 
 All schema definitions must include natural language description of the data structure, natural language description of each data structure element, and valid examples of correctly populated data structures. 
 
@@ -65,6 +65,6 @@ Note the recursive nature of Agent Manifests that can point in turn to other Age
 A potential user of an agent needs to obtain the corresponding agent manifest to get all the needed information to interact with the agent.
 
 There are different ways to obtain an Agent Manifest:
-* It could be available as a standalone document, e.g. a json file
+* It could be available as a standalone document, e.g. a JSON file
 * It can be retrieved directly from a running agent through the [Agent Connect Protocol](connect.md)
 * It can be discovered through the [Agent Directory](dir.md). To achieve this, the Agent Manifest can be embedded as an extension in the [Open Agent Schema Framework](data_model.md) data model.
