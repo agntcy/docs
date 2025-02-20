@@ -14,6 +14,8 @@ We propose a solution where all agents are able to communicate over the network 
 
 This document describes the main requirements and design principles of ACP.
 
+The current specification of ACP can be found [here](https://agntcy.github.io/acp-spec), ACP Software Development Kit can be found [here](https://agntcy.github.io/acp-sdk).
+
 ## ACP Requirements
 
 Agent Connect Protocol needs to formally specify the network interactions needed to address the following:
