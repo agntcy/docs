@@ -12,7 +12,7 @@ We propose a solution where all agents are able to communicate over the network 
 
 This document describes the main requirements and design principles of the ACP.
 
-The current specification of the ACP can be found [here](https://agntcy.github.io/acp-spec) and the ACP Software Development Kit can be found [here](https://agntcy.github.io/acp-sdk).
+The current specification of the ACP can be found [here](https://spec.acp.agntcy.org/).
 
 ## ACP Requirements
 
