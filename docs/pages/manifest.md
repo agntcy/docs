@@ -8,13 +8,13 @@ An Agent Manifest is a document that describes in detail the following:
 * How the agent can be deployed if provided as a deployable artifact.
 * What are the dependencies of the agent, that is, which other agents it relies on.
 
-Agent Manifest specification, which is part of the [Agent Connect Protocol](connect.md) specification, defines a standard format for Agent Manifests.
+The manifest is designed to be used by [Agent Connect Protocol](connect.md) and the Workflow Server and stored in the Agent Directory with the corresponding OASF extensions.  
 
-This document describes the main requirements of the Agent Manifest definition.
+This document describes the principles of the Agent Manifest definition.
 
 ## Agent Manifest Structure
 
-Agent Manifest needs to include the following sections:
+Agent Manifest includes the following sections:
 * [Agent Identification and Metadata](#agent-identification-and-metadataidentification)
 * [Agent Interface Data Structure Specification](#agent-interface-data-structure-specification)
 * [Agent Deployment and Consumption](#agent-deployment-and-consumption)
@@ -31,14 +31,13 @@ Agent Manifest can include metadata that provides additional information about t
 
 <a id="agent-interface-data-structure-specification"></a>
 ### Agent Interface Data Structure Specification
+Agents willing to interoperate with other agents expose an interface that allow for invocation and configuration.
 
-Agents willing to interoperate with other agents expose an interface that allow for invocation and configuration. For example, the [Agent Connect Protocol](connect.md) specifies a standard for this interface. 
+Agent Connect Protocol specifies a standard for this interface. However, it specifies methods to configure and invoke agents, but it does not specify the format of the data structures that an agent expects and produces for such configurations and invocations.
 
-This interface specifies methods to configure and invoke agents, but it does not specify the format of the data structures that an agent expects and produces for such configurations and invocations.
+The specification of these data structures is included in the what we call the Agent ACP descriptor, which can be provided by ACP itself, but it is also defined as part of the Agent Manifest.  
 
-The specification of these data structures is included in the Agent Manifest.
-
-Agent Manifest must include an interface data structure specification section that provides schema definitions for the following data structures:
+Agent ACP descriptor must include an interface data structure specification section that provides schema definitions for the following data structures:
 * **Configuration**: The data structure used to provide agent configuration. 
 * **Input**: The data structures used to provide agent input.
 * **Output**: The data structure used to retrieve agent output.
@@ -74,12 +73,3 @@ This may imply simply checking that sub-agents are reachable or deploying them, 
 The Agent Manifest must include a list of all sub-agents in the form of a list of references to their manifests.
 
 Note the recursive nature of Agent Manifests that can point in turn to other Agent Manifests as dependencies.
-
-## How Agent Manifest relates to Agent Connect Protocol, Agent Directory, and  Open Agent Schema Framework
-
-A potential user of an agent needs to obtain the corresponding agent manifest to get all the necessary information to interact with the agent.
-
-There are different ways to obtain an Agent Manifest:
-* Available as a standalone document, for example, a JSON file.
-* Retrieved directly from a running agent through the [Agent Connect Protocol](connect.md).
-* Discovered through the [Agent Directory](dir.md). To achieve this, the Agent Manifest can be embedded as an extension in the [Open Agent Schema Framework](data_model.md) data model.
