@@ -1,10 +1,10 @@
-# Agent Connect Protocol 
+# Agent Connect Protocol
 
 ## Introduction
 
 Existing Multi-Agent Systems (MAS) provide convenient ways to build Multi-Agent Applications (MAAs) that combine various agents and enable them to communicate with each other. Such communication occurs within the MAS using internal mechanisms and APIs.
 
-Building the Internet of Agents (IoA) requires agents built by different parties, potentially for different MAS and potentially running in different locations to interact. 
+Building the Internet of Agents (IoA) requires agents built by different parties, potentially for different MAS and potentially running in different locations to interact.
 
 While interaction between co-located agents implemented through the same MAS is trivial, it is harder in case the agents are not natively compatible or in case they run in different locations.
 
@@ -21,11 +21,11 @@ Agent Connect Protocol needs to formally specify the network interactions needed
 * **Authentication**: Define how caller authenticates with an agent and what its permissions are.
 * **Configuration**: Define how to configure a remote agent.
 * **Invocation**: Define how to invoke a remote agent providing input for its execution.
-* **Output retrieval and interrupt Handling**: Define how to retrieve the result of an agent invocation. Different interaction modes should be supported: 
+* **Output retrieval and interrupt Handling**: Define how to retrieve the result of an agent invocation. Different interaction modes should be supported:
     * Synchronous
     * Asynchronous
     * Streaming
-    
+
     This should include interrupt handling. That is, how agents notify the caller about execution suspension to ask for additional input.
 * **Capabilities and Schema definitions**: Retrieve details about the agent supported capabilities and the data structures definitions for configuration, input, and output.
 * **Error definitions**: Receive error notifications with meaningful error codes and explanations.
@@ -43,7 +43,7 @@ For the reason above, ACP must define an endpoint that does not require authenti
 <a id="configuration"></a>
 ### Configuration
 
-Agents may support configuration. 
+Agents may support configuration.
 
 Configuration is meant to provide parameters needed by the agent to function and to flavor their behavior.
 
@@ -73,10 +73,10 @@ The invocation endpoint must accept the following parameters:
 * **Optional configuration**
 
     When provided, this configuration is valid only for this invocation. Alternatively, the invocation endpoint must accept the identifier of a previously configured instance of an agent. For more information, see [Configuration](#configuration).
- 
+
 * **Optional callback**
-    
-    When provided, the output of the invocation is provided asynchronously through the provided callback. For more information. For more information, see [Output Retrieval and Interrupt Handling](#output).
+
+    When provided, the output of the invocation is provided asynchronously through the provided callback. For more information, see [Output Retrieval and Interrupt Handling](#output).
 
 * **Optional execution identifier**
 
@@ -113,18 +113,18 @@ The ACP must define an endpoint that provides schema definitions for configurati
 
 Different agents may implement different parts of the protocol. For example: an agent may support streaming, while another may only support full responses. An agent may support threads while another may not.
 
-The ACP must define and endpoint that provides details about the specific capabilities that the agent supports.
+The ACP must define an endpoint that provides details about the specific capabilities that the agent supports.
 
 Schemas, agent capabilities, and other essential information that describe an agent are also needed in what we call the [Agent Manifest](manifest.md). 
 
 <a id="errors"></a>
 ### Error Definitions
 
-Each of the operations offered by the ACP can produce an error. 
+Each of the operations offered by the ACP can produce an error.
 
 Errors can be provided synchronously by each of the invoked endpoints or asynchronously when they occur during an execution that supports asynchronous output.
 
-The ACP must define errors for the most common error conditions. 
+The ACP must define errors for the most common error conditions.
 
 Each definition must include the following details:
 * Error code.
