@@ -5,7 +5,7 @@ contribute to the development of OASF Schemas and the framework itself.
 
 * * *
 
-### Key OASF Terminology
+### Terminology
 
 1. **Field**: A field is a unique identifier name for a piece of data contained in OASF. Each field also designates a corresponding data_type.
 2. **Object**: An object is a collection of contextually related fields and other objects.  It is also a data_type in OASF.
@@ -15,7 +15,7 @@ contribute to the development of OASF Schemas and the framework itself.
 
 ## How do I add a `class`?
 
-### In brief -
+### Overview
 
 1. Determine all the `attributes` (including fields and objects) you would want to add in the `class`.
 2. Check the [dictionary](https://github.com/agntcy/oasf/blob/main/schema/dictionary.json) and the [/objects](https://github.com/agntcy/oasf/tree/main/schema/objects) folder, many of your desired attributes may already be present.
@@ -326,7 +326,7 @@ As with categories and classes, extensions have unique IDs within the
 framework as well as their own versioning. The following sections provide
 guidelines to create extensions within OASF.
 
-### Reserve a UID and Name for your extension:
+### Reserve a UID and Name for your extension
 
 In order to reserve an ID space, and make your extension public, add a unique
 identifier & a unique name for your extension in the OASF Extensions Registry
@@ -338,7 +338,7 @@ For example, a new sample extension would have a row in the table as follows:
 |---------------|----------|---------|-----------------------------------|
 | New Extension | new_ex   | 123     | The development schema extensions |
 
-### Create your Extension's subdirectory:
+### Create your Extension's subdirectory
 
 To extend the schema, create a new subdirectory in the `extensions` directory,
 and add a new `extension.json` file, which defines the extension's `name`
