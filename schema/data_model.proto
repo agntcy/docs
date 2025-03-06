@@ -8,7 +8,7 @@ package schema.model;
 // The data model defines a schema for AI agent content representation.
 // The schema provides a way to describe agent's features, constraints, artifact
 // locators, versioning, ownership, or relevant details.
-message AgentDataModel {
+message Agent {
     // Name of the agent.
     string name = 1;
 
@@ -35,17 +35,8 @@ message AgentDataModel {
         // Location URI where this source locator can be found.
         string url = 1;
 
-        // Type collects supported types for locators.
-        enum Type {
-            LOCATOR_TYPE_UNSPECIFIED = 0;
-            LOCATOR_TYPE_HELM_CHART = 1;
-            LOCATOR_TYPE_DOCKER_IMAGE = 2;
-            LOCATOR_TYPE_PYTHON_PACKAGE = 3;
-            LOCATOR_TYPE_SOURCE_CODE = 4;
-            LOCATOR_TYPE_BINARY = 5;
-        }
-        // Type of the source locator.
-        Type type = 2;
+        // Type of the source locator, for example: "docker-image", "binary", "source-code".
+        string type = 2;
 
         // Metadata associated with this source locator.
         map<string, string> annotations = 3;

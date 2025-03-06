@@ -9,6 +9,6 @@ The data model schema defines a set of standards for AI agent content representa
 ## Schema
 
 ```{include} ./data_model.proto.md
-:start-after: "### AgentDataModel Diagram"
+:start-after: "### Agent Diagram"
 :heading-offset: 0
 ```
