@@ -190,6 +190,3 @@ myst_fence_as_directive = ["mermaid"]
 html_js_files = [
     'js/segment.js',
 ]
-html_js_files = [
-    'js/segment.js',
-]
