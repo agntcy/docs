@@ -1,0 +1,15 @@
+.rst-content .toctree-wrapper > p.caption, h1, h2, h3, h4, h5, h6, legend {
+    font-family: Roboto, ff-tisa-web-pro, Georgia, Arial, sans-serif;
+}
+
+.wy-nav-content-wrap {
+    background: #f8f9fa;
+}
+
+.wy-nav-content {
+    background: #f8f9fa;
+}
+
+.wy-nav-content {
+    max-width: 80%;
+}

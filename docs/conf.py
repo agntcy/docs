@@ -187,3 +187,7 @@ epub_exclude_files = ["search.html"]
 # https://github.com/mgaitan/sphinxcontrib-mermaid
 myst_fence_as_directive = ["mermaid"]
 
+# CSS styles
+html_css_files = [
+    'css/theme.custom.css',
+]
