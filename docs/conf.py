@@ -24,7 +24,7 @@ copyright = "2025, Internet of Agents Collective"
 author = "IoA Collective"
 
 # The short X.Y version
-version = os.environ.get("VERSION", "v0.0.1")
+version = "Version: " + os.environ.get("VERSION", "v0.0.1")
 
 # The full version, including alpha/beta/rc tags
 release = os.environ.get("VERSION", "v0.0.1")
@@ -73,7 +73,7 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = None
-#html_logo = "_static/neural-network.svg"
+html_logo = "_static/img/logo.png"
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -86,7 +86,11 @@ html_theme = "sphinx_rtd_theme"
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-# html_theme_options = {}
+html_theme_options = {
+    'logo_only': True,
+    'style_external_links': True,
+    'github_url': 'https://github.com/agntcy/docs',
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
