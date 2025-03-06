@@ -108,15 +108,3 @@ task down
 ## Artifacts distribution
 
 See https://github.com/orgs/agntcy/packages?repo_name=oasf
-
-### Container images
-
-```bash
-docker pull ghcr.io/agntcy/oasf-server:latest
-```
-
-### Helm charts
-
-```bash
-helm pull oci://ghcr.io/agntcy/oasf/helm-charts/oasf:latest
-```
