@@ -10,10 +10,3 @@ standards and safety protocols. By integrating these elements, AI agents can
 provide significant value in various applications, adapting to changing
 conditions and user needs. 
 Below are specification of currently supported AI agentic frameworks.
-
-## CrewAI framework
-
-```{include} ./data_model_crewai.proto.md
-:start-after: "### CrewaiAgentExtensionSpecs Diagram"
-:heading-offset: 1
-```

@@ -45,7 +45,7 @@ To build the documentation locally, you need to install Taskfile.
 - To build the documentation, run the following command:
 
    ```sh
-   task docs:build
+   task build
 
 - This will generate the HTML documentation in the .build/docs/html directory.
 

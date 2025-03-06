@@ -3,9 +3,8 @@
 The data model schema defines a set of standards for AI agent content representation that aims to:
 
 - Define common data structure to facilitate content standardisation, validation, and interoperability
-- Ensure unique agent identification to address content identity and consumption
-- Provide extension capabilities to enable support of additional features like security and categorisation
-- Expose common interfaces for content management and discovery to enable implementation of custom services
+- Ensure unique agent identification to address content discovery and consumption
+- Provide extension capabilities to enable third-party features
 
 ## Schema
 

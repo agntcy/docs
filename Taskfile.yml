@@ -23,7 +23,7 @@ tasks:
   ##
   ## Website
   ##
-  docs:build:
+  build:
     desc: Build documentation website
     deps:
       - deps/venv
@@ -41,8 +41,8 @@ tasks:
 
   # TODO(ramizpolic): This usually works well to regenerate context, but it's not a real hot-reload.
   # Note that sometimes it crashes and goes into reload loop. Investigate or find alternative.
-  docs:watch:
-    desc: Hot-reload documentation website
+  run:
+    desc: Run documentation website in live editing mode
     watch: true
     sources:
       - 'docs/**/*'
@@ -50,7 +50,7 @@ tasks:
     vars:
       BUILD_SITE_DIR: "{{.BUILD_DIR}}/docs/html"
     cmds:
-      - task: docs:build
+      - task: build
       - |
         echo "Docs available at: file://{{.BUILD_SITE_DIR}}/index.html"
 

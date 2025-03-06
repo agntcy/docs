@@ -9,56 +9,72 @@ package schema.model;
 // The schema provides a way to describe agent's features, constraints, artifact
 // locators, versioning, ownership, or relevant details.
 message AgentDataModel {
-    // Digest defines complete content fingerprint. It can be used as a globally-unique ID of an Agent.
-    string digest = 1;
+    // Name of the agent.
+    string name = 1;
 
-    // Name of the agent
-    string name = 2;
+    // Version of the agent.
+    string version = 2;
 
-    // Version of the agent
-    string version = 3;
+    // List of agent’s authors in the form of `author-name <author-email>`.
+    repeated string authors = 3;
 
-    // List of agent’s authors in the form of `author-name <author-email>`
-    repeated string authors = 4;
+    // Creation timestamp of the agent in the RFC3339 format.
+    // Specs: https://www.rfc-editor.org/rfc/rfc3339.html
+    string created_at = 4;
 
-    // Additional metadata associated with this agent
+    // Additional metadata associated with this agent.
     map<string, string> annotations = 5;
 
-    // Timestamp of the agent creation time
-    string created_at = 6;
+    // List of skills that this agent is capable of performing.
+    // Specs: https://schema.oasf.agntcy.org/skills
+    repeated string skills = 6;
 
     // Locators provide actual artifact locators of an agent. For example,
     // this can reference sources such as helm charts, docker images, binaries, etc.
     message Locator {
-        // Metadata associated with this source locator
-        map<string, string> annotations = 1;
-        // Name of the source locator for this agent
-        string name = 2;
-        // Type of the source locator, e.g. `docker-image, helm-chart`
-        string type = 3;
-        // Location URI where this source locator can be found
-        string url = 4;
-        // Size in bytes of the source locator pointed by the `url` property
-        uint64 size = 5;
-        // Digest of the source locator pointed by the `url` property
-        string digest = 6;
+        // Location URI where this source locator can be found.
+        string url = 1;
+
+        // Type collects supported types for locators.
+        enum Type {
+            LOCATOR_TYPE_UNSPECIFIED = 0;
+            LOCATOR_TYPE_HELM_CHART = 1;
+            LOCATOR_TYPE_DOCKER_IMAGE = 2;
+            LOCATOR_TYPE_PYTHON_PACKAGE = 3;
+            LOCATOR_TYPE_SOURCE_CODE = 4;
+            LOCATOR_TYPE_BINARY = 5;
+        }
+        // Type of the source locator.
+        Type type = 2;
+
+        // Metadata associated with this source locator.
+        map<string, string> annotations = 3;
+
+        // Size in bytes of the source locator pointed by the `url` property.
+        optional uint64 size = 4;
+
+        // Digest of the source locator pointed by the `url` property.
+        optional string digest = 5;
     }
-    // List of source locators where this agent can be found or used from
+    // List of source locators where this agent can be found or used from.
     repeated Locator locators = 7;
 
     // Extensions provide dynamic descriptors for an agent. For example,
     // security and categorization features can be described using extensions.
     message Extension {
-        // Metadata associated with this extension
-        map<string, string> annotations = 1;
-        // Name of the extension attached to this agent
-        string name = 2;
-        // Version of the extension attached to this agent
-        string version = 3;
-        // Generic specification schema of this extension.
-        // Value of this property is JSON-encoded.
+        // Name of the extension.
+        string name = 1;
+
+        // Version of the extension.
+        string version = 2;
+
+        // Metadata associated with this extension.
+        map<string, string> annotations = 3;
+
+        // Value of the data, it is available directly
+        // or can be constructed by fetching from some URL.
         bytes specs = 4;
     }
-    // List of extensions that describe this agent and its capabilities more in depth
+    // List of extensions that describe this agent more in depth.
     repeated Extension extensions = 8;
 }

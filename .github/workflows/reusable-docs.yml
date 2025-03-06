@@ -74,7 +74,7 @@ jobs:
         env:
           VERSION: ${{ inputs.version }}
         run: |
-          task docs:build
+          task build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

@@ -26,12 +26,12 @@ direction LR
 %% The data model defines a schema for AI agent content representation. The schema provides a way to describe agent's features, constraints, artifact locators, versioning, ownership, or relevant details.
 
 class AgentDataModel {
-  + string digest
   + string name
   + string version
   + List~string~ authors
-  + Map~string,  string~ annotations
   + string created_at
+  + Map~string,  string~ annotations
+  + List~string~ skills
   + List~Locator~ locators
   + List~Extension~ extensions
 }
@@ -42,21 +42,32 @@ AgentDataModel --o `Locator`
 %% Locators provide actual artifact locators of an agent. For example, this can reference sources such as helm charts, docker images, binaries, etc.
 
 class Locator {
-  + Map~string,  string~ annotations
-  + string name
-  + string type
   + string url
-  + uint64 size
-  + string digest
+  + Type type
+  + Map~string,  string~ annotations
+  + Optional~uint64~ size
+  + Optional~string~ digest
 }
-AgentDataModel --o `Extension`
+Locator --> `Type`
+Locator --o `Type`
+%% Type collects supported types for locators.
+
+class Type{
+  <<enumeration>>
+  LOCATOR_TYPE_UNSPECIFIED
+  LOCATOR_TYPE_HELM_CHART
+  LOCATOR_TYPE_DOCKER_IMAGE
+  LOCATOR_TYPE_PYTHON_PACKAGE
+  LOCATOR_TYPE_SOURCE_CODE
+  LOCATOR_TYPE_BINARY
+}AgentDataModel --o `Extension`
 
 %% Extensions provide dynamic descriptors for an agent. For example, security and categorization features can be described using extensions.
 
 class Extension {
-  + Map~string,  string~ annotations
   + string name
   + string version
+  + Map~string,  string~ annotations
   + bytes specs
 }
 
@@ -67,16 +78,16 @@ class Extension {
 
 <div class="comment"><span>The data model defines a schema for AI agent content representation. The schema provides a way to describe agent's features, constraints, artifact locators, versioning, ownership, or relevant details.</span><br/></div>
 
-| Field       | Ordinal | Type           | Label    | Description                                                                                       |
-|-------------|---------|----------------|----------|---------------------------------------------------------------------------------------------------|
-| digest      | 1       | string         |          | Digest defines complete content fingerprint. It can be used as a globally-unique ID of an Agent.  |
-| name        | 2       | string         |          | Name of the agent                                                                                 |
-| version     | 3       | string         |          | Version of the agent                                                                              |
-| authors     | 4       | string         | Repeated | List of agent’s authors in the form of `author-name <author-email>`                             |
-| annotations | 5       | string, string | Map      | Additional metadata associated with this agent                                                    |
-| created_at  | 6       | string         |          | Timestamp of the agent creation time                                                              |
-| locators    | 7       | Locator        | Repeated | List of source locators where this agent can be found or used from                                |
-| extensions  | 8       | Extension      | Repeated | List of extensions that describe this agent and its capabilities more in depth                    |
+| Field       | Ordinal | Type           | Label    | Description                                                                                                |
+|-------------|---------|----------------|----------|------------------------------------------------------------------------------------------------------------|
+| name        | 1       | string         |          | Name of the agent.                                                                                         |
+| version     | 2       | string         |          | Version of the agent.                                                                                      |
+| authors     | 3       | string         | Repeated | List of agent’s authors in the form of `author-name <author-email>`.                                     |
+| created_at  | 4       | string         |          | Creation timestamp of the agent in the RFC3339 format. Specs: https://www.rfc-editor.org/rfc/rfc3339.html  |
+| annotations | 5       | string, string | Map      | Additional metadata associated with this agent.                                                            |
+| skills      | 6       | string         | Repeated | List of skills that this agent is capable of performing. Specs: https://schema.oasf.agntcy.org/skills      |
+| locators    | 7       | Locator        | Repeated | List of source locators where this agent can be found or used from.                                        |
+| extensions  | 8       | Extension      | Repeated | List of extensions that describe this agent more in depth.                                                 |
 
 
 
@@ -89,14 +100,42 @@ direction LR
 %% Locators provide actual artifact locators of an agent. For example, this can reference sources such as helm charts, docker images, binaries, etc.
 
 class Locator {
-  + Map~string,  string~ annotations
-  + string name
-  + string type
   + string url
-  + uint64 size
-  + string digest
+  + Type type
+  + Map~string,  string~ annotations
+  + Optional~uint64~ size
+  + Optional~string~ digest
 }
+Locator --> `Type`
+Locator --o `Type`
+%% Type collects supported types for locators.
 
+class Type{
+  <<enumeration>>
+  LOCATOR_TYPE_UNSPECIFIED
+  LOCATOR_TYPE_HELM_CHART
+  LOCATOR_TYPE_DOCKER_IMAGE
+  LOCATOR_TYPE_PYTHON_PACKAGE
+  LOCATOR_TYPE_SOURCE_CODE
+  LOCATOR_TYPE_BINARY
+}
+```
+### Type Diagram
+
+```mermaid
+classDiagram
+direction LR
+%% Type collects supported types for locators.
+
+class Type{
+  <<enumeration>>
+  LOCATOR_TYPE_UNSPECIFIED
+  LOCATOR_TYPE_HELM_CHART
+  LOCATOR_TYPE_DOCKER_IMAGE
+  LOCATOR_TYPE_PYTHON_PACKAGE
+  LOCATOR_TYPE_SOURCE_CODE
+  LOCATOR_TYPE_BINARY
+}
 ```
 ### Extension Diagram
 
@@ -107,9 +146,9 @@ direction LR
 %% Extensions provide dynamic descriptors for an agent. For example, security and categorization features can be described using extensions.
 
 class Extension {
-  + Map~string,  string~ annotations
   + string name
   + string version
+  + Map~string,  string~ annotations
   + bytes specs
 }
 
@@ -120,14 +159,28 @@ class Extension {
 
 <div class="comment"><span>Locators provide actual artifact locators of an agent. For example, this can reference sources such as helm charts, docker images, binaries, etc.</span><br/></div>
 
-| Field       | Ordinal | Type           | Label | Description                                                        |
-|-------------|---------|----------------|-------|--------------------------------------------------------------------|
-| annotations | 1       | string, string | Map   | Metadata associated with this source locator                       |
-| name        | 2       | string         |       | Name of the source locator for this agent                          |
-| type        | 3       | string         |       | Type of the source locator, e.g. `docker-image, helm-chart`        |
-| url         | 4       | string         |       | Location URI where this source locator can be found                |
-| size        | 5       | uint64         |       | Size in bytes of the source locator pointed by the `url` property  |
-| digest      | 6       | string         |       | Digest of the source locator pointed by the `url` property         |
+| Field       | Ordinal | Type           | Label    | Description                                                         |
+|-------------|---------|----------------|----------|---------------------------------------------------------------------|
+| url         | 1       | string         |          | Location URI where this source locator can be found.                |
+| type        | 2       | Type           |          | Type of the source locator.                                         |
+| annotations | 3       | string, string | Map      | Metadata associated with this source locator.                       |
+| size        | 4       | uint64         | Optional | Size in bytes of the source locator pointed by the `url` property.  |
+| digest      | 5       | string         | Optional | Digest of the source locator pointed by the `url` property.         |
+
+
+## Enum: Type
+<div style="font-size: 12px; margin-top: -10px;" class="fqn">FQN: schema.model.AgentDataModel.Locator.Type</div>
+
+<div class="comment"><span>Type collects supported types for locators.</span><br/></div>
+
+| Name                        | Ordinal | Description |
+|-----------------------------|---------|-------------|
+| LOCATOR_TYPE_UNSPECIFIED    | 0       |             |
+| LOCATOR_TYPE_HELM_CHART     | 1       |             |
+| LOCATOR_TYPE_DOCKER_IMAGE   | 2       |             |
+| LOCATOR_TYPE_PYTHON_PACKAGE | 3       |             |
+| LOCATOR_TYPE_SOURCE_CODE    | 4       |             |
+| LOCATOR_TYPE_BINARY         | 5       |             |
 
 
 
@@ -137,12 +190,12 @@ class Extension {
 
 <div class="comment"><span>Extensions provide dynamic descriptors for an agent. For example, security and categorization features can be described using extensions.</span><br/></div>
 
-| Field       | Ordinal | Type           | Label | Description                                                                              |
-|-------------|---------|----------------|-------|------------------------------------------------------------------------------------------|
-| annotations | 1       | string, string | Map   | Metadata associated with this extension                                                  |
-| name        | 2       | string         |       | Name of the extension attached to this agent                                             |
-| version     | 3       | string         |       | Version of the extension attached to this agent                                          |
-| specs       | 4       | bytes          |       | Generic specification schema of this extension. Value of this property is JSON-encoded.  |
+| Field       | Ordinal | Type           | Label | Description                                                                                   |
+|-------------|---------|----------------|-------|-----------------------------------------------------------------------------------------------|
+| name        | 1       | string         |       | Name of the extension.                                                                        |
+| version     | 2       | string         |       | Version of the extension.                                                                     |
+| annotations | 3       | string, string | Map   | Metadata associated with this extension.                                                      |
+| specs       | 4       | bytes          |       | Value of the data, it is available directly or can be constructed by fetching from some URL.  |
 
 
 
