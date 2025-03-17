@@ -1,5 +1,5 @@
 Internet of Agents Components
-==========================================
+=============================
 
 .. toctree::
    :maxdepth: 2
@@ -37,3 +37,11 @@ Internet of Agents Components
    pages/data_model
    pages/taxonomy
    pages/oasf_workflow
+
+..
+  Uncomment this when ready to publish
+  .. toctree::
+     :caption: Multi-Agent Software Toolkit
+     :maxdepth: 2
+
+     pages/toolkit/api_bridge_agent
