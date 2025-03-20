@@ -19,6 +19,7 @@ Internet of Agents Components
 
 .. toctree::
    :caption: Agent Directory Service
+   :maxdepth: 1
 
    pages/dir
    pages/dir_howto
@@ -37,9 +38,15 @@ Internet of Agents Components
 
 .. toctree::
    :caption: OASF
-   :maxdepth: 2
+   :maxdepth: 1
 
    pages/oasf
    pages/data_model
    pages/taxonomy
    pages/oasf_workflow
+
+.. toctree::
+   :caption: Agent Gateway Protocol
+   :maxdepth: 1
+
+   pages/agp.md
