@@ -19,11 +19,11 @@ contribute to the development of OASF Schemas and the framework itself.
 
 1. Determine all the `attributes` (including fields and objects) you want to add in the `class`.
 2. Check the [dictionary](https://github.com/agntcy/oasf/blob/main/schema/dictionary.json) and the [/objects](https://github.com/agntcy/oasf/tree/main/schema/objects) folder, many of your desired attributes may already be present.
-3. Define the missing attributes → [Adding/Modifying an `attribute`](#addingmodifying-an-attribute)
+3. Define the missing attributes → [Adding/Modifying an `attribute`](#adding-modifying-an-attribute)
 4. Determine which category you want to add your class in, note it’s `name`.
 5. Create a new file →  `<class_name.json>` inside the category specific subdirectory in the [/schema](https://github.com/agntcy/oasf/tree/main/schema) folder. Template available [here](https://github.com/agntcy/oasf/blob/main/schema/templates/class_name.json).
-6. Define the `class` itself → [Adding/Modifying a `class`](#addingmodifying-a-class).
-7. Verify the changes are working as expected in your local [oasf/server](https://github.com/agntcy/oasf/server).
+6. Define the `class` itself → [Adding/Modifying a `class`](#adding-modifying-a-class).
+7. Verify the changes are working as expected in your local [oasf/server](https://github.com/agntcy/oasf/tree/main/server).
 
 * * *
 
@@ -256,9 +256,7 @@ To deprecate an attribute (`field`, `object`) follow the steps below:
 
 Contributors should verify the changes before they submit the PR, the best
 method to test and verify their changes is to run a local instance of the
-[oasf/server](https://github.com/agntcy/oasf/tree/main/server). Follow the
-instructions [here](https://github.com/agntcy/oasf/blob/main/server/README.md)
-to set your own local oasf server.
+[oasf/server](https://github.com/agntcy/oasf/tree/main/server).
 
 If there are any problems with the newly made changes, the server will throw
 corresponding errors. Sample error messages:

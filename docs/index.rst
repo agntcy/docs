@@ -57,3 +57,4 @@ Internet of Agents Components
    :maxdepth: 1
 
    pages/agp.md
+   pages/data-plane

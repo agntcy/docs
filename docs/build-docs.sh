@@ -31,5 +31,4 @@ mv ./*.proto.md $SOURCE_PAGES_DIR
 
 ## Build using sphinx
 sphinx-build -M clean "$SOURCE_DIR" "$BUILD_DOCS_DIR"
-sphinx-build -M confluence "$SOURCE_DIR" "$BUILD_DOCS_DIR"
 sphinx-build -M html "$SOURCE_DIR" "$BUILD_DOCS_DIR"

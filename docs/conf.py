@@ -41,7 +41,6 @@ release = os.environ.get("VERSION", "v0.0.1")
 # ones.
 extensions = [
     "sphinx_markdown_tables",
-    "sphinxcontrib.confluencebuilder",
     "myst_parser",
     "sphinxcontrib.mermaid",
     "sphinx_inline_tabs",

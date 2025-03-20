@@ -1,5 +1,5 @@
 pip-tools==7.4.1                        # BSD
-sphinx==8.2.3                          # BSD
+sphinx==8.2.3                           # BSD
 sphinx-rtd-theme==3.0.2                 # MIT
 sphinx-markdown-tables==0.0.17          # GPLv3
 sphinxcontrib.mermaid==1.0.0            # Apache 2.0
