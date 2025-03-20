@@ -43,3 +43,9 @@ Internet of Agents Components
    pages/data_model
    pages/taxonomy
    pages/oasf_workflow
+
+.. toctree::
+   :caption: CSIT
+   :maxdepth: 2
+
+   pages/csit
