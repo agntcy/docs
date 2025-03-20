@@ -22,11 +22,18 @@ Internet of Agents Components
    :maxdepth: 1
 
    pages/dir
-   pages/dir_howto
+   pages/dir-howto
+
+.. toctree::
+   :caption: Application Toolkit
+   :maxdepth: 1
+
+   pages/maa-toolkit
+   pages/composer
 
 .. toctree::
    :caption: Agent Connect Protocol
-   :maxdepth: 2
+   :maxdepth: 1
 
    pages/connect
 
@@ -41,9 +48,9 @@ Internet of Agents Components
    :maxdepth: 1
 
    pages/oasf
-   pages/data_model
+   pages/data-model
    pages/taxonomy
-   pages/oasf_workflow
+   pages/oasf-workflow
 
 .. toctree::
    :caption: Agent Gateway Protocol

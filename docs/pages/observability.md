@@ -1,3 +1,0 @@
-# Observability Framework
-
-## Open Telemetry

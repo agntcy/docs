@@ -87,9 +87,9 @@ html_theme = "sphinx_rtd_theme"
 # documentation.
 #
 html_theme_options = {
+
     'logo_only': True,
     'style_external_links': True,
-    'github_url': 'https://github.com/agntcy/docs',
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
