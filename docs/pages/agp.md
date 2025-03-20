@@ -5,23 +5,7 @@ It supports various communication patterns such as request-response,
 publish-subscribe, fire-and-forget, and streaming. Built on the gRPC framework,
 the Agent Gateway ensures secure and scalable interactions among agents.
 
-## Messages
-
-A message carries data payload and a channel identifier, plus a message
-identifier relative to the channel id.
-
-## Connection tables
-
-##
-
-
-## Features
-
-- **Request-Response**: Supports synchronous communication between agents.
-- **Publish-Subscribe**: Allows agents to publish messages to topics and subscribe to receive messages from topics.
-- **Fire-and-Forget**: Enables agents to send messages without waiting for a response.
-- **Streaming**: Supports both unidirectional and bidirectional streaming.
-- **Security**: Employs authentication, authorization, and end-to-end encryption to protect data privacy and integrity.
+ **Security**: Employs authentication, authorization, and end-to-end encryption to protect data privacy and integrity.
 
 ## Source tree
 
