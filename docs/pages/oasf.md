@@ -20,7 +20,7 @@ The OASF defines a set of standards for AI agent content representation that aim
 
 A core component in OASF is to implement data types and core objects that define the skills of autonomous agents. This component helps in announcing and discovering agents with these skills across various data platforms.
 
-The current skill set taxonomy is described in [Taxonomy of AI Agent Skills](taxonomy.md).
+The current skill set taxonomy is described in [Taxonomy of AI Agent Skills](oasf-taxonomy.md).
 
 The guidelines to upgrade and maintain OASF are outlined in the [OASF Contribution Guide](oasf-workflow.md).
 

@@ -48,13 +48,14 @@ Internet of Agents Components
    :maxdepth: 1
 
    pages/oasf
-   pages/data-model
-   pages/taxonomy
+   pages/oasf-data-model
+   pages/oasf-taxonomy
    pages/oasf-workflow
 
 .. toctree::
    :caption: Agent Gateway Protocol
    :maxdepth: 1
 
-   pages/agp.md
-   pages/data-plane
+   pages/agp
+   pages/agp-data-plane
+   pages/agp-howto
