@@ -40,7 +40,7 @@ To get a local copy up and running follow these simple steps.
    git clone https://github.com/agntcy/iomapper-agnt.git
    ```
 
-# Usage
+## Usage
 
 There are several different ways to leverage the IO Mapper functions in Python. There
 is an [agentic interface](#use-agent-io-mapper) using models that can be invoked on
