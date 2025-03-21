@@ -15,7 +15,7 @@ You need to have installed the following software to run the Agent Workflow Serv
 
 ### Local development
 
-1. Clone Agent Workflow Server repository: ` git clone https://github.com/agntcy/workflow-srv.git`
+1. Clone Agent Workflow Server repository: `git clone https://github.com/agntcy/workflow-srv.git`
 
 1. Copy example env file and adapt if necessary: `cp .env.example .env`
 
@@ -53,8 +53,7 @@ Once the Agent Workflow Server is running, interactive API docs are available un
 
 ### ACP API Contribution
 
-Agent Workflow Server implements ACP specification to expose Agents functionalities. To contribute to the ACP API, check out [Agent Connect Protocol Specification
-](https://github.com/agntcy/acp-spec).
+Agent Workflow Server implements ACP specification to expose Agents functionalities. To contribute to the ACP API, check out [Agent Connect Protocol Specification](https://github.com/agntcy/acp-spec).
 
 ### Adapters SDK Contribution
 
@@ -96,6 +95,3 @@ class MyAdapter(BaseAdapter):
         #     return MyAgent(MyAgentTypeConv(agent))
 
 ```
-
-> For detailed contributing guidelines, please see
-> [CONTRIBUTING.md](docs/CONTRIBUTING.md)
