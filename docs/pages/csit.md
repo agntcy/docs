@@ -1,11 +1,10 @@
 # CSIT - Continuous System Integration Testing
 
-## Architecture
+The Agncty Continuous System Integration Testing (CSIT) system design needs to meet the continuously expanding requirements of Agntcy projects including Agent Gateway Protocol, Agent Directory, and others.
 
-Agncty CSIT system design needs to meet continuously expanding requirements of
-Agntcy projects including Agent Gateway Protocol, Agent Directory and many more.
+Tests can be run locally using taskfile or in GitHub Actions.
 
-The directory structure of the CSIT:
+The directory structure of the CSIT is the following:
 
 ```
 csit
@@ -14,12 +13,12 @@ csit
 |   ├── docs                            # Documentations
 |   ├── environment
 |   │   └── kind                        # kind related manifests
-|   ├── agntcy-dir                      # Agent directory related tests, components, etc...
-|   │   ├── components                  # the compontents charts
-|   │   ├── examples                    # the examples that can be used for testing
-|   │   ├── manifests                   # requred manifests for tests
-|   │   └── tests                       # tests
-|   └── agntcy-agp                      # Agent Gateway related tests, components, etc...
+|   ├── agntcy-dir                      # Agent directory related tests, components, and so on
+|   │   ├── components                  # The compontents charts
+|   │   ├── examples                    # The examples that can be used for testing
+|   │   ├── manifests                   # Requred manifests for the tests
+|   │   └── tests                       # Tests
+|   └── agntcy-agp                      # Agent Gateway related tests, components, and so on
 |       └── agentic-apps                # Agentic apps for gateway tests
 |           ├── autogen_agent
 |           └── langchain_agent
@@ -33,179 +32,154 @@ csit
     │   ├── build.config.yaml
 ```
 
+## Integration Tests
 
-# Integration tests
+The integration tests are testing interactions between integrated components.
 
-> Focuses on testing interactions between integrated components.
+### Directory structure
 
-## Directory structure
+The CSIT integrations directory contains the tasks that create the test environment, deploy the components to be tested, and run the tests.
 
-Inside csit integrations directory contains the tasks that creating the test
-environment, deploying the components that will be tested, and running the tests.
+### Running Tests Locally
 
-```
-integrations
-├── Taskfile.yaml                   # Task definitions
-├── docs                            # Documentations
-├── environment
-│   └── kind                        # kind related manifests
-├── agntcy-dir                      # Agent directory related tests, components, etc...
-│   ├── components                  # the compontents charts
-│   ├── examples                    # the examples that can be used for testing
-│   ├── manifests                   # requred manifests for tests
-│   └── tests                       # tests
-└── agntcy-agp                      # Agent Gateway related tests, components, etc...
-    └── agentic-apps                # Agentic apps for gateway tests
-        ├── autogen_agent
-        └── langchain_agent
-```
+Make sure that [Helm](https://helm.sh/docs/intro/install/) and [kind](https://kind.sigs.k8s.io/docs/user/quick-start/#installation) are installed.
 
-## Running tests
+For local testing, a test cluster and needs to be created then the test environment deployed on it.
 
-We can launch tests using taskfile locally or in GitHub actions.
-Running locally we need to create a test cluster and deploy the test env on
-it before running the tests. It requires Kind and Helm installed on local machine.
-Instructions for installing [helm](https://helm.sh/docs/intro/install/) and [kind](https://kind.sigs.k8s.io/docs/user/quick-start/#installation)
+To run tests locally:
 
-```bash
-cd integrations
-task kind:create
-task test:env:directory:deploy
-task test:directory
-```
+1. Create the cluster and deploy the environment:
 
-We can focus on specified tests:
-```bash
-task test:directory:compiler
-```
+    ```bash
+    cd integrations
+    task kind:create
+    task test:env:directory:deploy
+    task test:directory
+    ```
 
-After we finish the tests we can destroy the test cluster
-```bash
-task kind:destroy
-```
+1. Run the tests:
 
+    ```bash
+    task test:directory:compiler
+    ```
 
-## Running tests using GitHub actions
+1. When finished, the test cluster can be cleared:
 
-We can run integration test using Github actions using `gh` command line tool or using the GitHub web UI
+    ```bash
+    task kind:destroy
+    ```
+
+### Running Tests Using GitHub Actions
+
+Integration tests can be run using Github Actions using `gh` command line tool or using the GitHub web UI:
 
 ```bash
 gh workflow run test-integrations -f testenv=kind
 ```
 
-If we want to run the tests on a specified branch
+To run the tests on a specified branch:
 
 ```bash
 gh workflow run test-integrations --ref feat/integration/deploy-agent-directory -f testenv=kind
 ```
 
+### Contributing Tests
 
-## How to extend tests with your own test
+Contributing your own tests to the project is a great way to improve the robustness and coverage of the testing suite.
 
-Contributing your own tests to our project is a great way to improve the robustness and coverage of our testing suite. Follow these steps to add your tests.
+To add your tests:
 
 1. Fork and Clone the Repository
 
-Fork the repository to your GitHub account.
-Clone your fork to your local machine.
+    Fork the repository to your GitHub account. Clone your fork to your local machine.
+    
+    ```bash
+    git clone https://github.com/your-username/repository.git
+    cd repository
+    ```
 
-```bash
-git clone https://github.com/your-username/repository.git
-cd repository
-```
+1. Create a new branch
 
-2. Create a New Branch
+    Create a new branch for your additions to keep your changes organized and separate from the main codebase.
 
-Create a new branch for your test additions to keep your changes organized and separate from the main codebase.
+    ```bash
+    git checkout -b add-new-test
+    ```
 
+1. Navigate to the Integrations directory
 
-```bash
-git checkout -b add-new-test
-```
+    Locate the integrations directory where the test components are organized.
 
-3. Navigate to the Integrations Directory
+    ```bash
+    cd integrations
+    ```
 
-Locate the integrations directory where the test components are organized.
+1. Add your test
 
-```bash
-cd integrations
-```
+    Following the existing structure, create a new sub-directory for your test if necessary. For example, `integrations/new-component`.
+    Add all necessary test files, such as scripts, manifests, and configuration files.
 
-4. Add Your Test
+1. Update Taskfile
 
-Create a new sub-directory for your test if necessary, following the existing structure. For example, integrations/new-component.
-Add all necessary test files, such as scripts, manifests, and configuration files.
+    Modify the Taskfile.yaml to include tasks for deploying and running your new test.
 
-5. Update Taskfile
+    ```yaml
+    tasks:
+      test:env:new-component:deploy:
+        desc: Desription of deployig new component elements
+        cmds:
+          - # Command for deploying your components if needed
 
-Modify the Taskfile.yaml to include tasks for deploying and running your new test.
+      test:env:new-component:cleanup:
+        desc: Desription of cleaning up component elements
+        cmds:
+          - # Command for cleaning up your components if needed
 
-```yaml
-tasks:
-  test:env:new-component:deploy:
-    desc: Desription of deployig new component elements
-    cmds:
-      - # Command for deploying your components if needed
+      test:new-component:
+        desc: Desription of the test
+        cmds:
+          - # Commands to set up and run your test
+    ```
 
-  test:env:new-component:cleanup:
-    desc: Desription of cleaning up component elements
-    cmds:
-      - # Command for cleaning up your components if needed
+1. Test locally
 
-  test:new-component:
-    desc: Desription of the test
-    cmds:
-      - # Commands to set up and run your test
-```
+    Before pushing your changes, test them locally to ensure everything works as expected.
 
-6. Test Locally
+    ```bash
+    task kind:create
+    task test:env:new-componet:deploy
+    task test:new-component
+    task test:env:new-componet:cleanup
+    task kind:destroy
+    ```
 
-Before pushing your changes, test them locally to ensure everything works as expected.
+1. Document your test
 
-```bash
-task kind:create
-task test:env:new-componet:deploy
-task test:new-component
-task test:env:new-componet:cleanup
-task kind:destroy
-```
+    Update the documentation in the docs folder to include details on the new test. Explain the purpose of the test, any special setup instructions, and how it fits into the overall testing strategy.
 
-7. Document Your Test
+1. Commit and push your changes
 
-Update the documentation in the docs folder to include details about your new test. Explain the purpose of the test, any special setup instructions, and how it fits into the overall testing strategy.
+    Commit your changes with a descriptive message and push them to your fork.
 
-8. Commit and Push Your Changes
+    ```bash
+    git add .
+    git commit -m "feat: add new test for component X"
+    git push origin add-new-test
+    ```
 
-Commit your changes with a descriptive message and push them to your fork.
+1. Submit a pull request
 
-```bash
-git add .
-git commit -m "feat: add new test for component X"
-git push origin add-new-test
-```
+    Go to the original repository on GitHub and submit a pull request from your branch.
+    Provide a detailed description of what your test covers and any additional context needed for reviewers.
 
-9. Submit a Pull Request
+## Samples
 
-Go to the original repository on GitHub and submit a pull request from your branch.
-Provide a detailed description of what your test covers and any additional context needed for reviewers.
+The samples directory in the CSIT repository serves two primary purposes related to the testing of agentic applications.
 
-# Samples
+### Compilation and Execution Verification
 
-The directory sturcture of the samples applications:
+The agentic applications stored within the `samples` directory are subjected to sample tests. These tests are designed to run whenever changes are made to the agentic apps to ensure they compile correctly and are able to execute as expected.
 
-```
-samples
-├── app1                            # Agentic application example
-│   ├── model.json                  # Required model file
-│   ├── build.config.yaml           # Required build configuration file
-├── app2                            # Another agentic application example
-│   ├── model.json
-│   ├── build.config.yaml
-```
+### Base for Agent Directory Integration Test
 
-The samples directory in the CSIT repository serves two primary purposes related to the testing of agentic applications:
-
-
-1. Compilation and Execution Verification: The agentic applications stored within the samples directory are subjected to sample tests. These tests are designed to run whenever changes are made to the agentic apps to ensure they compile correctly and are able to execute as expected.
-2. Base for Agent Directory Integration Test:
-The agentic applications in the samples directory also serve as the foundation for the agent model build and push test. This specific test checks for the presence of two required files: model.json and build.config.yaml. If these files are present within an agentic application, the integration agent model build and push testa are triggered. This test is crucial for validating the construction and verification of the agent model, ensuring that all necessary components are correctly configured and operational.
+The agentic applications in the `samples` directory also serve as the foundation for the agent model build and push test. This specific test checks for the presence of two required files: `model.json` and `build.config.yaml`. If these files are present within an agentic application, the integration agent model build and push tests are triggered. This test is crucial for validating the construction and verification of the agent model, ensuring that all necessary components are correctly configured and operational.
