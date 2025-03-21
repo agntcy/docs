@@ -160,7 +160,7 @@ TypeAdapter(GraphState).json_schema()
 mapping_agent = IOMappingAgent(metadata=metadata, llm=llm)
 ```
 
-Bellow in the there are explanation for the interface of IOMappingAgent model
+Below are explanations for the interface of the IOMappingAgent model.
 
 <table>
     <tr>
