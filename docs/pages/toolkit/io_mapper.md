@@ -56,11 +56,13 @@ object provides a specification for the system and default user prompts:
 
 This project supports specifying model interactions using [LangGraph](https://langchain-ai.github.io/langgraph/).
 
-## How to use the Agent IO mapping
+This project supports specifying model interations using [LangGraph](https://langchain-ai.github.io/langgraph/).
 
+## How to use the Agent IO mapping
+ :warning:<b> For each example, the detailed process of creating agents and configuring the respective multi-agent software is omitted. Instead, only the essential steps for configuring and integrating the IO mapper agent are presented.</b>
 ### LangGraph Example 1
 
-### To use this agent in a LangGraph multi agent software:
+This example involves a multi-agent software system designed to process a create engagement campaign and share within an organization. It interacts with an agent specialized in creating campaigns, another agent specialized in identifying suitable users. The information is then relayed to an IO mapper, which converts the list of users and the campaign details to present statistics about the campaign.
 
 #### Define an agent io mapper metadata
 
@@ -74,7 +76,7 @@ metadata = IOMappingAgentMetadata(
 
 The above instruction directs the IO mapper agent to utilize the `selected_users` and `name` from the `campaign_details` field and map them to the `stats.status`. No further information is needed since the type information can be derived from the input data which is a pydantic model.
 
-:information_source: Both input_fields and output_fields can also be sourced with a list composed of str and/or instances of FieldMetadata as the bellow example shows:
+:information_source: <i>Both input_fields and output_fields can also be sourced with a list composed of str and/or instances of FieldMetadata as the bellow example shows</i>:
 
 ```python
 metadata = IOMappingAgentMetadata(
@@ -94,6 +96,7 @@ metadata = IOMappingAgentMetadata(
 
 <details>
 <summary><h4>Expand to better understand the IOMappingAgentMetadata Interface</h4></summary>
+   
 ## IOMappingAgentMetadata model Interface
 <table>
     <tr>
@@ -167,6 +170,7 @@ mapping_agent = IOMappingAgent(metadata=metadata, llm=llm)
 <details>
 <summary>Expand for explanation of interface for IOMappingAgent model</summary>
 
+## IOMappingAgent model
 <table>
     <tr>
         <th>Field</th>
@@ -234,7 +238,7 @@ workflow.add_edge("create_communication", "io_mapping")
 workflow.add_edge("io_mapping", "send_communication")
 ```
 
-Here is a flow chart of io mapper in a langgraph graph of the discussed application
+Here is a flow chart of io mapper in a LangGraph graph of the discussed multi agent software discussed above
 
 ```mermaid
 flowchart TD
@@ -288,64 +292,17 @@ graph.add_edge("recipe_expert", "recipe_io_mapper")
 
 #### LlamaIndex
 
-This project supports specifying model interations using [LangGraph](https://langchain-ai.github.io/langgraph/).
+### LlamaIndex AgentWorkflow [WIP]
 
-### LlamaIndex AgentWorkflow
-
-## Use Imperative / Deterministic IO Mapper
-
-The code snippet below illustrates a fully functional deterministic mapping that
-transforms the output of one agent into input for a second agent. The code for the
-agents is omitted.
-
-```python
- # define schema for the origin agent
- input_schema = {"question": {"type": "string"}}
-
- # define schema to witch the input should be converted to
- output_schema = {
-     "quiz": {
-         "type": "object",
-         "properties": {
-             "prof_question": {"type": "string"},
-             "due_date": {"type": "string"},
-         },
-     }
- }
-
- # the mapping object using jsonpath, note: the value of the mapping
- # can be either a jsonpath or a function
- mapping_object = {
-     "prof_question": "$.question",
-     "due_date": lambda _: datetime.now().strftime("%x"),
- }
-
- input = IOMapperInput(
-     input=ArgumentsDescription(
-         json_schema=Schema.model_validate(input_schema)
-     ),
-     output=ArgumentsDescription(
-         json_schema=Schema.model_validate(output_schema)
-     ),
-     data={"question": output_prof},
- )
- # instantiate the mapper
- imperative_mapp = ImperativeIOMapper(
-     field_mapping=mapping_object,
- )
- # get the mapping result and send to the other agent
- mapping_result = imperative_mapp.invoke(input=input)
-```
+<b>WIP</b>
 
 ### Use Examples
 
-1. To run the examples we strongly recommend that a
-   [virtual environment is created](https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/)
-2. Install the requirements file
-3. From within examples folder run:
+1. Install [cmake](https://cmake.org/)
+2. From within examples folder run the desired make command, for example:
 
 ```shell
-make run_imperative_example
+make make run_lg_eg_py
 ```
 
 ## Contributing
