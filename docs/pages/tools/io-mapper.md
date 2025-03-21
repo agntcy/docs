@@ -72,8 +72,9 @@ metadata = IOMappingAgentMetadata(
 
 The above instruction directs the IO mapper agent to utilize the `selected_users` and `name` from the `campaign_details` field and map them to the `stats.status`. Here is an example to illustrate this further. No further information is needed since the type information can be derived from the input data which is a pydantic model.
 
-Bellow is a table that explain each fields of the IOMappingAgentMetadata class and how to use each
-
+<details>
+<summary><h4>IOMappingAgentMetadata Interface</h4></summary>
+## IOMappingAgentMetadata model Interface
 <table>
     <tr>
         <th>Field</th>
@@ -210,6 +211,7 @@ IOMappingAgentMetadata(
 </td>
 </tr>
 </table>
+</details>
 
 ### Add the node to the LangGraph graph
 
