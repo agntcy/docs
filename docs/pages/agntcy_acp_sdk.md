@@ -25,13 +25,15 @@ pip install agntcy-acp
 
 ```python
 from agntcy_acp import AsyncACPClient
+from agntcy_acp.models import RunCreate
 
 client = AsyncACPClient.fromConfiguration(
     host="localhost://", 
     api_key="", 
     retries=3
 )
-
+response = client.create_run(RunCreate(agent_id="my-agent-id"))
+print(f"Run {response.run_id} is currently {response.status}")
 ```
 
 ## Building the package
