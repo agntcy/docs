@@ -54,13 +54,15 @@ first agent) to match the desired output (typically the input of a second agent)
 it additionally supports specifying the model prompts for the translation. The configuration
 object provides a specification for the system and default user prompts:
 
-## Example Agent IO mapping
+This project supports specifying model interactions using [LangGraph](https://langchain-ai.github.io/langgraph/).
 
-#### LangGraph Example 1
+## How to use the Agent IO mapping
 
-This project supports specifying model interations using [LangGraph](https://langchain-ai.github.io/langgraph/).
+### LangGraph Example 1
 
-### Define an agent io mapper metadata
+### To use this agent in a LangGraph multi agent software:
+
+#### Define an agent io mapper metadata
 
 ```python
 metadata = IOMappingAgentMetadata(
@@ -70,10 +72,28 @@ metadata = IOMappingAgentMetadata(
 
 ```
 
-The above instruction directs the IO mapper agent to utilize the `selected_users` and `name` from the `campaign_details` field and map them to the `stats.status`. Here is an example to illustrate this further. No further information is needed since the type information can be derived from the input data which is a pydantic model.
+The above instruction directs the IO mapper agent to utilize the `selected_users` and `name` from the `campaign_details` field and map them to the `stats.status`. No further information is needed since the type information can be derived from the input data which is a pydantic model.
+
+:information_source: Both input_fields and output_fields can also be sourced with a list composed of str and/or instances of FieldMetadata as the bellow example shows:
+
+```python
+metadata = IOMappingAgentMetadata(
+    input_fields=[
+        FieldMetadata(
+            json_path="selected_users", description="A list of users to be targeted"
+        ),
+        FieldMetadata(
+            json_path="campaign_details.name",
+            description="The name that can be used by the campaign",
+            examples=["Campaign A"]
+        ),
+    ],
+    output_fields=["stats"],
+)
+```
 
 <details>
-<summary><h4>IOMappingAgentMetadata Interface</h4></summary>
+<summary><h4>Expand to better understand the IOMappingAgentMetadata Interface</h4></summary>
 ## IOMappingAgentMetadata model Interface
 <table>
     <tr>
@@ -135,24 +155,8 @@ TypeAdapter(GraphState).json_schema()
         <td>:heavy_minus_sign:</td>
         <td>same as input_schema</td>
     </tr>
-    <tr>
-        <td>output_description_prompt</td>
-        <td>A prompt structured using a Jinja template that can be used by the llm in the mapping definition</td>
-        <td>:heavy_minus_sign:</td>
-        <td>
-    
-```python
-"""Output as JSON with this structure:
-{{
-"name": "Campaign Name",
-"content": "Campaign Content",
-"is_urgent": "yes/no"
-}}
-"""
-```
-</td>
-</tr>
 </table>
+</details>
 
 ### Define an Instance of the Agent
 
@@ -160,7 +164,8 @@ TypeAdapter(GraphState).json_schema()
 mapping_agent = IOMappingAgent(metadata=metadata, llm=llm)
 ```
 
-Below are explanations for the interface of the IOMappingAgent model.
+<details>
+<summary>Expand for explanation of interface for IOMappingAgent model</summary>
 
 <table>
     <tr>
@@ -171,7 +176,7 @@ Below are explanations for the interface of the IOMappingAgent model.
     </tr>
     <tr>
         <td>metadata</td>
-        <td></td>
+        <td>Instance of IOMappingAgentMetadata</td>
         <td>:white_check_mark:</td>
 <td>
             
