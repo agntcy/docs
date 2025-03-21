@@ -1,18 +1,38 @@
-# Agntcy ACP SDK
+# Agntcy ACP client SDK
 
 ## Introduction
 
 The "Agent Connect Protocol SDK" is an open-source library designed to
 facilitate the adoption of the Agent Connect Protocol. It offers tools
-for both client and server implementations, enabling seamless integration
-and communication between multi-agent systems.
+for client implementations, enabling seamless integration and communication
+between multi-agent systems.
 
 The SDK is current available in:
-  * [python](https://pypi.org/project/agntcy-acp/)
+  * [python](https://pypi.org/project/agntcy-acp/) [![PyPI version](https://img.shields.io/pypi/v/agntcy-acp.svg)](https://pypi.org/project/agntcy-acp/)
 
-## Getting Started
+## Getting Started with the client
 
+To use the package 
 
+### Installation
+
+Install the latest version from PyPi:
+```shell
+pip install agntcy-acp
+```
+
+### Usage
+
+```python
+from agntcy_acp import AsyncACPClient
+
+client = AsyncACPClient.fromConfiguration(
+    host="localhost://", 
+    api_key="", 
+    retries=3
+)
+
+```
 
 ## Building the package
 
