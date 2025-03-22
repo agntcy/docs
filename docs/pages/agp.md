@@ -25,7 +25,7 @@ workflows while ensuring:
 - Large-scale data processing
 - Seamless ML model integration
 
-## Communications
+## Main Components
 
 Interconnecting these systems at scale requires meeting strict latency and
 response time requirements. AGP aims to provide a secure, scalable, and
@@ -37,5 +37,5 @@ The main components of AGP are:
 - Data plane
 - Session layer
 - Control plane
-- Securyt layer.
+- Security layer.
 
