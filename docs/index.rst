@@ -48,7 +48,7 @@ Internet of Agents Components
    :maxdepth: 1
 
    pages/oasf
-   pages/oasf-data-model
+   pages/oasf-data-model.proto
    pages/oasf-taxonomy
    pages/oasf-workflow
 
