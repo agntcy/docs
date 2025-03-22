@@ -8,4 +8,3 @@ identifier relative to the channel id.
 ## Connection tables
 
 ##
-asfdasd
