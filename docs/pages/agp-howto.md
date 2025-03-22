@@ -1,13 +1,5 @@
 # Getting Started
 
-## Source tree
-
-Main software components:
-
-- [data-plane](./data-plane): client and cloud components for efficient message
-  forwarding among agents
-- [control-plane](./control-plane): cloud services to manage control-plane ops
-  carried out by agents
 
 ## Prerequisites
 
