@@ -20,7 +20,7 @@ import os
 # -- Project information -----------------------------------------------------
 
 project = "Internet of Agents"
-copyright = "2025 AGNTCY Collective"
+copyright = "AGNTCY Collective"
 author = "AGNTCY Collective"
 
 # The short X.Y version
