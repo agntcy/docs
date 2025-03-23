@@ -61,4 +61,4 @@ changes. Submit a pull request.
 
 [Copyright Notice and License](./LICENSE.md)
 
-Copyright AGNTCY (https://github.com/agentcy)
+Copyright AGNTCY Contributors (https://github.com/agentcy)
