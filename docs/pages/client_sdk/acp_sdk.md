@@ -14,6 +14,10 @@ The SDK is current available in:
 
 To use the package 
 
+### Requirements.
+
+Python 3.9+
+
 ### Installation
 
 Install the latest version from PyPi:
@@ -24,19 +28,34 @@ pip install agntcy-acp
 ### Usage
 
 ```python
-from agntcy_acp import AsyncACPClient
+from agntcy_acp import AsyncACPClient, ApiException
 from agntcy_acp.models import RunCreate
 
+# Defining the host is optional and defaults to http://localhost
 client = AsyncACPClient.fromConfiguration(
-    host="localhost://", 
-    api_key="", 
+    host="https://localhost:8081/", 
+    api_key="super-secure-api-key-hash", 
     retries=3
 )
-response = client.create_run(RunCreate(agent_id="my-agent-id"))
-print(f"Run {response.run_id} is currently {response.status}")
+# Enter a context with an instance of the API client
+async with client:
+    agent_id = 'agent_id_example' # str | The ID of the agent.
+
+    try:
+      api_response = client.create_run(RunCreate(agent_id="my-agent-id"))
+      print(f"Run {api_response.run_id} is currently {api_response.status}")
+    except ApiException as e:
+        print("Exception when calling create_run: %s\n" % e)
 ```
 
+### Documentation for API Endpoints
+
+All URIs are relative to *http://localhost*
+
+
 ## Building the package
+
+⚠️ Note: this step is only necessary for maintainers of the project. ⚠️
 
 The [agntcy-acp Python package](https://pypi.org/project/agntcy-acp/) is
 built on GitHub and published using GitHub actions. The action can be found
