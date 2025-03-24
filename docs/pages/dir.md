@@ -77,3 +77,30 @@ ADS leverages the OCI distribution specification for content storage and retriev
 While ADS uses zot as its reference OCI server implementation, the system works
 with any server that implements the OCI distribution specification.
 
+```mermaid
+sequenceDiagram
+    participant User
+    participant DHT
+    participant ServerA
+    participant ServerB
+    participant ServerC
+
+    Note over ServerA,ServerC: Publication Phase
+    ServerA->>ServerA: Generate record digest
+    ServerA->>ServerA: Extract skills from record
+    ServerA->>ServerA: Store record locally
+    ServerA->>DHT: Announce digest + skills
+    ServerB->>ServerB: Generate record digest
+    ServerB->>ServerB: Extract skills from record
+    ServerB->>ServerB: Store record locally
+    ServerB->>DHT: Announce digest + skills
+    DHT->>DHT: Update routing tables<br/>(skills→digests→servers)
+
+    Note over User,ServerC: Discovery Phase
+    User->>DHT: Query by skills
+    DHT->>DHT: Search routing tables
+    DHT->>User: Return matching digests<br/>+ server addresses
+    User->>User: Select records
+    User->>ServerA: Download record 1
+    User->>ServerB: Download record 2
+```
