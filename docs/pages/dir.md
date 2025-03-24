@@ -108,9 +108,9 @@ sequenceDiagram
 ```
 
 
-## Agent Directory Records Example
+# Agent Directory Records Example
 
-### Skill Tags (Taxonomy)
+## Skill Tags (Taxonomy)
 ```yaml
 skills:
   language:
@@ -143,7 +143,11 @@ skills:
   ],
   "metadata": {
     "name": "gpt4-agent",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "locator": {
+      "type": "github",
+      "url": "github.com/agntcy/agents/gpt4-agent"
+    }
   }
 }
 ```
@@ -158,7 +162,11 @@ skills:
   ],
   "metadata": {
     "name": "dall-e-agent",
-    "version": "2.0.0"
+    "version": "2.0.0",
+    "locator": {
+      "type": "github",
+      "url": "github.com/agntcy/agents/dalle-agent"
+    }
   }
 }
 ```
@@ -174,7 +182,11 @@ skills:
   ],
   "metadata": {
     "name": "multi-modal-agent",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "locator": {
+      "type": "github",
+      "url": "github.com/agntcy/agents/multimodal-agent"
+    }
   }
 }
 ```
