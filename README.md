@@ -1,7 +1,8 @@
 # Documentation Repository Internet of Agent
 
 This repository contains the documentation for the project, built using Sphinx
-with the Read the Docs template. The documentation sources are written in Markdown.
+with the Read the Docs template. The documentation sources are written in
+Markdown.
 
 ## Table of Contents
 
@@ -50,15 +51,14 @@ To build the documentation locally, you need to install Taskfile.
 - This will generate the HTML documentation in the .build/docs/html directory.
 
 ## Contributing
+
 Contributions are welcome! Please follow these steps to contribute:
 
-Fork the repository.
-Create a new branch for your feature or bugfix.
-Make your changes.
-Submit a pull request.
+Fork the repository. Create a new branch for your feature or bugfix. Make your
+changes. Submit a pull request.
 
 # Copyright Notice
 
 [Copyright Notice and License](./LICENSE.md)
 
-Copyright (c) 2025 Cisco and/or its affiliates.
+Copyright AGNTCY (https://github.com/agentcy)

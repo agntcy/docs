@@ -14,7 +14,7 @@ Similarly, the skill taxonomy is routable in the DHT to map skillsets to records
 that announce those skills.
 
 Each directory record must include skills from a defined taxonomy, as specified
-in the [Taxonomy of AI Agent Skills](taxonomy.md) from [OASF](oasf.md).
+in the [Taxonomy of AI Agent Skills](oasf-taxonomy.md) from [OASF](oasf.md).
 While all record data is modeled using [OASF](oasf.md), only skills are
 leveraged for content routing in the distributed network of directory servers.
 The ADS specification is under active development and is published as an

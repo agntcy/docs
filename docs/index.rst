@@ -19,13 +19,21 @@ Internet of Agents Components
 
 .. toctree::
    :caption: Agent Directory Service
+   :maxdepth: 1
 
    pages/dir
-   pages/dir_howto
+   pages/dir-howto
+
+.. toctree::
+   :caption: Application Toolkit
+   :maxdepth: 1
+
+   pages/maa-toolkit
+   pages/composer
 
 .. toctree::
    :caption: Agent Connect Protocol
-   :maxdepth: 2
+   :maxdepth: 1
 
    pages/connect
    pages/agntcy_acp_sdk
@@ -38,12 +46,26 @@ Internet of Agents Components
 
 .. toctree::
    :caption: OASF
-   :maxdepth: 2
+   :maxdepth: 1
 
    pages/oasf
-   pages/data_model
-   pages/taxonomy
-   pages/oasf_workflow
+   pages/oasf-data-model.proto
+   pages/oasf-taxonomy
+   pages/oasf-workflow
+
+.. toctree::
+   :caption: Agent Gateway Protocol
+   :maxdepth: 1
+
+   pages/agp
+   pages/agp-data-plane
+   pages/agp-howto
+
+.. toctree::
+   :caption: CSIT
+   :maxdepth: 2
+
+   pages/csit
 
 .. toctree::
    :caption: Multi-Agent Software Toolkit

@@ -1,6 +1,6 @@
 # Package: schema.model
 
-<div class="comment"><span>SPDX-FileCopyrightText: Copyright (c) 2025 Cisco and/or its affiliates. SPDX-License-Identifier: Apache-2.0</span><br/></div>
+<div class="comment"><span></span><br/></div>
 
 ## Imports
 

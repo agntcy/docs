@@ -1,5 +1,5 @@
 
-# Reference Implementation
+# Getting Started
 
 ## Features
 
@@ -10,19 +10,6 @@
 - _Discover_ - Listen and retreive records published on the network.
 - _Search_ - Supports searching of records across the network that satisfy given attributes and constraints.
 - _Security_ - Relies on well-known security principles to provide data provenance, integrity and ownership.
-
-**NOTE**: This is an alpha version, some features may be missing and breaking changes are expected.
-
-## Source tree
-
-Main software components:
-
-- [api](./api) - gRPC specification for models and services
-- [cli](./cli) - command line tooling for interacting with services
-- [cli/builder/plugins](./cli/builder/plugins) - schema specification and tooling for model plugins
-- [client](./client) - client SDK tooling for interacting with services
-- [e2e](./e2e) - end-to-end testing framework
-- [server](./server) - node implementation for distributed services that provide storage and networking capabilities
 
 ## Prerequisites
 

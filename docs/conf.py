@@ -20,14 +20,14 @@ import os
 # -- Project information -----------------------------------------------------
 
 project = "Internet of Agents"
-copyright = "2025, Internet of Agents Collective"
-author = "IoA Collective"
+copyright = "AGNTCY Collective"
+author = "AGNTCY Collective"
 
 # The short X.Y version
-version = "Version: " + os.environ.get("VERSION", "v0.0.1")
+version = "Version: " + os.environ.get("VERSION", "v0.1.0")
 
 # The full version, including alpha/beta/rc tags
-release = os.environ.get("VERSION", "v0.0.1")
+release = os.environ.get("VERSION", "v0.1.0")
 
 
 # -- General configuration ---------------------------------------------------
@@ -41,7 +41,6 @@ release = os.environ.get("VERSION", "v0.0.1")
 # ones.
 extensions = [
     "sphinx_markdown_tables",
-    "sphinxcontrib.confluencebuilder",
     "myst_parser",
     "sphinxcontrib.mermaid",
     "sphinx_inline_tabs",
@@ -89,7 +88,6 @@ html_theme = "sphinx_rtd_theme"
 html_theme_options = {
     'logo_only': True,
     'style_external_links': True,
-    'github_url': 'https://github.com/agntcy/docs',
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
@@ -111,7 +109,7 @@ html_static_path = ["_static"]
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "ioac-doc"
+htmlhelp_basename = "agntcy-doc"
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -137,9 +135,9 @@ latex_elements = {
 latex_documents = [
     (
         master_doc,
-        "ioa-doc.tex",
+        "agntcy-doc.tex",
         "Documentation",
-        "Internet of Agents Collective",
+        "AGNTCY Collective",
         "manual",
     ),
 ]
@@ -149,7 +147,7 @@ latex_documents = [
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [(master_doc, "ioa-doc", "IOA Documentation", [author], 1)]
+man_pages = [(master_doc, "agntcy-doc", "Documentation", [author], 1)]
 
 
 # -- Options for Texinfo output ----------------------------------------------
@@ -160,10 +158,10 @@ man_pages = [(master_doc, "ioa-doc", "IOA Documentation", [author], 1)]
 texinfo_documents = [
     (
         master_doc,
-        "ioa-doc",
-        "IOA Documentation",
+        "agntcy-doc",
+        "Documentation",
         author,
-        "ioa-doc",
+        "agncty-doc",
         "One line description of project.",
         "Miscellaneous",
     ),
