@@ -8,3 +8,4 @@ myst-parser==4.0.1                      # MIT
 sphinx-inline-tabs==2023.4.21           # MIT
 sphinxemoji==0.2.0                      # BSD-3-Clause
 agntcy-acp==0.1.0a2                     # Apache 2.0
+autodoc_pydantic==2.2.0                 # MIT
