@@ -5,6 +5,7 @@ The Security Layer implements secure group communications using the Message Laye
 ## Overview
 
 The security layer leverages MLS to provide:
+
 - Quantum-safe end-to-end encryption (QSE2EE) for group communications
 - Dynamic group membership management
 - Forward secrecy and post-compromise security
@@ -13,24 +14,28 @@ The security layer leverages MLS to provide:
 ## Key Components
 
 ### 1. Group State Management
+
 - Maintains cryptographic group state
 - Handles member additions and removals
 - Manages group epoch changes
 - Processes key updates
 
 ### 2. Key Schedule
+
 - Derives encryption keys from group secrets
 - Implements MLS key schedule
 - Manages key rotations
 - Ensures forward secrecy
 
 ### 3. Message Protection
+
 - Encrypts group messages
 - Provides integrity protection
 - Implements sender authentication
 - Handles message sequencing
 
 ### 4. Authentication
+
 - Validates group members
 - Verifies message signatures
 - Manages identity credentials
@@ -46,10 +51,10 @@ The security layer leverages MLS to provide:
 ## Integration
 
 The security layer integrates with:
+
 - Transport layer for secure message delivery
 - Session layer for maintaining secure contexts
 - Identity services for credential management
-
 
 ```mermaid
 graph TB

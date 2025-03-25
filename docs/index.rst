@@ -59,6 +59,7 @@ Internet of Agents Components
    pages/agp
    pages/agp-security-layer
    pages/agp-data-plane
+   pages/agp-control-plane
    pages/agp-session-layer
    pages/agp-howto
 

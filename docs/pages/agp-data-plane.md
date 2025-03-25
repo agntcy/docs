@@ -18,12 +18,14 @@ message AgpMessage {
 ## Connection Table
 
 The connection table maintains agent connectivity information:
+
 - Maps channel IDs to connected agents
 - Tracks connection state and capabilities
 
 ## Forwarding Table
 
 The forwarding table implements intelligent message routing:
+
 - Maps message patterns to delivery strategies
 - Supports content-based routing
 - Maintains routing metrics and preferences
@@ -32,10 +34,12 @@ The forwarding table implements intelligent message routing:
 ## Message Buffer
 
 The message buffer provides temporary storage:
+
 - Caches messages for reliable delivery
 - Implements store-and-forward when needed
 - Supports message deduplication
 - Handles out-of-order delivery
+
 ## Data Plane Flow
 
 ```mermaid
@@ -53,9 +57,9 @@ graph LR
 ```
 
 The diagram shows the message flow through the AGP data plane components:
+
 1. Messages enter the system and are processed by the Message Buffer
 2. The Message Buffer handles deduplication and store-and-forward
 3. The Forwarding Table determines routing strategy
 4. The Connection Table manages delivery to connected agents
 5. Messages are delivered via direct, multicast, or anycast methods.
-

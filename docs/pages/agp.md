@@ -34,7 +34,7 @@ from all mentioned frameworks into a single implementation.
 
 The main components of AGP are:
 
-- [Data plane](./agp-data-plane.md)
-- [Session layer](./agp-session-layer.md)
-- Control plane
-- Security layer.
+- [Security layer](./agp-security-layer)
+- [Data plane](./agp-data-plane)
+- [Session layer](./agp-session-layer)
+- [Control plane](./agp-control-plane)
