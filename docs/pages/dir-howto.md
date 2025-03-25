@@ -3,13 +3,13 @@
 
 ## Features
 
-- _Standards_ - Defines standard schema for data representation and exchange.
-- _Dev Kit_ - Tooling to facilitate API interaction and generation of agent data models from different sources.
-- _Plugins_ - Supports model schema and build plugins to enrich agent data models for custom use-cases.
-- _Announce_ - Enables publication of records to the network.
-- _Discover_ - Listen and retreive records published on the network.
-- _Search_ - Supports searching of records across the network that satisfy given attributes and constraints.
-- _Security_ - Relies on well-known security principles to provide data provenance, integrity and ownership.
+- _Standards_: Defines standard schema for data representation and exchange.
+- _Dev Kit_: Tooling to facilitate API interaction and generation of agent data models from different sources.
+- _Plugins_: Supports model schema and build plugins to enrich agent data models for custom use-cases.
+- _Announce_: Enables publication of records to the network.
+- _Discover_: Listen and retreive records published on the network.
+- _Search_: Supports searching of records across the network that satisfy given attributes and constraints.
+- _Security_: Relies on well-known security principles to provide data provenance, integrity and ownership.
 
 ## Prerequisites
 
@@ -21,11 +21,11 @@
 
 ### Golang Packages
 
-See [API package](https://pkg.go.dev/github.com/agntcy/dir/api), [Server package](https://pkg.go.dev/github.com/agntcy/dir/server) and [CLI package](https://pkg.go.dev/github.com/agntcy/dir/cli).
+For the necessary Golanf packages, see [API package](https://pkg.go.dev/github.com/agntcy/dir/api), [Server package](https://pkg.go.dev/github.com/agntcy/dir/server), and [CLI package](https://pkg.go.dev/github.com/agntcy/dir/cli).
 
 ### Binaries
 
-See https://github.com/agntcy/dir/releases
+For the binaries, see the [Agntcy releases](https://github.com/agntcy/dir/releases) on GitHub.
 
 ### Container images
 
@@ -58,14 +58,14 @@ To deploy the Directory, you can use the provided `Taskfile` commands to start t
 
 ### Local Deployment
 
+You can set up a local environment for development and testing purposes.
+
 To start a local OCI registry server for storage and the Directory server, use the following commands:
 
 ```bash
 task server:store:start
 task server:start
 ```
-
-These commands will set up a local environment for development and testing purposes.
 
 ### Remote Deployment
 
@@ -76,55 +76,64 @@ helm pull oci://ghcr.io/agntcy/dir/helm-charts/dir --version v0.1.3
 helm upgrade --install dir oci://ghcr.io/agntcy/dir/helm-charts/dir --version v0.1.3
 ```
 
-These commands will pull the latest version of the Directory Helm chart from the GitHub Container Registry and install or upgrade the Directory in your Kubernetes cluster. Ensure that your Kubernetes cluster is properly configured and accessible before running these commands. The `helm upgrade --install` command will either upgrade an existing release or install a new release if it does not exist.
+These commands pull the latest version of the Directory Helm chart from the GitHub Container Registry and install or upgrade the Directory in your Kubernetes cluster. Ensure that your Kubernetes cluster is properly configured and accessible before running these commands. The `helm upgrade --install` command either upgrades an existing release or installs a new release if it does not exist.
 
 ## Usage
 
-The Directory CLI provides `build`, `push`, and `pull` commands to interact with the Directory server. Below are the details on how to run each command.
+The Directory CLI provides `build`, `push`, and `pull` commands to interact with the Directory server. See the details below on how to run each command.
 
 To run these commands, you can either:
-* Download a released CLI binary with `curl -L -o dirctl https://github.com/agntcy/dir/releases/download/<release tag>/dirctl-$(uname | tr '[:upper:]' '[:lower:]')-$(uname -m)`
-* Use a binary compiled from source with `task cli:compile`
-* Use CLI module from source by navigating to the `cli` directory and running `go run cli.go <command> <args>`
+
+* Download a released CLI binary with `curl -L -o dirctl https://github.com/agntcy/dir/releases/download/<release tag>/dirctl-$(uname | tr '[:upper:]' '[:lower:]')-$(uname -m)`.
+* Use a binary compiled from source with `task cli:compile`.
+* Use CLI module from source by navigating to the `cli` directory and running `go run cli.go <command> <args>`.
 
 ### Build Command
 
 The `build` command is used to compile and build the agent data model.
 
 Usage:
+
 ```bash
 dirctl build [options]
 ```
 
-Options:
-- `--config-file` : Path to the agent build configuration file. Please note that other flags will override the build configuration from the file. Supported formats: YAML. Example template: cli/build.config.yaml.
+The available options are the following:
+
+- `--config-file` : Path to the agent build configuration file.
+        Supported formats: YAML. Example template: `cli/build.config.yaml`.
+        Note that other flags will override the build configuration from the file.
 
 ### Push Command
 
 The `push` command is used to publish the built agent data model to the store. The input data model should be JSON formatted.
 
 Usage:
+
 ```bash
 dirctl push [options]
 ```
 
-Options:
+The available options are the following:
+
 - `--from-file` : Read compiled data from JSON file, reads from STDIN if empty.
-- `--server-addr`: Directory Server API address (default "0.0.0.0:8888")
+- `--server-addr`: Directory Server API address (default "0.0.0.0:8888").
 
 Example usage with read from STDIN: `dirctl build <args> | dirctl push`.
 
 ### Pull Command
 
-The `pull` command is used to retrieve agent data model from the store. The output data model will be JSON formatted.
+The `pull` command is used to retrieve agent data model from the store. The output data model is JSON formatted.
 
 Usage:
+
 ```bash
 dirctl pull [options]
 ```
 
-Options:
+The available options are the following:
+
 - `--digest` : Digest of the agent to pull.
-- `--server-addr`: Directory Server API address (default "0.0.0.0:8888")
+- `--server-addr`: Directory Server API address (default "0.0.0.0:8888").
 
 Example usage in combination with other commands: `dirctl pull --digest $(dirctl build | dirctl push)`.
