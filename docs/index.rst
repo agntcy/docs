@@ -57,7 +57,9 @@ Internet of Agents Components
    :maxdepth: 1
 
    pages/agp
+   pages/agp-security-layer
    pages/agp-data-plane
+   pages/agp-session-layer
    pages/agp-howto
 
 .. toctree::

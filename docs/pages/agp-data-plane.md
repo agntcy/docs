@@ -46,7 +46,7 @@ graph LR
     D -->|Direct| E([Output])
     D -->|Multicast| E
     D -->|Anycast| E
-   
+
     style B fill:#f9f
     style C fill:#bbf
     style D fill:#bfb
@@ -57,4 +57,5 @@ The diagram shows the message flow through the AGP data plane components:
 2. The Message Buffer handles deduplication and store-and-forward
 3. The Forwarding Table determines routing strategy
 4. The Connection Table manages delivery to connected agents
-5. Messages are delivered via direct, multicast, or anycast methods
+5. Messages are delivered via direct, multicast, or anycast methods.
+
