@@ -37,15 +37,24 @@ The initial set of IoA components and architecture is outlined below. As a very 
 :align: center
 ```
 
-1. **Open Agent Schema Framework (OASF)**: A framework that provides standardized data models and schemas for representing and validating data exchanged between agents. OASF ensures data integrity and consistency across the Internet of Agents ecosystem. Current OASF repo can be found [here](https://github.com/agntcy/oasf), OASF schema documentation can be found [here](https://schema.oasf.agntcy.org).
-1. **Agent Directory**: A centralized service that stores and manages OASF metadata about AI agents, including their capabilities, attributes, and constraints. This service enables agents to discover and connect with each other based on their advertised capabilities.
-1. **Decentralized Agent Identity**: A system that leverages decentralized technologies to manage and verify the identities of Agents issued by any organization, ensuring secure and trustworthy interactions.
-1. **Agent Connect Protocol (ACP)**: A protocol that defines a standard interface to invoke agents, configure them, provide input, and retrieve output. Current ACP spec can be found [here](https://spec.acp.agntcy.org/).
-1. **Multi-Agent Application Toolkit**: A set of agents and software libraries that support seamless creation of Multi-Agent workflows.
-1. **Agent Workflow Server**: A server that leverages ACP to manage and executes workflows involving multiple AI agents, ensuring coordinated and efficient task execution.
+1. **Agent Identity**: A system that leverages decentralized technologies to manage and verify the identities of Agents issued by any organization, ensuring secure and trustworthy interactions.
+1. **Open Agent Schema Framework (OASF)**: An OCI based extensible data model allowing to describe agents' attributes and ensuring unique identification of agents. Current OASF repo can be found [here](https://github.com/agntcy/oasf), OASF schema documentation can be found [here](https://schema.oasf.agntcy.org).
 1. **Agent Manifest**: A standard format to describes agents, their capabilities, their dependencies, and how to deploy or consume them. The manifest is designed to be used by ACP and the Workflow Server and stored in the Agent Directory with the corresponding OASF extensions.
-1. **Agent Gateway Protocol (AGP)**: A protocol that defines the standards and guidelines for secure and efficient network-level communication between AI agents. AGP ensures interoperability and seamless data exchange by specifying message formats, transport mechanisms, and interaction patterns.
-1. **Agent Observability**: Tools and techniques for monitoring and analyzing the behavior and performance of AI agents, providing insights into their operations and interactions.
+1. **Agent Directory**: Allows to announce and discover agents or multi-agent applications. Any organization can run its directory and keep it in sync with others, forming the Internet of Agents inventory.
+1. **Semantic SDK**: 
+    * **I/O Mapper Agent**: Handles semantic data adaptations between agents that need to communicate with each other.
+    * **Semantic Router**: Directs workflows via semantic matches.
+1. **Syntactic SDK**:
+    * **Agent Connect Protocol (ACP)**: A standard interface to invoke agents (or agentic applications), provide input, retrieve output, retrieve supported schemas, graph topology and other useful information. Current ACP spec can be found [here](https://spec.acp.agntcy.org/).
+    * **API-bridge Agent** to connect an Agent with any API end-point (tools or data sources)
+    * **Human in the Loop Agent** to interface with human input/output seamlessly.
+1. **Messaging SDK**:
+    * **Agent Gateway Protocol (AGP)**: A protocol that defines the standards and guidelines for secure and efficient network-level communication between AI agents. AGP ensures interoperability and seamless data exchange by specifying message formats, transport mechanisms, and interaction patterns.
+    * **Agent Gateway**: Offers handy secure (MLS and quantum safe) network-level communication services to a group of agents (typically those of a given multi-agent application) through SDK/Libraries. It extends gRPC to support  pub/sub interactions in addition to request/reply, streaming, fire & forget and more.
+1. **Agent Workflow Server**: Deploys and supervises agent workflows written in various frameworks and makes them available through the Agent Connect Protocol. Such workflows could be multi-agent applications including a mix of toolkit agents, local and remote agents. 
+1. **Agentic Ensemble Observability & Evaluation**: Telemetry collectors, tools and services to enable multi-agent application observability and evaluation
+1. **Agentic Ensemble Security**: Tools and services to trust and  protect multi-agent applications.
+
 
 The following diagram shows a simplified architecture of the core components described above.
 
