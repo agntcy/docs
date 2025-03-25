@@ -19,9 +19,9 @@ import os
 
 # -- Project information -----------------------------------------------------
 
-project = "Internet of Agents"
-copyright = "AGNTCY Collective"
-author = "AGNTCY Collective"
+project = "AGNTCY Collective"
+copyright = "AGNTCY Contributors"
+author = "AGNTCY Contributors"
 
 # The short X.Y version
 version = "Version: " + os.environ.get("VERSION", "v0.1.0")
@@ -137,7 +137,7 @@ latex_documents = [
         master_doc,
         "agntcy-doc.tex",
         "Documentation",
-        "AGNTCY Collective",
+        "AGNTCY Contributors",
         "manual",
     ),
 ]

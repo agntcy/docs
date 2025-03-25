@@ -1,10 +1,10 @@
 # Data Plane
 
-The AGP data plane uses concepts similar to Named Data Networking (NDN) for efficient message routing and delivery between agents.
+The AGP data plane implements an efficient message routing and delivery system between agents.
 
 ## Message Format
 
-Like NDN's Interest and Data packets, AGP messages are structured around named content:
+AGP messages use a channel-based addressing scheme for content routing:
 
 ```protobuf
 message AgpMessage {
@@ -18,12 +18,14 @@ message AgpMessage {
 ## Connection Table
 
 The connection table maintains agent connectivity information:
+
 - Maps channel IDs to connected agents
 - Tracks connection state and capabilities
 
 ## Forwarding Table
 
 The forwarding table implements intelligent message routing:
+
 - Maps message patterns to delivery strategies
 - Supports content-based routing
 - Maintains routing metrics and preferences
@@ -32,7 +34,32 @@ The forwarding table implements intelligent message routing:
 ## Message Buffer
 
 The message buffer provides temporary storage:
+
 - Caches messages for reliable delivery
 - Implements store-and-forward when needed
 - Supports message deduplication
 - Handles out-of-order delivery
+
+## Data Plane Flow
+
+```mermaid
+graph LR
+    A([Input]) --> B[Buffer]
+    B --> C{Forwarding}
+    C --> D[Connection]
+    D -->|Direct| E([Output])
+    D -->|Multicast| E
+    D -->|Anycast| E
+
+    style B fill:#ffffff,stroke:#000000,stroke-width:2px
+    style C fill:#f0f0f0,stroke:#000000,stroke-width:2px
+    style D fill:#e0e0e0,stroke:#000000,stroke-width:2px
+```
+
+The diagram shows the message flow through the AGP data plane components:
+
+1. Messages enter the system and are processed by the Message Buffer
+2. The Message Buffer handles deduplication and store-and-forward
+3. The Forwarding Table determines routing strategy
+4. The Connection Table manages delivery to connected agents
+5. Messages are delivered via direct, multicast, or anycast methods.
