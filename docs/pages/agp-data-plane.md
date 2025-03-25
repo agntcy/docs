@@ -1,10 +1,10 @@
 # Data Plane
 
-The AGP data plane uses concepts similar to Named Data Networking (NDN) for efficient message routing and delivery between agents.
+The AGP data plane implements an efficient message routing and delivery system between agents.
 
 ## Message Format
 
-Like NDN's Interest and Data packets, AGP messages are structured around named content:
+AGP messages use a channel-based addressing scheme for content routing:
 
 ```protobuf
 message AgpMessage {
