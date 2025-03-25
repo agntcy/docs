@@ -1,12 +1,12 @@
-# Multi-Agent Application Toolkit
+# Overview
 
-The **Multi-Agent Application Toolkit** is a comprehensive suite of agents designed to tackle the challenges of developing applications that require effective coordination among agents originating from diverse sources, APIs, and humans.
+The **Multi-Agent Software Toolkit** is a comprehensive suite of agents designed to tackle the challenges of developing applications that require effective coordination among agents originating from diverse sources, APIs, and humans.
 
 In the following we list and describes the agents that compose this toolkit.
 
-## I/O Mapper Agent
+## [I/O Mapper Agent](io_mapper)
 
-In multi-agent applications, ensuring seamless communication between two agents requires that the output of the first agent is compatible with the input of the second agent. This compatibility must be achieved across three distinct levels:
+In a multi-agent software, ensuring seamless communication between two agents requires that the output of the first agent is compatible with the input of the second agent. This compatibility must be achieved across three distinct levels:
 
 * Transport Level: Both agents must utilize the same transport protocol to exchange data.
 * Format Level: Both agents must convey information using the same format. Such as identical JSON data structures, or in case of natural language, same semantic structure.
@@ -24,7 +24,7 @@ Assuming semantic compatibility among agents (where the first agent's output inh
 
 The I/O Mapper Agent operates using schema definitions of input and output as specified by the Agent Connect Protocol (ACP), which should include natural language descriptions of data structures and numerous examples to facilitate accurate LLM inference.
 
-## API Bridge Agent
+## [API Bridge Agent](api_bridge_agent)
 
 In the realm of agentic applications, seamless connectivity to APIs is a fundamental requirement. The process of interfacing with an API should be as straightforward as engaging with a remote agent. This is where the API Bridge Agent comes into play. Its primary function is to ensure that APIs can be accessed and utilized through the ACP, similarly to how agents are made accessible through ACP by the agent workflow server.
 
@@ -37,15 +37,15 @@ Additionally, the API Bridge Agent offers advanced features for automatically se
 
 Moreover, the API Bridge Agent is designed to support a wide array of pre-configured API services, providing extensive "out-of-the-box" functionality.
 
-## Semantic Router Agent
+## Semantic Router Agent (Future Release)
 
 When defining a multi-agent application workflow, it is often needed to make decisions based on the output of invoked agents.
 
-In a graph-based agentic application (for example, Langgraph), this corresponds to decide which node in the graph to execute based on the current state of the graph.  
+In a graph-based agentic application (for example, LangGraph), this corresponds to decide which node in the graph to execute based on the current state of the graph.
 
 There is a large set of common decisions that are based on semantic similarity, even if some of these decisions can be trivially implemented by a simple `if` condition and others can be so complex that they require a dedicated agent to be processed.
 
-This is where the Semantic Router Agent comes in. The semantic router agent is a component, modelled as a node in the graph, that takes an input in the form of natural language and decides where to go next.  Here next means following an edge in the graph that is associated to the semantically closest reference natural language text. In other words: the semantic router agent chooses the next node based on a semantic routing table.  
+This is where the Semantic Router Agent comes in. The semantic router agent is a component, modelled as a node in the graph, that takes an input in the form of natural language and decides where to go next.  Here next means following an edge in the graph that is associated to the semantically closest reference natural language text. In other words: the semantic router agent chooses the next node based on a semantic routing table.
 
 **An example**:
 
@@ -56,7 +56,7 @@ This is where the Semantic Router Agent comes in. The semantic router agent is a
 >
 > The above can be implemented with a semantic router agent with three possible routes, with each route associated with a text describing what is the expected content of the user prompt.
 
-## Human in the Loop Agent
+## Human in the Loop Agent (Future Release)
 
 In many cases, agentic applications require human input.  
 
@@ -72,3 +72,19 @@ Few examples below:
 * Webhook: the agent calls a provided webhook to request for input and receive it through OpenAPI or REST.
 * Email engagement: the agent sends an email and offers a web interface to provide input.
 * Webex, Slack, or other engagement: the agent uses a messaging paltform to request input. 
+
+## Composer (Future Release)
+
+The **Multi-Agent Software Composer** is an agent on its own right meant to automatically compose a Multi-Agent Application starting from user intent.
+
+The composer using one or more LLMs is able to:
+
+* Interpret the developer intent and the goal of the application they want to build. This could be an iterative process based on a conversation.
+* Decompose the user ask into fundamental tasks assignable to agents.
+* Search an agent directory to identify suitable agents.
+* Assemble agents, potentially invoking them through the Agent Connect Protocol, IO mappers, Semantic  Router Agents, and API Bridge agents into a workflow to accomplish the intended goal.
+* Allow the user to review, refine and approve.
+
+The workflow is described in an abstract form, for example using a json data structure.
+
+A compiler is in charge of transforming the abstract description produced by the composer into runnable code, using one of the supported frameworks, and when needed leveraging the Agent Connect Protocol to invoke remote agents.

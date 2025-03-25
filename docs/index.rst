@@ -24,12 +24,6 @@ Internet of Agents Components
    pages/dir
    pages/dir-howto
 
-.. toctree::
-   :caption: Application Toolkit
-   :maxdepth: 1
-
-   pages/maa-toolkit
-   pages/composer
 
 .. toctree::
    :caption: Agent Connect Protocol
@@ -74,6 +68,7 @@ Internet of Agents Components
    :caption: Multi-Agent Software Toolkit
    :maxdepth: 2
 
+   pages/toolkit/mas-toolkit
    pages/toolkit/api_bridge_agent
    pages/toolkit/io_mapper
 
