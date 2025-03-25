@@ -37,7 +37,7 @@ Additionally, the API Bridge Agent offers advanced features for automatically se
 
 Moreover, the API Bridge Agent is designed to support a wide array of pre-configured API services, providing extensive "out-of-the-box" functionality.
 
-## Semantic Router Agent (Future Release)
+## Semantic Router Agent (Coming soon)
 
 When defining a multi-agent application workflow, it is often needed to make decisions based on the output of invoked agents.
 
@@ -56,7 +56,7 @@ This is where the Semantic Router Agent comes in. The semantic router agent is a
 >
 > The above can be implemented with a semantic router agent with three possible routes, with each route associated with a text describing what is the expected content of the user prompt.
 
-## Human in the Loop Agent (Future Release)
+## Human in the Loop Agent (Coming soon)
 
 In many cases, agentic applications require human input.  
 
@@ -72,19 +72,3 @@ Few examples below:
 * Webhook: the agent calls a provided webhook to request for input and receive it through OpenAPI or REST.
 * Email engagement: the agent sends an email and offers a web interface to provide input.
 * Webex, Slack, or other engagement: the agent uses a messaging paltform to request input. 
-
-## Composer (Future Release)
-
-The **Multi-Agent Software Composer** is an agent on its own right meant to automatically compose a Multi-Agent Application starting from user intent.
-
-The composer using one or more LLMs is able to:
-
-* Interpret the developer intent and the goal of the application they want to build. This could be an iterative process based on a conversation.
-* Decompose the user ask into fundamental tasks assignable to agents.
-* Search an agent directory to identify suitable agents.
-* Assemble agents, potentially invoking them through the Agent Connect Protocol, IO mappers, Semantic  Router Agents, and API Bridge agents into a workflow to accomplish the intended goal.
-* Allow the user to review, refine and approve.
-
-The workflow is described in an abstract form, for example using a json data structure.
-
-A compiler is in charge of transforming the abstract description produced by the composer into runnable code, using one of the supported frameworks, and when needed leveraging the Agent Connect Protocol to invoke remote agents.
