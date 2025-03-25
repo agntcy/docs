@@ -51,9 +51,9 @@ graph LR
     D -->|Multicast| E
     D -->|Anycast| E
 
-    style B fill:#f9f
-    style C fill:#bbf
-    style D fill:#bfb
+    style B fill:#ffffff,stroke:#000000,stroke-width:2px
+    style C fill:#f0f0f0,stroke:#000000,stroke-width:2px
+    style D fill:#e0e0e0,stroke:#000000,stroke-width:2px
 ```
 
 The diagram shows the message flow through the AGP data plane components:

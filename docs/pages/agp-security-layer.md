@@ -91,9 +91,9 @@ graph TB
     Client3 === Member2
 
     %% Styles
-    classDef service fill:#f9f,stroke:#333,stroke-width:2px
-    classDef client fill:#bbf,stroke:#333,stroke-width:2px
-    classDef member fill:#fbb,stroke:#333,stroke-width:2px
+    classDef service fill:#ffffff,stroke:#000000,stroke-width:2px
+    classDef client fill:#f0f0f0,stroke:#000000,stroke-width:2px
+    classDef member fill:#e0e0e0,stroke:#000000,stroke-width:2px
 
     class AS,DS service
     class Client1,Client2,Client3 client
