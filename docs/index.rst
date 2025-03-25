@@ -18,27 +18,6 @@ Internet of Agents Components
    pages/introduction
 
 .. toctree::
-   :caption: Agent Directory Service
-   :maxdepth: 1
-
-   pages/dir
-   pages/dir-howto
-
-
-.. toctree::
-   :caption: Agent Connect Protocol
-   :maxdepth: 1
-
-   pages/connect
-   pages/agntcy_acp_sdk
-
-.. toctree::
-   :caption: Agent Manifest
-   :maxdepth: 2
-
-   pages/manifest
-
-.. toctree::
    :caption: OASF
    :maxdepth: 1
 
@@ -48,15 +27,53 @@ Internet of Agents Components
    pages/oasf-workflow
 
 .. toctree::
-   :caption: Agent Gateway Protocol
+   :caption: Agent Directory Service
    :maxdepth: 1
 
-   pages/agp
-   pages/agp-security-layer
-   pages/agp-data-plane
-   pages/agp-control-plane
-   pages/agp-session-layer
-   pages/agp-howto
+   pages/dir
+   pages/dir-howto
+
+.. toctree::
+   :caption: Agent Manifest
+   :maxdepth: 1
+
+   pages/agws/manifest
+
+.. toctree::
+   :caption: Semantic SDK
+   :maxdepth: 1
+
+   pages/semantic_sdk/io_mapper
+   pages/semantic_sdk/semantic_router
+
+.. toctree::
+   :caption: Syntactic SDK
+   :maxdepth: 1
+
+   pages/syntactic_sdk/connect
+   pages/syntactic_sdk/agntcy_acp_sdk
+   pages/syntactic_sdk/api_bridge_agent
+   pages/syntactic_sdk/hil
+
+
+.. toctree::
+   :caption: Messaging SDK: Agent Gateway Protocol
+   :maxdepth: 1
+
+   pages/messaging_sdk/agp
+   pages/messaging_sdk/agp-security-layer
+   pages/messaging_sdk/agp-data-plane
+   pages/messaging_sdk/agp-control-plane
+   pages/messaging_sdk/agp-session-layer
+   pages/messaging_sdk/agp-howto
+   
+
+.. toctree::
+   :caption: Agent Workflow Server
+   :maxdepth: 1
+
+   pages/agws/workflow_server
+   pages/agws/workflow_server_manager
 
 .. toctree::
    :caption: CSIT
@@ -64,17 +81,4 @@ Internet of Agents Components
 
    pages/csit
 
-.. toctree::
-   :caption: Multi-Agent Software Toolkit
-   :maxdepth: 2
 
-   pages/toolkit/mas-toolkit
-   pages/toolkit/api_bridge_agent
-   pages/toolkit/io_mapper
-
-.. toctree::
-   :caption: Agent Workflow Server
-   :maxdepth: 2
-
-   pages/workflow_server
-   pages/workflow_server_manager
