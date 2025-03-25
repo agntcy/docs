@@ -28,19 +28,21 @@ pip install agntcy-acp
 ### Usage
 
 ```python
-from agntcy_acp import AsyncACPClient, ApiException
+from agntcy_acp import AsyncACPClient, AsyncApiClient, ApiException
 from agntcy_acp.models import RunCreate
 
 # Defining the host is optional and defaults to http://localhost
-client = AsyncACPClient.fromConfiguration(
+config = ApiClientConfiguration(
     host="https://localhost:8081/", 
-    api_key="super-secure-api-key-hash", 
+    api_key={"x-api-key": os.environ["API_KEY"]}, 
     retries=3
 )
-# Enter a context with an instance of the API client
-async with client:
-    agent_id = 'agent_id_example' # str | The ID of the agent.
 
+# Enter a context with an instance of the API client
+async with AsyncApiClient(config) as api_client:
+    agent_id = 'agent_id_example' # str | The ID of the agent.
+    client = AsyncACPClient(api_client)
+    
     try:
       api_response = client.create_run(RunCreate(agent_id="my-agent-id"))
       print(f"Run {api_response.run_id} is currently {api_response.status}")

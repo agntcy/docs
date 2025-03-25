@@ -28,7 +28,7 @@ Exceptions
 ------------
 
 ``ACPDescriptorValidationException``
-*****************************
+**************************************
 .. autoclass:: agntcy_acp.ACPDescriptorValidationException
    :members:
    :inherited-members:
@@ -69,6 +69,48 @@ Exceptions
    :members:
    :inherited-members:
 
+``BadRequestException``
+*****************************
+.. autoclass:: agntcy_acp.ApiException
+   :members:
+   :inherited-members:
+
+``NotFoundException``
+*****************************
+.. autoclass:: agntcy_acp.ApiException
+   :members:
+   :inherited-members:
+
+``UnauthorizedException``
+*****************************
+.. autoclass:: agntcy_acp.ApiException
+   :members:
+   :inherited-members:
+
+``ForbiddenException``
+*****************************
+.. autoclass:: agntcy_acp.ApiException
+   :members:
+   :inherited-members:
+
+``ServiceException``
+*****************************
+.. autoclass:: agntcy_acp.ApiException
+   :members:
+   :inherited-members:
+
+``ConflictException(ApiException``
+************************************
+.. autoclass:: agntcy_acp.ApiException
+   :members:
+   :inherited-members:
+
+``UnprocessableEntityException``
+************************************
+.. autoclass:: agntcy_acp.ApiException
+   :members:
+   :inherited-members:
+ 
 ``OpenApiException``
 *****************************
 .. autoclass:: agntcy_acp.OpenApiException
