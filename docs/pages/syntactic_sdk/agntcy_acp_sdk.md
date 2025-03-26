@@ -1,4 +1,4 @@
-# Agntcy ACP client SDK
+# ACP Client SDK
 
 ## Introduction
 
