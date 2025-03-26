@@ -10,7 +10,9 @@ An Agent Manifest is a document that describes in detail the following:
 
 The manifest is designed to be used by [Agent Connect Protocol](connect.md) and the Workflow Server and stored in the Agent Directory with the corresponding OASF extensions.
 
-This document describes the principles of the Agent Manifest definition.
+This document describes the principles of the Agent Manifest definition. Manifest definition can be found [here](https://github.com/agntcy/workflow-srv-mgr/blob/main/wfsm/spec/manifest.yaml)
+
+Sample manifests can be found [here](https://github.com/agntcy/workflow-srv-mgr/tree/main/wfsm/spec/examples).
 
 ## Agent Manifest Structure
 
@@ -29,6 +31,29 @@ Agent Manifest must include a natural language description that describes what t
 
 Agent Manifest can include metadata that provides additional information about the agent, such as ownership, timestamps, tags, and so on.
 
+
+<details>
+<summary>Sample descriptor metadata section for the mailcomposer agent</summary>
+
+```json
+{
+  "metadata": {
+    "ref": {
+      "name": "org.agntcy.mailcomposer",
+      "version": "0.0.1",
+      "url": "https://github.com/agntcy/acp-spec/blob/main/docs/sample_acp_descriptors/mailcomposer.json"
+    },
+    "description": "This agent is able to collect user intent through a chat interface and compose wonderful emails based on that."
+  }
+  ...
+}
+```
+
+Metadata for a mail composer agent named `org.agntcy.mailcomposer` version `0.0.1`.
+
+</details>
+
+
 <a id="agent-interface-data-structure-specification"></a>
 ### Agent Interface Data Structure Specification
 Agents willing to interoperate with other agents expose an interface that allow for invocation and configuration.
@@ -37,34 +62,192 @@ Agent Connect Protocol specifies a standard for this interface. However, it spec
 
 The specification of these data structures is included in what we call the Agent ACP descriptor, which can be provided by ACP itself, but it is also defined as part of the Agent Manifest.
 
-Agent ACP descriptor must include an interface data structure specification section that provides schema definitions for the following data structures:
-* **Configuration**: The data structure used to provide agent configuration.
-* **Input**: The data structures used to provide agent input.
-* **Output**: The data structure used to retrieve agent output.
+Agent Specs section includes ACP invocation capabilities, e.g. `streaming`, `callbacks`, `interrupts` etc.,  and the JSON schema definitions for ACP interactions:
+   * Agent Configuration.
+   * Run Input.
+   * Run Output.
+   * Interrupt and Resume Payloads.
+   * Thread State.
 
-If an agent supports interrupts, meaning its execution can be interrupted to request additional input and then resumed, the Agent Manifest needs to define the types of interrupts that can possibly occur.
+<details>
+<summary>Sample  specs section for the mailcomposer agent</summary>
 
-For each of the interrupts it must define the following:
-* **Interrupt Output**: The format of the output provided by the specific interrupt.
-* **Resume Input**: The input expected by the agent to resume its execution when this specific interrupt occurs.
+```json
+{
+  ...
+    "specs": {
+      "capabilities": {
+        "threads": true,
+        "interrupts": true,
+        "callbacks": true
+      },
+      "input": {
+        "type": "object",
+        "description": "Agent Input",
+        "properties": {
+            "message": {
+                "type": "string",
+                "description": "Last message of the chat from the user"
+            }
+        }
+      },
+      "thread_state": {
+        "type": "object",
+        "description": "The state of the agent",
+        "properties": {
+          "messages": {
+            "type": "array",
+            "description": "Full chat history",
+            "items": {
+                "type": "string",
+                "description": "A message in the chat"
+            }
+          }
+        }
+      },
+      "output": {
+        "type": "object",
+        "description": "Agent Input",
+        "properties": {
+            "message": {
+                "type": "string",
+                "description": "Last message of the chat from the user"
+            }
+        }
+      },
+      "config": {
+        "type": "object",
+        "description": "The configuration of the agent",
+        "properties": {
+          "style": {
+            "type": "string",
+            "enum": ["formal", "friendly"]
+          }
+        }
+      },
+      "interrupts": [
+        {
+          "interrupt_type": "mail_send_approval",
+          "interrupt_payload": {
+            "type": "object",
+            "title": "Mail Approval Payload",
+            "description": "Description of the email",
+            "properties": {
+              "subject": {
+                "title": "Mail Subject",
+                "description": "Subject of the email that is about to be sent",
+                "type": "string"
+              },
+              "body": {
+                "title": "Mail Body",
+                "description": "Body of the email that is about to be sent",
+                "type": "string"
+              },
+              "recipients": {
+                "title": "Mail recipients",
+                "description": "List of recipients of the email",
+                "type": "array",
+                "items": {
+                    "type": "string",
+                    "format": "email"
+                }
+              }
+            },
+            "required": [
+              "subject",
+              "body",
+              "recipients"
+            ]
+          },
+          "resume_payload": {
+            "type": "object",
+            "title": "Email Approval Input",
+            "description": "User Approval for this email",
+            "properties": {
+              "reason": {
+                "title": "Approval Reason",
+                "description": "Reason to approve or decline",
+                "type": "string"
+              },
+              "approved": {
+                "title": "Approval Decision",
+                "description": "True if approved, False if declined",
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "approved"
+            ]
+          }
+        }
+      ]
+    }
+  ...
+}
+```
+The agent supports threads, interrupts, and callback.
 
-All schema definitions must include natural language description of the data structure, natural language description of each data structure element, and valid examples of correctly populated data structures.
+It declares schemas for input, output, and config:
+* As input, it expects the next message of the chat from the user.
+* As output, it produces the next message of the chat from the agent.
+* As config it expects the style of the email to be written.
+
+It supports one kind of interrupt, which is used to ask user for approval before sending the email. It provides subject, body, and recipients of the email as interrupt payload and expects approval as input to resume.
+
+It supports a thread state which holds the chat history.
+
+</details>
 
 <a id="agent-deployment-and-consumption"></a>
 ### Agent Deployment and Consumption
 
-Agents can be provided in two different forms, which we call deployment modes:
+Agents can be provided in two different forms, which we call deployment options:
 
 * **As a service**: a network endpoint that exposes an interface to the agent (for example, Agent Connect Protocol).
 * **As a deployable artifact**, for example:
    * A docker image, which once deployed exposes an interface to the agent (for example, Agent Connect Protocol).
    * A source code bundle, which can be executed within the specific runtime and framework it is built on.
 
-The same agent can support one or more deployment modes.
+The same agent can support one or more deployment options.
 
-The Agent Manifest must include a list of all the possible deployment modes supported by the agent. For each mode, it needs to provide all the information needed to consume the agent service or to deploy and then consume it, including authentication details when applicable.
+Agent Manifest currently supports three deployment otions:
+* Source Code Deployment: In this case the agent can be deployed starting from its code. For this deployment mode, the manifest provides:
+    * The location where the code is available
+    * The framework used for this agent
+    * The framework specific configuration needed to run the agent.
+* Remote Service Deployment: In this case, the agent does not come as a deployable artefact, but it's already deployed and available as a service. For this deployment mode, the manifest provides:
+    * The network endpoint where the agent is available through the ACP
+    * The authentication used by ACP for this agent
+* Docker Deployment: In this case the agent can be deployed starting from a docker image. It is assumed that once running the docker container expose the agent through ACP. For this deployment mode, the manifest provides:
+    * The agent container image
+    * The authentication used by ACP for this agent
+
+<details>
+<summary>Sample manifest dependency section for the mailcomposer agent</summary>
+
+```json
+{
+  ...
+    "deployments": [
+      {
+        "type": "source_code",
+        "name": "src",
+        "url": "git@github.com:agntcy/mailcomposer.git",
+        "framework_config": {
+          "framework_type": "langgraph",
+          "graph": "mailcomposer"
+        }
+      }
+    ]
+  ...
+}
+```
+
+Mailcomposer agent in the example above comes as code written for LangGraph and available on Github.
 
 <a id="agent-dependencies"></a>
+</details>
+
 ### Agent Dependencies
 
 An agent may depend on other agents, which means that at some point of its execution it needs to invoke them to accomplish its tasks. We refer to these other agents as **sub-agents**.  A user who wants to use the agent, needs to know this information and check that the dependencies are satisfied, that is, make sure that the sub-agents are available.
@@ -99,41 +282,5 @@ Mailcomposer agent in the example above depends on `sample-agent-2` and `sample-
 </details>
 
 <a id="agent-deployments"></a>
-### Agent Deployments
-Agent Deployments section lists all the possible ways the agent can be consumed, which we call deployment modes.
 
-Agent Manifest currently supports three deployment modes:
-* Source Code Deployment: In this case the agent can be deployed starting from its code. For this deployment mode, the manifest provides:
-    * The location where the code is available
-    * The framework used for this agent
-    * The framework specific configuration needed to run the agent.
-* Remote Service Deployment: In this case, the agent does not come as a deployable artefact, but it's already deployed and available as a service. For this deployment mode, the manifest provides:
-    * The network endpoint where the agent is available through the ACP
-    * The authentication used by ACP for this agent
-* Docker Deployment: In this case the agent can be deployed starting from a docker image. It is assumed that once running the docker container expose the agent through ACP. For this deployment mode, the manifest provides:
-    * The agent container image
-    * The authentication used by ACP for this agent
-
-<details>
-<summary>Sample manifest dependency section for the mailcomposer agent</summary>
-
-```json
-{
-  ...
-    "deployments": [
-      {
-        "type": "source_code",
-        "name": "src",
-        "url": "git@github.com:agntcy/mailcomposer.git",
-        "framework_config": {
-          "framework_type": "langgraph",
-          "graph": "mailcomposer"
-        }
-      }
-    ]
-  ...
-}
-```
-
-Mailcomposer agent in the example above comes as code written for LangGraph and available on Github.
 

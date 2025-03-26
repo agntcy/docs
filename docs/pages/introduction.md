@@ -29,7 +29,7 @@ Based on advanced protocols, frameworks, and components, the goal of IoA softwar
 
 ### Core Components
 
-The initial set of IoA components and architecture is outlined below. As a very first step, we are sharing two important specifications: OASF and ACP. In a few weeks the collective will release code and documentation for most of the components. This is a starting point - as new members join and bring their contributions, the collective will continue to evolve and expand the IoA architecture, components, and interfaces.
+The initial set of IoA components and architecture is outlined below. This is a starting point - as new members join and bring their contributions, the collective will continue to evolve and expand the IoA architecture, components, and interfaces.
 
 ```{image} ../_static/ioa_stack.png
 :alt: Simplified Internet of Agent Stack
@@ -47,7 +47,7 @@ The initial set of IoA components and architecture is outlined below. As a very 
 1. **Syntactic SDK**:
     * **Agent Connect Protocol (ACP)**: A standard interface to invoke agents (or agentic applications), provide input, retrieve output, retrieve supported schemas, graph topology and other useful information. Current ACP spec can be found [here](https://spec.acp.agntcy.org/).
     * **API-bridge Agent** to connect an Agent with any API end-point (tools or data sources)
-    * **Human in the Loop Agent** to interface with human input/output seamlessly.
+    * **Human in the Loop Agent** to interface with human input/output seamlessly. (comming soon)
 1. **Messaging SDK**:
     * **Agent Gateway Protocol (AGP)**: A protocol that defines the standards and guidelines for secure and efficient network-level communication between AI agents. AGP ensures interoperability and seamless data exchange by specifying message formats, transport mechanisms, and interaction patterns.
     * **Agent Gateway**: Offers handy secure (MLS and quantum safe) network-level communication services to a group of agents (typically those of a given multi-agent application) through SDK/Libraries. It extends gRPC to support  pub/sub interactions in addition to request/reply, streaming, fire & forget and more.
