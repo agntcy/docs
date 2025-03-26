@@ -6,3 +6,4 @@ sphinxcontrib.mermaid==1.0.0            # Apache 2.0
 recommonmark==0.7.1                     # MIT
 myst-parser==4.0.1                      # MIT
 sphinx-inline-tabs==2023.4.21           # MIT
+sphinxemoji==0.2.0                      # BSD-3-Clause
