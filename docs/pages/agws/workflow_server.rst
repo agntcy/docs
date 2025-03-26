@@ -1,7 +1,7 @@
 Agent Workflow Server
 =====================
 
-The `Agent Workflow Server <https://github.com/agntcy/workflow-srv>`_ enables participation in the Internet of Agents. It accommodates AI Agents from diverse frameworks and exposes them through Agent Connect Protocol (`ACP <connect.html>`_), regardless of their underlying implementation.
+The `Agent Workflow Server <https://github.com/agntcy/workflow-srv>`_ enables participation in the Internet of Agents. It accommodates AI Agents from diverse frameworks and exposes them through Agent Connect Protocol (`ACP <../syntactic_sdk/agntcy_acp_sdk.html>`_), regardless of their underlying implementation.
 
 .. note::
 
