@@ -1,27 +1,30 @@
-# Agent Workflow Server Manager
+# Workflow Server Manager
 
-The workflow server manager (`wfsm`) is a command line tool that streamlines the process of wrapping an agent into a container image, starting the container and exposing the agent functionality through the Agent Connect Protocol (ACP)
+The Workflow Server Manager (WFSM) is a command line tool that streamlines the process of wrapping an agent into a container image, starting the container, and exposing the agent functionality through the Agent Connect Protocol (ACP).
 
-The `wfsm` tool takes an [agent manifest](manifest.md) as input and based on it spins up a web server container exposing the agent through ACP through REST api
+The WFSM tool takes an [Agent Manifest](manifest.md) as input and based on it spins up a web server container exposing the agent through ACP through REST api.
 
-## Getting started
+## Getting Started
 
 ### Prerequisites
 
-The utility requires docker engine,  `docker` and `docker-compose` to be present on the host 
-To make sure the docker setup is correct on the host execute the 
+The utility requires Docker engine, `docker`, and `docker-compose` to be present on the host.
+
+To make sure the docker setup is correct on the host, execute the following:
+
 ```bash
 wfsm check
 ```
-command. In case the command signals error you can pass the `-v` flag to display verbose information about the failure.
+
+In case the command signals error you can pass the `-v` flag to display verbose information about the failure.
 
 ## Installation
 
-Download the release version corresponding to the host architecture from the available [release versions](https://github.com/agntcy/workflow-srv-mgr/tags), and unpack it to a folder at your convenience.
+Download the release version corresponding to the host architecture from the available [release versions](https://github.com/agntcy/workflow-srv-mgr/tags), and unpack it into a folder at your convenience.
 
 ## Run 
 
-Execute the unpacked binary - it'll output the usage string with the available flags and options. 
+Execute the unpacked binary. This outputs the usage string with the available flags and options.
 
 ```bash
 
@@ -52,17 +55,16 @@ Use "wfsm [command] --help" for more information about a command.
 
 ```
 
+## Test the Results
 
-## Test the results
-
-The exposed rest endpoints can be accessed with regular tools (curl, postman)
+The exposed rest endpoints can be accessed with regular tools (for eaxample, Curl or Postman).
 
 ## Examples
 
-Example manifests can be found in the [wfsm tool](https://github.com/agntcy/workflow-srv-mgr/examples) repository.
+Example manifests can be found in the [WFSM Tool](https://github.com/agntcy/workflow-srv-mgr/examples) repository.
 
-> Warning!
-> paths to the manifests and the paths inside the manifest definitions in the example commands need to be correct on the environment they are executed in!
+> Note:
+> Paths to the manifests and the paths inside the manifest definitions in the example commands need to be correct on the environment they are executed in!
 
 
 ### Expose the [Mail Composer](https://github.com/agntcy/acp-sdk/tree/main/examples/mailcomposer) LangGraph agent through ACP workflow server 
@@ -83,7 +85,3 @@ wfsm deploy -m examples/llama_manifest.json -e examples/env_vars.yaml
 ```bash
 wfsm deploy -m examples/manifest_with_deps.json -e examples/env_vars_with_deps.yaml
 ```
-
-
-
-

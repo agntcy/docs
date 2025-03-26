@@ -1,15 +1,14 @@
 # Getting Started
 
-
 ## Prerequisites
 
-To build the project and work with the code, you will need the following
-installed in your system:
+To build the project and work with the code, you need the following
+installed components in your system:
 
-### [Taskfile](https://taskfile.dev/)
+### Taskfile
 
 Taskfile is required to run all the build operations. Follow the
-[installation](https://taskfile.dev/installation/) instructions in the Taskfile
+[installation instructions](https://taskfile.dev/installation/) in the Taskfile
 documentations to find the best installation method for your system.
 
 <details>
@@ -27,8 +26,9 @@ documentations to find the best installation method for your system.
   ```
 </details>
 
+For more information, see [Taskfile](https://taskfile.dev/).
 
-### [Rust](https://rustup.rs/)
+### Rust
 
 The data-plane components are implemented in rust. Install with rustup:
 
@@ -36,34 +36,36 @@ The data-plane components are implemented in rust. Install with rustup:
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
-### [Golang]
+For more information, see [Rust](https://rustup.rs/).
 
-The control-plane components are implemented in golang. Follow the installation
+### Golang
+
+The control-plane components are implemented in Golang. Follow the installation
 instructions in the golang website.
 
 ## Artifacts distribution
 
-### [Crates]
+### Crates
 
-See https://crates.io/users/artifacts-agntcy
+For more information, see (https://crates.io/users/artifacts-agntcy).
 
 ```bash
 cargo install agp-gw
 ```
 
-### [Container images]
+### Container Images
 
 ```bash
 docker pull ghcr.io/agntcy/agp/gw:latest
 ```
 
-### [Helm charts]
+### Helm Charts
 
 ```bash
 helm pull ghcr.io/agntcy/agp/helm/agp:latest
 ```
 
-### [Pypi packages]
+### Pypi Packages
 
 ```bash
 pip install agp-bindings

@@ -9,11 +9,11 @@ requests/responses.
 
 Key features:
 
-- Converts natural language queries into valid API requests based on OpenAPI specifications
-- Transforms API responses back into natural language explanations
-- Integrates with Tyk API Gateway as a plugin
-- Uses Azure OpenAI's GPT models for language processing
-- Preserves API schema validation and security while enabling conversational interfaces
+- Converts natural language queries into valid API requests based on OpenAPI specifications.
+- Transforms API responses back into natural language explanations.
+- Integrates with Tyk API Gateway as a plugin.
+- Uses Azure OpenAI's GPT models for language processing.
+- Preserves API schema validation and security while enabling conversational interfaces.
 
 This enables developers to build more accessible and user-friendly API interfaces without modifying
 the underlying API implementations.
@@ -22,19 +22,19 @@ the underlying API implementations.
 
 ### Prerequisites
 
-To build the plugin you need those dependenccies
+To build the plugin you need the following dependenccies:
 - Go
-- Cmake
+- CMake
 - Git
 - jq
 
-Then get the source code:
+Get the source code by running the following command:
 
 ```
 git clone https://github.com/agntcy/api-bridge-agnt
 ```
 
-Tyk requires also a redis database. You can deploy it with:
+Tyk requires also a Redis database. Deploy it with the following command:
 
 ```bash
 make start_redis
@@ -44,8 +44,8 @@ make start_redis
 
 Built with:
 
-- [search](https://github.com/kelindar/search) for the semantic router
-- [Tyk](https://github.com/TykTechnologies/tyk.git) for the gateway
+- [Search](https://github.com/kelindar/search) for the semantic router.
+- [Tyk](https://github.com/TykTechnologies/tyk.git) for the gateway.
 We use these dependencies inside the project. However, you don't need to download it or to build it, 
 everything is managed by the Makefile.
 
@@ -66,7 +66,7 @@ export OPENAI_ENDPOINT=https://REPLACE_WITH_YOUR_ENDPOINT.openai.azure.com
 export OPENAI_MODEL=gpt-4o-mini
 ```
 
-#### Build the plugin and start tyk locally on [Tyk](http://localhost:8080)
+#### Build the Plugin and Start Tyk Locally on [Tyk](http://localhost:8080)
 
 Dependencies are managed so that you can just run:
 
@@ -74,9 +74,9 @@ Dependencies are managed so that you can just run:
 make start_tyk
 ```
 
-This will automatically build "Tyk", "search" and the plugin, then install the plugin and start Tyk gateway
+This will automatically build "Tyk", "search" and the plugin, then install the plugin and start Tyk gateway.
 
-#### Load and configure Tyk with an example API (httpbin.org)
+#### Load and Configure Tyk with an Example API (httpbin.org)
 
 ```bash
 make load_plugin
@@ -86,15 +86,15 @@ make load_plugin
 
 #### Linux
 
-For linux (ubuntu) you can use:
+For Linux (Ubuntu) you can use:
 
 ```bash
 TARGET_OS=linux TARGET_ARCH=amd64 SEARCH_LIB=libllama_go.so make start_tyk
 ```
 
-#### Individual steps for building if needed:
+#### Individual Steps for Building if Needed:
 
-If you need to decompose each task individually, you can split into
+If you need to decompose each task individually, you can split into:
 
 ```bash
 make build_tyk          # build tyk
@@ -103,9 +103,9 @@ make build_plugin       # build the plugin
 make install_plugin     # Install the plugin
 ```
 
-## Tyk configuration
+## Tyk Configuration
 
-This plugins relies on [Tyk OAS API Definition](https://tyk.io/docs/api-management/gateway-config-tyk-oas/).
+This plugin relies on [Tyk OAS API Definition](https://tyk.io/docs/api-management/gateway-config-tyk-oas/).
 To use it, you need to add the plugin to the `postPlugins` and `responsePlugins`
 sections of the `x-tyk-api-gateway` section:
 
@@ -144,6 +144,7 @@ sections of the `x-tyk-api-gateway` section:
   }
 }
 ```
+
 Then add the your OpenAPI specification:
 
 For example, adding the httpbin.org service can be done using the `configs/httpbin.org.oas.json` file.
@@ -174,7 +175,7 @@ In this example `http://localhost:8080/httpbin/json`:
 - "json" is the endpoint on the spec
 
 
-### Select and rewrite middleware
+### Select and Rewrite Middleware
 
 The first middleware function (`SelectAndRewrite`) is responsible for selecting
 the appropriate OpenAPI endpoint based on the request, and then rewriting the
@@ -190,7 +191,7 @@ curl 'http://localhost:8080/github/' \
   -d 'List the first issue for the repository named tyk owned by TykTechnologies with the label bug'
 ```
 
-### Rewrite query
+### Rewrite Query
 
 The second middleware function (`RewriteQueryToOas`) is only responsible for
 converting the natural language query into a valid API request based on the
@@ -222,13 +223,13 @@ In this example "http://localhost:8080/gmail/gmail/v1/users/me/messages/send":
 - `/gmail/` is the listen path defined on the x-tyk-api-gateway part of the spec
 - `gmail/v1/users/me/messages/send` is the endpoint in the specification
 
-### Rewrite response
+### Rewrite Response
 
 The third middleware function (`RewriteResponseToNl`) is responsible for
 converting the API response into natural language.
 It can be used standalone or in combination with the `RewriteQueryToOas` middleware.
 
-## An example with Github
+## An Example with Github
 
 The `configs/api.github.com.gist.deref.oas.json` file is a subset of the Github API, already configured with a few `x-nl-input-examples`:
 
@@ -239,17 +240,17 @@ curl 'http://localhost:8080/github/' \
 ```
 
 
-## An example with Sendgrid API
+## An Example with Sendgrid API
 
 As a usage example, we will use the API Bridge Agnt to send email via SENGRID API.
 
 ### Prerequisites
 
-- Get an API Key for free from sendgrid [sengrid by twilio](https://sendgrid.com/en-us)
-- Retreive the open api spec here [tsg_mail_v3.json](https://github.com/twilio/sendgrid-oai/blob/main/spec/json/tsg_mail_v3.json)
-- Make sure redis is running (otherwise, use `make start_redis`)
-- Make sure you properly export `OPENAI_*` parameters
-- Start the plugin as described on "Getting Started" section
+- Get an API Key for free from sendgrid [sengrid by twilio](https://sendgrid.com/en-us).
+- Retreive the open api spec here [tsg_mail_v3.json](https://github.com/twilio/sendgrid-oai/blob/main/spec/json/tsg_mail_v3.json).
+- Make sure redis is running (otherwise, use `make start_redis`).
+- Make sure you properly export `OPENAI_*` parameters.
+- Start the plugin as described on "Getting Started" section.
 
 ### Update the API with tyk middleware settings
 
@@ -311,7 +312,7 @@ Configure Tyk to use the sendgrid API by adding the `x-tyk-api-gateway` extensio
 
 You have an example of a such configuration in `configs/api.sendgrid.com.oas.json`
 
-### Configure an endpoint to allow plugin to retrieve it
+### Configure an Endpoint to Allow Plugin to Retrieve It
 
 On the same oas file, add a `x-nl-input-examples` element to an endpoint with
 sentence that describe how you can use the endpoint with natural language.
@@ -354,7 +355,7 @@ curl http://localhost:8080/tyk/reload/group \
   --header "x-tyk-authorization: foo"
 ```
 
-### Test it !
+### Test It!
 
 Replace "agntcy@example.com" with a sender email you have configured on your sendgrid account.
 
@@ -1007,24 +1008,24 @@ Here are the flights that were recorded between 12 PM and 1 PM on March 11th, 20
 
 Here is what happened behind the scenes:
 
-1. **Content-Type Detection**: The system recognizes the `application/nlq` content type
+1. **Content-Type Detection**: The system recognizes the `application/nlq` content type.
 2. **Operation Matching**:
    - Compares your query ("Get flights from 12pm to 1pm on March 11th 2025")
-     against the `x-nl-input-examples` or the operation description
-   - Identifies the closest matching operation (`getFlightsAll` in this case, ie `GET /flights/all`)
+     against the `x-nl-input-examples` or the operation description.
+   - Identifies the closest matching operation (`getFlightsAll` in this case, ie `GET /flights/all`).
 3. **Parameter Extraction**:
-   - An LLM extracts relevant parameters from your query
-   - Builds a proper API request
+   - An LLM extracts relevant parameters from your query.
+   - Builds a proper API request.
 4. **Request Transformation**:
-   - Converts the natural query to a proper HTTP request
-   - Forwards the request to the upstream API (`GET /flights/all?start=1678560000&end=1678563600` for example)
+   - Converts the natural query to a proper HTTP request.
+   - Forwards the request to the upstream API (`GET /flights/all?start=1678560000&end=1678563600` for example).
 5. **Response Handling**:
-   - Receives the raw API response
-   - Returns the JSON response with the flight data
+   - Receives the raw API response.
+   - Returns the JSON response with the flight data.
 
 Without any code you were able to query the OpenSky Network API and retrieve flight data.
 
-### Improving the operation matching
+### Improving the Operation Matching
 
 When the `description` field provided in the operation definition are poorly
 written or missing, it's possible to improve the selection of the operation by

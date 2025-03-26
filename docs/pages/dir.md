@@ -1,6 +1,6 @@
 # Core Concepts
 
-ADS (Agent Directory Service) is a distributed directory service designed to
+The Agent Directory Service (ADS) is a distributed directory service designed to
 store metadata for AI agent applications. This metadata, stored as directory
 records, enables the discovery of agent applications with specific skills for
 solving various problems.
@@ -38,41 +38,41 @@ as described in [OCI digest](https://github.com/opencontainers/image-spec/blob/m
 ADS implements capability-based record discovery through a hierarchical skill
 taxonomy. This architecture enables:
 
-1. Capability Announcement
+1. Capability Announcement:
    1. Multi-agent systems can publish their capabilities by encoding them as
       skill taxonomies.
    2. Each record contains metadata describing the agent's functional abilities.
-   3. Skills are structured in a hierarchical format for efficient matching
-2. Discovery Process: The system performs a two-phase discovery operation.
+   3. Skills are structured in a hierarchical format for efficient matching.
+2. Discovery Process: The system performs a two-phase discovery operation:
    1. Matches queried capabilities against the skill taxonomy to determine
-      records by their identifier;
-   2. Identifies the server nodes storing relevant records;
-3. Distributed Resolution: Local nodes execute targeted retrievals based on
-   1. Skill matching results: Evaluates capability requirements
-   2. Server location information: Determines optimal data sources
+      records by their identifier.
+   2. Identifies the server nodes storing relevant records.
+3. Distributed Resolution: Local nodes execute targeted retrievals based on:
+   1. Skill matching results: Evaluates capability requirements.
+   2. Server location information: Determines optimal data sources.
 
 ADS uses libp2p [Kad-DHT](https://docs.libp2p.io/concepts/discovery-routing/kaddht/)
 for server and content discovery.
 
 ## Distributed Object Storage
 
-ADS (Agent Directory Service) differs from block storage systems like
-[IPFS](https://ipfs.tech/) in its approach to distributed object storage. Here's
-how:
+ADS differs from block storage systems like
+[IPFS](https://ipfs.tech/) in its approach to distributed object storage.
+The differences are described in the following sections.
 
 ### Simplified Content Retrieval
 
-1. ADS directly stores complete records rather than splitting them into blocks
-2. No special optimizations needed for retrieving content from multiple sources
-3. Records are retrieved as complete units using standard OCI protocols
+1. ADS directly stores complete records rather than splitting them into blocks.
+2. No special optimizations needed for retrieving content from multiple sources.
+3. Records are retrieved as complete units using standard OCI protocols.
 
 ### OCI Integration
 
 ADS leverages the OCI distribution specification for content storage and retrieval:
 
-1. Records are stored and transferred using OCI artifacts
-2. Any OCI distribution-compliant server can participate in the network
-3. Servers retrieve records directly from each other using standard OCI protocols
+1. Records are stored and transferred using OCI artifacts.
+2. Any OCI distribution-compliant server can participate in the network.
+3. Servers retrieve records directly from each other using standard OCI protocols.
 
 While ADS uses zot as its reference OCI server implementation, the system works
 with any server that implements the OCI distribution specification.
