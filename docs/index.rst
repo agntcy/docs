@@ -2,7 +2,7 @@ Internet of Agents Components
 =============================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Contents:
 
 .. toctree::
@@ -57,15 +57,10 @@ Internet of Agents Components
 
 
 .. toctree::
-   :caption: Messaging SDK: Agent Gateway Protocol
+   :caption: Messaging SDK
    :maxdepth: 1
 
-   pages/messaging_sdk/agp
-   pages/messaging_sdk/agp-security-layer
-   pages/messaging_sdk/agp-data-plane
-   pages/messaging_sdk/agp-control-plane
-   pages/messaging_sdk/agp-session-layer
-   pages/messaging_sdk/agp-howto
+   pages/messaging_sdk/agp-index.rst
    
 
 .. toctree::
@@ -77,7 +72,7 @@ Internet of Agents Components
 
 .. toctree::
    :caption: CSIT
-   :maxdepth: 2
+   :maxdepth: 1
 
    pages/csit
 

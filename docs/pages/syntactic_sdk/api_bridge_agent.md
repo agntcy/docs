@@ -1,8 +1,8 @@
-# API Bridge Agnt
+# API Bridge Agent
 
 ## About The Project
 
-The [API Bridge Agnt](https://github.com/agntcy/api-bridge-agnt) project provides a [Tyk](https://tyk.io/) middleware plugin
+The [API Bridge Agent](https://github.com/agntcy/api-bridge-agnt) project provides a [Tyk](https://tyk.io/) middleware plugin
 that allows users to interact with traditional REST APIs using natural language.
 It acts as a translator between human language and structured API
 requests/responses.
