@@ -43,11 +43,11 @@ The initial set of IoA components and architecture is outlined below. This is a 
 1. **Agent Manifest**: A standard format to describes agents, their capabilities, their dependencies, and how to deploy or consume them. The manifest is designed to be used by ACP and the Workflow Server and stored in the Agent Directory with the corresponding OASF extensions.
 1. **Semantic SDK**: 
     * **I/O Mapper Agent**: Handles semantic data adaptations between agents that need to communicate with each other.
-    * **Semantic Router**: Directs workflows via semantic matches.
+    * **Semantic Router**: Directs workflows via semantic matches. (coming soon)
 1. **Syntactic SDK**:
     * **Agent Connect Protocol (ACP)**: A standard interface to invoke agents (or agentic applications), provide input, retrieve output, retrieve supported schemas, graph topology and other useful information. Current ACP spec can be found [here](https://spec.acp.agntcy.org/).
     * **API-bridge Agent** to connect an Agent with any API end-point (tools or data sources)
-    * **Human in the Loop Agent** to interface with human input/output seamlessly. (comming soon)
+    * **Human in the Loop Agent** to interface with human input/output seamlessly. (coming soon)
 1. **Messaging SDK**:
     * **Agent Gateway Protocol (AGP)**: A protocol that defines the standards and guidelines for secure and efficient network-level communication between AI agents. AGP ensures interoperability and seamless data exchange by specifying message formats, transport mechanisms, and interaction patterns.
     * **Agent Gateway**: Offers handy secure (MLS and quantum safe) network-level communication services to a group of agents (typically those of a given multi-agent application) through SDK/Libraries. It extends gRPC to support  pub/sub interactions in addition to request/reply, streaming, fire & forget and more.
