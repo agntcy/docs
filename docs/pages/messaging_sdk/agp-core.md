@@ -10,7 +10,7 @@ established frameworks:
 
 LLMs (Large Language Models) and agent frameworks serve as middleware that
 automates processes traditionally requiring human intervention. This integration
-layer connects diverse systems and enables new automation capabilities through the follownig:
+layer connects diverse systems and enables new automation capabilities through the following:
 
 - Natural language processing
 - Contextual understanding
