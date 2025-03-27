@@ -11,20 +11,20 @@ The directory structure of the CSIT is the following:
 ```
 csit
 └── integrations
-|   ├── Taskfile.yaml                   # Task definitions
-|   ├── docs                            # Documentations
-|   ├── environment
-|   │   └── kind                        # kind related manifests
-|   ├── agntcy-dir                      # Agent directory related tests, components, and so on
-|   │   ├── components                  # The compontents charts
-|   │   ├── examples                    # The examples that can be used for testing
-|   │   ├── manifests                   # Requred manifests for the tests
-|   │   └── tests                       # Tests
-|   └── agntcy-agp                      # Agent Gateway related tests, components, and so on
-|       └── agentic-apps                # Agentic apps for gateway tests
-|           ├── autogen_agent
-|           └── langchain_agent
-|
+│   ├── Taskfile.yaml                   # Task definitions
+│   ├── docs                            # Documentations
+│   ├── environment
+│   │   └── kind                        # kind related manifests
+│   ├── agntcy-dir                      # Agent directory related tests, components, and so on
+│   │   ├── components                  # The compontents charts
+│   │   ├── examples                    # The examples that can be used for testing
+│   │   ├── manifests                   # Requred manifests for the tests
+│   │   └── tests                       # Tests
+│   └── agntcy-agp                      # Agent Gateway related tests, components, and so on
+│       └── agentic-apps                # Agentic apps for gateway tests
+│           ├── autogen_agent
+│           └── langchain_agent
+│
 └── samples
     ├── app1                            # Agentic application example
     │   ├── model.json                  # Required model file
@@ -43,12 +43,17 @@ The integration tests are testing interactions between integrated components.
 The CSIT integrations directory contains the tasks that create the test
 environment, deploy the components to be tested, and run the tests.
 
-### Running Tests Locally
+### Running Integration Tests Locally
 
-Make sure that [Helm](https://helm.sh/docs/intro/install/) and
-[kind](https://kind.sigs.k8s.io/docs/user/quick-start/#installation) are
-installed. For local testing, a test cluster and needs to be created then the
-test environment deployed on it.
+Running locally we need to create a test cluster and deploy the test env on
+it before running the tests.
+It requires the following tools to be installed on local machine:
+  - [Taskfile](https://taskfile.dev/installation/)
+  - [Go](https://go.dev/doc/install)
+  - [Docker](https://docs.docker.com/get-started/get-docker/)
+  - [Kind](https://kind.sigs.k8s.io/docs/user/quick-start#installation)
+  - [Kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl)
+  - [Helm](https://helm.sh/docs/intro/install/)
 
 To run tests locally:
 
@@ -58,13 +63,12 @@ To run tests locally:
     cd integrations
     task kind:create
     task test:env:directory:deploy
-    task test:directory
     ```
 
 1. Run the tests:
 
     ```bash
-    task test:directory:compiler
+    task test:directory
     ```
 
 1. When finished, the test cluster can be cleared:
@@ -72,21 +76,6 @@ To run tests locally:
     ```bash
     task kind:destroy
     ```
-
-### Running Tests Using GitHub Actions
-
-Integration tests can be run using Github Actions using `gh` command line tool
-or using the GitHub web UI:
-
-```bash
-gh workflow run test-integrations -f testenv=kind
-```
-
-To run the tests on a specified branch:
-
-```bash
-gh workflow run test-integrations --ref feat/integration/deploy-agent-directory -f testenv=kind
-```
 
 ### Contributing Tests
 
@@ -188,6 +177,21 @@ To add your tests:
 
 The samples directory in the CSIT repository serves two primary purposes related
 to the testing of agentic applications.
+
+### Running Samples Tests Locally
+
+Running locally we need some tools to build the sample applications and run the tests.
+It requires the followings on local machine:
+  - [Taskfile](https://taskfile.dev/installation/)
+  - [Python 3.12.X](https://www.python.org/downloads/)
+  - [Poetry](https://python-poetry.org/docs/#installation)
+  - [Docker](https://docs.docker.com/get-started/get-docker/)
+  - [Kind](https://kind.sigs.k8s.io/docs/user/quick-start#installation)
+  - [Kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl)
+
+```bash
+cd samples/[app-name]
+task run:test
 
 ### Compilation and Execution Verification
 
