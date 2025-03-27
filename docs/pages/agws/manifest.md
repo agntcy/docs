@@ -62,7 +62,7 @@ Agent Connect Protocol specifies a standard for this interface. However, it spec
 
 The specification of these data structures is included in what we call the Agent ACP descriptor, which can be provided by ACP itself, but it is also defined as part of the Agent Manifest.
 
-Agent Specs section includes ACP invocation capabilities, e.g. `streaming`, `callbacks`, `interrupts` etc.,  and the JSON schema definitions for ACP interactions:
+Agent `specs` section includes ACP invocation capabilities, e.g. `streaming`, `callbacks`, `interrupts` etc.,  and the JSON schema definitions for ACP interactions:
    * Agent Configuration.
    * Run Input.
    * Run Output.
