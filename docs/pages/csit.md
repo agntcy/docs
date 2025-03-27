@@ -46,7 +46,7 @@ environment, deploy the components to be tested, and run the tests.
 ### Running Integration Tests Locally
 
 For running tests locally, we need to create a test cluster and deploy the test environment on it before running the tests.
-It requires the following tools to be installed on local machine:
+Make sure the following tools are installed:
   - [Taskfile](https://taskfile.dev/installation/)
   - [Go](https://go.dev/doc/install)
   - [Docker](https://docs.docker.com/get-started/get-docker/)
