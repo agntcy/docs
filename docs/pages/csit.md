@@ -187,6 +187,8 @@ For running tests locally, we need the following tools to build the sample appli
   - [Kind](https://kind.sigs.k8s.io/docs/user/quick-start#installation)
   - [Kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl)
 
+Run the test:
+
 ```bash
 cd samples/[app-name]
 task run:test
