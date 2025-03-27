@@ -181,7 +181,6 @@ to the testing of agentic applications.
 ### Running Samples Tests Locally
 
 Running locally we need some tools to build the sample applications and run the tests.
-It requires the followings on local machine:
   - [Taskfile](https://taskfile.dev/installation/)
   - [Python 3.12.X](https://www.python.org/downloads/)
   - [Poetry](https://python-poetry.org/docs/#installation)
