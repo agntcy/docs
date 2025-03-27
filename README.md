@@ -18,7 +18,13 @@ Markdown.
 
 ## Installation
 
-To build the documentation locally, you need to install Taskfile.
+To build the documentation locally, you need to install required dependencies.
+
+**Prerequisites**
+
+- [Taskfile](https://taskfile.dev/)
+- [Python](https://www.python.org/downloads/)
+- [Golang](https://go.dev/doc/devel/release#go1.24.0)
 
 ### macOS
 

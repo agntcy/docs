@@ -1,130 +1,242 @@
+# Getting started
 
-# Getting Started
+The Agent Directory (dir) allows publication, exchange and discovery of information about AI agents over a distributed peer-to-peer network.
+It leverages [OASF](https://github.com/agntcy/oasf) to describe agents and provides a set of APIs and tools to build, store, publish and discover agents across the network by their attributes and constraints.
+Directory also leverages [CSIT](https://github.com/agntcy/csit) for continuous system integration and testing across different versions, environments, and features.
 
 ## Features
 
-- _Standards_ - Defines standard schema for data representation and exchange.
-- _Dev Kit_ - Tooling to facilitate API interaction and generation of agent data models from different sources.
-- _Plugins_ - Supports model schema and build plugins to enrich agent data models for custom use-cases.
-- _Announce_ - Enables publication of records to the network.
-- _Discover_ - Listen and retreive records published on the network.
-- _Search_ - Supports searching of records across the network that satisfy given attributes and constraints.
-- _Security_ - Relies on well-known security principles to provide data provenance, integrity and ownership.
+- **Data Models** - Defines a standard schema for data representation and exchange.
+- **Dev Kit** - Provides CLI tooling to simplify development workflows and facilitate API interactions.
+- **Plugins** - Pluggable components to extend the build process of agent data models for custom use-cases.
+- **Announce** - Allows publication of agent data models to the network.
+- **Discover** - Listen, search, and retrieve agents across the network by their attributes and constraints.
+- **Security** - Relies on well-known security principles to provide data provenance, integrity and ownership.
 
 ## Prerequisites
 
+To build the project and work with the code, you will need the following installed in your system
+
 - [Taskfile](https://taskfile.dev/)
 - [Docker](https://www.docker.com/)
-- Golang
+- [Golang](https://go.dev/doc/devel/release#go1.24.0)
 
-## Artifacts distribution
-
-### Golang Packages
-
-See [API package](https://pkg.go.dev/github.com/agntcy/dir/api), [Server package](https://pkg.go.dev/github.com/agntcy/dir/server) and [CLI package](https://pkg.go.dev/github.com/agntcy/dir/cli).
-
-### Binaries
-
-See https://github.com/agntcy/dir/releases
-
-### Container images
-
-```bash
-docker pull ghcr.io/agntcy/dir-ctl:latest
-docker pull ghcr.io/agntcy/dir-apiserver:latest
-```
-
-### Helm charts
-
-```bash
-helm pull ghcr.io/agntcy/dir/helm-charts/dir:latest
-```
+Make sure Docker is installed with Buildx.
 
 ## Development
 
 Use `Taskfile` for all related development operations such as testing, validating, deploying, and working with the project.
 
-To execute the test suite locally, run:
+### Clone the repository
 
 ```bash
-task gen
+git clone https://github.com/agntcy/dir
+cd dir
+```
+
+### Initialize the project
+
+This step will fetch all project dependencies and prepare the environment for development.
+
+```bash
+task deps
+```
+
+### Make changes
+
+Make the changes to the source code and rebuild for later testing.
+
+```bash
 task build
+```
+
+### Test changes
+
+The local testing pipeline relies on Golang to perform unit tests, and
+Docker to perform E2E tests in an isolated Kubernetes environment using Kind.
+
+```bash
+task test:unit
 task test:e2e
 ```
 
-## Deployment
+## Artifacts distribution
 
-To deploy the Directory, you can use the provided `Taskfile` commands to start the necessary services and deploy the Directory server. Alternatively, you can deploy from a GitHub Helm chart release.
+All artifacts are tagged using the [Semantic Versioning](https://semver.org/) and follow the checked out source code tags.
+It is not advised to use artifacts with mismatching versions.
 
-### Local Deployment
+### Container images
 
-To start a local OCI registry server for storage and the Directory server, use the following commands:
+All container images are distributed via [GitHub Packages](https://github.com/orgs/agntcy/packages?repo_name=dir).
 
 ```bash
-task server:store:start
+docker pull ghcr.io/agntcy/dir-ctl:v0.2.0
+docker pull ghcr.io/agntcy/dir-apiserver:v0.2.0
+```
+
+### Helm charts
+
+All helm charts are distributed as OCI artifacts via [GitHub Packages](https://github.com/agntcy/dir/pkgs/container/dir%2Fhelm-charts%2Fdir).
+
+```bash
+helm pull oci://ghcr.io/agntcy/dir/helm-charts/dir --version v0.2.0
+```
+
+### Binaries
+
+All release binaries are distributed via [GitHub Releases](https://github.com/agntcy/dir/releases).
+
+### SDKs
+
+- **Golang** - [github.com/agntcy/dir/api](https://pkg.go.dev/github.com/agntcy/dir/api), [github.com/agntcy/dir/cli](https://pkg.go.dev/github.com/agntcy/dir/cli), [github.com/agntcy/dir/server](https://pkg.go.dev/github.com/agntcy/dir/server)
+
+## Deployment
+
+Directory API services can be deployed either using the `Taskfile` or directly via released Helm chart.
+
+### Using Taskfile
+
+This will start the necessary components such as storage and API services.
+
+```bash
 task server:start
 ```
 
-These commands will set up a local environment for development and testing purposes.
+### Using Helm chart
 
-### Remote Deployment
-
-To deploy the Directory into an existing Kubernetes cluster, use a released Helm chart from GitHub with the following commands:
+This will deploy Directory services into an existing Kubernetes cluster.
 
 ```bash
-helm pull oci://ghcr.io/agntcy/dir/helm-charts/dir --version v0.1.3
-helm upgrade --install dir oci://ghcr.io/agntcy/dir/helm-charts/dir --version v0.1.3
+helm pull oci://ghcr.io/agntcy/dir/helm-charts/dir --version v0.2.0
+helm upgrade --install dir oci://ghcr.io/agntcy/dir/helm-charts/dir --version v0.2.0
 ```
-
-These commands will pull the latest version of the Directory Helm chart from the GitHub Container Registry and install or upgrade the Directory in your Kubernetes cluster. Ensure that your Kubernetes cluster is properly configured and accessible before running these commands. The `helm upgrade --install` command will either upgrade an existing release or install a new release if it does not exist.
 
 ## Usage
 
-The Directory CLI provides `build`, `push`, and `pull` commands to interact with the Directory server. Below are the details on how to run each command.
+This document defines a basic overview of main Directory features, components, and usage scenarios.
 
-To run these commands, you can either:
-* Download a released CLI binary with `curl -L -o dirctl https://github.com/agntcy/dir/releases/download/<release tag>/dirctl-$(uname | tr '[:upper:]' '[:lower:]')-$(uname -m)`
-* Use a binary compiled from source with `task cli:compile`
-* Use CLI module from source by navigating to the `cli` directory and running `go run cli.go <command> <args>`
+> Although the following example is shown for CLI-based usage scenario,
+there is an effort on exposing the same functionality via SDKs.
 
-### Build Command
+### Requirements
 
-The `build` command is used to compile and build the agent data model.
+- Directory CLI client, distributed via [GitHub Releases](https://github.com/agntcy/dir/releases)
+- Directory API server, outlined in the [Deployment](#deployment) section.
 
-Usage:
+### Build
+
+This example demonstrates the examples of a data model and how to build such models using provided tooling to prepare for publication.
+
+Generate an example agent that matches the data model schema defined in [Agent Data Model](api/core/v1alpha1/agent.proto) specification.
+
 ```bash
-dirctl build [options]
+cat << EOF > model.json
+{
+  "name": "my-agent",
+  "skills": [
+    {"category_name": "Text Generation"},
+    {"category_name": "Fact Extraction"}
+  ]
+}
+EOF
 ```
 
-Options:
-- `--config-file` : Path to the agent build configuration file. Please note that other flags will override the build configuration from the file. Supported formats: YAML. Example template: cli/build.config.yaml.
+Alternatively, build the same agent data model using the CLI client.
+The build process allows additional operations to be performed,
+which is useful for agent model enrichment and other custom use-cases.
 
-### Push Command
-
-The `push` command is used to publish the built agent data model to the store. The input data model should be JSON formatted.
-
-Usage:
 ```bash
-dirctl push [options]
+# Define the build config
+cat << EOF > build.config.yml
+builder:
+  # Base agent model path
+  base-model: "model.json"
+
+  # Disable the LLMAnalyzer plugin
+  llmanalyzer: false
+
+  # Disable the runtime plugin
+  runtime: false
+EOF
+
+# Build the agent
+dirctl build . > built.model.json
+
+# Override above example
+mv built.model.json model.json
 ```
 
-Options:
-- `--from-file` : Read compiled data from JSON file, reads from STDIN if empty.
-- `--server-addr`: Directory Server API address (default "0.0.0.0:8888")
+### Store
 
-Example usage with read from STDIN: `dirctl build <args> | dirctl push`.
+This example demonstrates the interaction with the local storage layer.
+It is used as an content-addressable object store for Directory-specific models and serves both the local and network-based operations (if enabled).
 
-### Pull Command
-
-The `pull` command is used to retrieve agent data model from the store. The output data model will be JSON formatted.
-
-Usage:
 ```bash
-dirctl pull [options]
+# push and store content digest
+dirctl push model.json > model.digest
+DIGEST=$(cat model.digest)
+
+# pull
+dirctl pull $DIGEST
+
+# lookup
+dirctl info $DIGEST
 ```
 
-Options:
-- `--digest` : Digest of the agent to pull.
-- `--server-addr`: Directory Server API address (default "0.0.0.0:8888")
+### Announce
 
-Example usage in combination with other commands: `dirctl pull --digest $(dirctl build | dirctl push)`.
+This examples demonstrates how to publish the data to allow content discovery.
+To avoid stale data, it is recommended to republish the data periodically
+as the data across the network has TTL.
+
+Note that this operation only works for the objects already pushed to local storage layer, ie.
+you must first push the data before being able to perform publication.
+
+```bash
+# Publish the data to your local data store.
+dirctl publish $DIGEST
+
+# Publish the data across the network.
+dirctl publish $DIGEST --network
+```
+
+If the data is not published to the network, it cannot be discovered by other peers.
+For published data, peers may try to reach out over network
+and request specific objects for verification and replication.
+Network publication may fail if you are not connected to any peers.
+
+### Discover
+
+This examples demonstrates how to discover published data locally or across the network.
+This API supports both unicast- mode for routing to specific objects,
+and multicast mode for attribute-based matching and routing.
+
+There are two modes of operation, a) local mode where the data is queried from the local data store, and b) network mode where the data is queried across the network.
+
+Discovery is performed using full-set label matching, ie. the results always fully match the requested query.
+Note that it is not guaranteed that the data is available, valid, or up to date as results.
+
+```bash
+# Get a list of peers holding a specific agent data model
+dirctl list --digest $DIGEST
+
+# Discover the agent data models in your local data store that can fully satisfy your search query.
+dirctl list "/skills/Text Generation"
+dirctl list "/skills/Text Generation" "/skills/Fact Extraction"
+
+# Discover the agent data models across the network that can fully satisfy your search query.
+dirctl list "/skills/Text Generation" --network
+dirctl list "/skills/Text Generation" "/skills/Fact Extraction" --network
+```
+
+It is also possible to get an aggregated summary about the data held in your local data store or across the network.
+This is used for routing decisions when traversing the network.
+Note that for network search, you will not query your own data, but only the data of other peers.
+
+```bash
+# Get a list of labels and basic summary details about the data you currently have in your local data store.
+dirctl list info
+
+# Get a list of labels and basic summary details about the data you across the reachable network.
+dirctl list info --network
+```

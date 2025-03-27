@@ -28,6 +28,9 @@ tasks:
     deps:
       - deps/venv
       - deps/proto-diagrams
+    preconditions:
+      - which go
+      - which python
     env:
       SOURCE_DIR:     "{{.ROOT_DIR}}/docs"
       SCHEMA_DIR:     "{{.ROOT_DIR}}/schema"
@@ -43,6 +46,9 @@ tasks:
   # Note that sometimes it crashes and goes into reload loop. Investigate or find alternative.
   run:
     desc: Run documentation website in live editing mode
+    preconditions:
+      - which go
+      - which python
     watch: true
     sources:
       - 'docs/**/*'
