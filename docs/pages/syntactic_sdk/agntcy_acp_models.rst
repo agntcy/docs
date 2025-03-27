@@ -97,11 +97,6 @@ API Models
 .. autopydantic_model:: agntcy_acp.models.RunCreateStateless
    :members:
 
-``RunCreation``
-***************************************
-.. autopydantic_model:: agntcy_acp.models.RunCreation
-   :members:
-
 ``RunError``
 ***************************************
 .. autopydantic_model:: agntcy_acp.models.RunError
@@ -132,14 +127,29 @@ API Models
 .. autopydantic_model:: agntcy_acp.models.RunSearchRequest
    :members:
 
+``RunStateful``
+***************************************
+.. autopydantic_model:: agntcy_acp.models.RunStateful
+   :members:
+
+``RunStateless``
+***************************************
+.. autopydantic_model:: agntcy_acp.models.RunStateless
+   :members:
+
 ``RunStatus``
 ***************************************
 .. autoclass:: agntcy_acp.models.RunStatus
    :members:
 
-``RunWaitResponse``
+``RunWaitResponseStateful``
 ***************************************
-.. autopydantic_model:: agntcy_acp.models.RunWaitResponse
+.. autopydantic_model:: agntcy_acp.models.RunWaitResponseStateful
+   :members:
+
+``RunWaitResponseStateless``
+***************************************
+.. autopydantic_model:: agntcy_acp.models.RunWaitResponseStateless
    :members:
 
 ``StreamEventPayload``
