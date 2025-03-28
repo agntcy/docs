@@ -192,6 +192,7 @@ Run the test:
 ```bash
 cd samples/[app-name]
 task run:test
+```
 
 ### Compilation and Execution Verification
 
