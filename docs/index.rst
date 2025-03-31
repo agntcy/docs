@@ -52,8 +52,6 @@ Internet of Agents Components
 
    pages/syntactic_sdk/connect
    pages/syntactic_sdk/agntcy_acp_sdk
-   pages/syntactic_sdk/agntcy_acp_reference
-   pages/syntactic_sdk/agntcy_acp_models
    pages/syntactic_sdk/api_bridge_agent
    pages/syntactic_sdk/hil
 
