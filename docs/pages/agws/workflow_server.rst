@@ -77,7 +77,7 @@ Current Support
      - |:construction:|
      - |:construction:|
      - |:construction:|
-     - |:construction:|
+     - |:white_check_mark:|
    * - LlamaIndex
      - >=0.12.0,<0.13.0
      - |:white_check_mark:|
