@@ -78,3 +78,8 @@ Internet of Agents Components
 
    pages/csit
 
+.. toctree::
+   :caption: How-to Guides
+   :maxdepth: 1
+
+   pages/how-to-guides/mas-creation-tutorial/mas-tutorial
