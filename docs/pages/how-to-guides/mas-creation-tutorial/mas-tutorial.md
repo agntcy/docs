@@ -275,7 +275,7 @@ from langgraph.graph import StateGraph, START, END
 from langgraph.graph.state import CompiledStateGraph
 from langchain_core.runnables.graph import MermaidDrawMethod
 # Import the state from our new file
-from state import OverallState, MailComposerState, MailReviewerState
+from state import OverallState, MailComposerState
 
 # IMPORTANT: Remove the
 # class OverallState(BaseModel):
@@ -473,7 +473,7 @@ To achieve this, we not only added the **I/O Mapper**, a powerful tool that auto
 
 ### I/O Processing Overview
 
-Among the three nodes added so far, some additional nodes are required to handle input and output transformations effectively. Specifically, In the [Marketing Campaign MAS](examples/marketing-campaign/src/marketing_campaign/app.py), the following nodes were added:
+Among the three nodes added so far, some additional nodes are required to handle input and output transformations effectively. Specifically, as shown in [Marketing Campaign MAS](https://github.com/agntcy/acp-sdk/blob/main/examples/marketing-campaign/src/marketing_campaign/app.py), the following nodes were added:
 
 - **`process_inputs`**: Processes the user's input, updates the `OverallState`, and initializes the `mailcomposer_state` with messages to ensure they are correctly interpreted by the `mailcomposer`. It also checks if the user has completed their interaction (e.g., input is "OK"), which means the user is satisfied about the composed email.
 
@@ -481,8 +481,113 @@ Among the three nodes added so far, some additional nodes are required to handle
 
 - **`prepare_output`**: This node consolidates the outputs of the application. It updates the `OverallState` with the final email content and logs the result of the email send operation.
 
-At the end of the document, we will present the final graph that incorporates all these nodes and demonstrates the complete flow.
+To make this tutorial code fully functional, we need to add implementations for the processing nodes mentioned above:
 
+1. First, update the `state.py` file to include a SendGridState definition:
+    ```python
+    # state.py
+    from agntcy_acp.langgraph.api_bridge import APIBridgeOutput, APIBridgeInput
+    from pydantic import BaseModel, Field
+    from typing import List, Optional
+    from langchain_core.messages import  AIMessage, HumanMessage
+    from marketing_campaign import mailcomposer
+    from marketing_campaign import email_reviewer
+
+    class ConfigModel(BaseModel):
+        recipient_email_address: str = Field(..., description="Email address of the email recipient")
+        sender_email_address: str = Field(..., description="Email address of the email sender")
+        target_audience: email_reviewer.TargetAudience = Field(..., description="Target audience for the marketing campaign")
+
+    class MailComposerState(BaseModel):
+        input: Optional[mailcomposer.InputSchema] = None
+        output: Optional[mailcomposer.OutputSchema] = None
+
+    class MailReviewerState(BaseModel):
+        input: Optional[email_reviewer.InputSchema] = None
+        output: Optional[email_reviewer.OutputSchema] = None
+
+    class SendGridState(BaseModel):
+        input: Optional[APIBridgeInput] = None
+        output: Optional[APIBridgeOutput]= None
+
+    class OverallState(BaseModel):
+        messages: List[mailcomposer.Message] = Field([], description="Chat messages")
+        operation_logs: List[str] = Field([],
+                                        description="An array containing all the operations performed and their result. Each operation is appended to this array with a timestamp.",
+                                        examples=[["Mar 15 18:10:39 Operation performed: email sent Result: OK",
+                                                    "Mar 19 18:13:39 Operation X failed"]])
+
+        has_composer_completed: Optional[bool] = Field(None, description="Flag indicating if the mail composer has succesfully completed its task")
+        has_reviewer_completed: Optional[bool] = None
+        has_sender_completed: Optional[bool] = None
+        mailcomposer_state: Optional[MailComposerState] = None
+        email_reviewer_state: Optional[MailReviewerState] = None
+        target_audience: Optional[email_reviewer.TargetAudience] = None
+        sendgrid_state: Optional[SendGridState] = None
+    ```
+
+
+2. Then, update imports at the top of your `marketing_campaign.py` file:
+
+    ```python
+    import copy
+    from state import OverallState, MailComposerState, SendGridState
+    from agntcy_acp.langgraph.api_bridge import APIBridgeAgentNode, APIBridgeInput
+    from langchain_core.runnables import RunnableConfig
+    ```
+
+
+3. Finally, implement the processing nodes in `marketing_campaign.py`:
+    ```python
+    def process_inputs(state: OverallState, config: RunnableConfig) -> OverallState:
+        cfg = config.get('configurable', {})
+
+        user_message = state.messages[-1].content
+
+        if user_message.upper() == "OK":
+            state.has_composer_completed = True
+
+        else:
+            state.has_composer_completed = False
+
+        state.target_audience = email_reviewer.TargetAudience(cfg["target_audience"])
+
+        state.mailcomposer_state = MailComposerState(
+            input=mailcomposer.InputSchema(
+                messages=copy.deepcopy(state.messages),
+                is_completed=state.has_composer_completed
+            )
+
+        )
+        return state
+
+    def prepare_sendgrid_input(state: OverallState, config: RunnableConfig) -> OverallState:
+        cfg = config.get('configurable', {})
+        state.sendgrid_state = SendGridState(
+            input=APIBridgeInput(
+                query=f""
+                    f"Please send an email to {cfg['recipient_email_address']} from {cfg['sender_email_address']}.\n"
+                    f"Content of the email should be the following:\n"
+                    f"{state.email_reviewer_state.output.corrected_email if (state.email_reviewer_state
+                        and state.email_reviewer_state.output
+                        and hasattr(state.email_reviewer_state.output, 'corrected_email')
+                        ) else ''}"
+            )
+        )
+        return state
+
+    def prepare_output(state: OverallState, config:RunnableConfig) -> OverallState:
+        state.messages = copy.deepcopy(
+            state.mailcomposer_state.output.messages if (state.mailcomposer_state
+                and state.mailcomposer_state.output
+                and state.mailcomposer_state.output.messages
+            ) else []
+        )
+        if state.sendgrid_state and state.sendgrid_state.output and state.sendgrid_state.output.result:
+            state.operation_logs.append(f"Email Send Operation: {state.sendgrid_state.output.result}")
+
+        return state
+    ```
 
 ### Conditional Edge with I/O Mapper
 
@@ -491,28 +596,69 @@ The edge between the `mailcomposer` and subsequent nodes is a **conditional edge
 - If the user input is **not "OK"**, the graph transitions to the `prepare_output` node, allowing the user to interact with the `mailcomposer` again.
 - If the user input is **"OK"**, the graph transitions to the `email_reviewer` node and continues through the workflow.
 
-The conditional edge is implemented with the I/O Mapper, which ensures that the outputs of one node are transformed to match the input requirements of the next node. Here's the code for the conditional edge:
+The conditional edge is implemented with the I/O Mapper, which ensures that the outputs of one node are transformed to match the input requirements of the next node. Here's the code of `marketing_campaign.py` for implementing the conditional edge:
 
-```python
-add_io_mapped_conditional_edge(
-    sg,
-    start=acp_mailcomposer,
-    path=check_final_email,
-    iomapper_config_map={
-        "done": {
-            "end": acp_email_reviewer,
-            "metadata": {
-                "input_fields": ["mailcomposer_state.output.final_email", "target_audience"]
+1. Add LLM client for the I/O Mapper, in this example `AzureChatOpenAI`, but you can use any LLM client supported by LangChain
+    ```python
+    from langchain_openai.chat_models.azure import AzureChatOpenAI
+
+    llm = AzureChatOpenAI(
+        model="gpt-4o-mini",
+        api_version="2024-07-01-preview",
+        seed=42,
+        temperature=0,
+    )
+    ```
+
+2. Define the conditional edge function
+    ```python
+    def check_final_email(state: state.OverallState):
+        return "done" if (state.mailcomposer_state
+                        and state.mailcomposer_state.output
+                        and state.mailcomposer_state.output.final_email
+                        ) else "user"
+    ```
+
+3. Next, update the `build_app_graph` function to include our new nodes and the `add_io_mapped_conditional_edge` edge:
+
+    ```python
+    # Add nodes
+    sg.add_node(process_inputs)
+    sg.add_node(acp_mailcomposer)
+    sg.add_node(acp_email_reviewer)
+    sg.add_node(send_email)
+    sg.add_node(prepare_sendgrid_input)
+    sg.add_node(prepare_output)
+
+    # Add edges
+    sg.add_edge(START, "process_inputs")
+    sg.add_edge("process_inputs", acp_mailcomposer.get_name())
+
+    ## Add conditional edge between mailcomposer and either email_reviewer or END, adding io_mappers between them
+    add_io_mapped_conditional_edge(
+        sg,
+        start=acp_mailcomposer,
+        path=check_final_email,
+        iomapper_config_map={
+            "done": {
+                "end": acp_email_reviewer,
+                "metadata": {
+                    "input_fields": ["mailcomposer_state.output.final_email", "target_audience"]
+                }
+            },
+            "user": {
+                "end": "prepare_output",
+                "metadata": None
             }
         },
-        "user": {
-            "end": "prepare_output",
-            "metadata": None
-        }
-    },
-    llm=llm
-)
-```
+        llm=llm
+    )
+
+    sg.add_edge(acp_email_reviewer.get_name(), "prepare_sendgrid_input")
+    sg.add_edge("prepare_sendgrid_input", send_email.get_name())
+    sg.add_edge(send_email.get_name(), "prepare_output")
+    sg.add_edge("prepare_output", END)
+    ```
 
 #### Explanation of Parameters and Workflow Behavior:
 
