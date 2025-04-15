@@ -2,16 +2,16 @@
 
 This tutorial guides you through the process of building a distributed multi-agent application using [LangGraph](https://www.langchain.com/langgraph) and leveraging [Agent Connect Protocol (ACP)](https://docs.agntcy.org/pages/syntactic_sdk/connect.html) and other **AGNTCY** components and tools.
 
-The sample app used for this tutorial is a **Marketing Campaign Manager** agent. A "pre-cooked" version of this application is available [here](https://github.com/agntcy/acp-sdk/tree/main/examples/marketing-campaign).
+The sample app used for this tutorial is a **Marketing Campaign Manager** agent. A "pre-cooked" version of this application is available [here](https://github.com/agntcy/agentic-apps/tree/main/marketing-campaign).
 
 > For this tutorial we are using LangGraph, but other frameworks can also be used.
 
 
 ## Overview
 The **Marketing Campaign Manager** we are building implements a LangGraph graph which:
-* Interact with a user to gather the description of the email marketing campaign they wants to launch.
-* Uses an already existing [Mail Composer Agent](https://github.com/agntcy/acp-sdk/tree/main/examples/mailcomposer), capable of compose emails for the marketing campaign. This agent is written using LangGraph, it provides a Agent Manifest which allows to deploy it through the Agent Workflow Server and be consumed through ACP.
-* Uses an already existing [Email Reviewer Agent](https://github.com/agntcy/acp-sdk/tree/main/examples/email_reviewer) capable of revieving an email and adjust it for a specific target audience. This agent is written using [LlamaIndex](https://www.llamaindex.ai/framework) and simirarly to the previous agent, it provides a Agent Manifest which allows to deploy it through the [Agent Workflow Server](https://docs.agntcy.org/pages/agws/workflow_server.html) and be consumed through ACP.
+* Interact with a user to gather the description of the email marketing campaign to launch.
+* Uses an already existing [Mail Composer Agent](https://github.com/agntcy/agentic-apps/tree/main/mailcomposer), capable of composing emails for the marketing campaign. This agent is written using LangGraph, it provides a Agent Manifest which allows to deploy it through the Agent Workflow Server and be consumed through ACP.
+* Uses an already existing [Email Reviewer Agent](https://github.com/agntcy/agentic-apps/tree/main/email_reviewer) capable of reviewing an email and adjust it for a specific target audience. This agent is written using [LlamaIndex](https://www.llamaindex.ai/framework) and simirarly to the previous agent, it provides a Agent Manifest which allows to deploy it through the [Agent Workflow Server](https://docs.agntcy.org/pages/agws/workflow_server.html) and be consumed through ACP.
 * Uses [Twilio Sendgrid](https://sendgrid.com/) API to deliver the marketing campaign email to the intended recipient. We will consume this API leveraging the capabilities of the [API Bridge Agent](https://docs.agntcy.org/pages/syntactic_sdk/api_bridge_agent.html).
 
 This tutorial is structured in the following steps:
@@ -26,11 +26,11 @@ This tutorial is structured in the following steps:
 
 5. [API Bridge Integration](#step-5-api-bridge-integration): Connect natural language outputs to structured API requests.
 
-6. [I/O Mapper Integration](#step-6-io-mapper-integration): Adjust inputs and outputs between different agents such that they match in format and meaning.
+6. [I/O Mapper Integration](#step-6-i-o-mapper-integration): Adapt inputs and outputs between different agents such that they match in format and meaning.
 
-7. [Generate Application Manifest](#step-7-generate-application-manifest): Create a manifest file to define how your application can be deployed and used as a dependency.
+7. [Generate Application Manifest](#step-7-generate-application-manifest): Create a manifest file to define how your application can be deployed and consumed via ACP.
 
-8. [Review Resulting Application](#step-8-review-resulting-application): Analyze the complete workflow and how all components interact together.
+8. [Review Resulting Application](#step-8-review-resulting-application): Analyze the complete workflow and how all components interact with one another.
 
 9. [Execute Application through Workflow Server Manager](#step-9-execute-application-through-workflow-server-manager): Deploy and test the multi-agent system using Workflow Server.
 
@@ -38,7 +38,6 @@ This tutorial is structured in the following steps:
 
 - A working installation of [Python](https://www.python.org/) 3.9 or higher
 - [Poetry](https://pypi.org/project/poetry/) v2 or greater
-- [ACP SDK](https://github.com/agntcy/acp-sdk): Includes a CLI for generating models, OpenAPI specifications, and validating agent manifests
 - [Curl](https://curl.se/)
 
 
@@ -198,26 +197,26 @@ And a file named "marketing_campaign_skeleton.png" should be created in your dir
 In this step, you will **generate** models based on the agent manifests to define the **input, output and config schemas** for each agent involved in MAS. The models are created using the `acp generate-agent-models` cli command, which reads the agent manifest files and produces Python files that encapsulate the agent's data structures and interfaces necessary for integration.
 
 > **What is an Agent Manifest?**
-> An Agent Manifest is a detailed document outlining an agent's capabilities, deployment methods, data structure specifications and dependencies on other agents. It provides** essential information** for ensuring agents can communicate and work together within the **Agent Connect Protocol** and **Workflow Server ecosystem**. [Learn more](https://docs.agntcy.org/pages/agws/manifest.html)
+> An Agent Manifest is a detailed document outlining an agent's capabilities, deployment methods, data structure specifications and dependencies on other agents. It provides **essential information** for ensuring agents can communicate and work together within the **Agent Connect Protocol** and **Workflow Server ecosystem**. [Learn more](https://docs.agntcy.org/pages/agws/manifest.html)
 
 ### Schema and Type Generation
 
 We will use two agents whose manifests
 
-* [Mail Composer Manifest](https://github.com/agntcy/acp-sdk/blob/main/examples/mailcomposer/deploy/mailcomposer.json)
-* [Email Reviewer Manifest](https://github.com/agntcy/acp-sdk/blob/main/examples/email_reviewer/deploy/email_reviewer.json)
+* [Mail Composer Manifest](https://github.com/agntcy/agentic-apps/tree/main/mailcomposer/deploy/mailcomposer.json)
+* [Email Reviewer Manifest](https://github.com/agntcy/agentic-apps/tree/main/email_reviewer/deploy/email_reviewer.json)
 
-are provided within the [ACP SDK](https://github.com/agntcy/acp-sdk) repository. To proceed, let's download the manifest files:
+are provided within the [Agentic Apps](https://github.com/agntcy/agentic-apps) repository. To proceed, let's download the manifest files:
 
 ```bash
 # Create a manifests directory to store the agent manifests
 mkdir -p manifests
 
 # Download Mail Composer Manifest
-curl -o manifests/mailcomposer.json https://raw.githubusercontent.com/agntcy/acp-sdk/main/examples/mailcomposer/deploy/mailcomposer.json
+curl -o manifests/mailcomposer.json https://raw.githubusercontent.com/agntcy/agentic-apps/refs/heads/main/mailcomposer/deploy/mailcomposer.json
 
 # Download Email Reviewer Manifest
-curl -o manifests/email_reviewer.json https://raw.githubusercontent.com/agntcy/acp-sdk/main/examples/email_reviewer/deploy/email_reviewer.json
+curl -o manifests/email_reviewer.json https://raw.githubusercontent.com/agntcy/agentic-apps/refs/heads/main/email_reviewer/deploy/email_reviewer.json
 ```
 
 Now, we can generate the models using the `acp` command-line tool that was installed as part of our dependencies:
@@ -467,7 +466,7 @@ def build_app_graph() -> CompiledStateGraph:
 For a complete setup guide including Tyk gateway configuration and SendGrid API details, see the [SendGrid API Bridge example in the ACP SDK documentation](https://docs.agntcy.org/pages/syntactic_sdk/api_bridge_agent.html#an-example-with-sendgrid-api).
 
 
-## Step 6: Input and Output Processing and I/O Mapper Integration
+## Step 6: I/O Mapper Integration
 
 In this section, we will explore how to handle inputs and outputs effectively within the workflow. Managing the flow of data between agents allows to maintain the integrity of the process.
 
@@ -488,7 +487,7 @@ To achieve this, we not only added the **I/O Mapper**, a powerful tool that auto
 
 ### I/O Processing Overview
 
-Among the three nodes added so far, some additional nodes are required to handle input and output transformations effectively. Specifically, as shown in [Marketing Campaign MAS](https://github.com/agntcy/acp-sdk/blob/main/examples/marketing-campaign/src/marketing_campaign/app.py), the following nodes were added:
+Among the three nodes added so far, some additional nodes are required to handle input and output transformations effectively. Specifically, as shown in [Marketing Campaign MAS](https://github.com/agntcy/agentic-apps/tree/main/marketing-campaign/src/marketing_campaign/app.py), the following nodes were added:
 
 - **`process_inputs`**: Processes the user's input, updates the `OverallState`, and initializes the `mailcomposer_state` with messages to ensure they are correctly interpreted by the `mailcomposer`. It also checks if the user has completed their interaction (e.g., input is "OK"), which means the user is satisfied about the composed email.
 
@@ -1030,4 +1029,4 @@ In this tutorial, we demonstrated how to build a complete Multi-Agent System (MA
 
 These components allowed us to create a dynamic and flexible workflow that ensures compatibility between agents, adapts to user interactions, and can be deployed as a complete distributed system.
 
-By following this approach, you can design and implement your own MAS tailored to specific use cases, leveraging the power of ACP to enable communication and collaboration between distributed agents. The tools and techniques presented here provide a solid foundation for building scalable, efficient, and user-friendly multi-agent software that can run locally or be deployed to production environments.
+By following this approach, you can design and implement your own MAS tailored to specific use cases, leveraging the power of ACP to enable communication and collaboration between distributed agents.
