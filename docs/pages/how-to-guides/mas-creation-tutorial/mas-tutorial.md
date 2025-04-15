@@ -1,13 +1,22 @@
-# Sample Multi Agent Software - Step by Step Tutorial
+# Getting started with AGNTCY compoenents: build your first app
 
-This guide will help you transform a simple [LangGraph application](https://langchain-ai.github.io/langgraph/tutorials/introduction/#part-1-build-a-basic-chatbot) into a robust multi-agent software, which uses the [Agent Connect Protocol (ACP)](https://docs.agntcy.org/pages/syntactic_sdk/connect.html) to allow communication between distributed agents. These agents run on a [Workflow Server](https://docs.agntcy.org/pages/agws/workflow_server.html), where they are deployed and executed remotely. To make the explanation clearer, we provide a [marketing campaign manager example](https://github.com/agntcy/acp-sdk/tree/main/examples/marketing-campaign) that demonstrates how to integrate the capabilities of different agents into a unified application.
+This tutorial guides you through the process of building a distributed multi-agent application using [LangGraph](https://www.langchain.com/langgraph) and leveraging [Agent Connect Protocol (ACP)](https://docs.agntcy.org/pages/syntactic_sdk/connect.html) and other **AGNTCY** components and tools.
+
+The sample app used for this tutorial is a **Marketing Campaign Manager** agent. A "pre-cooked" version of this application is available [here](https://github.com/agntcy/acp-sdk/tree/main/examples/marketing-campaign).
+
+> For this tutorial we are using LangGraph, but other frameworks can also be used.
 
 
 ## Overview
 
-In this tutorial, we assume you **already know the agents you wish to integrate into your system**. For our example, these are the [Mail Composer](https://github.com/agntcy/acp-sdk/tree/main/examples/mailcomposer) and [Email Reviewer](https://github.com/agntcy/acp-sdk/tree/main/examples/email_reviewer) agents. You should have **access to their manifests**, which are fundamental for **generating** the necessary **data types** and structures for integration.
+## Overview
+The **Marketing Campaign Manager** we are building implements a LangGraph graph which:
+* Interact with a user to gather the description of the email marketing campaign they wants to launch.
+* Uses an already existing [Mail Composer Agent](https://github.com/agntcy/acp-sdk/tree/main/examples/mailcomposer), capable of compose emails for the marketing campaign. This agent is written using LangGraph, it provides a Agent Manifest which allows to deploy it through the Agent Workflow Server and be consumed through ACP.
+* Uses an already existing [Email Reviewer Agent](https://github.com/agntcy/acp-sdk/tree/main/examples/email_reviewer) capable of revieving an email and adjust it for a specific target audience. This agent is written using [LlamaIndex](https://www.llamaindex.ai/framework) and simirarly to the previous agent, it provides a Agent Manifest which allows to deploy it through the [Agent Workflow Server](https://docs.agntcy.org/pages/agws/workflow_server.html) and be consumed through ACP.
+* Uses [Twilio Sendgrid](https://sendgrid.com/) API to deliver the marketing campaign email to the intended recipient. We will consume this API leveraging the capabilities of the [API Bridge Agent](https://docs.agntcy.org/pages/syntactic_sdk/api_bridge_agent.html).
 
-This tutorial is structured to guide you through the following key steps:
+This tutorial is structured in the following steps:
 
 1. [Create a Basic LangGraph Skeleton Application](#step-1-create-a-basic-langgraph-skeleton-application): Set up a LangGraph application structure to serve as the base of your multi-agent software.
 
@@ -21,10 +30,11 @@ This tutorial is structured to guide you through the following key steps:
 
 6. [I/O Mapper Integration](#step-6-io-mapper-integration): Adjust inputs and outputs between different agents such that they match in format and meaning.
 
-### Final Thoughts
+7. [Generate Application Manifest](#step-7-generate-application-manifest): Create a manifest file to define how your application can be deployed and used as a dependency.
 
-- [Resulting Graph and Conclusion](#resulting-graph-and-conclusion): Review the complete graph and summarize the key takeaways from this tutorial.
+8. [Review Resulting Application](#step-8-review-resulting-application): Analyze the complete workflow and how all components interact together.
 
+9. [Execute Application through Workflow Server Manager](#step-9-execute-application-through-workflow-server-manager): Deploy and test the multi-agent system using Workflow Server.
 
 ## Prerequisites
 
@@ -50,19 +60,26 @@ cd marketing-campaign-mas
 Create a `pyproject.toml` file with the following dependencies:
 
 ```
-[tool.poetry]
+[project]
 name = "marketing-campaign-mas"
 version = "0.1.0"
 description = "Multi-agent software for marketing campaigns"
-authors = ["Your Name <your.email@example.com>"]
+authors = [
+    {"Your Name <your.email@example.com>"}
+]
+dynamic = [ "dependencies" ]
+requires-python =  ">=3.9.0,<4.0"
+
 
 [tool.poetry.dependencies]
-python = "^3.9"
 python-dotenv = "^1.0.1"
 langgraph = "^0.3.5"
 langchain-openai = "^0.3.8"
 langchain = "^0.3.20"
 agntcy-acp = "1.1.2"
+
+[tool.poetry]
+packages = [{include = "marketing_campaign-mas", from = "."}]
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
@@ -189,8 +206,8 @@ In this step, you will **generate** models based on the agent manifests to defin
 
 We will use two agents whose manifests
 
-* ([Mail Composer Manifest](https://github.com/agntcy/acp-sdk/blob/main/examples/mailcomposer/deploy/mailcomposer.json)
-* [Email Reviewer Manifest](https://github.com/agntcy/acp-sdk/blob/main/examples/email_reviewer/deploy/email_reviewer.json))
+* [Mail Composer Manifest](https://github.com/agntcy/acp-sdk/blob/main/examples/mailcomposer/deploy/mailcomposer.json)
+* [Email Reviewer Manifest](https://github.com/agntcy/acp-sdk/blob/main/examples/email_reviewer/deploy/email_reviewer.json)
 
 are provided within the [ACP SDK](https://github.com/agntcy/acp-sdk) repository. To proceed, let's download the manifest files:
 
@@ -489,9 +506,8 @@ To make this tutorial code fully functional, we need to add implementations for 
     from agntcy_acp.langgraph.api_bridge import APIBridgeOutput, APIBridgeInput
     from pydantic import BaseModel, Field
     from typing import List, Optional
-    from langchain_core.messages import  AIMessage, HumanMessage
-    from marketing_campaign import mailcomposer
-    from marketing_campaign import email_reviewer
+    from models import mailcomposer
+    from models import email_reviewer
 
     class ConfigModel(BaseModel):
         recipient_email_address: str = Field(..., description="Email address of the email recipient")
@@ -673,12 +689,159 @@ The conditional edge is implemented with the I/O Mapper, which ensures that the 
 
 > **Note**: All paths specified in the `input_fields` are rooted in the `OverallState`
 
+With these additions, our application now has a complete workflow that can:
+1. Process user inputs and initialize states
+2. Compose emails with the Mail Composer agent
+3. Route based on user feedback using conditional edges
+4. Review emails with the Email Reviewer agent when needed
+5. Prepare and send emails using the SendGrid API Bridge
+6. Provide meaningful output back to the user
 
-### Resulting Graph and Conclusion
+## Step 7: Generate Application Manifest
+
+In this step, we will **generate the Agent Manifest** for our Marketing Campaign application. The manifest generation enables our application to be used by other applications and to be deployed through a [Workflow Server](https://github.com/agntcy/workflow-srv).
+
+> **Why Generate an Agent Manifest?**
+> 1. **Reusability**: The manifest allows your MAS to be used as a dependency in other applications, so as to allow modular and composable agent architectures.
+> 2. **Deployment**: It provides the necessary information for the Workflow Server to deploy and run your application along with its dependencies.
+> 3. **Documentation**: It serves as a self-documenting artifact that describes your agent's capabilities, configuration options, and dependencies.
+
+### Creating the Manifest Generator
+
+Let's create a new file called `generate_manifest.py` in the root of our project:
+
+```python
+from pathlib import Path
+from pydantic import AnyUrl
+from state import OverallState, ConfigModel
+from agntcy_acp.manifest import (
+    AgentManifest,
+    AgentDeployment,
+    DeploymentOptions,
+    LangGraphConfig,
+    EnvVar,
+    AgentMetadata,
+    AgentACPSpec,
+    AgentRef,
+    Capabilities,
+    SourceCodeDeployment,
+    AgentDependency
+)
+
+mailcomposer_dependency_manifest = "./manifests/mailcomposer.json"
+email_reviewer_dependency_manifest = "./manifests/email_reviewer.json"
+
+manifest = AgentManifest(
+    metadata=AgentMetadata(
+        ref=AgentRef(name="org.agntcy.marketing-campaign", version="0.0.1", url=None),
+        description="Offer a chat interface to compose an email for a marketing campaign. Final output is the email that could be used for the campaign"),
+    specs=AgentACPSpec(
+        input=OverallState.model_json_schema(),
+        output=OverallState.model_json_schema(),
+        config=ConfigModel.model_json_schema(),
+        capabilities=Capabilities(
+            threads=False,
+            callbacks=False,
+            interrupts=False,
+            streaming=None
+        ),
+        custom_streaming_update=None,
+        thread_state=None,
+        interrupts=None
+    ),
+    deployment=AgentDeployment(
+        deployment_options=[
+            DeploymentOptions(
+                root = SourceCodeDeployment(
+                    type="source_code",
+                    name="source_code_local",
+                    url=AnyUrl("file://."),
+                    framework_config=LangGraphConfig(
+                        framework_type="langgraph",
+                        graph="marketing_campaign:graph"
+                    )
+                )
+            )
+        ],
+        env_vars=[EnvVar(name="AZURE_OPENAI_API_KEY", desc="Azure key for the OpenAI service"),
+                  EnvVar(name="AZURE_OPENAI_ENDPOINT", desc="Azure endpoint for the OpenAI service"),
+                  EnvVar(name="SENDGRID_API_KEY", desc="Sendgrid API key")],
+        dependencies=[
+            AgentDependency(
+                name="mailcomposer",
+                ref=AgentRef(name="org.agntcy.mailcomposer", version="0.0.1", url=f"file://{mailcomposer_dependency_manifest}"),
+                deployment_option = None,
+                env_var_values = None
+            ),
+           AgentDependency(
+                name="email_reviewer",
+                ref=AgentRef(name="org.agntcy.email_reviewer", version="0.0.1", url=f"file://{email_reviewer_dependency_manifest}"),
+                deployment_option = None,
+                env_var_values = None
+            )
+        ]
+    )
+)
+
+with open(f"{Path(__file__).parent}/manifests/marketing-campaign.json", "w") as f:
+    json_content = manifest.model_dump_json(
+        exclude_unset=True,
+        exclude_none=True,
+        indent=2
+    )
+    # Replace URLs with filesystem paths because file:// schema not yet supported on dependencies
+    json_content = json_content.replace(
+        f"file://{mailcomposer_dependency_manifest}",
+        mailcomposer_dependency_manifest
+    )
+    json_content = json_content.replace(
+        f"file://{email_reviewer_dependency_manifest}",
+        email_reviewer_dependency_manifest
+    )
+    f.write(json_content)
+```
+
+### Understanding the Manifest Generator Structure
+
+Let's break down the components of our manifest generator:
+
+1. **Metadata**: Defines basic information as unique name of the agent (`org.agntcy.marketing-campaign`), its version number, and a human-readable description explaining its purpose or functionality.
+
+2. **Specs**: Establishes how the agent communicates by defining expected input/output formats using `OverallState` JSON schemas, configuration options through `ConfigModel`, and supported capabilities.
+
+3. **Deployment**: This section contains deployment-related information:
+   - `deployment_options`: Defines how the agent can be deployed
+     - `url=AnyUrl("file://.")`: Specifies that the source code is located in the current directory (relative to where the manifest is being used)
+     - `framework_config`: Specifies that this is a LangGraph application with the graph defined in `marketing_campaign:graph`
+
+   - `env_vars`: Lists the environment variables required by the marketing campaing.
+   - `dependencies`: Lists the agents that our application depends on. Each dependency specifies:
+     - The local name used to refer to the dependency
+     - The reference to the agent manifest file (`./manifests/mailcomposer.json`)
+
+### Generating the Manifest
+
+Now, let's run our script to generate the manifest:
+
+```bash
+poetry run python generate_manifest.py
+```
+
+This will create a file called `marketing-campaign.json` in the `manifests` directory, which contains all the information needed for:
+
+* Using our Marketing Campaign application as a dependency in other applications
+* Deploying and running our application through the Workflow Server
+
+We'll focus on the second point and see how to execute our application using the Workflow Server Manager.
+
+
+## Step 8: Review Resulting Application
 
 Below is the final graph that represents the **complete process** of composing, reviewing, and sending an email. This graph shows how agents are connected, how inputs and outputs are processed, and how the application adapts dynamically based on user interactions.
 
 ![Final LangGraph Application](./_static/marketing_campaign_final.png)
+
+Our completed application now implements a robust workflow where:
 
 The MAS begins with the `process_inputs` node and transitions to the `mailcomposer` node, where the email draft is created. A **conditional edge** allows the user to interact with the `mailcomposer` until they are satisfied with the composed email. Once confirmed, the workflow proceeds through the following nodes in sequence:
 
@@ -687,10 +850,186 @@ The MAS begins with the `process_inputs` node and transitions to the `mailcompos
 3. **`sendgrid`**: Sends the email using the SendGrid API.
 4. **`prepare_output`**: Consolidates the final output and logs the result.
 
-This graph highlights the **importance of input and output transformations**, the role of the **I/O Mapper** in ensuring compatibility between agents, and the flexibility provided by conditional edges to adapt the workflow dynamically. With this setup, the system achieves a robust and user-friendly process for managing email campaigns.
+This application review highlights the **importance of input and output transformations**, the role of the **I/O Mapper** in ensuring compatibility between agents, and the flexibility provided by conditional edges to adapt the workflow dynamically. With this architecture, the system achieves a robust and user-friendly process for managing email campaigns.
+
+## Step 9: Execute Application through Workflow Server Manager
+
+After generating the manifest, we can deploy and run our application using the Workflow Server Manager. This allows us to execute the entire multi-agent system as a distributed application with all dependencies properly managed.
+
+### Installing the Workflow Server Manager
+
+First, download the Workflow Server Management CLI appropriate for your operating system from the [releases page](https://github.com/agntcy/workflow-srv-mgr/releases):
+
+```bash
+# For macOS with Apple Silicon
+curl -L https://github.com/agntcy/workflow-srv-mgr/releases/download/v0.1.1/wfsm0.1.1_darwin_arm64.tar.gz -o wfsm.tar.gz
+tar -xzf wfsm.tar.gz # Keep the extracted wfsm binary it in the project root
+chmod +x wfsm
+# For other platforms, download the appropriate binary from the releases page
+```
+
+Follow these [instructions](https://docs.agntcy.org/pages/agws/workflow_server_manager.html#installation) to install the Agent Workflow Server Manager
+
+### Configuring the Application Environment
+
+Before starting the workflow server, create a configuration file that provides the necessary environment variables and dependency settings. Create a file named `marketing_campaign_config.yaml` in your project root:
+
+```yaml
+# marketing_campaign_config.yaml
+values:
+  AZURE_OPENAI_API_KEY: your_secret
+  AZURE_OPENAI_ENDPOINT: "the_url.com"
+  API_HOST: 0.0.0.0
+  SENDGRID_HOST: http://host.docker.internal:8080
+  SENDGRID_API_KEY: SG.your-api-key
+dependencies:
+  - name: mailcomposer
+    values:
+      AZURE_OPENAI_API_KEY: your_secret
+      AZURE_OPENAI_ENDPOINT: "the_url.com"
+  - name: email_reviewer
+    values:
+      AZURE_OPENAI_API_KEY: your_secret
+      AZURE_OPENAI_ENDPOINT: "the_url.com"
+```
+
+> **Note**: Replace placeholder values with your actual API keys and endpoints. The `SENDGRID_HOST` is set to `http://host.docker.internal:8080` to allow communication with a API Bridge service that will locally run in Docker.
+
+### Setting Up the SendGrid API Bridge
+
+Before testing the full application workflow, you need to set up the SendGrid API Bridge locally. Follow the detailed guide in the [API Bridge documentation](https://docs.agntcy.org/pages/syntactic_sdk/api_bridge_agent.html#an-example-with-sendgrid-api) for complete instructions.
+
+### Deploying the Application
+
+Now, deploy the Marketing Campaign workflow server using the manifest we generated:
+
+```bash
+./wfsm deploy -m ./manifests/marketing-campaign.json -e ./marketing_campaign_config.yaml
+```
+
+If the deployment is successful, you'll see output similar to:
+```plaintext
+2025-03-28T12:31:04+01:00 INF ---------------------------------------------------------------------
+2025-03-28T12:31:04+01:00 INF ACP agent deployment name: org.agntcy.marketing-campaign
+2025-03-28T12:31:04+01:00 INF ACP agent running in container: org.agntcy.marketing-campaign, listening for ACP request on: http://127.0.0.1:62609
+2025-03-28T12:31:04+01:00 INF Agent ID: eae32ada-aaf8-408c-bf0c-7654455ce6e3
+2025-03-28T12:31:04+01:00 INF API Key: 08817517-7000-48e9-94d8-01d22cf7d20a
+2025-03-28T12:31:04+01:00 INF ---------------------------------------------------------------------
+```
+
+Take note of the **Agent ID**, **API Key**, and **Host** information, as you'll need them to interact with the deployed application.
+
+
+### Testing the Application with ACP Client
+
+To test our application, we'll use an ACP client that allows us to communicate with the deployed workflow server:
+
+1. In the project root, create the client script `main_acp_client.py`:
+    ``` python
+    #main_acp_client.py
+    import os
+    import asyncio
+    from state import OverallState, ConfigModel
+    from marketing_campaign import mailcomposer
+    from marketing_campaign import email_reviewer
+    from agntcy_acp import AsyncACPClient, ApiClientConfiguration
+    from agntcy_acp.acp_v0.async_client.api_client import ApiClient as AsyncApiClient
+
+    from agntcy_acp.models import (
+        RunCreateStateless,
+        RunResult,
+        RunError,
+        Config,
+    )
+
+    async def main():
+        print("What marketing campaign do you want to create?")
+        inputState = OverallState(
+            messages=[],
+            operation_logs=[],
+            has_composer_completed=False
+        )
+
+        marketing_campaign_id = os.environ.get("MARKETING_CAMPAIGN_ID", "")
+        client_config = ApiClientConfiguration.fromEnvPrefix("MARKETING_CAMPAIGN_")
+
+        while True:
+            usermsg = input("YOU [Type OK when you are happy with the email proposed] >>> ")
+            inputState.messages.append(mailcomposer.Message(content=usermsg, type=mailcomposer.Type.human))
+            run_create = RunCreateStateless(
+                agent_id=marketing_campaign_id,
+                input=inputState.model_dump(),
+                config=Config(configurable=ConfigModel(
+                    recipient_email_address=os.environ["RECIPIENT_EMAIL_ADDRESS"],
+                    sender_email_address=os.environ["SENDER_EMAIL_ADDRESS"],
+                    target_audience=email_reviewer.TargetAudience.academic
+                ).model_dump())
+            )
+            async with AsyncApiClient(configuration=client_config) as api_client:
+                acp_client = AsyncACPClient(api_client=api_client)
+                run_output = await acp_client.create_and_wait_for_stateless_run_output(run_create)
+                if run_output.output is None:
+                    raise Exception("Run output is None")
+                actual_output = run_output.output.actual_instance
+                if isinstance(actual_output, RunResult):
+                    run_result: RunResult = actual_output
+                elif isinstance(actual_output, RunError):
+                    run_error: RunError = actual_output
+                    raise Exception(f"Run Failed: {run_error}")
+                else:
+                    raise Exception(f"ACP Server returned a unsupported response: {run_output}")
+
+                runState = run_result.values # type: ignore
+                outputState = OverallState.model_validate(runState)
+                if len(outputState.operation_logs) > 0:
+                    print(outputState.operation_logs)
+                    break
+                else:
+                    print(outputState.messages[-1].content)
+                inputState = outputState
+
+    if __name__ == "__main__":
+        asyncio.run(main())
+    ```
+
+2. Set the environment variables with the information from your deployment logs:
+    ```bash
+    export MARKETING_CAMPAIGN_HOST="http://localhost:62609"  # Use the host from your logs
+    export MARKETING_CAMPAIGN_ID="eae32ada-aaf8-408c-bf0c-7654455ce6e3"  # Use your actual Agent ID
+    export MARKETING_CAMPAIGN_API_KEY='{"x-api-key": "08817517-7000-48e9-94d8-01d22cf7d20a"}'  # Use your actual API Key
+
+    # Configuration of the application
+    export RECIPIENT_EMAIL_ADDRESS="recipient@example.com"
+    export SENDER_EMAIL_ADDRESS="sender@example.com" # Sender email address as configured in SendGrid
+    ```
+
+3. Run the ACP client:
+
+    ```bash
+    poetry run python main_acp_client.py
+    ```
+
+4. Interact with the application:
+   - Describe the marketing campaign email you want to compose
+   - Refine the email content through conversation with the Mail Composer agent
+   - Type "OK" when you're satisfied with the draft
+   - The Email Reviewer agent will review and improve the email for your target audience
+   - The email will be sent to the specified recipient via SendGrid
+
+Through this client interaction, you can experience the complete workflow of our multi-agent system, from email composition to delivery, with all the intermediate processing steps handled automatically.
+
+The Workflow Server Manager makes it easy to deploy and run complex multi-agent applications, handling the dependencies, environment configuration, and communication between components.
 
 ### Conclusion
 
-In this tutorial, we demonstrated how to build a Multi-Agent System (MAS) using the ACP SDK. Starting from a basic LangGraph skeleton application, we progressively integrated agents, defined states, and implemented advanced features such as the I/O Mapper and API Bridge integration. These components allowed us to create a dynamic and flexible flow that ensures compatibility between agents and adapts to user interactions.
+In this tutorial, we demonstrated how to build a complete Multi-Agent System (MAS) using the ACP SDK. Starting from a basic LangGraph skeleton application, we progressively:
 
-By following this approach, you can design and implement your own MAS tailored to specific use cases, leveraging the power of ACP to enable communication and collaboration between distributed agents. The tools and techniques presented here provide a solid foundation for building scalable, efficient, and user-friendly multi-agent software.
+1. Integrated remote agents using ACP nodes
+2. Defined states to manage data flow between components
+3. Implemented advanced features such as the I/O Mapper and API Bridge integration
+4. Generated a deployable manifest for our application
+5. Executed our application through the Workflow Server Manager
+
+These components allowed us to create a dynamic and flexible workflow that ensures compatibility between agents, adapts to user interactions, and can be deployed as a complete distributed system.
+
+By following this approach, you can design and implement your own MAS tailored to specific use cases, leveraging the power of ACP to enable communication and collaboration between distributed agents. The tools and techniques presented here provide a solid foundation for building scalable, efficient, and user-friendly multi-agent software that can run locally or be deployed to production environments.
