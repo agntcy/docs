@@ -8,8 +8,6 @@ The sample app used for this tutorial is a **Marketing Campaign Manager** agent.
 
 
 ## Overview
-
-## Overview
 The **Marketing Campaign Manager** we are building implements a LangGraph graph which:
 * Interact with a user to gather the description of the email marketing campaign they wants to launch.
 * Uses an already existing [Mail Composer Agent](https://github.com/agntcy/acp-sdk/tree/main/examples/mailcomposer), capable of compose emails for the marketing campaign. This agent is written using LangGraph, it provides a Agent Manifest which allows to deploy it through the Agent Workflow Server and be consumed through ACP.
