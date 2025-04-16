@@ -1,4 +1,4 @@
-# Getting started with AGNTCY compoenents: build your first app
+# Getting started with AGNTCY components: build your first app
 
 This tutorial guides you through the process of building a distributed multi-agent application using [LangGraph](https://www.langchain.com/langgraph) and leveraging [Agent Connect Protocol (ACP)](https://docs.agntcy.org/pages/syntactic_sdk/connect.html) and other **AGNTCY** components and tools.
 
@@ -9,9 +9,9 @@ The sample app used for this tutorial is a **Marketing Campaign Manager** agent.
 
 ## Overview
 The **Marketing Campaign Manager** we are building implements a LangGraph graph which:
-* Interact with a user to gather the description of the email marketing campaign to launch.
-* Uses an already existing [Mail Composer Agent](https://github.com/agntcy/agentic-apps/tree/main/mailcomposer), capable of composing emails for the marketing campaign. This agent is written using LangGraph, it provides a Agent Manifest which allows to deploy it through the Agent Workflow Server and be consumed through ACP.
-* Uses an already existing [Email Reviewer Agent](https://github.com/agntcy/agentic-apps/tree/main/email_reviewer) capable of reviewing an email and adjust it for a specific target audience. This agent is written using [LlamaIndex](https://www.llamaindex.ai/framework) and simirarly to the previous agent, it provides a Agent Manifest which allows to deploy it through the [Agent Workflow Server](https://docs.agntcy.org/pages/agws/workflow_server.html) and be consumed through ACP.
+* Interacts with a user to gather the description of the email marketing campaign to launch.
+* Uses an already existing [Mail Composer Agent](https://github.com/agntcy/agentic-apps/tree/main/mailcomposer), capable of composing emails for the marketing campaign. This agent is written using LangGraph, it provides an Agent Manifest which allows to deploy it through the Agent Workflow Server and be consumed through ACP.
+* Uses an already existing [Email Reviewer Agent](https://github.com/agntcy/agentic-apps/tree/main/email_reviewer) capable of reviewing an email and adjust it for a specific target audience. This agent is written using [LlamaIndex](https://www.llamaindex.ai/framework) and similarly to the previous agent, it provides a Agent Manifest which allows to deploy it through the [Agent Workflow Server](https://docs.agntcy.org/pages/agws/workflow_server.html) and be consumed through ACP.
 * Uses [Twilio Sendgrid](https://sendgrid.com/) API to deliver the marketing campaign email to the intended recipient. We will consume this API leveraging the capabilities of the [API Bridge Agent](https://docs.agntcy.org/pages/syntactic_sdk/api_bridge_agent.html).
 
 This tutorial is structured in the following steps:
@@ -32,15 +32,17 @@ This tutorial is structured in the following steps:
 
 8. [Review Resulting Application](#step-8-review-resulting-application): Analyze the complete workflow and how all components interact with one another.
 
-9. [Execute Application through Workflow Server Manager](#step-9-execute-application-through-workflow-server-manager): Deploy and test the multi-agent system using Workflow Server.
+9. [Execute Application through Workflow Server Manager](#step-9-execute-application-through-workflow-server-manager): Deploy and test the multi-agent system using Workflow Server Manager.
 
 ## Prerequisites
 
 - A working installation of [Python](https://www.python.org/) 3.9 or higher
-- [Poetry](https://pypi.org/project/poetry/) v2 or greater
-- [Curl](https://curl.se/)
+- [poetry](https://pypi.org/project/poetry/) v2 or greater
+- [curl](https://curl.se/)
 
-
+<!-- TODO: poetry new --python='>=3.9,<4.0' marketing-campaign-mas -->
+<!-- TODO: cd marketing-campaign-mas -->
+<!-- TODO: poetry add python-dotenv langgraph langchain-openai langchain agntcy-acp -->
 ## Step 1: Create a Basic LangGraph Skeleton Application
 
 Let's start by setting up our project environment. You can either use pip to install the required packages or Poetry for dependency management.
@@ -61,9 +63,6 @@ Create a `pyproject.toml` file with the following dependencies:
 name = "marketing-campaign-mas"
 version = "0.1.0"
 description = "Multi-agent software for marketing campaigns"
-authors = [
-    {"Your Name <your.email@example.com>"}
-]
 dynamic = [ "dependencies" ]
 requires-python =  ">=3.9.0,<4.0"
 
@@ -313,7 +312,7 @@ This enables remote invocation, configuration, and output retrieval with the goa
 
 
 > **Why Use ACP?**
-> 1. **Remote Execution**: ACP nodes run on a Workflow Server, making it possible to execute tasks remotely.
+> 1. **Remote Execution**: ACP nodes run on a Agent Workflow Server, making it possible to execute tasks remotely.
 > 2. **Technology Independence**: ACP allows agents to be implemented in various technologies, such as LangGraph, LlamaIndex, etc., without compatibility issues.
 > 3. **Interoperability**: ACP ensures that agents can communicate and work together, regardless of the underlying technology, by adhering to a standardized protocol.
 > [Learn more about ACP](https://docs.agntcy.org/pages/syntactic_sdk/connect.html)
@@ -371,7 +370,7 @@ Next, define the ACP nodes to **replace** our placeholder functions:
     )
     ```
 
-> **Note**: The `_ path` fields indicate where to find the input and output in the `OverallState`, while the `_type` fields specify the type of the input and output schemas.
+> **Note**: The `_path` fields indicate where to find the input and output in the `OverallState`, while the `_type` fields specify the type of the input and output.
 
 Finally, update the `build_app_graph` function to use these ACP nodes instead of the placeholder functions:
 
@@ -385,9 +384,9 @@ def build_app_graph() -> CompiledStateGraph:
     sg.add_node(send_mail)  # We'll replace this with an API Bridge Agent node in Step 5
 
     # Define the flow of the graph
-    sg.add_edge(START, acp_mailcomposer.name)
-    sg.add_edge(acp_mailcomposer.name, acp_email_reviewer.name)
-    sg.add_edge(acp_email_reviewer.name, send_mail.__name__)
+    sg.add_edge(START, acp_mailcomposer.get_name())
+    sg.add_edge(acp_mailcomposer.get_name(), acp_email_reviewer.get_name())
+    sg.add_edge(acp_email_reviewer.get_name(), send_mail.__name__)
     sg.add_edge(send_mail.__name__, END)
 
     graph = sg.compile()
@@ -449,10 +448,10 @@ def build_app_graph() -> CompiledStateGraph:
     sg.add_node(send_email)  # Replace the placeholder send_mail with the API Bridge
 
     # Define the flow of the graph
-    sg.add_edge(START, acp_mailcomposer.name)
-    sg.add_edge(acp_mailcomposer.name, acp_email_reviewer.name)
-    sg.add_edge(acp_email_reviewer.name, send_email.name)
-    sg.add_edge(send_email.name, END)
+    sg.add_edge(START, acp_mailcomposer.get_name())
+    sg.add_edge(acp_mailcomposer.get_name(), acp_email_reviewer.get_name())
+    sg.add_edge(acp_email_reviewer.get_name(), send_email.get_name())
+    sg.add_edge(send_email.get_name(), END)
 
     graph = sg.compile()
     graph.name = "Marketing Campaign Manager"
@@ -474,9 +473,9 @@ To achieve this, we not only added the **I/O Mapper**, a powerful tool that auto
 
 ### Why Use I/O Mapper?
 
-> **What is I/O Mapper?**  
+> **What is I/O Mapper?**\
 > I/O Mapper is a component that ensures compatibility between agents by **transforming outputs to meet the input requirements** of subsequent agents. It addresses both **format-level** and **semantic-level** compatibility by leveraging an LLM to perform tasks such as:
-> 
+>
 > - **JSON Structure Transcoding**: Remapping JSON dictionaries.
 > - **Text Summarization**: Reducing or refining text content.
 > - **Text Translation**: Translating text between languages.
@@ -559,7 +558,6 @@ To make this tutorial code fully functional, we need to add implementations for 
 
         if user_message.upper() == "OK":
             state.has_composer_completed = True
-
         else:
             state.has_composer_completed = False
 
@@ -673,6 +671,7 @@ The conditional edge is implemented with the I/O Mapper, which ensures that the 
     sg.add_edge("prepare_output", END)
     ```
 
+<!-- TODO: Improve description of inputs of io mapper -->
 #### Explanation of Parameters and Workflow Behavior:
 
 - **`start=acp_mailcomposer`**: Specifies the starting node for the conditional edge, which is the `mailcomposer`.
@@ -696,11 +695,11 @@ With these additions, our application now has a complete workflow that can:
 
 ## Step 7: Generate Application Manifest
 
-In this step, we will **generate the Agent Manifest** for our Marketing Campaign application. The manifest generation enables our application to be used by other applications and to be deployed through a [Workflow Server](https://github.com/agntcy/workflow-srv).
+In this step, we will **generate the Agent Manifest** for our Marketing Campaign application. The manifest generation enables our application to be used by other applications and to be deployed through an [Agent Workflow Server](https://github.com/agntcy/workflow-srv).
 
 > **Why Generate an Agent Manifest?**
 > 1. **Reusability**: The manifest allows your MAS to be used as a dependency in other applications, so as to allow modular and composable agent architectures.
-> 2. **Deployment**: It provides the necessary information for the Workflow Server to deploy and run your application along with its dependencies.
+> 2. **Deployment**: It provides the necessary information for the Workflow Server Manager to deploy and run your application along with its dependencies.
 > 3. **Documentation**: It serves as a self-documenting artifact that describes your agent's capabilities, configuration options, and dependencies.
 
 ### Creating the Manifest Generator
@@ -811,7 +810,7 @@ Let's break down the components of our manifest generator:
      - `url=AnyUrl("file://.")`: Specifies that the source code is located in the current directory (relative to where the manifest is being used)
      - `framework_config`: Specifies that this is a LangGraph application with the graph defined in `marketing_campaign:graph`
 
-   - `env_vars`: Lists the environment variables required by the marketing campaing.
+   - `env_vars`: Lists the environment variables required by the marketing campaign.
    - `dependencies`: Lists the agents that our application depends on. Each dependency specifies:
      - The local name used to refer to the dependency
      - The reference to the agent manifest file (`./manifests/mailcomposer.json`)
@@ -827,7 +826,7 @@ poetry run python generate_manifest.py
 This will create a file called `marketing-campaign.json` in the `manifests` directory, which contains all the information needed for:
 
 * Using our Marketing Campaign application as a dependency in other applications
-* Deploying and running our application through the Workflow Server
+* Deploying and running our application through the Workflow Server Manager
 
 We'll focus on the second point and see how to execute our application using the Workflow Server Manager.
 
@@ -855,7 +854,7 @@ After generating the manifest, we can deploy and run our application using the W
 
 ### Installing the Workflow Server Manager
 
-First, download the Workflow Server Management CLI appropriate for your operating system from the [releases page](https://github.com/agntcy/workflow-srv-mgr/releases):
+First, download the Workflow Server Manager CLI appropriate for your operating system from the [releases page](https://github.com/agntcy/workflow-srv-mgr/releases):
 
 ```bash
 # For macOS with Apple Silicon
