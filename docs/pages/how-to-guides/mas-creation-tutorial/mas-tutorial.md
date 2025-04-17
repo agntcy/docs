@@ -1,4 +1,4 @@
-# Getting started with AGNTCY components: build your first app
+# Getting Started: Build Your First Multi-Agent Software
 
 This tutorial guides you through the process of building a distributed multi-agent application using [LangGraph](https://www.langchain.com/langgraph) and leveraging [Agent Connect Protocol (ACP)](https://docs.agntcy.org/pages/syntactic_sdk/connect.html) and other **AGNTCY** components and tools.
 
@@ -60,8 +60,11 @@ At this point, it's recommended to open the project folder in your favorite IDE 
 Install the dependencies:
 
 ```bash
-# Install all dependencies
+# Add all dependencies
 poetry add python-dotenv langgraph langchain-openai langchain agntcy-acp
+
+# Install the current project (marketing-campaign) and dependencies
+poetry install
 ```
 
 
@@ -135,12 +138,12 @@ def build_app_graph() -> CompiledStateGraph:
     sg.add_edge(send_mail.__name__, END)
 
     graph = sg.compile()
+    print("Graph compiled successfully.")
     return graph
 
 # Compile and skeleton graph
-if __name__ == "__main__":
-    graph = build_app_graph()
-    print("Skeleton graph compiled successfully.")
+graph = build_app_graph()
+
 ```
 
 Let's run our code to make sure everything works as expected:
@@ -151,7 +154,7 @@ poetry run python src/marketing_campaign/app.py
 
 You should see the output:
 ```
-"Skeleton graph compiled successfully."
+"Graph compiled successfully."
 ```
 
 
@@ -215,8 +218,8 @@ Create a file named `state.py` in the `src/marketing_campaign/` directory that w
 # src/marketing_campaign/state.py
 from pydantic import BaseModel, Field
 from typing import List, Optional
-import mailcomposer
-import email_reviewer
+from marketing_campaign import mailcomposer
+from marketing_campaign import email_reviewer
 
 class ConfigModel(BaseModel):
     recipient_email_address: str = Field(..., description="Email address of the email recipient")
@@ -295,7 +298,8 @@ To integrate the Mail Composer and Email Reviewer as ACP nodes, update the `src/
 ```python
 # Add these imports at the top of src/marketing_campaign/app.py
 import os
-import mailcomposer, email_reviewer
+from marketing_campaign import mailcomposer
+from marketing_campaign import email_reviewer
 from agntcy_acp import ApiClientConfiguration
 from agntcy_acp.langgraph.acp_node import ACPNode
 ```
@@ -357,6 +361,7 @@ def build_app_graph() -> CompiledStateGraph:
     sg.add_edge(send_mail.__name__, END)
 
     graph = sg.compile()
+    print("Graph compiled successfully.")
     return graph
 ```
 
@@ -423,6 +428,7 @@ def build_app_graph() -> CompiledStateGraph:
     sg.add_edge(send_email.get_name(), END)
 
     graph = sg.compile()
+    print("Graph compiled successfully.")
     return graph
 ```
 
@@ -468,9 +474,11 @@ To make this tutorial code fully functional, we need to add implementations for 
     class SendGridState(BaseModel):
         input: Optional[APIBridgeInput] = None
         output: Optional[APIBridgeOutput]= None
-
-    # Update OverallState class to include sendgrid_state
+    ```
+2. Then, update `OverallState` class to include `sendgrid_state` in `src/marketing_campaign/state.py`:
+    ```python
     class OverallState(BaseModel):
+        # Add sendgrid_state to OverallState
         messages: List[mailcomposer.Message] = Field([], description="Chat messages")
         operation_logs: List[str] = Field([],
                                         description="An array containing all the operations performed and their result. Each operation is appended to this array with a timestamp.",
@@ -486,7 +494,7 @@ To make this tutorial code fully functional, we need to add implementations for 
         sendgrid_state: Optional[SendGridState] = None  # Add this line
     ```
 
-2. Then, update imports at the top of your `src/marketing_campaign/app.py` file:
+3. Subsequently, update imports at the top of your `src/marketing_campaign/app.py` file:
     ```python
     # src/marketing_campaign/app.py
     # Update import to include SendGridState
@@ -498,7 +506,7 @@ To make this tutorial code fully functional, we need to add implementations for 
     from langchain_core.runnables import RunnableConfig
     ```
 
-3. Finally, implement the processing nodes in `src/marketing_campaign/app.py`:
+4. Finally, implement the processing nodes in `src/marketing_campaign/app.py`:
     ```python
     # Add these processing nodes to src/marketing_campaign/app.py
     def process_inputs(state: OverallState, config: RunnableConfig) -> OverallState:
@@ -636,6 +644,7 @@ The conditional edge is implemented with the I/O Mapper, which ensures that the 
         sg.add_edge("prepare_output", END)
 
         graph = sg.compile()
+        print("Graph compiled successfully.")
         return graph
     ```
 
@@ -678,7 +687,7 @@ Let's create a new file called `generate_manifest.py` in the `src/marketing_camp
 # src/marketing_campaign/generate_manifest.py
 from pathlib import Path
 from pydantic import AnyUrl
-from state import OverallState, ConfigModel
+from marketing_campaign.state import OverallState, ConfigModel
 from agntcy_acp.manifest import (
     AgentManifest,
     AgentDeployment,
@@ -789,6 +798,10 @@ Let's break down the components of our manifest generator:
 Now, let's run our script to generate the manifest:
 
 ```bash
+# Install the current project
+poetry install
+
+# Run the manifest generator
 poetry run python src/marketing_campaign/generate_manifest.py
 ```
 
@@ -823,10 +836,10 @@ After generating the manifest, we can deploy and run our application using the W
 
 ### Installing the Workflow Server Manager
 
-First, download the Workflow Server Manager CLI appropriate for your operating system from the [releases page](https://github.com/agntcy/workflow-srv-mgr/releases):
+First, download the Workflow Server Manager CLI appropriate for your operating system from the [releases page](https://github.com/agntcy/workflow-srv-mgr/releases).  Make sure to execute these commands from the root directory of your project:
 
 ```bash
-# For macOS with Apple Silicon
+# For macOS with Apple Silicon (run from project root)
 curl -L https://github.com/agntcy/workflow-srv-mgr/releases/download/v0.1.1/wfsm0.1.1_darwin_arm64.tar.gz -o wfsm.tar.gz
 tar -xzf wfsm.tar.gz # Keep the extracted wfsm binary it in the project root
 chmod +x wfsm
@@ -837,7 +850,7 @@ Follow these [instructions](https://docs.agntcy.org/pages/agws/workflow_server_m
 
 ### Configuring the Application Environment
 
-Before starting the workflow server, create a configuration file that provides the necessary environment variables and dependency settings. Create a file named `marketing_campaign_config.yaml` in your project root:
+Before starting the workflow server, create a configuration file that provides the necessary environment variables for the marketing-campaign application and its dependencies. Create a file named `marketing_campaign_config.yaml` in your project root directory:
 
 ```yaml
 # marketing_campaign_config.yaml
@@ -866,7 +879,7 @@ Before testing the full application workflow, you need to set up the SendGrid AP
 
 ### Deploying the Application
 
-Now, deploy the Marketing Campaign workflow server using the manifest we generated:
+Now, deploy the Marketing Campaign workflow server using the manifest we generated. Run this command from the root directory of your project:
 
 ```bash
 ./wfsm deploy -m ./manifests/marketing-campaign.json -e ./marketing_campaign_config.yaml
@@ -889,72 +902,10 @@ Take note of the **Agent ID**, **API Key**, and **Host** information, as you'll 
 
 To test our application, we'll use an ACP client that allows us to communicate with the deployed workflow server:
 
-1. In the project root, create the client script `main_acp_client.py`:
-    ``` python
-    #main_acp_client.py
-    import os
-    import asyncio
-    from state import OverallState, ConfigModel
-    import mailcomposer
-    import email_reviewer
-    from agntcy_acp import AsyncACPClient, ApiClientConfiguration
-    from agntcy_acp.acp_v0.async_client.api_client import ApiClient as AsyncApiClient
-
-    from agntcy_acp.models import (
-        RunCreateStateless,
-        RunResult,
-        RunError,
-        Config,
-    )
-
-    async def main():
-        print("What marketing campaign do you want to create?")
-        inputState = OverallState(
-            messages=[],
-            operation_logs=[],
-            has_composer_completed=False
-        )
-
-        marketing_campaign_id = os.environ.get("MARKETING_CAMPAIGN_ID", "")
-        client_config = ApiClientConfiguration.fromEnvPrefix("MARKETING_CAMPAIGN_")
-
-        while True:
-            usermsg = input("YOU [Type OK when you are happy with the email proposed] >>> ")
-            inputState.messages.append(mailcomposer.Message(content=usermsg, type=mailcomposer.Type.human))
-            run_create = RunCreateStateless(
-                agent_id=marketing_campaign_id,
-                input=inputState.model_dump(),
-                config=Config(configurable=ConfigModel(
-                    recipient_email_address=os.environ["RECIPIENT_EMAIL_ADDRESS"],
-                    sender_email_address=os.environ["SENDER_EMAIL_ADDRESS"],
-                    target_audience=email_reviewer.TargetAudience.academic
-                ).model_dump())
-            )
-            async with AsyncApiClient(configuration=client_config) as api_client:
-                acp_client = AsyncACPClient(api_client=api_client)
-                run_output = await acp_client.create_and_wait_for_stateless_run_output(run_create)
-                if run_output.output is None:
-                    raise Exception("Run output is None")
-                actual_output = run_output.output.actual_instance
-                if isinstance(actual_output, RunResult):
-                    run_result: RunResult = actual_output
-                elif isinstance(actual_output, RunError):
-                    run_error: RunError = actual_output
-                    raise Exception(f"Run Failed: {run_error}")
-                else:
-                    raise Exception(f"ACP Server returned a unsupported response: {run_output}")
-
-                runState = run_result.values # type: ignore
-                outputState = OverallState.model_validate(runState)
-                if len(outputState.operation_logs) > 0:
-                    print(outputState.operation_logs)
-                    break
-                else:
-                    print(outputState.messages[-1].content)
-                inputState = outputState
-
-    if __name__ == "__main__":
-        asyncio.run(main())
+1. Download the client script by running the following command from the root of the project:
+    ```bash
+    # Download the ACP client example from the agntcy/agentic-apps repository
+    curl https://raw.githubusercontent.com/agntcy/agentic-apps/refs/heads/main/marketing-campaign/src/marketing_campaign/main_acp_client.py -o src/marketing_campaign/main_acp_client.py
     ```
 
 2. Set the environment variables with the information from your deployment logs:
@@ -969,9 +920,8 @@ To test our application, we'll use an ACP client that allows us to communicate w
     ```
 
 3. Run the ACP client:
-
     ```bash
-    poetry run python main_acp_client.py
+    poetry run python src/marketing_campaign/main_acp_client.py
     ```
 
 4. Interact with the application:
