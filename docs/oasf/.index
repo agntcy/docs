@@ -1,0 +1,5 @@
+nav:
+  - Open Agentic Schema Framework: open-agentic-schema-framework.md
+  - Schema: model.proto.md
+  - Taxonomy of AI Agent Skills: taxonomy.md
+  - OASF Contribution Guide: workflow.md

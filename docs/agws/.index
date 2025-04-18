@@ -1,0 +1,3 @@
+nav:
+  - Agent Workflow Server: workflow_server.md
+  - Workflow Server Manager: workflow_server_manager.md

@@ -1,0 +1,7 @@
+nav:
+  - Agent Connect Protocol: connect.md
+  - Agntcy ACP Client SDK: agntcy_acp_sdk.md
+  - Client Reference API: agntcy_acp_reference.md
+  - API Models: agntcy_acp_models.md
+  - API Bridge Models: api_bridge_agent.md
+  - Human In the Loop: hil.md
