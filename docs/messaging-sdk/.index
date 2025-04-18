@@ -1,0 +1,7 @@
+nav:
+  - Getting Started: agp-howto.md
+  - Core Concepts: agp-core.md
+  - Security Layer: agp-security-layer.md
+  - Data Plane: agp-data-plane.md
+  - Control Plane: agp-control-plane.md
+  - Session Layer: agp-session-layer.md
