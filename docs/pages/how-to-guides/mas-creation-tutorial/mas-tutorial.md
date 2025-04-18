@@ -278,7 +278,7 @@ With this state definition in place, your application now has a structured appro
 The next step involves transforming our placeholder nodes into actual ACP nodes for remote agent integration.
 
 
-# Step 4: Multi-Agent Application Development
+## Step 4: Multi-Agent Application Development
 
 Now, let's enhance the skeleton setup by **transforming** LangGraph nodes **into ACP nodes** using `agntcy_acp` **sdk**. ACP nodes allow network communication between agents by using the **Agent Connect Protocol (ACP)**.
 This enables remote invocation, configuration, and output retrieval with the goal of allowing heterogeneous and distributed agents to interoperate.
