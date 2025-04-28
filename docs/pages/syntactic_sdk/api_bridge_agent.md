@@ -3,14 +3,14 @@
 ## About The Project
 
 The [API Bridge Agent](https://github.com/agntcy/api-bridge-agnt) project provides a [Tyk](https://tyk.io/) middleware plugin
-that allows users to interact with external services, using natural language. These external services can either offers 
-traditional REST APIs interface, or MCP interfaces. It acts as a translator between human language and structured API and 
+that allows users to interact with external services, using natural language. These external services can either offers
+traditional REST APIs interface, or MCP interfaces. It acts as a translator between human language and structured API and
 MCP Servers, for requests and responses.
 
 Key features:
 
 - Select best services, based on the intent on the query.
-- Converts natural language queries into valid API requests based on OpenAPI specifications for service with API interfaces, 
+- Converts natural language queries into valid API requests based on OpenAPI specifications for service with API interfaces,
 or into valid MCP tool calls for MCP Servers.
 - Transforms service responses back into natural language explanations.
 - Integrates with Tyk API Gateway as a plugin.
@@ -20,7 +20,7 @@ or into valid MCP tool calls for MCP Servers.
 This enables developers to build more accessible and user-friendly API interfaces without modifying
 the underlying API implementations, or to access to MCP Servers and tools without implementing a MCP Client.
 
-## API Bridge Agent interfaces
+## API Bridge Agent Interfaces
 
 API Agent Bridge support several level of interface:
 
@@ -30,18 +30,18 @@ API Agent Bridge support several level of interface:
 :align: center
 ```
 
-### ① - The API interfaces
+### ① - The API Interfaces
 
 API Bridge Agent provides one endpoint per API (service) supported
 
 i.e. if you add the Github support to API Bridge Agent, with a /github/ configured listen path, then you can address natural language requests directly to this endpoint to access to Github service.
 
-#### direct mode
+#### Direct Mode
 
 You can request directly the wanted endpoint in the API specification.
 
-For ex: 
-```bash
+For ex:
+```shell
 curl 'http://localhost:8080/gmail/gmail/v1/users/me/messages/send' \
   --header "Authorization: Bearer YOUR_GOOGLE_TOKEN" \
   --header 'Content-Type: text/plain' \
@@ -59,13 +59,13 @@ API Bridge Agent will :
 - Tyk will automatically connect to the upstream endpoint and get the response
 - use LLM to translate result of api call to NLQ
 
-#### indirect mode
+#### Indirect Mode
 
-In this case, you target a service, but you let API Bridge Agent to choose inside the service the best endpoint to solve the 
+In this case, you target a service, but you let API Bridge Agent to choose inside the service the best endpoint to solve the
 request.
 
-For ex: 
-```bash
+For ex:
+```shell
 curl 'http://localhost:8080/gmail/' \
   --header "Authorization: Bearer YOUR_GOOGLE_TOKEN" \
   --header 'Content-Type: text/plain' \
@@ -82,25 +82,25 @@ API Bridge Agent will :
 
 ### ② - The Cross-API Interface
 
-API Bridge Agent provide a specific endpoint /aba/. If you address a natural language request to this endpoint, 
-API Bridge Agent will search for the best service to solve the request, then it will forward the request to the proper API 
+API Bridge Agent provide a specific endpoint /aba/. If you address a natural language request to this endpoint,
+API Bridge Agent will search for the best service to solve the request, then it will forward the request to the proper API
 interface.
 
 API Bridge Agent will :
 - use a semantic search for best service selection.
-- forward the request to the selected service (indirect mode: we let the service choose the best endpoint. We don’t select it 
+- forward the request to the selected service (indirect mode: we let the service choose the best endpoint. We don’t select it
 at the cross-api interface level)
 
 ### ③ - The MCP Interface (new)
 
-MCP is an open protocol that standardizes how applications provide context to LLMs. It provides a standardized way to connect 
+MCP is an open protocol that standardizes how applications provide context to LLMs. It provides a standardized way to connect
 AI models to different data sources and tools.
 
 API Bridge Agent support MCP across a specific endpoint /mcp/. One MCP Client is instantiated per MCP servers connected.
 
 API Bridge Agent will :
 - invoke the LLM with the list of available tools that come from all the connected MCP Servers.
-- if the LLM needs informations coming from the tools, API bridge Agent will request all the needed tools using corresponding 
+- if the LLM needs informations coming from the tools, API bridge Agent will request all the needed tools using corresponding
 MCP client.
 - API Bridge Agent invoke again the LLM with the NLQ, the list of tools, the first response and the list of result of call tools.
 - If LLM still need some informations, API Bridge Agent loop again and call tools.
@@ -123,31 +123,31 @@ git clone https://github.com/agntcy/api-bridge-agnt
 
 Tyk requires also a Redis database. Deploy it with the following command:
 
-```bash
+```shell
 make start_redis
 ```
 
-### Local development
+### Local Development
 
 Built with:
 
 - [Search](https://github.com/kelindar/search) for the semantic router.
 - [Tyk](https://github.com/TykTechnologies/tyk.git) for the gateway.
-We use these dependencies inside the project. However, you don't need to download it or to build it, 
+We use these dependencies inside the project. However, you don't need to download it or to build it,
 everything is managed by the Makefile.
 
-#### Set environment variables
+#### Set Environment Variables
 
 For OpenAI:
 
-```bash
+```shell
 export OPENAI_API_KEY=REPLACE_WITH_YOUR_KEY
 export OPENAI_MODEL=gpt-4o-mini
 ```
 
 For Azure OpenAI:
 
-```bash
+```shell
 export OPENAI_API_KEY=REPLACE_WITH_YOUR_KEY
 export OPENAI_ENDPOINT=https://REPLACE_WITH_YOUR_ENDPOINT.openai.azure.com
 export OPENAI_MODEL=gpt-4o-mini
@@ -157,7 +157,7 @@ export OPENAI_MODEL=gpt-4o-mini
 
 Dependencies are managed so that you can just run:
 
-```bash
+```shell
 make start_tyk
 ```
 
@@ -165,17 +165,17 @@ This will automatically build "Tyk", "search" and the plugin, then install the p
 
 #### Load and Configure Tyk with an Example API (httpbin.org)
 
-```bash
+```shell
 make load_plugin
 ```
 
-### Other installation
+### Other Installation
 
 #### Linux
 
 For Linux (Ubuntu) you can use:
 
-```bash
+```shell
 TARGET_OS=linux TARGET_ARCH=amd64 SEARCH_LIB=libllama_go.so make start_tyk
 ```
 
@@ -183,7 +183,7 @@ TARGET_OS=linux TARGET_ARCH=amd64 SEARCH_LIB=libllama_go.so make start_tyk
 
 If you need to decompose each task individually, you can split into:
 
-```bash
+```shell
 make build_tyk          # build tyk
 make build_search_lib   # build the "search" library, used as semantic router
 make build_plugin       # build the plugin
@@ -244,7 +244,7 @@ Then add your OpenAPI specification:
 
 For example, adding the httpbin.org service can be done using the `configs/httpbin.org.oas.json` file.
 
-```bash
+```shell
 curl http://localhost:8080/tyk/apis/oas \
   --header "x-tyk-authorization: foo" \
   --header 'Content-Type: text/plain' \
@@ -256,7 +256,7 @@ curl http://localhost:8080/tyk/reload/group \
 
 It's then possible to do a query like this:
 
-```bash
+```shell
 curl http://localhost:8080/httpbin/json \
   --header "X-Nl-Query-Enabled: yes" \
   --header "X-Nl-Response-Type: nl" \
@@ -274,11 +274,11 @@ In this example `http://localhost:8080/httpbin/json`:
 The new Cross-API interface, available at the `/aba/` endpoint, is not activated by default.
 
 To activate it, simply copy/paste `configs/agent_bridge.json` file into `./tyk-release-v5.8.0/apps` folder,
-then restart 
+then restart
 
 It's then possible to do a query like this:
 
-```bash
+```shell
 curl http://localhost:8080/aba/ \
   --header "Content-Type: application/nlq" \
   -d "Send email to <john.doe@gmail.com>. The content is "Hello from Mr Smith", The subject is "This is a test" and the reply-to address is <mr.smith@gmail.com>. No BCC, no CC"
@@ -330,8 +330,8 @@ A valid configuration need a `command` and `args`, or a SSE address. This is som
     "args": [
       "run",
       "python",
-      "../../../mcp/servers/git/src/mcp_server_git/server.py", 
-      "--repository", 
+      "../../../mcp/servers/git/src/mcp_server_git/server.py",
+      "--repository",
       "/media/sf_vmshared/my_repository"
     ]
   },
@@ -350,8 +350,8 @@ A valid configuration need a `command` and `args`, or a SSE address. This is som
   "resend": {
     "command": "node",
     "args": [
-      ".../mcp/mcp-send-email/build/index.js", 
-      "--key=<MAY KEY>", 
+      ".../mcp/mcp-send-email/build/index.js",
+      "--key=<MAY KEY>",
       "--sender=john.doe@resend.dev"
     ]
   },
@@ -378,10 +378,10 @@ curl http://localhost:8080/mcp/init
 
 When using API Bridge Agent, you *MUST* use the content type `application/nlq` on your request
 
-```bash
+```shell
 curl http://localhost:8080/aba/ \
   --header "Content-Type: application/nlq" \
-  -d "Send email to <john.doe@gmail.com>. The content is "Hello from Mr Smith", The subject is "This is a test" and 
+  -d "Send email to <john.doe@gmail.com>. The content is "Hello from Mr Smith", The subject is "This is a test" and
   the reply-to address is <mr.smith@gmail.com>. No BCC, no CC"
 ```
 
@@ -389,7 +389,7 @@ curl http://localhost:8080/aba/ \
 
 The `configs/api.github.com.gist.deref.oas.json` file is a subset of the Github API, already configured with a few `x-nl-input-examples`:
 
-```bash
+```shell
 curl 'http://localhost:8080/github/' \
   --header 'Content-Type: application/nlq' \
   -d 'List the first issue for the repository named tyk owned by TykTechnologies with the label bug'
@@ -398,7 +398,7 @@ curl 'http://localhost:8080/github/' \
 
 ## An Example with Sendgrid API
 
-As a usage example, we will use the API Bridge Agnt to send email via SENGRID API.
+As a usage example, we will use the API Bridge Agent to send email via SENGRID API.
 
 ### Prerequisites
 
@@ -501,7 +501,7 @@ You have a configuration example here: `./configs/api.sendgrid.com.oas.json`
 
 Your OAS API is ready to be integrated on the Tyk plugin:
 
-```bash
+```shell
 curl http://localhost:8080/tyk/apis/oas \
   --header "x-tyk-authorization: foo" \
   --header 'Content-Type: text/plain' \
@@ -515,7 +515,7 @@ curl http://localhost:8080/tyk/reload/group \
 
 Replace "agntcy@example.com" with a sender email you have configured on your sendgrid account.
 
-```bash
+```shell
 curl http://localhost:8080/sendgrid/ \
   --header "Authorization: Bearer $SENDGRID_API_KEY" \
   --header 'Content-Type: application/nlq' \
@@ -1249,7 +1249,7 @@ emphasize-lines: 7-11
 
 ## An Example with a new MCP Server
 
-In this exemple, we have already activated MCP support 
+In this exemple, we have already activated MCP support
 We want to add a new MCP server (weather) in addition to the existing one (the default one) github.
 
 1- create a MCP server
