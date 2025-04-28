@@ -29,14 +29,12 @@ API Agent Bridge support several level of interface:
 :width: 100%
 :align: center
 ```
-&nbsp;
 
-### 1- The API interfaces
+### ① - The API interfaces
 
 API Bridge Agent provides one endpoint per API (service) supported
 
-I.e. if you add the github support to API Bridge Agent, with a /github/ configured listen path, then you can address natural 
-language request directly to this endpoint to access to github service.
+i.e. if you add the Github support to API Bridge Agent, with a /github/ configured listen path, then you can address natural language requests directly to this endpoint to access to Github service.
 
 #### direct mode
 
@@ -56,14 +54,14 @@ In this example
 - /gmail/ is the listen path defined on the x-tyk-api-gateway part of the spec
 - gmail/v1/users/me/messages/send is the endpoint in the specification
 
-Api Bridge Agent will :
+API Bridge Agent will :
 - use LLM to translate Natural Language Query (NLQ) to api call for the wanted endpoint
-- tyk will automatically connect to the upstream endpoint and get the response
+- Tyk will automatically connect to the upstream endpoint and get the response
 - use LLM to translate result of api call to NLQ
 
 #### indirect mode
 
-In this case, you target a service, but you let Api Bridge Agent to choose inside the service the best endpoint to solve the 
+In this case, you target a service, but you let API Bridge Agent to choose inside the service the best endpoint to solve the 
 request.
 
 For ex: 
@@ -76,44 +74,42 @@ curl 'http://localhost:8080/gmail/' \
   --data 'Send an email to "john.doe@example.com". Explain that we are accepting his offer for Agntcy'
 ```
 
-Api Bridge Agent will :
+API Bridge Agent will :
 - use a semantic search to select the best endpoint that correspond to the query
 - use LLM to translate NLQ to api call for the wanted endpoint
-- tyk will automatically connect to the upstream endpoint and get the response
+- Tyk will automatically connect to the upstream endpoint and get the response
 - use LLM to translate result of api call to NLQ
 
-### 2- The Cross-API Interface
+### ② - The Cross-API Interface
 
 API Bridge Agent provide a specific endpoint /aba/. If you address a natural language request to this endpoint, 
 API Bridge Agent will search for the best service to solve the request, then it will forward the request to the proper API 
 interface.
 
-Api Bridge Agent will :
+API Bridge Agent will :
 - use a semantic search for best service selection.
 - forward the request to the selected service (indirect mode: we let the service choose the best endpoint. We don’t select it 
 at the cross-api interface level)
 
-### 3- The MCP Interface (new)
+### ③ - The MCP Interface (new)
 
 MCP is an open protocol that standardizes how applications provide context to LLMs. It provides a standardized way to connect 
 AI models to different data sources and tools.
 
-API Bridge Agent support MCP accross a specific endpoint /mcp/. One MCP Client is instantiated per MCP servers connected.
+API Bridge Agent support MCP across a specific endpoint /mcp/. One MCP Client is instantiated per MCP servers connected.
 
-In place of Claude, API Bridge Agent use AzureOpenAI as LLM.
-
-Api Bridge Agent will :
-- invoke the LLM with the list of availables tools that come from all the connected MCP Servers.
-- if the LLM needs informations coming from the tools, API bridge Agent will request all the needed tools using coresponding 
+API Bridge Agent will :
+- invoke the LLM with the list of available tools that come from all the connected MCP Servers.
+- if the LLM needs informations coming from the tools, API bridge Agent will request all the needed tools using corresponding 
 MCP client.
-- Api Bridge Agent invoke again the LLM with the NLQ, the list of tools, the first response and the list of result of call tools.
+- API Bridge Agent invoke again the LLM with the NLQ, the list of tools, the first response and the list of result of call tools.
 - If LLM still need some informations, API Bridge Agent loop again and call tools.
 
 ## Getting Started
 
 ### Prerequisites
 
-To build the plugin you need the following dependenccies:
+To build the plugin you need the following dependencies:
 - Go
 - CMake
 - Git
@@ -206,9 +202,7 @@ You need to apply some configuration when:
 
 ### Adding a new Service
 
-At this date, 
-To use it, you need to add the plugin to the `postPlugins` and `responsePlugins`
-sections of the `x-tyk-api-gateway` section:
+Add the plugin to the `postPlugins` and `responsePlugins` sections of the `x-tyk-api-gateway` section:
 
 ```json
 "x-tyk-api-gateway": {
@@ -272,12 +266,12 @@ curl http://localhost:8080/httpbin/json \
 
 In this example `http://localhost:8080/httpbin/json`:
 
-- "/httpbin/" is the listen path defined on the x-tyk-api-gateway part of the spec
-- "json" is the endpoint on the spec
+- "/httpbin/" is the listen path defined on the `x-tyk-api-gateway` part of the specification
+- "json" is the endpoint on the specification
 
-### Activate the new cross-api interface
+### Activate the new Cross-API interface
 
-The new cross-api interface, available across the `/aba/` endpoint, is not activated by default.
+The new Cross-API interface, available at the `/aba/` endpoint, is not activated by default.
 
 To activate it, simply copy/paste `configs/agent_bridge.json` file into `./tyk-release-v5.8.0/apps` folder,
 then restart 
@@ -290,7 +284,7 @@ curl http://localhost:8080/aba/ \
   -d "Send email to <john.doe@gmail.com>. The content is "Hello from Mr Smith", The subject is "This is a test" and the reply-to address is <mr.smith@gmail.com>. No BCC, no CC"
 ```
 
-If you have a service that support action to send an email, the cross-api interface will route this request to that service.
+If you have a service that support action to send an email, the Cross-API interface will route this request to that service.
 Otherwise, a "404 Not found" will be answered.
 
 Note: it is possible to change the listen path `/aba/` by editing the `configs/agent_bridge.json` file before activate it.
@@ -316,10 +310,10 @@ Note: do not change the listen path `/mcp/` on the `configs/agent_bridge.json` f
 
 ### Adding support for a new MCP server
 
-You have to edit the `configs/mcp.oas.json` file, then reload the tyk configuration.
+You have to edit the `configs/mcp.oas.json` file, then reload the Tyk configuration.
 
-Inside the `configs/mcp.oas.json` file, add the new MCP server to the "mcpServers" list.
-A valid configuration need a command and args, or a SSE address. This is some examples of such configuration:
+Inside the `configs/mcp.oas.json` file, add the new MCP server to the `mcpServers` list.
+A valid configuration need a `command` and `args`, or a SSE address. This is some examples of such configuration:
 
 ```json
 "mcpServers": {
@@ -367,7 +361,7 @@ A valid configuration need a command and args, or a SSE address. This is some ex
 }
 ```
 
-then refresh tyk with the new configuration:
+then refresh Tyk with the new configuration:
 
 ```shell
 curl http://localhost:8080/tyk/apis/oas \
@@ -380,9 +374,9 @@ curl http://localhost:8080/tyk/reload/group --header 'x-tyk-authorization: foo'
 curl http://localhost:8080/mcp/init
 ```
 
-### Using Api Bridge Agent
+### Using API Bridge Agent
 
-When using Api Bridge Agent, you *MUST* use the content type `application/nlq` on your request
+When using API Bridge Agent, you *MUST* use the content type `application/nlq` on your request
 
 ```bash
 curl http://localhost:8080/aba/ \
@@ -414,7 +408,7 @@ As a usage example, we will use the API Bridge Agnt to send email via SENGRID AP
 - Make sure you properly export `OPENAI_*` parameters.
 - Start the plugin as described on "Getting Started" section.
 
-### Update the API with tyk middleware settings
+### Update the API with Tyk middleware settings
 
 Configure Tyk to use the sendgrid API by adding the `x-tyk-api-gateway` extension:
 
@@ -503,7 +497,7 @@ For example:
 
 You have a configuration example here: `./configs/api.sendgrid.com.oas.json`
 
-### Add the API to tyk configuration
+### Add the API to Tyk configuration
 
 Your OAS API is ready to be integrated on the Tyk plugin:
 
@@ -1070,7 +1064,6 @@ There is no OpenAPI specification available so we create one.
 ```
 
 </details>
-&nbsp;
 
 ### Update the API and configure Tyk
 
@@ -1365,7 +1358,6 @@ if __name__ == "__main__":
 ```
 
 </details>
-&nbsp;
 
 Then, still inside the `mcp-weather` folder, create a file `pyproject.toml` with content:
 
@@ -1395,7 +1387,7 @@ Use poetry to install dependencies.
 poetry install
 ```
 
-2- update the Api-Bridge-Agent configuration. Add the following "weather" entry on the mcpServers list inside the `configs/mcp.oas.json` file:
+2- update the API Bridge Agent configuration. Add the following "weather" entry on the mcpServers list inside the `configs/mcp.oas.json` file:
 
 ```json
               "mcpServers": {
@@ -1424,7 +1416,7 @@ curl http://localhost:8080/tyk/reload/group --header 'x-tyk-authorization: foo'
 curl http://localhost:8080/mcp/init
 ```
 
-4- You can request Api-Bridge-Agent with
+4- You can request API Bridge Agent with
 
 ```shell
 curl 'http://localhost:8080/mcp/'  \
