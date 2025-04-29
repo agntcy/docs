@@ -13,7 +13,7 @@ The SDK is current available in [Python](https://pypi.org/project/agntcy-acp/) [
 
 To use the package, follow the steps below.
 
-### Requirements.
+### Requirements
 
 Python 3.9+
 
