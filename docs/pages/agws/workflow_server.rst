@@ -52,7 +52,7 @@ The Agent Workflow Server, and the underlying Agent, could be optionally authent
 - Include the same value in requests from clients via ``x-api-key`` header
 
 API Documentation
----------------
+-----------------
 
 Once the Agent Workflow Server is running, interactive API docs are available under ``/docs`` endpoint, redoc documentation under ``/redoc`` endpoint
 

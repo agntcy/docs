@@ -35,7 +35,7 @@ Getting Started
 ---------------
 
 Use in your project
-~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: sh
 
@@ -59,9 +59,10 @@ Prerequisites
    git clone https://github.com/agntcy/iomapper-agnt.git
 
 2. Install dependecies
-  .. code-block:: sh
 
-      poetry install
+.. code-block:: sh
+
+    poetry install
 
 Usage
 -----
@@ -143,6 +144,7 @@ Entities
                },
                "required": ["title", "ingredients, instructions"],
            }
+        
      **output_schema** (:py:class:`Optional[dict[str, Any]]`) [Optional]
 
      Defines the schema for the result of the mapping.
@@ -265,7 +267,7 @@ Define an Instance of the Agent
 Add the node to the LangGraph graph
 -----------------------------------
 
-.. code_block:: python
+.. code-block:: python
 
     workflow.add_node(
         "io_mapping",
@@ -308,7 +310,7 @@ Define an Agent IO Mapper Metadata
     )
 
 Define an Instance of the Agent
-------------------------------
+-------------------------------
 
 .. code-block:: python
 
@@ -553,6 +555,7 @@ Use Examples
 ------------
 
 1. Install:
+
   - `cmake <https://cmake.org/>`_
 
   - `pip <https://pip.pypa.io/en/stable/installation/>`_
