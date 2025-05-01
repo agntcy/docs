@@ -54,8 +54,8 @@ async with AsyncApiClient(config) as api_client:
 The complete documentation for all of the API Endpoints are
 available in the reference documentation for the API clients:
 
-  * [ApiClient](/pages/syntactic_sdk/agntcy_acp_reference.html#acpclient)
-  * [AsyncApiClient](/pages/syntactic_sdk/agntcy_acp_reference.html#asyncacpclient)
+  * [ACPClient](https://agntcy.github.io/acp-sdk/html/agntcy_acp.html#agntcy_acp.ACPClient)
+  * [AsyncACPClient](https://agntcy.github.io/acp-sdk/html/agntcy_acp.html#agntcy_acp.AsyncACPClient)
 
 ## Using ACP with LangGraph
 
@@ -197,12 +197,5 @@ See the [open issues](https://github.com/agntcy/acp-sdk/issues) for a list of pr
 
 ## Client Reference API
 
-```{eval-rst}
-.. include:: ./agntcy_acp_reference.rst
-```
-
-## API Models
-
-```{eval-rst}
-.. include:: ./agntcy_acp_models.rst
-```
+For a detailed description of the classes and functions in the SDK, please see the
+[agntcy-acp Package Documentation](https://agntcy.github.io/acp-sdk/index.html)
