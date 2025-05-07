@@ -37,7 +37,7 @@ The initial set of IoA components and architecture is outlined below. This is a 
 :align: center
 ```
 
-1. **Agent Identity**: A system that leverages decentralized technologies to manage and verify the identities of Agents issued by any organization, ensuring secure and trustworthy interactions.
+1. **Identity**: To ensure open, collision-free, secure agent authentication and metadata validation, fostering trust and reliability across Agents, MCP Servers, and Multi-Agent Systems.
 1. **Open Agent Schema Framework (OASF)**: An OCI based extensible data model allowing to describe agents' attributes and ensuring unique identification of agents. Current OASF repo can be found [here](https://github.com/agntcy/oasf), OASF schema documentation can be found [here](https://schema.oasf.agntcy.org).
 1. **Agent Directory**: Allows to announce and discover agents or multi-agent applications. Any organization can run its directory and keep it in sync with others, forming the Internet of Agents inventory.
 1. **Agent Manifest**: A standard format to describes agents, their capabilities, their dependencies, and how to deploy or consume them. The manifest is designed to be used by ACP and the Workflow Server and stored in the Agent Directory with the corresponding OASF extensions.

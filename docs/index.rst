@@ -40,6 +40,12 @@ Internet of Agents Components
    pages/agws/manifest
 
 .. toctree::
+   :caption: Identity
+   :maxdepth: 1
+
+   pages/identity/identity
+
+.. toctree::
    :caption: Semantic SDK
    :maxdepth: 1
 
