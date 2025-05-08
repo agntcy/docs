@@ -109,7 +109,7 @@ Env vars are applied in the below order, meaning that bottom ones override :
 ### Example of configuring environment variables for agents
 
 Let's say you want to set `AZURE_OPENAI_API_KEY` for `mailcomposer` and it's dependency `email_reviewer_1` (deployment name).
-Declare `AZURE_OPENAI_API_KEY` env var both for `mailcomposer` and `email_reviewer_1` in their mainfest:
+Declare `AZURE_OPENAI_API_KEY` env var both for `mailcomposer` and `email_reviewer_1` in their manifest:
 
 ```yaml
     "env_vars": [
