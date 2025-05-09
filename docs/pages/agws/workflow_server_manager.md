@@ -229,10 +229,6 @@ The exposed REST endpoints can be accessed with regular tools (for example, Curl
 
 Example manifests can be found in the [WFSM Tool](https://github.com/agntcy/workflow-srv-mgr/tree/main/examples) repository.
 
-> Note:
-> Paths to the manifests and the paths inside the manifest definitions in the example commands need to be correct on the environment they are executed in!
-
-
 ### Expose the [Mail Composer](https://github.com/agntcy/agentic-apps/tree/main/mailcomposer) LangGraph agent through ACP workflow server 
 
 ```bash
@@ -251,14 +247,12 @@ wfsm deploy -m examples/llama_manifest.json -e examples/env_vars
 wfsm deploy -m examples/manifest_with_deps.json -e examples/env_vars_with_deps
 ```
 
->Make sure the url to the manifest of the dependent agent is either an absolute path or a relative path to the directory you are running `wfsm` tool.
-
 ### Run agent from docker image
 
 Run deploy to build images.
 
 ```bash
-wfsm deploy -m examples/langgraph_manifest.json -e examples/env_vars --dryRun
+wfsm deploy -m examples/langgraph_manifest.json -e examples/env_vars
 ```
 
 Get the image tag from console athset in the manifest.
