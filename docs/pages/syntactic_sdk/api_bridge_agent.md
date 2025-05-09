@@ -3,14 +3,14 @@
 ## About The Project
 
 The [API Bridge Agent](https://github.com/agntcy/api-bridge-agnt) project provides a [Tyk](https://tyk.io/) middleware plugin
-that allows users to interact with external services, using natural language. These external services can either offers
-traditional REST APIs interface, or MCP interfaces. It acts as a translator between human language and structured API and
-MCP Servers, for requests and responses.
+that allows users to interact with external services using natural language. These external services can either offer a
+traditional REST APIs interface or MCP interfaces. It acts as a translator between natural language, structured APIs, and
+MCP Servers for requests and responses.
 
 Key features:
 
-- Select best services, based on the intent on the query.
-- Converts natural language queries into valid API requests based on OpenAPI specifications for service with API interfaces,
+- Select best services based on the intent on the query.
+- Converts natural language queries into valid API requests based on OpenAPI specifications for service with API interfaces
 or into valid MCP tool calls for MCP Servers.
 - Transforms service responses back into natural language explanations.
 - Integrates with Tyk API Gateway as a plugin.
@@ -18,11 +18,11 @@ or into valid MCP tool calls for MCP Servers.
 - Preserves API schema validation and security while enabling conversational interfaces.
 
 This enables developers to build more accessible and user-friendly API interfaces without modifying
-the underlying API implementations, or to access to MCP Servers and tools without implementing a MCP Client.
+the underlying API implementations, or to access to MCP Servers and tools without implementing an MCP Client.
 
 ## API Bridge Agent Interfaces
 
-API Agent Bridge support several level of interface:
+The API Agent Bridge supports several level of interface:
 
 ```{image} ../../_static/ABA.drawio.png
 :alt: Agent Bridge Interfaces
@@ -30,17 +30,16 @@ API Agent Bridge support several level of interface:
 :align: center
 ```
 
-### ① - The API Interfaces
+### The API Interfaces
 
-API Bridge Agent provides one endpoint per API (service) supported
-
-i.e. if you add the Github support to API Bridge Agent, with a /github/ configured listen path, then you can address natural language requests directly to this endpoint to access to Github service.
+API Bridge Agent provides one endpoint per API (service) supported, that is if you add the Github support to API Bridge Agent, with a `/github/` configured listen path, then you can address natural language requests directly to this endpoint to access to Github service.
 
 #### Direct Mode
 
-You can request directly the wanted endpoint in the API specification.
+You can request directly the desired endpoint in the API specification.
 
-For ex:
+For example:
+
 ```shell
 curl 'http://localhost:8080/gmail/gmail/v1/users/me/messages/send' \
   --header "Authorization: Bearer YOUR_GOOGLE_TOKEN" \
@@ -50,21 +49,24 @@ curl 'http://localhost:8080/gmail/gmail/v1/users/me/messages/send' \
   --data 'Send an email to "john.doe@example.com". Explain that we are accepting his offer for Agntcy'
 ```
 
-In this example
-- /gmail/ is the listen path defined on the x-tyk-api-gateway part of the spec
-- gmail/v1/users/me/messages/send is the endpoint in the specification
+In this example:
 
-API Bridge Agent will :
-- use LLM to translate Natural Language Query (NLQ) to api call for the wanted endpoint
-- Tyk will automatically connect to the upstream endpoint and get the response
-- use LLM to translate result of api call to NLQ
+- `/gmail/` is the listen path defined on the `x-tyk-api-gateway` part of the specification.
+- `gmail/v1/users/me/messages/send` is the endpoint in the specification.
+
+The API Bridge Agent does the following:
+
+- It uses an LLM to translate Natural Language Query (NLQ) to an API call for the desired endpoint.
+- Tyk automatically connects to the upstream endpoint and gets the response.
+- It uses an LLM to translate result of api call to NLQ.
 
 #### Indirect Mode
 
-In this case, you target a service, but you let API Bridge Agent to choose inside the service the best endpoint to solve the
+In this case, you target a service but you let API Bridge Agent to choose the best endpoint inside the service to solve the
 request.
 
-For ex:
+For example:
+
 ```shell
 curl 'http://localhost:8080/gmail/' \
   --header "Authorization: Bearer YOUR_GOOGLE_TOKEN" \
@@ -74,36 +76,39 @@ curl 'http://localhost:8080/gmail/' \
   --data 'Send an email to "john.doe@example.com". Explain that we are accepting his offer for Agntcy'
 ```
 
-API Bridge Agent will :
-- use a semantic search to select the best endpoint that correspond to the query
-- use LLM to translate NLQ to api call for the wanted endpoint
-- Tyk will automatically connect to the upstream endpoint and get the response
-- use LLM to translate result of api call to NLQ
+API Bridge Agent does the following:
 
-### ② - The Cross-API Interface
+- It uses a semantic search to select the best endpoint that correspond to the query.
+- Uses an LLM to translate NLQ to an API call for the desired endpoint.
+- Tyk automatically connects to the upstream endpoint and gets the response.
+- It use an LLM to translate result of api call to NLQ.
 
-API Bridge Agent provide a specific endpoint /aba/. If you address a natural language request to this endpoint,
-API Bridge Agent will search for the best service to solve the request, then it will forward the request to the proper API
+### The Cross-API Interface
+
+API Bridge Agent provides a specific endpoint: `/aba/`. If you address a natural language request to this endpoint,
+API Bridge Agent searches for the best service to solve the request, then it forwards the request to the proper API
 interface.
 
-API Bridge Agent will :
-- use a semantic search for best service selection.
-- forward the request to the selected service (indirect mode: we let the service choose the best endpoint. We don’t select it
-at the cross-api interface level)
+API Bridge Agent does the following:
 
-### ③ - The MCP Interface (new)
+- It uses a semantic search for best service selection.
+- Then forwards the request to the selected service (indirect mode: we let the service choose the best endpoint. We don’t select it
+at the cross-api interface level).
+
+### The MCP Interface (new)
 
 MCP is an open protocol that standardizes how applications provide context to LLMs. It provides a standardized way to connect
 AI models to different data sources and tools.
 
-API Bridge Agent support MCP across a specific endpoint /mcp/. One MCP Client is instantiated per MCP servers connected.
+API Bridge Agent support MCP across a specific endpoint: `/mcp/`. One MCP Client is instantiated per MCP servers connected.
 
-API Bridge Agent will :
-- invoke the LLM with the list of available tools that come from all the connected MCP Servers.
-- if the LLM needs informations coming from the tools, API bridge Agent will request all the needed tools using corresponding
+API Bridge Agent does the following:
+
+- It invokes the LLM with the list of available tools that come from all the connected MCP Servers.
+- If the LLM needs information from the tools, the API bridge Agent will request all the needed tools using the corresponding
 MCP client.
-- API Bridge Agent invoke again the LLM with the NLQ, the list of tools, the first response and the list of result of call tools.
-- If LLM still need some informations, API Bridge Agent loop again and call tools.
+- API Bridge Agent invokes again the LLM with the NLQ, the list of tools, the first response and the list of result of call tools.
+- If LLM needs further information, API Bridge Agent loops again and calls the tools.
 
 ## Getting Started
 
@@ -121,7 +126,7 @@ Get the source code by running the following command:
 git clone https://github.com/agntcy/api-bridge-agnt
 ```
 
-Tyk requires also a Redis database. Deploy it with the following command:
+Tyk requires a Redis database. Deploy it with the following command:
 
 ```shell
 make start_redis
@@ -161,7 +166,7 @@ Dependencies are managed so that you can just run:
 make start_tyk
 ```
 
-This will automatically build "Tyk", "search" and the plugin, then install the plugin and start Tyk gateway.
+This automatically builds "Tyk", "search", and the plugin, then installs the plugin and starts the Tyk gateway.
 
 #### Load and Configure Tyk with an Example API (httpbin.org)
 
@@ -179,7 +184,7 @@ For Linux (Ubuntu) you can use:
 TARGET_OS=linux TARGET_ARCH=amd64 SEARCH_LIB=libllama_go.so make start_tyk
 ```
 
-#### Individual Steps for Building if Needed:
+#### Individual Steps for Building
 
 If you need to decompose each task individually, you can split into:
 
@@ -194,13 +199,14 @@ make install_plugin     # Install the plugin
 
 This plugin relies on [Tyk OAS API Definition](https://tyk.io/docs/api-management/gateway-config-tyk-oas/).
 
-You need to apply some configuration when:
-- you add a new service
-- you want to activate the new cross-api interface
-- you want to activate the mcp interface
-- you add the support for a new MCP server
+You need to apply configuration during the following processes:
 
-### Adding a new Service
+- Adding a new service.
+- Activating the new cross-API interface.
+- Activating the MCP interface.
+- Adding the support for a new MCP server.
+
+### Adding a New Service
 
 Add the plugin to the `postPlugins` and `responsePlugins` sections of the `x-tyk-api-gateway` section:
 
@@ -240,7 +246,7 @@ Add the plugin to the `postPlugins` and `responsePlugins` sections of the `x-tyk
 }
 ```
 
-Then add your OpenAPI specification:
+Then add your OpenAPI specification.
 
 For example, adding the httpbin.org service can be done using the `configs/httpbin.org.oas.json` file.
 
@@ -254,7 +260,7 @@ curl http://localhost:8080/tyk/reload/group \
   --header "x-tyk-authorization: foo"
 ```
 
-It's then possible to do a query like this:
+After adding the OpenAI specification, it is possible to do a query similar to the one below:
 
 ```shell
 curl http://localhost:8080/httpbin/json \
@@ -266,17 +272,17 @@ curl http://localhost:8080/httpbin/json \
 
 In this example `http://localhost:8080/httpbin/json`:
 
-- "/httpbin/" is the listen path defined on the `x-tyk-api-gateway` part of the specification
-- "json" is the endpoint on the specification
+- `httpbin/` is the listen path defined on the `x-tyk-api-gateway` part of the specification.
+- `json` is the endpoint on the specification.
 
-### Activate the new Cross-API interface
+### Activate the New Cross-API Interface
 
-The new Cross-API interface, available at the `/aba/` endpoint, is not activated by default.
+The new Cross-API interface available at the `/aba/` endpoint is not activated by default.
 
-To activate it, simply copy/paste `configs/agent_bridge.json` file into `./tyk-release-v5.8.0/apps` folder,
+To activate it, simply copy the `configs/agent_bridge.json` file into the `./tyk-release-v5.8.0/apps` folder,
 then restart
 
-It's then possible to do a query like this:
+After copying the file, it is possible to do a query similar to the one below:
 
 ```shell
 curl http://localhost:8080/aba/ \
@@ -284,16 +290,17 @@ curl http://localhost:8080/aba/ \
   -d "Send email to <john.doe@gmail.com>. The content is "Hello from Mr Smith", The subject is "This is a test" and the reply-to address is <mr.smith@gmail.com>. No BCC, no CC"
 ```
 
-If you have a service that support action to send an email, the Cross-API interface will route this request to that service.
-Otherwise, a "404 Not found" will be answered.
+If you have a service that supports an action to send an email, the Cross-API interface routes this request to that service.
+Otherwise, a "404 Not found" is returned.
 
-Note: it is possible to change the listen path `/aba/` by editing the `configs/agent_bridge.json` file before activate it.
+>Note:
+>It is possible to change the listen path `/aba/` by editing the `configs/agent_bridge.json` file before activate it.
 
-### Activate the new MCP interface
+### Activate the New MCP Interface
 
 The new MCP interface, available across the `/mcp/` endpoint, is not activated by default.
 
-To activate it, use the provided `configs/mcp.oas.json` file
+To activate it, use the provided `configs/mcp.oas.json` file.
 
 ```shell
 curl http://localhost:8080/tyk/apis/oas \
@@ -306,14 +313,17 @@ curl http://localhost:8080/tyk/reload/group --header 'x-tyk-authorization: foo'
 curl http://localhost:8080/mcp/init
 ```
 
-Note: do not change the listen path `/mcp/` on the `configs/agent_bridge.json` file. It is used internally.
+>Note:
+>Do not change the listen path `/mcp/` on the `configs/agent_bridge.json` file. It is used internally.
 
-### Adding support for a new MCP server
+### Adding Aupport for a New MCP Server
 
-You have to edit the `configs/mcp.oas.json` file, then reload the Tyk configuration.
+Edit the `configs/mcp.oas.json` file, then reload the Tyk configuration.
 
 Inside the `configs/mcp.oas.json` file, add the new MCP server to the `mcpServers` list.
-A valid configuration need a `command` and `args`, or a SSE address. This is some examples of such configuration:
+A valid configuration needs a `command` and `args`, or a SSE address. 
+
+An example of such configuration:
 
 ```json
 "mcpServers": {
@@ -361,7 +371,7 @@ A valid configuration need a `command` and `args`, or a SSE address. This is som
 }
 ```
 
-then refresh Tyk with the new configuration:
+Then refresh Tyk with the new configuration:
 
 ```shell
 curl http://localhost:8080/tyk/apis/oas \
@@ -376,7 +386,7 @@ curl http://localhost:8080/mcp/init
 
 ### Using API Bridge Agent
 
-When using API Bridge Agent, you *MUST* use the content type `application/nlq` on your request
+When using API Bridge Agent, you must use the content type `application/nlq` on your request.
 
 ```shell
 curl http://localhost:8080/aba/ \
@@ -398,19 +408,19 @@ curl 'http://localhost:8080/github/' \
 
 ## An Example with Sendgrid API
 
-As a usage example, we will use the API Bridge Agent to send email via SENGRID API.
+As an example, we use the API Bridge Agent to send email through SENGRID API.
 
 ### Prerequisites
 
-- Get an API Key for free from sendgrid [sengrid by twilio](https://sendgrid.com/en-us).
-- Retreive the open api spec here [tsg_mail_v3.json](https://github.com/twilio/sendgrid-oai/blob/main/spec/json/tsg_mail_v3.json).
+- Get an API key for free from SendGrid [sengrid by twilio](https://sendgrid.com/en-us).
+- Retreive the open API spec: [tsg_mail_v3.json](https://github.com/twilio/sendgrid-oai/blob/main/spec/json/tsg_mail_v3.json).
 - Make sure redis is running (otherwise, use `make start_redis`).
-- Make sure you properly export `OPENAI_*` parameters.
+- Make sure you properly export the `OPENAI_*` parameters.
 - Start the plugin as described on "Getting Started" section.
 
 ### Update the API with Tyk middleware settings
 
-Configure Tyk to use the sendgrid API by adding the `x-tyk-api-gateway` extension:
+Configure Tyk to use the SendGrid API by adding the `x-tyk-api-gateway` extension:
 
 ```json
 {
@@ -466,12 +476,13 @@ Configure Tyk to use the sendgrid API by adding the `x-tyk-api-gateway` extensio
 }
 ```
 
-You have an example of a such configuration in `configs/api.sendgrid.com.oas.json`
+There is an example of a such configuration in `configs/api.sendgrid.com.oas.json`
 
 ### Configure an Endpoint to Allow Plugin to Retrieve It
 
-On the same oas file, add a `x-nl-input-examples` element to an endpoint with
-sentence that describe how you can use the endpoint with natural language.
+On the same OAS file, add a `x-nl-input-examples` element to an endpoint with a
+sentence that describes how to use the endpoint with natural language.
+
 For example:
 
 ```json
@@ -484,8 +495,8 @@ For example:
       "post": {
         "...": "...",
         "x-nl-input-examples": [
-          "Send an message to 'test@example.com' including a joke. Please use emojis inside it.",
-          "Send an email to 'test@example.com' including a joke. Please use emojis inside it.",
+          "Send an message to 'test@example.com' including a joke. Please use emojis in it.",
+          "Send an email to 'test@example.com' including a joke. Please use emojis in it.",
           "Tell to 'test@example.com' that his new car is available.",
           "Write a profesional email to reject the candidate 'John Doe <test@example.com'"
         ]
@@ -495,9 +506,9 @@ For example:
   "...": "..."
 ```
 
-You have a configuration example here: `./configs/api.sendgrid.com.oas.json`
+There is a configuration example here: `./configs/api.sendgrid.com.oas.json`
 
-### Add the API to Tyk configuration
+### Add the API to Tyk Configuration
 
 Your OAS API is ready to be integrated on the Tyk plugin:
 
@@ -511,20 +522,20 @@ curl http://localhost:8080/tyk/reload/group \
   --header "x-tyk-authorization: foo"
 ```
 
-### Test It!
+### Test It
 
-Replace "agntcy@example.com" with a sender email you have configured on your sendgrid account.
+Replace "agntcy@example.com" with a sender email you have configured on your SendGrid account.
 
 ```shell
 curl http://localhost:8080/sendgrid/ \
   --header "Authorization: Bearer $SENDGRID_API_KEY" \
   --header 'Content-Type: application/nlq' \
-  -d 'Send a message from me (agntcy@example.com) to John Die <j.doe@example.com>. John is french, the message should be a joke using a lot of emojis, something fun about comparing France and Italy'
+  -d 'Send a message from me (agntcy@example.com) to John Die <j.doe@example.com>. John is french, the message should be a joke using a lot of emojis, something fun about comparing France and Italy.'
 ```
 
-As a result, the receiver (j.doe@example.com) must receive a mail like:
-```
+As a result, the receiver (in this case, j.doe@example.com) receives a mail something like this:
 
+```
 Subject: A Little Joke for You! 🇫🇷🇮🇹
 
 Hey John! 😄
@@ -543,23 +554,24 @@ Take care and keep smiling! 😊
 
 Best,
 agntcy
-
 ```
 
-## An example by adding a new API from scratch
+## Example: Adding a New API from Scratch
 
-Let's say you want to add a new API to your Tyk API Gateway, and make it available over natural language. Here are the steps:
+This example details how to add a new API to a Tyk API Gateway and make it available over natural language. 
 
-- Create or get the OpenAPI specification for your API.
-- Add the `x-tyk-api-gateway` section to your OpenAPI specification.
-- Add the `x-nl-input-examples` section to your OpenAPI operations.
-- Configure Tyk to use this new API.
-- Query your new API with natural language questions.
+Follow the steps below:
 
-### Let's choose an API
+1. Create or get the OpenAPI specification for the API.
+1. Add the `x-tyk-api-gateway` section to the OpenAPI specification.
+1. Add the `x-nl-input-examples` section to the OpenAPI operations.
+1. Configure Tyk to use this new API.
+1. Query the new API with natural language questions.
+
+### Choose an API
 
 Let's choose <https://openskynetwork.github.io/opensky-api>.
-There is no OpenAPI specification available so we create one.
+There is no OpenAPI specification available so we create one:
 
 <details>
 <summary>OpenSky Network OpenAPI (Click to expand)</summary>
@@ -1067,8 +1079,8 @@ There is no OpenAPI specification available so we create one.
 
 ### Update the API and configure Tyk
 
-Let's add the `x-tyk-api-gateway` extension. You can find more information about
-it in the [Tyk OAS API Definition](https://tyk.io/docs/api-management/gateway-config-tyk-oas/).
+Add the `x-tyk-api-gateway` extension. For more information on it,
+see the [Tyk OAS API Definition](https://tyk.io/docs/api-management/gateway-config-tyk-oas/).
 
 ```json
   "x-tyk-api-gateway": {
@@ -1168,13 +1180,13 @@ Here is what happened behind the scenes:
 2. **Operation Matching**:
    - Compares your query ("Get flights from 12pm to 1pm on March 11th 2025")
      against the `x-nl-input-examples` or the operation description.
-   - Identifies the closest matching operation (`getFlightsAll` in this case, ie `GET /flights/all`).
+   - Identifies the closest matching operation (`getFlightsAll` in this case, that is `GET /flights/all`).
 3. **Parameter Extraction**:
-   - An LLM extracts relevant parameters from your query.
+   - An LLM extracts the relevant parameters from your query.
    - Builds a proper API request.
 4. **Request Transformation**:
    - Converts the natural query to a proper HTTP request.
-   - Forwards the request to the upstream API (`GET /flights/all?start=1678560000&end=1678563600` for example).
+   - Forwards the request to the upstream API (for example, `GET /flights/all?start=1678560000&end=1678563600`).
 5. **Response Handling**:
    - Receives the raw API response.
    - Returns the JSON response with the flight data.
@@ -1184,7 +1196,7 @@ Without any code you were able to query the OpenSky Network API and retrieve fli
 ### Improving the Operation Matching
 
 When the `description` field provided in the operation definition are poorly
-written or missing, it's possible to improve the selection of the operation by
+written or missing, it is possible to improve the selection of the operation by
 providing examples of queries that should match the operation.
 
 This is done by adding the `x-nl-input-examples` field to the operation definition.
@@ -1193,7 +1205,8 @@ For example, you could provide the following examples which could help improve t
 
 In the OpenAPI specification, add the `x-nl-output-examples` field to the operation definition:
 
-```{code-block} json
+
+```json
 ---
 lineno-start: 123
 emphasize-lines: 7-11
@@ -1247,184 +1260,185 @@ emphasize-lines: 7-11
 }
 ```
 
-## An Example with a new MCP Server
+## Example: New MCP Server
 
-In this exemple, we have already activated MCP support
-We want to add a new MCP server (weather) in addition to the existing one (the default one) github.
+In this exemple, we have already activated MCP support.
+We want to add a new MCP server (weather) in addition to the existing GitHub one.
 
-1- create a MCP server
+To create a MCP server:
 
-create a folder `mcp-weather`, then inside this folder create a file `weather.py` and copy paste the following content:
+1. Create the `mcp-weather` folder, then inside this folder create the `weather.py` file and with the following content:
 
-<details>
-<summary>weather.py content (Click to expand)</summary>
+    <details>
+    <summary>weather.py content (Click to expand)</summary>
 
-```python
-from typing import Any
-import httpx
-from mcp.server.fastmcp import FastMCP
+    ```python
+    from typing import Any
+    import httpx
+    from mcp.server.fastmcp import FastMCP
 
-# Initialize FastMCP server
-mcp = FastMCP("weather")
+    # Initialize FastMCP server
+    mcp = FastMCP("weather")
 
-# Constants
-NWS_API_BASE = "https://api.weather.gov"
-USER_AGENT = "weather-app/1.0"
+    # Constants
+    NWS_API_BASE = "https://api.weather.gov"
+    USER_AGENT = "weather-app/1.0"
 
-async def make_nws_request(url: str) -> dict[str, Any] | None:
-    """Make a request to the NWS API with proper error handling."""
-    headers = {
-        "User-Agent": USER_AGENT,
-        "Accept": "application/geo+json"
-    }
-    async with httpx.AsyncClient() as client:
-        try:
-            response = await client.get(url, headers=headers, timeout=30.0)
-            response.raise_for_status()
-            return response.json()
-        except Exception:
-            return None
+    async def make_nws_request(url: str) -> dict[str, Any] | None:
+        """Make a request to the NWS API with proper error handling."""
+        headers = {
+            "User-Agent": USER_AGENT,
+            "Accept": "application/geo+json"
+        }
+        async with httpx.AsyncClient() as client:
+            try:
+                response = await client.get(url, headers=headers, timeout=30.0)
+                response.raise_for_status()
+                return response.json()
+            except Exception:
+                return None
 
-def format_alert(feature: dict) -> str:
-    """Format an alert feature into a readable string."""
-    props = feature["properties"]
-    return f"""
-Event: {props.get('event', 'Unknown')}
-Area: {props.get('areaDesc', 'Unknown')}
-Severity: {props.get('severity', 'Unknown')}
-Description: {props.get('description', 'No description available')}
-Instructions: {props.get('instruction', 'No specific instructions provided')}
-"""
-
-@mcp.tool()
-async def get_alerts(state: str) -> str:
-    """Get weather alerts for a US state.
-
-    Args:
-        state: Two-letter US state code (e.g. CA, NY)
+    def format_alert(feature: dict) -> str:
+        """Format an alert feature into a readable string."""
+        props = feature["properties"]
+        return f"""
+    Event: {props.get('event', 'Unknown')}
+    Area: {props.get('areaDesc', 'Unknown')}
+    Severity: {props.get('severity', 'Unknown')}
+    Description: {props.get('description', 'No description available')}
+    Instructions: {props.get('instruction', 'No specific instructions provided')}
     """
-    url = f"{NWS_API_BASE}/alerts/active/area/{state}"
-    data = await make_nws_request(url)
 
-    if not data or "features" not in data:
-        return "Unable to fetch alerts or no alerts found."
+    @mcp.tool()
+    async def get_alerts(state: str) -> str:
+        """Get weather alerts for a US state.
 
-    if not data["features"]:
-        return "No active alerts for this state."
+        Args:
+            state: Two-letter US state code (e.g. CA, NY)
+        """
+        url = f"{NWS_API_BASE}/alerts/active/area/{state}"
+        data = await make_nws_request(url)
 
-    alerts = [format_alert(feature) for feature in data["features"]]
-    return "\n---\n".join(alerts)
+        if not data or "features" not in data:
+            return "Unable to fetch alerts or no alerts found."
 
-@mcp.tool()
-async def get_forecast(latitude: float, longitude: float) -> str:
-    """Get weather forecast for a location.
+        if not data["features"]:
+            return "No active alerts for this state."
 
-    Args:
-        latitude: Latitude of the location
-        longitude: Longitude of the location
+        alerts = [format_alert(feature) for feature in data["features"]]
+        return "\n---\n".join(alerts)
+
+    @mcp.tool()
+    async def get_forecast(latitude: float, longitude: float) -> str:
+        """Get weather forecast for a location.
+
+        Args:
+            latitude: Latitude of the location
+            longitude: Longitude of the location
+        """
+        # First get the forecast grid endpoint
+        points_url = f"{NWS_API_BASE}/points/{latitude},{longitude}"
+        points_data = await make_nws_request(points_url)
+
+        if not points_data:
+            return "Unable to fetch forecast data for this location."
+
+        # Get the forecast URL from the points response
+        forecast_url = points_data["properties"]["forecast"]
+        forecast_data = await make_nws_request(forecast_url)
+
+        if not forecast_data:
+            return "Unable to fetch detailed forecast."
+
+        # Format the periods into a readable forecast
+        periods = forecast_data["properties"]["periods"]
+        forecasts = []
+        for period in periods[:5]:  # Only show next 5 periods
+            forecast = f"""
+    {period['name']}:
+    Temperature: {period['temperature']}°{period['temperatureUnit']}
+    Wind: {period['windSpeed']} {period['windDirection']}
+    Forecast: {period['detailedForecast']}
     """
-    # First get the forecast grid endpoint
-    points_url = f"{NWS_API_BASE}/points/{latitude},{longitude}"
-    points_data = await make_nws_request(points_url)
+            forecasts.append(forecast)
 
-    if not points_data:
-        return "Unable to fetch forecast data for this location."
+        return "\n---\n".join(forecasts)
 
-    # Get the forecast URL from the points response
-    forecast_url = points_data["properties"]["forecast"]
-    forecast_data = await make_nws_request(forecast_url)
+    if __name__ == "__main__":
+        # Initialize and run the server
+        mcp.run(transport='stdio')
 
-    if not forecast_data:
-        return "Unable to fetch detailed forecast."
+    ```
 
-    # Format the periods into a readable forecast
-    periods = forecast_data["properties"]["periods"]
-    forecasts = []
-    for period in periods[:5]:  # Only show next 5 periods
-        forecast = f"""
-{period['name']}:
-Temperature: {period['temperature']}°{period['temperatureUnit']}
-Wind: {period['windSpeed']} {period['windDirection']}
-Forecast: {period['detailedForecast']}
-"""
-        forecasts.append(forecast)
+    </details>
 
-    return "\n---\n".join(forecasts)
+1. Then, still inside the `mcp-weather` folder, create a file `pyproject.toml` with the following content:
 
-if __name__ == "__main__":
-    # Initialize and run the server
-    mcp.run(transport='stdio')
+    ```
+    [project]
+    name = "weather"
+    version = "0.1.0"
+    description = "A simple MCP weather server"
+    requires-python = ">=3.10"
+    dependencies = [
+        "httpx>=0.28.1",
+        "mcp[cli]>=1.2.0",
+    ]
 
-```
+    [build-system]
+    requires = [ "hatchling",]
+    build-backend = "hatchling.build"
 
-</details>
+    [project.scripts]
+    weather = "weather:main"
 
-Then, still inside the `mcp-weather` folder, create a file `pyproject.toml` with content:
+    ```
 
-```
-[project]
-name = "weather"
-version = "0.1.0"
-description = "A simple MCP weather server"
-requires-python = ">=3.10"
-dependencies = [
-    "httpx>=0.28.1",
-    "mcp[cli]>=1.2.0",
-]
+    Use poetry to install dependencies.
 
-[build-system]
-requires = [ "hatchling",]
-build-backend = "hatchling.build"
+    ```shell
+    poetry install
+    ```
 
-[project.scripts]
-weather = "weather:main"
+1. Update the API Bridge Agent configuration. Add the following "weather" entry on the `mcpServers` list in the `configs/mcp.oas.json` file:
 
-```
+    ```json
+                  "mcpServers": {
+                    ...
+                    "weather": {
+                      "command": "poetry",
+                      "args": [
+                        "run",
+                        "python",
+                        "<path_to>/mcp-weather/weather.py"
+                      ]
+                    }
+                  }
+    ```
 
-Use poetry to install dependencies.
+1. Reload the configuration:
 
-```shell
-poetry install
-```
+    ```shell
+    curl http://localhost:8080/tyk/apis/oas \
+      --header 'x-tyk-authorization: foo' \
+      --header 'Content-Type: text/plain' \
+      -d@configs/mcp.oas.json
 
-2- update the API Bridge Agent configuration. Add the following "weather" entry on the mcpServers list inside the `configs/mcp.oas.json` file:
+    curl http://localhost:8080/tyk/reload/group --header 'x-tyk-authorization: foo'
 
-```json
-              "mcpServers": {
-                ...
-                "weather": {
-                  "command": "poetry",
-                  "args": [
-                    "run",
-                    "python",
-                    "<path_to>/mcp-weather/weather.py"
-                  ]
-                }
-              }
-```
+    curl http://localhost:8080/mcp/init
+    ```
 
-3- reload the config
+1. You can request API Bridge Agent with the following:
 
-```shell
-curl http://localhost:8080/tyk/apis/oas \
-  --header 'x-tyk-authorization: foo' \
-  --header 'Content-Type: text/plain' \
-  -d@configs/mcp.oas.json
+    ```shell
+    curl 'http://localhost:8080/mcp/'  \
+      --header 'Content-Type: application/nlq'  \
+      -d "give me the weather forecast in california"
+    ```
 
-curl http://localhost:8080/tyk/reload/group --header 'x-tyk-authorization: foo'
+You should receive a response that looks like the following:
 
-curl http://localhost:8080/mcp/init
-```
-
-4- You can request API Bridge Agent with
-
-```shell
-curl 'http://localhost:8080/mcp/'  \
-  --header 'Content-Type: application/nlq'  \
-  -d "give me the weather forecast in california"
-```
-
-and you will receive a response that looks like
 ```
 Here's the weather forecast for California:
 
@@ -1452,5 +1466,4 @@ Here's the weather forecast for California:
 - **Temperature:** 65°F
 - **Wind:** 0 to 5 mph SW
 - **Forecast:** Partly sunny, with a high near 65.
-
 ```

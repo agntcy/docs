@@ -11,22 +11,23 @@ The SDK is current available in [Python](https://pypi.org/project/agntcy-acp/) [
 
 ## Getting Started with the client
 
-To use the package, follow the steps below.
+To use the package, follow the steps below:
 
 ### Requirements
 
-Python 3.9+
+* Python 3.9+
 
 ### Installation
 
 Install the latest version from PyPi:
+
 ```shell
 pip install agntcy-acp
 ```
 
 ### Usage
 
-```{code-block} python
+```python
 from agntcy_acp import AsyncACPClient, AsyncApiClient, ApiException
 from agntcy_acp.models import RunCreate
 
@@ -128,7 +129,7 @@ def main():
     })
 ```
 
-## Using the CLI to generate Agent-specific bindings
+## Using the CLI to Generate Agent-specific Bindings
 
 The Client SDK includes a CLI tool to generate models or OpenAPI specs
 specific to an agent using the manifest descriptor. With these models
@@ -138,9 +139,10 @@ only the ACP parameters are validated by the SDK client.
 The CLI also provides validators for the ACP descriptor and manifest
 files.
 
-You can use the CLI easily:
-  * using [poetry](https://python-poetry.org/): `poetry run acp --help`
-  * with the package installed: `python3 -m agntcy_acp --help`
+You can use the CLI the following ways:
+
+  * Using [poetry](https://python-poetry.org/): `poetry run acp --help`
+  * With the package installed: `python3 -m agntcy_acp --help`
 
 Usage: `acp [OPTIONS] COMMAND [ARGS]...`
 
@@ -159,16 +161,16 @@ Commands:
     * `--output-dir TEXT`
     
       Pydantic models for specific agent based on provided
-      agent descriptor or agent manifest  [required]
+      agent descriptor or agent manifest.  [required]
 
     * `--model-file-name TEXT`
     
       Filename containing the pydantic model of the agent
-      schemas
+      schemas.
 
 * `generate-agent-oapi [OPTIONS] AGENT_DESCRIPTOR_PATH`
 
-    Generate OpenAPI Spec from agent manifest or descriptor
+    Generate OpenAPI Spec from agent manifest or descriptor.
 
   Options:
 
@@ -179,12 +181,12 @@ Commands:
 * `validate-acp-descriptor [OPTIONS] AGENT_DESCRIPTOR_PATH`
 
     Validate the Agent Descriptor contained in the file AGENT_DESCRIPTOR_PATH
-    against the ACP specification
+    against the ACP specification.
 
 * `validate-acp-manifest [OPTIONS] AGENT_MANIFEST_PATH`
 
     Validate the Agent Manifest contained in the file AGENT_MANIFEST_PATH
-    against the Manifest specification
+    against the Manifest specification.
 
 
 ## Testing
@@ -198,4 +200,4 @@ See the [open issues](https://github.com/agntcy/acp-sdk/issues) for a list of pr
 ## Client Reference API
 
 For a detailed description of the classes and functions in the SDK, please see the
-[agntcy-acp Package Documentation](https://agntcy.github.io/acp-sdk/index.html)
+[agntcy-acp Package Documentation](https://agntcy.github.io/acp-sdk/index.html).
