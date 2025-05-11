@@ -25,6 +25,7 @@ Internet of Agents Components
    pages/oasf-data-model.proto
    pages/oasf-taxonomy
    pages/oasf-workflow
+   pages/data-model-guide
 
 .. toctree::
    :caption: Agent Directory Service
