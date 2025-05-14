@@ -940,38 +940,16 @@ At this point, your time-server is up and running.
 
 ### Setting up the AGP-MPC Proxy
 To enable the AGP client to communicate with the SSE-based time-server, you'll
-need to configure and run the AGP-MCP Proxy Server. Follow these steps:
+need to configure and run the AGP-MCP Proxy Server. You can run the following
+commands to run a local instance.
 
-#### Build the proxy server
-1. Navigate to the mcp-proxy folder: 
+1. Set the LOCAL_ADDRESS with your local IP. Assuming your IP is 192.168.10.10
 ```
-agp/data-plane/integrations/mcp/mcp-proxy
+LOCAL_ADDRESS=192.168.10.10
 ```
-2. Build the AGP-MCP proxy by running: 
-```bash
-task mcp-proxy:build
+2. Create the config file for the proxy
 ```
-
-#### Run the proxy server
-Run the AGP-MCP proxy server using the following command
-```bash
-cargo run -- --config <configuration> \
-    --svc-name <svc_name> \
-    --name <proxy_name> \
-    --mcp-server <address> 
-```
-Here's what each command option means: 
-| Option | Description |
-|-------------------------|------------------------------------------------------|
-| -c, --config | Path to the AGP configuration file | 
-| -s, --svc-name | Service name to look for in the configuration file | 
-| -n, --name | Name of the MCP Proxy (format: org/ns/type) | 
-| -m, --mcp-server | Address of the MCP Server (e.g., http://localhost:8000/sse) |
-
-An example of the configuration file is available at
-```./config/cp-proxy-config.yaml```
-
-```yaml
+cat << EOF > ./config-proxy.yaml
 tracing:
   log_level: info
   display_thread_names: true
@@ -986,28 +964,33 @@ services:
   gateway/0:
     pubsub:
       clients:
-        - endpoint: "http://localhost:46357"
+        - endpoint: "http://${LOCAL_ADDRESS}:46357"
           tls:
             insecure: true
+EOF
 ```
-In this example the service name to pass to the command with the
-```--svc-name``` option is ```gateway/0```
-
-In addtion, the option ```--name``` is the name used by AGP to route messages to
-the proxy, while the ```--mpc-server``` option indicates the address of the MCP
-server.
-
-Here's an example command to run the AGP-MCP Proxy:
-```bash
-cargo run -- --config config/mcp-proxy-config.yaml \
-    --svc-name gateway/0 \
-    --name org/mcp/proxy \
-    --mcp-server http://localhost:8000/sse 
+3. Run the proxy
+```
+docker run -it -v ./config-proxy.yaml:/config-proxy.yaml \
+    ghcr.io/agntcy/agp/mcp-proxy:latest /agp-mcp-proxy \
+    --config /config-proxy.yaml --svc-name gateway/0 \
+    --name org/mcp/proxy --mcp-server http://${LOCAL_ADDRESS}:8000/sse
 ```
 
 ### Running the Agent
 Finally, you can now run the agent as shown in the previuos section. The agent
 will automatically connect to the proxy and send messages to the MCP server via
-the proxy.
+the proxy. However now the proxy is reachable using the name ```org/mcp/proxy```
+so the command to run the agent is:
+```
+uv run llamaindex-time-agent \
+    --llm-type=azure \
+    --llm-endpoint=${AZURE_OPENAI_ENDPOINT} \
+    --llm-key=${AZURE_OPENAI_API_KEY} \
+    --city 'New York' \
+    --mcp-server-organization "org" \
+    --mcp-server-namespace "mcp" \
+    --mcp-server-name "proxy"
+```
 
 
