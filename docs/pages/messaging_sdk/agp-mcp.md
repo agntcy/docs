@@ -1,51 +1,52 @@
 # AGP-MCP
 
-This tutorial explains how to use AGP (Agent Gateway Protocol) to transport MCP
-(Model Context Protocol) messages. AGP supports two main integration options,
-depending on whether you're building a new system or working with an existing
+This tutorial demonstrates how to use AGP (Agent Gateway Protocol) to transport MCP
+(Model Context Protocol) messages. AGP offers two primary integration options,
+depending on whether you're building a new system or integrating with an existing
 MCP server:
 
-1. **Using AGP as an MCP Custom Transport Protocol**: MCP is designed to allow
-   custom transport protocols, and AGP has been added as one of these options.
-   To use AGP as a custom transport, you can install our AGP-MCP via a pipy
-   package and integrate it directly into your application. This approach is
-   ideal for new systems where you control both the client and the server,
-   enabling native AGP support for transporting MCP messages.
-2. **Using AGP with a Proxy Server***: If you already have an MCP server running
-   that uses SSE (Server-Sent Events) as MCP transport, you can integrate AGP by
-   setting up a proxy server. The proxy translates communication between AGP
-   clients and the existing SSE-based MCP server. This allows AGP clients to
-   connect seamlessly without requiring changes to the server itself, making it
-   a convenient solution for existing systems.
+1. **Using AGP as an MCP Custom Transport Protocol**: MCP is designed to support
+   multiple transport protocols, with AGP now available as one of these options.
+   To implement AGP as a custom transport, you can install the AGP-MCP package via pip
+   and integrate it directly into your application. This approach is
+   ideal for new systems where you control both client and server components,
+   providing native AGP support for efficient MCP message transport.
+   
+2. **Using AGP with a Proxy Server**: If you have an existing MCP server running
+   that uses SSE (Server-Sent Events) for transport, you can integrate AGP by
+   deploying a proxy server. This proxy handles translation between AGP
+   clients and your SSE-based MCP server, allowing AGP clients to
+   connect seamlessly without requiring modifications to your existing server,
+   making it an effective solution for established systems.
 
-This tutorial will guide you through both approaches. We'll show you how to use
-AGP as a custom transport for MCP, as well as how to configure the proxy server
-to enable AGP support for an SSE-based MCP server. By the end, you'll have the
-tools to integrate AGP with MCP in a way that suits your system's architecture
+This tutorial guides you through both integration methods. You'll learn how to implement
+AGP as a custom transport for MCP and how to configure the proxy server
+to enable AGP support for an SSE-based MCP server. By the end, you'll have all the
+necessary tools to integrate AGP with MCP in a way that best fits your system's architecture.
 
 ## Using AGP as an MCP Custom Transport Protocol
 
-For this part of the tutorial, we'll be using two simple applications:
+For this section of the tutorial, we'll implement and deploy two sample applications:
 
- - A [llamaindex
+ - A [LlamaIndex
    agent](https://github.com/agntcy/agp/tree/main/data-plane/integrations/mcp/agp-mcp/examples/llamaindex-time-agent)
-   that uses a MCP server over AGP for time queries andtimezone conversions.
+   that communicates with an MCP server over AGP to perform time queries and timezone conversions.
  - An [MCP time
    server](https://github.com/agntcy/agp/tree/main/data-plane/integrations/mcp/agp-mcp/examples/mcp-server-time)
-   that uses AGP as a custom transport protocol and handles requests from the
-   llamaindex agent.
+   that implements AGP as its transport protocol and processes requests from the
+   LlamaIndex agent.
 
 ### Prerequisites
 
-- [UV](https://docs.astral.sh/uv/getting-started/installation/)
-- [Docker](https://docs.docker.com/get-started/get-docker/)
+- [UV](https://docs.astral.sh/uv/getting-started/installation/) - A Python package installer and environment manager
+- [Docker](https://docs.docker.com/get-started/get-docker/) - For running the AGP instance
 
-### Run the AGP Instance
+### Setting Up the AGP Instance
 
-The client and server will communicate using AGP, so we need to run an AGP
-instance. We can use the pre-built docker image for this purpose.
+Since the client and server will communicate using AGP, we first need to deploy an AGP
+instance. We'll use a pre-built Docker image for this purpose.
 
-Execute the following command:
+Execute the following commands to create a configuration file and launch the AGP instance:
 
 ```bash
 cat << EOF > ./config.yaml
@@ -81,21 +82,20 @@ docker run -it \
     ghcr.io/agntcy/agp/gw:latest /gateway --config /config.yaml
 ```
 
-The above command will run an AGP instance listening on port 46357 for incoming
-connections.
+This command deploys an AGP instance that listens on port 46357 for incoming connections. This instance will serve as the communication backbone between our client and server applications.
 
-### Write the MCP Server
+### Implementing the MCP Server
 
-Now, let's write a simple MCP server that will handle requests from the
-llamaindex agent. This server will be using AGP as a custom transport protocol.
+Next, we'll implement a simple MCP server that processes requests from the
+LlamaIndex agent. This server will demonstrate how to use AGP as a custom transport protocol.
 
-First, let's write a simple pyproject to install the required dependencies:
+First, create a `pyproject.toml` file to define the project dependencies:
 
 ```toml
 # pyproject.toml
 [project]
 name = "mcp-server-time"
-description = "MCP server providing tools for time queries timezone conversions"
+description = "MCP server providing tools for time queries and timezone conversions"
 requires-python = ">=3.10"
 dependencies = ["mcp>=1.6.0", "agp-mcp>=0.1.1", "click>=8.1.8"]
 
@@ -107,13 +107,12 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 ```
 
-Then let's write the simple MCP server that will handle time queries and
-timezone. The server is taken from the [official example provided by
-MCP](https://github.com/modelcontextprotocol/servers/tree/main/src/time), and it
-is modified to use AGP or SSE as transport protocol.
+Next, let's implement the MCP server that will handle time queries and
+timezone conversions. This implementation is based on the [official MCP example server](https://github.com/modelcontextprotocol/servers/tree/main/src/time),
+modified to support both AGP and SSE as transport protocols.
 
 <details>
-<summary>MCP Server</summary>
+<summary>MCP Server Implementation</summary>
 <br>
 
 ```python
@@ -636,12 +635,9 @@ def main(local_timezone, transport, port, organization, namespace, mcp_server, c
 </details>
 
 
-The most important part of the server is the `serve_agp` function. This function
-is responsible for initializing the connection with the AGP instance we setup
-previously and handling incoming connections. It uses the `AGPServer` class to
-create a new AGP server instance and listens for incoming sessions.
+The core component of the server implementation is the `serve_agp` function. This function establishes a connection with our AGP instance and handles all incoming client sessions. It leverages the `AGPServer` class to create an AGP server instance that listens for and processes client connections.
 
-Clients can address the server using the AGP topic `org/ns/time-server`.
+External clients can address this server using the AGP topic identifier `org/ns/time-server`.
 
 ```python
 async def serve_agp(
@@ -680,30 +676,26 @@ async def serve_agp(
             logger.info("Server stopped")
 ```
 
-After writing the files, you project should have the following stricture:
+After implementing all the necessary files, your project structure should look like this:
 
 ```bash
 .
 ├── mcp_server_time
 │   ├── __init__.py
 │   └── server.py
-└──  pyproject.toml
+└── pyproject.toml
 ```
 
-In the folder, run the following command to start the server and listen for
-incoming connections:
+To launch the server and begin listening for incoming connections, navigate to the project directory and run:
 
 ```bash
 uv run mcp-server-time --local-timezone Europe/London
 ```
 
-### Run the LlamaIndex Agent
-Now that we have the MCP server running, let's write a simple LlamaIndex agent
-that will use the MCP server to handle time queries and timezone conversions.
-The agent will use the AGP transport protocol to communicate with the MCP
-server.
+### Implementing the LlamaIndex Agent
+With our MCP server up and running, let's now implement a LlamaIndex agent that will interact with the server. This agent will send time queries and timezone conversion requests to our MCP server using the AGP transport protocol.
 
-First, let's write a simple pyproject to install the required dependencies:
+First, create a `pyproject.toml` file to define the agent's dependencies:
 
 ```toml
 # pyproject.toml
@@ -736,7 +728,7 @@ Then let's write the simple LlamaIndex agent that will handle time queries and
 timezone.
 
 <details>
-<summary>MCP Server</summary>
+<summary>LlamaIndex Agent Implementation</summary>
 <br>
 
 ```python
@@ -886,14 +878,15 @@ def main(
 
 </details>
 
-The most important part of the agent is the `amain` function. This function is
-responsible for initializing the connection with the AGP instance we setup
-previously and connect to the MCP server.
+The key component of the agent is the `amain` function, which handles:
 
-The name of the AGP topic that we can use to address the server is
-`org/ns/time-agent`.
+1. LLM configuration (Azure OpenAI or Ollama)
+2. AGP client initialization and connection to our MCP server 
+3. Tool setup and agent execution
 
-After writing the files, you project should have the following structure:
+The agent establishes its identity through the AGP topic `org/ns/time-agent`, which is used for addressing.
+
+After implementing all the necessary files, your agent project structure should look like this:
 
 ```bash
 .
@@ -902,35 +895,32 @@ After writing the files, you project should have the following structure:
 │   └── main.py
 └── pyproject.toml
 ```
-In the folder, run the following command to start the agent and listen for
-incoming connections.
+To run the agent, navigate to the project directory and use one of the following commands based on your preferred LLM:
 
-With Azure OpenAI:
+**Option 1: Using Azure OpenAI:**
 ```bash
-uv run llamaindex-time-agent                    \
-    --llm-type=azure                            \
-    --llm-endpoint=${AZURE_OPENAI_ENDPOINT}     \
-    --llm-key=${AZURE_OPENAI_API_KEY}           \
+uv run llamaindex-time-agent \
+    --llm-type=azure \
+    --llm-endpoint=${AZURE_OPENAI_ENDPOINT} \
+    --llm-key=${AZURE_OPENAI_API_KEY} \
     --city 'New York'
 ```
 
-With Ollama:
+**Option 2: Using Ollama (locally):**
 ```bash
-uv run llamaindex-time-agent                    \
-    --llm-type=ollama                            \
+uv run llamaindex-time-agent \
+    --llm-type=ollama \
     --city 'New York'
 ```
+
+The agent will connect to the MCP server via AGP, send a time query for the specified city, and display the response.
 
 ## Using AGP with a Proxy Server
-In this tutorial, we'll configure and run the AGP-MCP Proxy to enable
-communication between an AGP-based client (from the previous section) and a
-time-server that uses the SSE (Server-Sent Events) transport. Follow the steps
-below to complete the setup:
 
-### Step 1: Runnig the AGP node.
-Before starting, ensure you have an AGP node up and running. If you don't
-already have one, refer to the steps provided in the previous session to start
-it.
+In this section, we'll demonstrate how to set up and configure the AGP-MCP Proxy Server. This proxy enables AGP-based clients to communicate with existing MCP servers that use SSE (Server-Sent Events) as their transport protocol. By following these steps, you'll create a bridge between AGP clients and SSE-based MCP servers without modifying the servers themselves.
+
+### Step 1: Setting Up the AGP Node
+First, ensure you have an AGP node running in your environment. If you haven't already set one up, follow the instructions provided in the previous section to deploy an AGP instance.
 
 ### Step 2: Running the Time-Server
 We'll now set up the time-server using the SSE transport protocol.
