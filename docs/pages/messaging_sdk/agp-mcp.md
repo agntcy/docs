@@ -105,7 +105,7 @@ name = "mcp-server-time"
 version = "0.1.0"
 description = "MCP server providing tools for time queries and timezone conversions"
 requires-python = ">=3.10"
-dependencies = ["mcp>=1.6.0", "agp-mcp>=0.1.2", "click>=8.1.8"]
+dependencies = ["mcp==1.6.0", "agp-mcp==0.1.2", "click>=8.1.8"]
 
 [project.scripts]
 mcp-server-time = "mcp_server_time:main"
@@ -727,8 +727,8 @@ version = "0.1.0"
 description = "A llamaindex agent using MCP server over AGP for time queries"
 requires-python = ">=3.12"
 dependencies = [
-    "mcp>=1.6.0",
-    "agp-mcp>=0.1.2",
+    "mcp==1.6.0",
+    "agp-mcp==0.1.2",
     "click>=8.1.8",
     "llama-index>=0.12.29",
     "llama-index-llms-azure-openai>=0.3.2",
