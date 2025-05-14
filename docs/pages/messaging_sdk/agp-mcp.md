@@ -919,21 +919,17 @@ The agent will connect to the MCP server via AGP, send a time query for the spec
 
 In this section, we'll demonstrate how to set up and configure the AGP-MCP Proxy Server. This proxy enables AGP-based clients to communicate with existing MCP servers that use SSE (Server-Sent Events) as their transport protocol. By following these steps, you'll create a bridge between AGP clients and SSE-based MCP servers without modifying the servers themselves.
 
-### Step 1: Setting Up the AGP Node
+### Setting Up the AGP Node
 First, ensure you have an AGP node running in your environment. If you haven't already set one up, follow the instructions provided in the previous section to deploy an AGP instance.
 
-### Step 2: Running the Time-Server
-We'll now set up the time-server using the SSE transport protocol.
-1. Navigate to the time-server directory: 
+### Running the MCP Server
+We'll now set up the time-server using the SSE transport protocol. 
+The server is the same desciber in the previos session. To run it using
+The SSE protocol use the following command:
 ```
-agp/data-plane/integrations/mcp/agp-mcp/examples/mcp-server-time
+uv run mcp-server-time --local-timezone Europe/London --transport sse
 ```
-2. Run the time-server using the SSE transpor wit the following command:
-```bash
-uv run --package mcp-server-time mcp-server-time \
-    --local-timezone "America/New_York" --transport sse
-```
-3. Once the server starts successfully, you should see logs similar to this:
+Once the server starts successfully, you should see logs similar to this:
 ```bash
 INFO:     Started server process [27044]
 INFO:     Waiting for application startup.
@@ -942,11 +938,11 @@ INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
 ```
 At this point, your time-server is up and running.
 
-### Step 3: Setting up the AGP-MPC Server
+### Setting up the AGP-MPC Proxy
 To enable the AGP client to communicate with the SSE-based time-server, you'll
 need to configure and run the AGP-MCP Proxy Server. Follow these steps:
 
-#### 3.1 Build the proxy server
+#### Build the proxy server
 1. Navigate to the mcp-proxy folder: 
 ```
 agp/data-plane/integrations/mcp/mcp-proxy
@@ -956,7 +952,7 @@ agp/data-plane/integrations/mcp/mcp-proxy
 task mcp-proxy:build
 ```
 
-#### 3.2 Run the proxy server
+#### Run the proxy server
 Run the AGP-MCP proxy server using the following command
 ```bash
 cargo run -- --config <configuration> \
@@ -964,15 +960,17 @@ cargo run -- --config <configuration> \
     --name <proxy_name> \
     --mcp-server <address> 
 ```
-Here's what each command option means: | Option | Description |
+Here's what each command option means: 
+| Option | Description |
 |-------------------------|------------------------------------------------------|
-| -c, --config | Path to the AGP configuration file | | -s, --svc-name | Service
-name to look for in the configuration file | | -n, --name | Name of the MCP
-Proxy (format: org/ns/type) | | -m, --mcp-server | Address of the MCP Server
-(e.g., http://localhost:8000/sse) |
+| -c, --config | Path to the AGP configuration file | 
+| -s, --svc-name | Service name to look for in the configuration file | 
+| -n, --name | Name of the MCP Proxy (format: org/ns/type) | 
+| -m, --mcp-server | Address of the MCP Server (e.g., http://localhost:8000/sse) |
 
 An example of the configuration file is available at
 ```./config/cp-proxy-config.yaml```
+
 ```yaml
 tracing:
   log_level: info
@@ -1007,7 +1005,7 @@ cargo run -- --config config/mcp-proxy-config.yaml \
     --mcp-server http://localhost:8000/sse 
 ```
 
-### Step 4: Running the Agent
+### Running the Agent
 Finally, you can now run the agent as shown in the previuos section. The agent
 will automatically connect to the proxy and send messages to the MCP server via
 the proxy.
