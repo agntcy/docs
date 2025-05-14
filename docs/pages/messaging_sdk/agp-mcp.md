@@ -116,7 +116,7 @@ modified to support both AGP and SSE as transport protocols.
 <br>
 
 ```python
-# mcp_server_time/__init__.py
+# src/mcp_server_time/__init__.py
 
 from .server import main
 
