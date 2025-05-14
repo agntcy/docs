@@ -10,6 +10,7 @@ Agent Gateway Protocol
    agp-control-plane
    agp-session-layer
    agp-howto
-   
+   agp-mcp
+
 
 
