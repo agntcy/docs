@@ -95,9 +95,10 @@ First, create a `pyproject.toml` file to define the project dependencies:
 # pyproject.toml
 [project]
 name = "mcp-server-time"
+version = "0.1.0"
 description = "MCP server providing tools for time queries and timezone conversions"
 requires-python = ">=3.10"
-dependencies = ["mcp>=1.6.0", "agp-mcp>=0.1.1", "click>=8.1.8"]
+dependencies = ["mcp>=1.6.0", "agp-mcp>=0.1.2", "click>=8.1.8"]
 
 [project.scripts]
 mcp-server-time = "mcp_server_time:main"
@@ -112,7 +113,9 @@ timezone conversions. This implementation is based on the [official MCP example 
 modified to support both AGP and SSE as transport protocols.
 
 <details>
+
 <summary>MCP Server Implementation</summary>
+
 <br>
 
 ```python
@@ -634,6 +637,7 @@ def main(local_timezone, transport, port, organization, namespace, mcp_server, c
 
 </details>
 
+<br>
 
 The core component of the server implementation is the `serve_agp` function. This function establishes a connection with our AGP instance and handles all incoming client sessions. It leverages the `AGPServer` class to create an AGP server instance that listens for and processes client connections.
 
@@ -707,7 +711,7 @@ description = "A llamaindex agent using MCP server over AGP for time queries"
 requires-python = ">=3.12"
 dependencies = [
     "mcp>=1.0.0",
-    "agp-mcp>=0.1.1",
+    "agp-mcp>=0.1.2",
     "click>=8.1.8",
     "llama-index>=0.12.29",
     "llama-index-llms-azure-openai>=0.3.2",
