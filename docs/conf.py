@@ -45,6 +45,7 @@ extensions = [
     "sphinxcontrib.mermaid",
     "sphinx_inline_tabs",
     "sphinxemoji.sphinxemoji",
+    "sphinx_copybutton",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
