@@ -11,6 +11,3 @@ Agent Gateway Protocol
    agp-session-layer
    agp-howto
    agp-mcp
-
-
-
