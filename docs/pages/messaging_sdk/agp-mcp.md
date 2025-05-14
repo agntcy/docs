@@ -89,7 +89,14 @@ This command deploys an AGP instance that listens on port 46357 for incoming con
 Next, we'll implement a simple MCP server that processes requests from the
 LlamaIndex agent. This server will demonstrate how to use AGP as a custom transport protocol.
 
-First, create a `pyproject.toml` file to define the project dependencies:
+First, create a new directory for our MCP server project:
+
+```bash
+mkdir -p mcp-server-time/src/mcp_server_time
+cd mcp-server-time
+```
+
+Now, create a `pyproject.toml` file in the project root to define the project dependencies:
 
 ```toml
 # pyproject.toml
@@ -111,6 +118,8 @@ build-backend = "hatchling.build"
 Next, let's implement the MCP server that will handle time queries and
 timezone conversions. This implementation is based on the [official MCP example server](https://github.com/modelcontextprotocol/servers/tree/main/src/time),
 modified to support both AGP and SSE as transport protocols.
+
+Create the following files in your project directory:
 
 <details>
 
@@ -683,10 +692,11 @@ async def serve_agp(
 After implementing all the necessary files, your project structure should look like this:
 
 ```bash
-.
-├── mcp_server_time
-│   ├── __init__.py
-│   └── server.py
+mcp-server-time/
+├── src/
+│   └── mcp_server_time/
+│       ├── __init__.py
+│       └── server.py
 └── pyproject.toml
 ```
 
@@ -699,7 +709,14 @@ uv run mcp-server-time --local-timezone Europe/London
 ### Implementing the LlamaIndex Agent
 With our MCP server up and running, let's now implement a LlamaIndex agent that will interact with the server. This agent will send time queries and timezone conversion requests to our MCP server using the AGP transport protocol.
 
-First, create a `pyproject.toml` file to define the agent's dependencies:
+First, create a new directory for our LlamaIndex agent project:
+
+```bash
+mkdir -p llamaindex-time-agent/src/llamaindex_time_agent
+cd llamaindex-time-agent
+```
+
+Now, create a `pyproject.toml` file to define the agent's dependencies:
 
 ```toml
 # pyproject.toml
@@ -710,7 +727,7 @@ version = "0.1.0"
 description = "A llamaindex agent using MCP server over AGP for time queries"
 requires-python = ">=3.12"
 dependencies = [
-    "mcp>=1.0.0",
+    "mcp>=1.6.0",
     "agp-mcp>=0.1.2",
     "click>=8.1.8",
     "llama-index>=0.12.29",
@@ -728,8 +745,8 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 ```
 
-Then let's write the simple LlamaIndex agent that will handle time queries and
-timezone.
+Now, let's create the Python files for our LlamaIndex agent that will handle time queries and
+timezone conversions. Create the following files in your project directory:
 
 <details>
 <summary>LlamaIndex Agent Implementation</summary>
@@ -893,10 +910,11 @@ The agent establishes its identity through the AGP topic `org/ns/time-agent`, wh
 After implementing all the necessary files, your agent project structure should look like this:
 
 ```bash
-.
-├── llamaindex_time_agent
-│   ├── __init__.py
-│   └── main.py
+llamaindex-time-agent/
+├── src/
+│   └── llamaindex_time_agent/
+│       ├── __init__.py
+│       └── main.py
 └── pyproject.toml
 ```
 To run the agent, navigate to the project directory and use one of the following commands based on your preferred LLM:
