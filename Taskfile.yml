@@ -30,7 +30,7 @@ tasks:
       - deps/proto-diagrams
     preconditions:
       - which go
-      - which python
+      - which python3
     env:
       SOURCE_DIR:     "{{.ROOT_DIR}}/docs"
       SCHEMA_DIR:     "{{.ROOT_DIR}}/schema"
@@ -48,7 +48,7 @@ tasks:
     desc: Run documentation website in live editing mode
     preconditions:
       - which go
-      - which python
+      - which python3
     watch: true
     sources:
       - 'docs/**/*'
