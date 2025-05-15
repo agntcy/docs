@@ -136,7 +136,7 @@ Create the following files in your project directory:
 
 <details>
 
-<summary>src/mcp_server_time/__init__.py</summary>
+<summary><b>src/mcp_server_time/__init__.py</b></summary>
 
 <br>
 
@@ -155,7 +155,7 @@ if __name__ == "__main__":
 
 <details>
 
-<summary>src/mcp_server_time/server.py</summary>
+<summary><b>src/mcp_server_time/server.py</b></summary>
 
 <br>
 
@@ -781,7 +781,7 @@ time queries and timezone conversions. Create the following files in your
 project directory:
 
 <details>
-<summary>src/llamaindex_time_agent/__init__.py</summary>
+<summary><b>src/llamaindex_time_agent/__init__.py</b></summary>
 <br>
 
 ```python
@@ -792,6 +792,14 @@ from .main import main
 if __name__ == "__main__":
     main()
 ```
+
+</details>
+
+<br>
+
+<details>
+<summary><b>src/llamaindex_time_agent/main.py</b></summary>
+<br>
 
 ```python
 # src/llamaindex_time_agent/main.py
