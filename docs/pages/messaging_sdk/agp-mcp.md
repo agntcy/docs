@@ -19,7 +19,7 @@ MCP server:
    connect seamlessly without requiring modifications to your existing server,
    making it an effective solution for established systems.
 
-This tutorial guides you through both integration methods. You'll learn how to implement
+This tutorial guides you through both integration methods. You'll learn how to use
 AGP as a custom transport for MCP and how to configure the proxy server
 to enable AGP support for an SSE-based MCP server. By the end, you'll have all the
 necessary tools to integrate AGP with MCP in a way that best fits your system's architecture.
@@ -46,7 +46,7 @@ For this section of the tutorial, we'll implement and deploy two sample applicat
 Since the client and server will communicate using AGP, we first need to deploy an AGP
 instance. We'll use a pre-built Docker image for this purpose.
 
-Execute the following commands to create a configuration file and launch the AGP instance:
+First, execute the following command to create a configuration file for AGP:
 
 ```bash
 cat << EOF > ./config.yaml
@@ -75,8 +75,11 @@ services:
         tls:
           insecure: true
 EOF
+```
 
+Now launch the AGP instance using the just created configuration file:
 
+```bash
 docker run -it \
     -v ./config.yaml:/config.yaml -p 46357:46357 \
     ghcr.io/agntcy/agp/gw:latest /gateway --config /config.yaml
@@ -650,7 +653,7 @@ def main(local_timezone, transport, port, organization, namespace, mcp_server, c
 
 The core component of the server implementation is the `serve_agp` function. This function establishes a connection with our AGP instance and handles all incoming client sessions. It leverages the `AGPServer` class to create an AGP server instance that listens for and processes client connections.
 
-External clients can address this server using the AGP topic identifier `org/ns/time-server`.
+External clients can address this server using the AGP name `org/ns/time-server`.
 
 ```python
 async def serve_agp(
@@ -905,7 +908,7 @@ The key component of the agent is the `amain` function, which handles:
 2. AGP client initialization and connection to our MCP server 
 3. Tool setup and agent execution
 
-The agent establishes its identity through the AGP topic `org/ns/time-agent`, which is used for addressing.
+The agent establishes its identity through the AGP name `org/ns/time-agent`, which is used for addressing.
 
 After implementing all the necessary files, your agent project structure should look like this:
 
@@ -946,8 +949,8 @@ First, ensure you have an AGP node running in your environment. If you haven't a
 
 ### Running the MCP Server
 We'll now set up the time-server using the SSE transport protocol. 
-The server is the same desciber in the previos session. To run it using
-The SSE protocol use the following command:
+The server is the same described in the previous section. To run it using
+the SSE protocol use the following command:
 ```
 uv run mcp-server-time --local-timezone Europe/London --transport sse
 ```
@@ -960,7 +963,7 @@ INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
 ```
 At this point, your time-server is up and running.
 
-### Setting up the AGP-MPC Proxy
+### Setting up the AGP-MCP Proxy
 To enable the AGP client to communicate with the SSE-based time-server, you'll
 need to configure and run the AGP-MCP Proxy Server. You can run the following
 commands to run a local instance.
@@ -1000,7 +1003,7 @@ docker run -it -v ./config-proxy.yaml:/config-proxy.yaml \
 ```
 
 ### Running the Agent
-Finally, you can now run the agent as shown in the previuos section. The agent
+Finally, you can now run the agent as shown in the previous section. The agent
 will automatically connect to the proxy and send messages to the MCP server via
 the proxy. However now the proxy is reachable using the name ```org/mcp/proxy```
 so the command to run the agent is:
