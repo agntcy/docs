@@ -163,8 +163,10 @@ if __name__ == "__main__":
 # src/mcp_server_time/server.py
 
 """
-MCP Time Server - A server implementation for time and timezone conversion functionality.
-This module provides tools for getting current time in different timezones and converting times between timezones.
+MCP Time Server - A server implementation for time and timezone conversion
+functionality.
+This module provides tools for getting current time in different timezones and
+converting times between timezones.
 """
 
 import asyncio
