@@ -976,8 +976,6 @@ uv run llamaindex-time-agent \
 The agent will connect to the MCP server via AGP, send a time query for the
 specified city, and display the response.
 
-## Using AGP with a Proxy Server
-
 ## Using AGP with a Proxy Server for SSE-based MCP Servers
 
 In this section, we'll demonstrate how to set up and configure the AGP-MCP Proxy
