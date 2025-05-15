@@ -781,7 +781,7 @@ time queries and timezone conversions. Create the following files in your
 project directory:
 
 <details>
-<summary>LlamaIndex Agent Implementation</summary>
+<summary>src/llamaindex_time_agent/__init__.py</summary>
 <br>
 
 ```python
