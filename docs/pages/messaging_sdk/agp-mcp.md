@@ -136,7 +136,7 @@ Create the following files in your project directory:
 
 <details>
 
-<summary>MCP Server Implementation</summary>
+<summary>src/mcp_server_time/__init__.py</summary>
 
 <br>
 
@@ -148,6 +148,16 @@ from .server import main
 if __name__ == "__main__":
     main()
 ```
+
+</details>
+
+<br>
+
+<details>
+
+<summary>src/mcp_server_time/server.py</summary>
+
+<br>
 
 ```python
 # src/mcp_server_time/server.py
