@@ -996,7 +996,7 @@ MCP servers without modifying the servers themselves.
 
 First, ensure you have an AGP node running in your environment. If you haven't
 already set one up, follow the instructions provided in the previous section to
-deploy an AGP instance.
+[deploy an AGP instance](#setting-up-the-agp-instance).
 
 ### Running the MCP Server with SSE Transport
 
