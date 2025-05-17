@@ -1,6 +1,6 @@
 # Agent Hub
 
-The Agent Hub is designed to provide a robust multi-tenant platform for hosting and managing agent repositories. Its primary aim is to deliver a hub-like user experience, offering easy navigation and management for users. The Agent Hub acts as a centralized point for organizing and accessing agent repositories. This service is enhanced by a gRPC API that supports efficient service communication and integration, ensuring seamless interaction between components.
+The Agent Hub is designed to provide a robust multi-organization platform for hosting and managing agent repositories. Its primary aim is to deliver a hub-like user experience, offering easy navigation and management for users. The Agent Hub acts as a centralized point for organizing and accessing agent repositories. This service is enhanced by a gRPC API that supports efficient service communication and integration, ensuring seamless interaction between components.
 
 The Agent Hub serves as the central platform for hosting and managing various agent-related services. The main purpose is to provide a comprehensive solution for developers and IT admins to register, discover, and manage agents in an organized manner. By offering a secure environment for authentication and user management, it ensures that organizations can confidently manage their agent directories and related services.
 
@@ -11,13 +11,13 @@ The Agent Hub enables users to:
 * View and search for public agent repositories.
 * Create repositories.
 * Publish records.
-* Access multiple separate tenants.
+* Access multiple separate organizations.
 
 ## Using the Agent Hub
 
 ### Signing up for the Agent Hub and Logging in
 
-To get started with the Agent Hub, sign up at the [Agent Hub homepage](https://phoenix.dev.outshift.ai) for free. You can create a dedicated account with your email address or use one of several SSO options. Once your account is created, you simply log in.
+To get started with the Agent Hub, sign up at the [Agent Hub homepage](https://hub.agntcy.org/) for free. You can create an account with your GitHub account. Once your account is created, you simply log in. When first logging in, you are prompted to create a name for your organization.
 
 ![Logging in](./_static/login.png)
 
@@ -33,7 +33,7 @@ You can refine the results using predefined filters and open search:
 * Use the drop-down **Filters** list to narrow the results by Agent Skill.
 * Use the drop-down **Sort by** list to sort the displayed items by Most Recent or Oldest.
 
-You can change tenants by clicking the Tenant drop-down list and selecting another tenant.
+You can change organizations by clicking the Org drop-down list and selecting another organization.
 
 ### Agent Details
 
@@ -85,7 +85,7 @@ To list an agent in the Agent Hub:
 1. Enter the repository name and description.
 1. Select the visibility for your agent repository.
     * Public agent repositories appear in search results.
-    * Private agent repositories are only visible in your tenant.
+    * Private agent repositories are only visible in your organization.
 1. Click **Publish**.
 1. You can also publish the agent repository using the generated CLI command.
 1. Click **Finish**.
@@ -94,25 +94,25 @@ Your agent repository is created in the Agent Hub.
 
 ### Settings
 
-The settings page allows you to manage your tenants and users.
+The settings page allows you to manage your organizations and users.
 
-#### Tenants
+#### Organizations
 
-Tenants represent separate spaces or organizations within the Agent Hub, each with its own repositories and users. The tenants available to you are listed under the **Tenants** tab.
+Organizations represent separate spaces or organizations within the Agent Hub, each with its own repositories and users. The organizations available to you are listed under the **Organizations** tab.
 
-Clicking the three dots (**⁝**) at the end of any record in opens a drop-down list of actions you can perform on that tenant.
+Clicking the three dots (**⁝**) at the end of any record in opens a drop-down list of actions you can perform on that organization.
 
-* Click **Edit** to edit the tenant.
-* Click **Delete** to delete the tenant.
-* Click **Switch** to switch to the tenant.
+* Click **Edit** to edit the organization.
+* Click **Delete** to delete the organization.
+* Click **Switch** to switch to the organization.
 
 You can reload the listed items by clicking the **Reload** button (**⟳**).
 
 #### Users
 
-The users in a tenant are listed under the **Users** tab.
+The users in a organization are listed under the **Users** tab.
 
-Clicking the three dots (**⁝**) at the end of any record in opens a drop-down list of actions you can perform on that tenant.
+Clicking the three dots (**⁝**) at the end of any record in opens a drop-down list of actions you can perform on that organization.
 
 * Click **Edit** to edit the user's role.
 * Click **Delete** to delete the user.
