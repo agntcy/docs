@@ -169,7 +169,7 @@ mv built.model.json model.json
 ### Store
 
 This example demonstrates the interaction with the local storage layer.
-It is used as an content-addressable object store for Directory-specific models and serves both the local and network-based operations (if enabled).
+It is used as an content-addressable object store for directory-specific models and serves both the local and network-based operations (if enabled).
 
 ```bash
 # push and store content digest

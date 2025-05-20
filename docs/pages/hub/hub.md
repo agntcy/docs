@@ -23,7 +23,7 @@ To get started with the Agent Hub, sign up at the [Agent Hub homepage](https://h
 
 ### Explore Page
 
-The Explore page offers an overview of the agent repositoriess registered and enables the user to explore them.
+"The Explore page allows users to browse and search through available agent repositories.
 
 ![The Explore Page](./_static/explore.png)
 
@@ -71,7 +71,7 @@ You can refine the results using predefined filters and open search:
 
 #### Agent Actions
 
-Clicking the three dots (**⁝**) at the end of any record in the Agent Directory table opens a drop-down list of actions you can perform on that agent reopsitory.
+Clicking the three dots (**⁝**) at the end of any record in the Agent Directory table opens a drop-down list of actions you can perform on that agent repository.
 
 * Click **Open Details** to view the agent.
 * Click **Edit** to edit the agent.
@@ -118,3 +118,30 @@ Clicking the three dots (**⁝**) at the end of any record in opens a drop-down 
 * Click **Delete** to delete the user.
 
 You can reload the listed items by clicking the **Reload** button (**⟳**).
+
+### Using the Hub through CLI
+
+You can use the Agent Hub through the CLI.
+
+Use the `bin/dirctl hub` command to list the available commands.
+
+#### Initiate the Repository
+
+```
+dirctl repo init
+```
+
+#### Logging in
+
+Use the `bin/dirctl hub login` command to log in. The login page opens in your browser. Use your credentials to log in.
+
+#### Listing Organizations
+
+Use the `bin/dirctl hub tenants` command to list the organizations you are a member of.
+
+#### Pushing and Pulling Agent Data Models
+
+To pull the data model, use the `bin/dirctl hub pull <repository>:<version>` command. Alternatively, you can use `bin/dirctl hub pull <digest>` instead.
+
+To push the data model, use the `bin/dirctl hub push <agent> ./agent.json` command.
+
