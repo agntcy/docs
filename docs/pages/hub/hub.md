@@ -17,7 +17,7 @@ The Agent Hub enables users to:
 
 ### Signing up for the Agent Hub and Logging in
 
-To get started with the Agent Hub, sign up at the [Agent Hub homepage](https://hub.agntcy.org/) for free. You can create an account with your GitHub account. Once your account is created, you simply log in. When first logging in, you are prompted to create a name for your organization.
+To get started with the Agent Hub, sign up for free at the [Agent Hub homepage](https://hub.agntcy.org/). You can sign up with your GitHub account or by providing an email and password. Once your account is created, simply log in. When first logging in, you are prompted to create a name for your default organization. This organization is a personal space where all repositories belong to you.
 
 ![Logging in](./_static/login.png)
 
@@ -111,6 +111,11 @@ You can reload the listed items by clicking the **Reload** button (**⟳**).
 #### Users
 
 The users in a organization are listed under the **Users** tab.
+
+You can invite other users to the organization by clicking the **+ Invite User** button.
+
+> Note:
+> You cannot invite other users to your personal organization created during signing up. To collaborate with others, create a new organization.
 
 Clicking the three dots (**⁝**) at the end of any record in opens a drop-down list of actions you can perform on that organization.
 
