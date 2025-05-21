@@ -166,6 +166,34 @@ dirctl build . > built.model.json
 mv built.model.json model.json
 ```
 
+### Signing and Verification
+
+This process relies on attaching signature to the agent data model using identity-based OIDC signing flow which can be verified by other clients.
+The signing process opens a browser window to authenticate the user
+with an OIDC identity provider.
+The verification process validates the agent signature against the identity provider and signature transparency services.
+These operations are implemented using [Sigstore](https://www.sigstore.dev/).
+
+```bash
+## Sign the agent data model
+cat model.json | dirctl sign --stdin > signed.model.json
+
+## Verify agent data models
+cat model.json | dirctl verify --stdin
+cat signed.model.json | dirctl verify --stdin
+
+## Verify signature using custom parameters:
+# 1. Only trust users with "cisco.com" addresses
+# 2. Only trust issuers from "github.com"
+dirctl verify signed.model.json \
+   --oidc-identity "(.*)@cisco.com" \
+   --oidc-issuer "(.*)github.com(.*)"
+
+## Replace the base agent model with a signed one
+rm -rf model.json
+mv signed.model.json model.json
+```
+
 ### Store
 
 This example demonstrates the interaction with the local storage layer.
