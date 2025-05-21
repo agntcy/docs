@@ -128,7 +128,7 @@ You can reload the listed items by clicking the **Reload** button (**⟳**).
 
 You can use the Agent Hub through the CLI.
 
-Use the `bin/dirctl hub` command to list the available commands.
+Use the `dirctl hub` command to list the available commands.
 
 #### Initiate the Repository
 
@@ -138,15 +138,28 @@ dirctl repo init
 
 #### Logging in
 
-Use the `bin/dirctl hub login` command to log in. The login page opens in your browser. Use your credentials to log in.
+Use the `dirctl hub login` command to log in. The login page opens in your browser. Use your credentials to log in.
 
 #### Listing Organizations
 
-Use the `bin/dirctl hub tenants` command to list the organizations you are a member of.
+Use the `dirctl hub orgs` command to list the organizations you are a member of.
+
+#### Signing Agent Data Models
+
+You must sign the agent data models before pushing to Hub. Unsigned models are rejected by the API. 
+
+To sign an agent data model using identity-based OIDC signing, run `dirctl sign ./agent.json`.
 
 #### Pushing and Pulling Agent Data Models
 
-To pull the data model, use the `bin/dirctl hub pull <repository>:<version>` command. Alternatively, you can use `bin/dirctl hub pull <digest>` instead.
+To pull the data model, use the `dirctl hub pull <repository>:<version>` command. Alternatively, you can use `dirctl hub pull <digest>` instead.
 
-To push the data model, use the `bin/dirctl hub push <agent> ./agent.json` command.
+To push the data model, use the `dirctl hub push <agent> ./agent.json` command.
 
+#### Verifying Agent Data Model Signature
+
+The verification process allows validation of the agent data model signature against a specific identity.
+
+To verify that an agent data model is properly signed, you can run `dirctl verify ./agent.json`.
+
+To verify the signature against a specific identity, for example to check if an agent model originates from GitHub Agntcy users, run `dirctl verify ./agent.json --oidc-identity "(.*)@agntcy.com" --oidc-issuer "(.*)github.com(.*)"`.
