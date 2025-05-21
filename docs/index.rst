@@ -81,3 +81,4 @@ Internet of Agents Components
    :maxdepth: 1
 
    pages/how-to-guides/mas-creation-tutorial/mas-tutorial
+   pages/how-to-guides/agents/thread.rst
