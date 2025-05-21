@@ -19,7 +19,7 @@ What you will need
 
   * poetry
   * python version <4.0,>=3.9
-  * `Workflow server manager <https://docs.agntcy.org/pages/agws/workflow_server_manager.html#installation>_`
+  * `Workflow server manager <https://docs.agntcy.org/pages/agws/workflow_server_manager.html#installation>`_
   * An Editor of your choice
 
 
