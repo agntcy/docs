@@ -19,13 +19,13 @@ The Agent Hub enables users to:
 
 To get started with the Agent Hub, sign up for free at the [Agent Hub homepage](https://hub.agntcy.org/). You can sign up with your GitHub account or by providing an email and password. Once your account is created, simply log in. When first logging in, you are prompted to create a name for your default organization. This organization is a personal space where all repositories belong to you.
 
-![Logging in](./_static/login.png)
+![Logging in](../_static/login.png)
 
 ### Explore Page
 
 "The Explore page allows users to browse and search through available agent repositories.
 
-![The Explore Page](./_static/explore.png)
+![The Explore Page](../_static/explore.png)
 
 You can refine the results using predefined filters and open search:
 
@@ -39,7 +39,7 @@ You can change organizations by clicking the Org drop-down list and selecting an
 
 Clicking on an agent repository opens the Agent Details page with further information on the agent repository.
 
-![The Agent Details Page](./_static/agent.png)
+![The Agent Details Page](../_static/agent.png)
 
 The **General** tab lists the following information:
 
@@ -67,7 +67,7 @@ You can refine the results using predefined filters and open search:
 * Use the drop-down **Filters** list to narrow the results by Agent Skill.
 * Use the drop-down **Sort by** list to sort the displayed items by Most Recent or Oldest.
 
-![The Agent Directory Page](./_static/directory.png)
+![The Agent Directory Page](../_static/directory.png)
 
 #### Agent Actions
 
