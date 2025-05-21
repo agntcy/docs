@@ -3,14 +3,14 @@
 
 version: "3"
 
-interval: '500ms'
+interval: "500ms"
 
-dotenv: ['.env']
+dotenv: [".env"]
 
 env:
   BUILD_DIR: "{{.ROOT_DIR}}/.build"
-  DEPS_DIR:  "{{.ROOT_DIR}}/.dep"
-  VENV_DIR:  "{{.ROOT_DIR}}/.dep/.venv"
+  DEPS_DIR: "{{.ROOT_DIR}}/.dep"
+  VENV_DIR: "{{.ROOT_DIR}}/.dep/.venv"
   # Taskfile env does not override the actual shell env, see:
   # https://github.com/go-task/task/issues/202
   PATH: "{{.DEPS_DIR}}:{{.VENV_DIR}}/bin:$PATH"
@@ -30,10 +30,10 @@ tasks:
       - deps/proto-diagrams
     preconditions:
       - which go
-      - which python
+      - which python3
     env:
-      SOURCE_DIR:     "{{.ROOT_DIR}}/docs"
-      SCHEMA_DIR:     "{{.ROOT_DIR}}/schema"
+      SOURCE_DIR: "{{.ROOT_DIR}}/docs"
+      SCHEMA_DIR: "{{.ROOT_DIR}}/schema"
       BUILD_DOCS_DIR: "{{.BUILD_DIR}}/docs"
     vars:
       BUILD_SITE_DIR: "{{.BUILD_DIR}}/docs/html"
@@ -48,11 +48,11 @@ tasks:
     desc: Run documentation website in live editing mode
     preconditions:
       - which go
-      - which python
+      - which python3
     watch: true
     sources:
-      - 'docs/**/*'
-      - 'schema/**/*'
+      - "docs/**/*"
+      - "schema/**/*"
     vars:
       BUILD_SITE_DIR: "{{.BUILD_DIR}}/docs/html"
     cmds:
