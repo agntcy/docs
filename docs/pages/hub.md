@@ -209,5 +209,7 @@ verify ./agent.json`.
 To verify the signature against a specific identity, for example to check if an
 agent model originates from GitHub Agntcy users, run:
 
-```bash dirctl verify ./agent.json \ --oidc-issuer "(.*)github.com(.*)" \
---oidc-identity "(.*)@agntcy.com" ```
+```bash
+dirctl verify ./agent.json \ 
+                 --oidc-issuer "(.*)github.com(.*)" \
+                 --oidc-identity "(.*)@agntcy.com"
