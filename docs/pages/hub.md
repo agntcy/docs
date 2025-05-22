@@ -130,10 +130,13 @@ You can use the Agent Hub through the CLI.
 
 Use the `dirctl hub` command to list the available commands.
 
-#### Initiate the Repository
+#### Initialize the Repository
 
-```
-dirctl repo init
+In order to start with the process, an `agent.json` object needs to be created.
+This can be done by initializing local code repo using:
+
+```bash
+dirctl init repo
 ```
 
 #### Logging in
@@ -162,4 +165,10 @@ The verification process allows validation of the agent data model signature aga
 
 To verify that an agent data model is properly signed, you can run `dirctl verify ./agent.json`.
 
-To verify the signature against a specific identity, for example to check if an agent model originates from GitHub Agntcy users, run `dirctl verify ./agent.json --oidc-identity "(.*)@agntcy.com" --oidc-issuer "(.*)github.com(.*)"`.
+To verify the signature against a specific identity, for example to check if an agent model originates from GitHub Agntcy users, run:
+
+```bash
+dirctl verify ./agent.json \
+            --oidc-issuer "(.*)github.com(.*)" \
+            --oidc-identity "(.*)@agntcy.com"
+```
