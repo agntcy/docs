@@ -273,21 +273,30 @@ In this example `http://localhost:8080/httpbin/json`:
 
 The new Cross-API interface, available at the `/aba/` endpoint, is not activated by default.
 
-To activate it, simply copy/paste `configs/agent_bridge.json` file into `./tyk-release-v5.8.0/apps` folder,
+To activate it, use the provided `configs/api-bridge-agent.oas.json` file:
 then restart
+
+```shell
+curl http://localhost:8080/tyk/apis/oas \
+  --header 'x-tyk-authorization: foo' \
+  --header 'Content-Type: text/plain' \
+  -d@configs/api-bridge-agent.oas.json
+
+curl http://localhost:8080/tyk/reload/group --header 'x-tyk-authorization: foo'
+```
 
 It's then possible to do a query like this:
 
 ```shell
 curl http://localhost:8080/aba/ \
   --header "Content-Type: application/nlq" \
-  -d "Send email to <john.doe@gmail.com>. The content is "Hello from Mr Smith", The subject is "This is a test" and the reply-to address is <mr.smith@gmail.com>. No BCC, no CC"
+  -d "Send email to <john.doe@gmail.com>. The content is 'Hello from Mr Smith', The subject is 'This is a test' and the reply-to address is <mr.smith@gmail.com>. No BCC, no CC"
 ```
 
 If you have a service that support action to send an email, the Cross-API interface will route this request to that service.
 Otherwise, a "404 Not found" will be answered.
 
-Note: it is possible to change the listen path `/aba/` by editing the `configs/agent_bridge.json` file before activate it.
+Note: it is possible to change the listen path `/aba/` by editing the `configs/api-bridge-agent.oas.json` file before activate it.
 
 ### Activate the new MCP interface
 
@@ -306,7 +315,7 @@ curl http://localhost:8080/tyk/reload/group --header 'x-tyk-authorization: foo'
 curl http://localhost:8080/mcp/init
 ```
 
-Note: do not change the listen path `/mcp/` on the `configs/agent_bridge.json` file. It is used internally.
+Note: do not change the listen path `/mcp/` on the `configs/mcp.oas.json` file. It is used internally.
 
 ### Adding support for a new MCP server
 
