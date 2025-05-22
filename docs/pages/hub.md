@@ -1,12 +1,28 @@
-# Agent Hub
+# Online Instance 
 
-The Agent Hub is designed to provide a robust multi-organization platform for hosting and managing agent repositories. Its primary aim is to deliver a hub-like user experience, offering easy navigation and management for users. The Agent Hub acts as a centralized point for organizing and accessing agent repositories. This service is enhanced by a gRPC API that supports efficient service communication and integration, ensuring seamless interaction between components.
+A public instance of agent directory is available at https://hub.agntcty.org. In
+this section we describe the main features of this instance which is provided AS
+IS to the community as a non production environment to familiarize with agent
+directory. In this section we will use the name hub to indicate
+hub.agntcy.org.
 
-The Agent Hub serves as the central platform for hosting and managing various agent-related services. The main purpose is to provide a comprehensive solution for developers and IT admins to register, discover, and manage agents in an organized manner. By offering a secure environment for authentication and user management, it ensures that organizations can confidently manage their agent directories and related services.
+Hub is designed to provide a robust multi-organization platform for hosting and
+managing agent repositories. Its primary aim is to deliver a hub-like user
+experience, offering easy navigation and management for users. Hub
+acts as a centralized point for organizing and accessing agent repositories.
+This service is enhanced by a gRPC API that supports efficient service
+communication and integration, ensuring seamless interaction between components.
+
+Hub serves as the central platform for hosting and managing various
+agent-related services. The main purpose is to provide a comprehensive solution
+for developers and IT admins to register, discover, and manage agents in an
+organized manner. By offering a secure environment for authentication and user
+management, it ensures that organizations can confidently manage their agent
+directories and related services.
 
 ## Features
 
-The Agent Hub enables users to:
+Hub enables users to:
 
 * View and search for public agent repositories.
 * Create repositories.
@@ -17,7 +33,12 @@ The Agent Hub enables users to:
 
 ### Signing up for the Agent Hub and Logging in
 
-To get started with the Agent Hub, sign up for free at the [Agent Hub homepage](https://hub.agntcy.org/). You can sign up with your GitHub account or by providing an email and password. Once your account is created, simply log in. When first logging in, you are prompted to create a name for your default organization. This organization is a personal space where all repositories belong to you.
+To get started with the hub, sign up for free at the [AGNCTY Agent Directory
+homepage](https://hub.agntcy.org/). You can sign up with your GitHub account or
+by providing an email and password. Once your account is created, simply log in.
+When first logging in, you are prompted to create a name for your default
+organization. This organization is a personal space where all repositories
+belong to you.
 
 ![Logging in](../_static/login.png)
 
@@ -55,7 +76,7 @@ The **Settings** tab allows the owner to change the description and the visibili
 
 ### Agent Directory Page
 
-The Agent Directory Page allows you to view, edit, and create agent repositories in the Agent Hub. Here the records are displayed in a table with customizable columns.
+The Agent Directory Page allows you to view, edit, and create agent repositories in the Hub. Here the records are displayed in a table with customizable columns.
 
 You can select which columns are displayed, and in which order, by clicking the **Arrange Columns** button (***▥***).
 
