@@ -29,9 +29,9 @@ Hub enables users to:
 * Publish records.
 * Access multiple separate organizations.
 
-## Using the Agent Hub
+## Using the Hub
 
-### Signing up for the Agent Hub and Logging in
+### Signing up for the Hub and Logging in
 
 To get started with the hub, sign up for free at the [AGNCTY Agent Directory
 homepage](https://hub.agntcy.org/). You can sign up with your GitHub account or
@@ -72,27 +72,34 @@ The **General** tab lists the following information:
 
 The **Versions** tab lists the published versions of the agent.
 
-The **Settings** tab allows the owner to change the description and the visibility of the agent.
+The **Settings** tab allows the owner to change the description and the
+visibility of the agent.
 
 ### Agent Directory Page
 
-The Agent Directory Page allows you to view, edit, and create agent repositories in the Hub. Here the records are displayed in a table with customizable columns.
+The Agent Directory Page allows you to view, edit, and create agent repositories
+in the Hub. Here the records are displayed in a table with customizable columns.
 
-You can select which columns are displayed, and in which order, by clicking the **Arrange Columns** button (***▥***).
+You can select which columns are displayed, and in which order, by clicking the
+**Arrange Columns** button (***▥***).
 
 You can reload the listed items by clicking the **Reload** button (**⟳**).
 
 You can refine the results using predefined filters and open search:
 
-* Use the **Search** bar to search for a text string in an agent repository name. To clear the search, click the **×**.
+* Use the **Search** bar to search for a text string in an agent repository
+name. To clear the search, click the **×**.
 * Use the drop-down **Filters** list to narrow the results by Agent Skill.
-* Use the drop-down **Sort by** list to sort the displayed items by Most Recent or Oldest.
+* Use the drop-down **Sort by** list to sort the displayed items by Most Recent
+or Oldest.
 
 ![The Agent Directory Page](../_static/directory.png)
 
 #### Agent Actions
 
-Clicking the three dots (**⁝**) at the end of any record in the Agent Directory table opens a drop-down list of actions you can perform on that agent repository.
+Clicking the three dots (**⁝**) at the end of any record in the Agent Directory
+table opens a drop-down list of actions you can perform on that agent
+repository.
 
 * Click **Open Details** to view the agent.
 * Click **Edit** to edit the agent.
@@ -100,7 +107,7 @@ Clicking the three dots (**⁝**) at the end of any record in the Agent Director
 
 #### Create
 
-To list an agent in the Agent Hub:
+To list an agent in the Hub:
 
 1. Click the **+ New Repository** button.
 1. Enter the repository name and description.
@@ -111,7 +118,7 @@ To list an agent in the Agent Hub:
 1. You can also publish the agent repository using the generated CLI command.
 1. Click **Finish**.
 
-Your agent repository is created in the Agent Hub.
+Your agent repository is created in the Hub.
 
 ### Settings
 
@@ -119,9 +126,12 @@ The settings page allows you to manage your organizations and users.
 
 #### Organizations
 
-Organizations represent separate spaces or organizations within the Agent Hub, each with its own repositories and users. The organizations available to you are listed under the **Organizations** tab.
+Organizations represent separate spaces or organizations within the Hub,
+each with its own repositories and users. The organizations available to you are
+listed under the **Organizations** tab.
 
-Clicking the three dots (**⁝**) at the end of any record in opens a drop-down list of actions you can perform on that organization.
+Clicking the three dots (**⁝**) at the end of any record in opens a drop-down
+list of actions you can perform on that organization.
 
 * Click **Edit** to edit the organization.
 * Click **Delete** to delete the organization.
@@ -133,12 +143,14 @@ You can reload the listed items by clicking the **Reload** button (**⟳**).
 
 The users in a organization are listed under the **Users** tab.
 
-You can invite other users to the organization by clicking the **+ Invite User** button.
+You can invite other users to the organization by clicking the **+ Invite User**
+button.
 
-> Note:
-> You cannot invite other users to your personal organization created during signing up. To collaborate with others, create a new organization.
+> Note: You cannot invite other users to your personal organization created
+> during signing up. To collaborate with others, create a new organization.
 
-Clicking the three dots (**⁝**) at the end of any record in opens a drop-down list of actions you can perform on that organization.
+Clicking the three dots (**⁝**) at the end of any record in opens a drop-down
+list of actions you can perform on that organization.
 
 * Click **Edit** to edit the user's role.
 * Click **Delete** to delete the user.
@@ -147,7 +159,7 @@ You can reload the listed items by clicking the **Reload** button (**⟳**).
 
 ### Using the Hub through CLI
 
-You can use the Agent Hub through the CLI.
+You can use the  Hub through the CLI.
 
 Use the `dirctl hub` command to list the available commands.
 
