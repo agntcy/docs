@@ -53,7 +53,7 @@ Install dependencies
 
 .. code-block:: console
 
-   poetry add langgraph langchain-openai pydantic agntcy_acp
+   poetry add langgraph langchain langchain-openai pydantic agntcy_acp
 
 Within the `src/agent_with_thread` directory, create two new files: the first named `agent.py` and the second named `state.py`.
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
