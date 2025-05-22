@@ -190,6 +190,7 @@ epub_exclude_files = ["search.html"]
 # Enable cross-support for mermaid renderable tags, check:
 # https://github.com/mgaitan/sphinxcontrib-mermaid
 myst_fence_as_directive = ["mermaid"]
+suppress_warnings = ["myst.xref_missing", "myst.iref_ambiguous", "misc.highlighting_failure"]
 
 # CSS styles
 html_css_files = [

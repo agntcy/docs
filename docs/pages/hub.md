@@ -50,15 +50,19 @@ belong to you.
 
 You can refine the results using predefined filters and open search:
 
-* Use the **Search** bar to search for a text string in a repository name. To clear the search bar, click the **×**.
+* Use the **Search** bar to search for a text string in a repository name. To
+clear the search bar, click the **×**.
 * Use the drop-down **Filters** list to narrow the results by Agent Skill.
-* Use the drop-down **Sort by** list to sort the displayed items by Most Recent or Oldest.
+* Use the drop-down **Sort by** list to sort the displayed items by Most Recent
+or Oldest.
 
-You can change organizations by clicking the Org drop-down list and selecting another organization.
+You can change organizations by clicking the Org drop-down list and selecting
+another organization.
 
 ### Agent Details
 
-Clicking on an agent repository opens the Agent Details page with further information on the agent repository.
+Clicking on an agent repository opens the Agent Details page with further
+information on the agent repository.
 
 ![The Agent Details Page](../_static/agent.png)
 
@@ -168,13 +172,12 @@ Use the `dirctl hub` command to list the available commands.
 In order to start with the process, an `agent.json` object needs to be created.
 This can be done by initializing local code repo using:
 
-```bash
-dirctl init repo
-```
+```bash dirctl init repo ```
 
 #### Logging in
 
-Use the `dirctl hub login` command to log in. The login page opens in your browser. Use your credentials to log in.
+Use the `dirctl hub login` command to log in. The login page opens in your
+browser. Use your credentials to log in.
 
 #### Listing Organizations
 
@@ -182,26 +185,29 @@ Use the `dirctl hub orgs` command to list the organizations you are a member of.
 
 #### Signing Agent Data Models
 
-You must sign the agent data models before pushing to Hub. Unsigned models are rejected by the API. 
+You must sign the agent data models before pushing to Hub. Unsigned models are
+rejected by the API. 
 
-To sign an agent data model using identity-based OIDC signing, run `dirctl sign ./agent.json`.
+To sign an agent data model using identity-based OIDC signing, run `dirctl sign
+./agent.json`.
 
 #### Pushing and Pulling Agent Data Models
 
-To pull the data model, use the `dirctl hub pull <repository>:<version>` command. Alternatively, you can use `dirctl hub pull <digest>` instead.
+To pull the data model, use the `dirctl hub pull <repository>:<version>`
+command. Alternatively, you can use `dirctl hub pull <digest>` instead.
 
 To push the data model, use the `dirctl hub push <agent> ./agent.json` command.
 
 #### Verifying Agent Data Model Signature
 
-The verification process allows validation of the agent data model signature against a specific identity.
+The verification process allows validation of the agent data model signature
+against a specific identity.
 
-To verify that an agent data model is properly signed, you can run `dirctl verify ./agent.json`.
+To verify that an agent data model is properly signed, you can run `dirctl
+verify ./agent.json`.
 
-To verify the signature against a specific identity, for example to check if an agent model originates from GitHub Agntcy users, run:
+To verify the signature against a specific identity, for example to check if an
+agent model originates from GitHub Agntcy users, run:
 
-```bash
-dirctl verify ./agent.json \
-            --oidc-issuer "(.*)github.com(.*)" \
-            --oidc-identity "(.*)@agntcy.com"
-```
+```bash dirctl verify ./agent.json \ --oidc-issuer "(.*)github.com(.*)" \
+--oidc-identity "(.*)@agntcy.com" ```
