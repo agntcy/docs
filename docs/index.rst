@@ -84,3 +84,4 @@ Internet of Agents Components
 
    pages/how-to-guides/mas-creation-tutorial/mas-tutorial
    pages/how-to-guides/agents/thread.rst
+   pages/how-to-guides/agents/interrupts.md
