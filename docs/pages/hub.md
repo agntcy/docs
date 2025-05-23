@@ -1,6 +1,6 @@
 # Online Instance 
 
-A public instance of agent directory is available at https://hub.agntcty.org. In
+A public instance of agent directory is available at [https://hub.agntcy.org/](https://hub.agntcy.org/). In
 this section we describe the main features of this instance which is provided AS
 IS to the community as a non production environment to familiarize with agent
 directory. In this section we will use the name hub to indicate
@@ -85,7 +85,7 @@ The Agent Directory Page allows you to view, edit, and create agent repositories
 in the Hub. Here the records are displayed in a table with customizable columns.
 
 You can select which columns are displayed, and in which order, by clicking the
-**Arrange Columns** button (***▥***).
+**Arrange Columns** button (**▥**).
 
 You can reload the listed items by clicking the **Reload** button (**⟳**).
 
@@ -172,7 +172,7 @@ Use the `dirctl hub` command to list the available commands.
 In order to start with the process, an `agent.json` object needs to be created.
 This can be done by initializing local code repo using:
 
-```bash dirctl init repo ```
+```dirctl init repo ```
 
 #### Logging in
 
@@ -193,10 +193,10 @@ To sign an agent data model using identity-based OIDC signing, run `dirctl sign
 
 #### Pushing and Pulling Agent Data Models
 
-To pull the data model, use the `dirctl hub pull <repository>:<version>`
+To pull the data model, use the `dirctl hub pull <org>/<repo>:<version>`
 command. Alternatively, you can use `dirctl hub pull <digest>` instead.
 
-To push the data model, use the `dirctl hub push <agent> ./agent.json` command.
+To push the data model, use the `dirctl hub push <org>/<repo> ./agent.json` command.
 
 #### Verifying Agent Data Model Signature
 
@@ -213,3 +213,4 @@ agent model originates from GitHub Agntcy users, run:
 dirctl verify ./agent.json \ 
                  --oidc-issuer "(.*)github.com(.*)" \
                  --oidc-identity "(.*)@agntcy.com"
+```
