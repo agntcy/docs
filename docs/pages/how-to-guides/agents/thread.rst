@@ -1,11 +1,11 @@
-Threads LangGraph
+Building Applications with ACP Threads
 =====================================
 
 ACP Node supports threads, where a thread contains the accumulated state of a sequence of runs.
 
 In this tutorial, we will explore how to create a LangGraph agent with threads, wrap it in an ACP node, and leverage the various functionalities that come with using threads.
 
-What you will learn
+Learning Objectives
 -------------------
 
 In this short tutorial you will learn:
@@ -14,7 +14,7 @@ In this short tutorial you will learn:
   * Deploy the agent with Workflow Server
   * Use thread endpoints effectively
 
-What you will need
+Prerequisites
 ------------------
 
   * poetry
@@ -23,7 +23,7 @@ What you will need
   * An Editor of your choice
 
 
-What you will build
+Implementation Walkthrough
 -------------------
 
 Together we will, create a LangGraph agent, deploy it on a Workflow Server, and utilize its threading capabilities. You can find the agent's source code here: `Mail Composer Agent Source Code <https://github.com/agntcy/agentic-apps/blob/main/mailcomposer/mailcomposer/mailcomposer.py>`_.  

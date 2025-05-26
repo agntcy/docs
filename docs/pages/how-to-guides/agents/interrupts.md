@@ -1,4 +1,4 @@
-# Interrupts Langgraph
+# Building Applications with ACP Interrupts
 
 This tutorial guides you through creating an agentic mail composer application with interrupts capability. Interrupts allow your agent to pause execution, prompt the user for additional information, and then resume processing.
 
