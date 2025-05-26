@@ -25,7 +25,7 @@ csit
 │   │   ├── agentic-apps
 │   │   ├── Taskfile.yml                          # Tasks for AGP integration tests
 │   │   └── tests
-│   ├── agntcy-apps                               # Integration tests for ([agntcy/agentic-apps](https://github.com/agntcy/agentic-apps))
+│   ├── agntcy-apps                               # Integration tests for [agntcy/agentic-apps](https://github.com/agntcy/agentic-apps)
 │   │   ├── agentic-apps
 │   │   ├── Taskfile.yml                          # Tasks for agentic-apps integration tests
 │   │   └──  tools
@@ -61,14 +61,14 @@ csit
 │   │       └── tests
 ├── ....
 ├── ....                             # Tasks for Samples
-└── Taskfile.yml                     # Repository level task definintions
+└── Taskfile.yml                     # Repository level task definitions
 ```
 
 In the Taskfiles, all required tasks and steps are defined in a structured manner. Each CSIT component contains its necessary tasks within dedicated Taskfiles, with higher-level Taskfiles incorporating lower-level ones to efficiently leverage their defined tasks.
 
 ## Tasks
 
-You can list all the task defined in the Taskfiles using the `task -l` or simply run `task`.
+You can list all the tasks defined in the Taskfiles using the `task -l` or simply run `task`.
 The following tasks are defined:
 
 ```bash
@@ -143,7 +143,7 @@ To run tests locally:
     ```bash
     task integrations:kind:create
     task integrations:directory:test-env:deploy
-    # OR change dir to integratons directory
+    # Or change dir to integratons directory:
     cd integrations
     task kind:create
     task directory:test-env:deploy
@@ -153,7 +153,7 @@ To run tests locally:
 
     ```bash
     task integrations:directory:test
-    # OR change dir to integratons directory
+    # Or change dir to integratons directory:
     cd integrations
     task directory:test
     ```
@@ -162,7 +162,7 @@ To run tests locally:
 
     ```bash
     task integrations:kind:destroy
-    # OR change dir to integratons directory
+    # Or change dir to integratons directory:
     cd integrations
     task kind:destroy
     ```
@@ -282,7 +282,7 @@ Run the test:
 
 ```bash
 task samples:<app-name>:run:test
-# OR change dir to integratons directory
+# Or change dir to integratons directory:
 cd samples/<app-name>
 task run:test
 ```
