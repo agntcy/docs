@@ -8,7 +8,7 @@ an existing MCP server:
 1. **Using AGP as an MCP Custom Transport Protocol**: MCP is designed to support
    multiple transport protocols, with AGP now available as one of these options.
    To implement AGP as a custom transport, you can install the AGP-MCP package
-   via pip and integrate it directly into your application. This approach is
+   through pip and integrate it directly into your application. This approach is
    ideal for new systems where you control both client and server components,
    providing native AGP support for efficient MCP message transport.
 
@@ -27,7 +27,7 @@ architecture.
 
 ## Using AGP as an MCP Custom Transport Protocol
 
-For this section of the tutorial, we'll implement and deploy two sample
+In this section of the tutorial, we implement and deploy two sample
 applications:
 
  - A [LlamaIndex
@@ -42,14 +42,14 @@ applications:
 ### Prerequisites
 
 - [UV](https://docs.astral.sh/uv/getting-started/installation/) - A Python
-  package installer and environment manager
+  package installer and environment manager.
 - [Docker](https://docs.docker.com/get-started/get-docker/) - For running the
-  AGP instance
+  AGP instance.
 
 ### Setting Up the AGP Instance
 
-Since the client and server will communicate using AGP, we first need to deploy
-an AGP instance. We'll use a pre-built Docker image for this purpose.
+Since the client and server communicate using AGP, we first need to deploy
+an AGP instance. We are using a pre-built Docker image for this purpose.
 
 First, execute the following command to create a configuration file for AGP:
 
@@ -91,13 +91,13 @@ docker run -it \
 ```
 
 This command deploys an AGP instance that listens on port 46357 for incoming
-connections. This instance will serve as the communication backbone between our
+connections. This instance serves as the communication backbone between our
 client and server applications.
 
 ### Implementing the MCP Server
 
 Next, we'll implement a simple MCP server that processes requests from the
-LlamaIndex agent. This server will demonstrate how to use AGP as a custom
+LlamaIndex agent. This server demonstrates how to use AGP as a custom
 transport protocol.
 
 First, create a new directory for our MCP server project:
@@ -127,7 +127,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 ```
 
-Next, let's implement the MCP server that will handle time queries and timezone
+Next, let's implement the MCP server that handles time queries and timezone
 conversions. This implementation is based on the [official MCP example
 server](https://github.com/modelcontextprotocol/servers/tree/main/src/time),
 modified to support both AGP and SSE as transport protocols.
@@ -163,10 +163,8 @@ if __name__ == "__main__":
 # src/mcp_server_time/server.py
 
 """
-MCP Time Server - A server implementation for time and timezone conversion
-functionality.
-This module provides tools for getting current time in different timezones and
-converting times between timezones.
+MCP Time Server - A server designed to handle time and timezone conversion functionalities.
+This module offers tools to retrieve the current time across various timezones and convert times between them.
 """
 
 import asyncio
@@ -718,7 +716,7 @@ async def serve_agp(
             logger.info("Server stopped")
 ```
 
-After implementing all the necessary files, your project structure should look
+After implementing all the necessary files, your project structure looks
 like this:
 
 ```bash
@@ -738,7 +736,7 @@ uv run mcp-server-time --local-timezone Europe/London
 ```
 
 ### Implementing the LlamaIndex Agent
-With our MCP server up and running, let's now implement a LlamaIndex agent that
+With our MCP server up and running, let's implement a LlamaIndex agent that
 will interact with the server. This agent will send time queries and timezone
 conversion requests to our MCP server using the AGP transport protocol.
 
@@ -749,7 +747,7 @@ mkdir -p llamaindex-time-agent/src/llamaindex_time_agent
 cd llamaindex-time-agent
 ```
 
-Now, create a `pyproject.toml` file to define the agent's dependencies:
+Next, create a `pyproject.toml` file to define the agent's dependencies:
 
 ```toml
 # pyproject.toml
@@ -778,7 +776,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 ```
 
-Now, let's create the Python files for our LlamaIndex agent that will handle
+Let's create the Python files for our LlamaIndex agent that will handle
 time queries and timezone conversions. Create the following files in your
 project directory:
 
@@ -946,9 +944,9 @@ def main(
 
 The key component of the agent is the `amain` function, which handles:
 
-1. LLM configuration (Azure OpenAI or Ollama)
-2. AGP client initialization and connection to our MCP server
-3. Tool setup and agent execution
+1. LLM configuration (Azure OpenAI or Ollama).
+2. AGP client initialization and connection to our MCP server.
+3. Tool setup and agent execution.
 
 The agent establishes its identity through the AGP name `org/ns/time-agent`,
 which is used for addressing.
@@ -983,12 +981,12 @@ uv run llamaindex-time-agent \
     --city 'New York'
 ```
 
-The agent will connect to the MCP server via AGP, send a time query for the
+The agent connects to the MCP server through AGP, send a time query for the
 specified city, and display the response.
 
 ## Using AGP with a Proxy Server for SSE-based MCP Servers
 
-In this section, we'll demonstrate how to set up and configure the AGP-MCP Proxy
+In this section, we demonstrate how to set up and configure the AGP-MCP Proxy
 Server. This proxy enables AGP-based clients to communicate with existing MCP
 servers that use SSE (Server-Sent Events) as their transport protocol. By
 following these steps, you'll create a bridge between AGP clients and SSE-based
@@ -1002,9 +1000,9 @@ already set one up, follow the instructions provided in the previous section to
 
 ### Running the MCP Server with SSE Transport
 
-We'll now set up the time-server using the SSE transport protocol instead of
+Let's set up the time-server using the SSE transport protocol instead of
 AGP. The server implementation is the same as described in the previous section,
-but we'll configure it to use SSE:
+but we configure it to use SSE:
 
 ```bash
 uv run mcp-server-time --local-timezone Europe/London --transport sse
@@ -1085,15 +1083,15 @@ local proxy instance:
    ```
 
    This command:
-   - Mounts your local configuration file into the container
-   - Uses the official AGP-MCP proxy image
-   - Sets the service name and proxy identifier
-   - Configures the connection to your SSE-based MCP server
+   - Mounts your local configuration file into the container.
+   - Uses the official AGP-MCP proxy image.
+   - Sets the service name and proxy identifier.
+   - Configures the connection to your SSE-based MCP server.
 
 ### Running the Agent with the Proxy
 
 Finally, you can run the LlamaIndex agent as shown in the previous section. The
-agent will automatically connect to the proxy, which will then relay messages to
+agent automatically connects to the proxy, which then relays messages to
 and from the MCP server. Notice that the proxy is reachable using the name
 `org/mcp/proxy`:
 
