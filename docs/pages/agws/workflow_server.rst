@@ -74,17 +74,17 @@ Current Support
    * - LangGraph
      - >=0.2.60,<0.4.0
      - |:white_check_mark:|
-     - |:construction:|
-     - |:construction:|
+     - |:white_check_mark:|
+     - |:white_check_mark:|
      - |:construction:|
      - |:white_check_mark:|
    * - LlamaIndex
-     - >=0.12.0,<0.13.0
+     - >=0.12.30,<0.13.0
+     - |:white_check_mark:|
+     - |:white_check_mark:|
      - |:white_check_mark:|
      - |:construction:|
-     - |:construction:|
-     - |:construction:|
-     - |:construction:|
+     - |:white_check_mark:|
 
 Contributing
 ------------
