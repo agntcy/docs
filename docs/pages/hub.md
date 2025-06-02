@@ -59,26 +59,6 @@ or Oldest.
 You can change organizations by clicking the Org drop-down list and selecting
 another organization.
 
-### Agent Details
-
-Clicking on an agent repository opens the Agent Details page with further
-information on the agent repository.
-
-![The Agent Details Page](../_static/agent.png)
-
-The **General** tab lists the following information:
-
-* A description of the agent.
-* The creator of the agent.
-* The skills associated with the agent.
-* The version number and date of publishing.
-* The CLI command to pull the agent's directory.
-
-The **Versions** tab lists the published versions of the agent.
-
-The **Settings** tab allows the owner to change the description and the
-visibility of the agent.
-
 ### Agent Directory Page
 
 The Agent Directory Page allows you to view, edit, and create agent repositories
@@ -105,9 +85,28 @@ Clicking the three dots (**⁝**) at the end of any record in the Agent Director
 table opens a drop-down list of actions you can perform on that agent
 repository.
 
-* Click **Open Details** to view the agent.
+* Click **Open Details** to [view the agent details](#agent-details).
 * Click **Edit** to edit the agent.
-* Click **Delete** to delete the agent.
+* Click **Delete** to remove the agent from the directory, including all of its versions.
+
+#### Agent Details
+
+Clicking on an agent repository opens the Agent Details page with further
+information on the agent repository.
+
+![The Agent Details Page](../_static/agent.png)
+
+The **General** tab lists the following information:
+
+* A description of the agent.
+* The skills associated with the agent.
+* The version number and date of publishing.
+* The CLI command to push a new version of the agent.
+
+The **Versions** tab lists the published versions of the agent.
+
+The **Settings** tab allows the owner to change the
+visibility of the agent.
 
 #### Create
 
@@ -137,8 +136,6 @@ listed under the **Organizations** tab.
 Clicking the three dots (**⁝**) at the end of any record in opens a drop-down
 list of actions you can perform on that organization.
 
-* Click **Edit** to edit the organization.
-* Click **Delete** to delete the organization.
 * Click **Switch** to switch to the organization.
 
 You can reload the listed items by clicking the **Reload** button (**⟳**).
@@ -163,18 +160,35 @@ You can reload the listed items by clicking the **Reload** button (**⟳**).
 
 ### Using the Hub through CLI
 
-You can use the  Hub through the CLI.
+You can use the Hub through the CLI. Binary packages and installation of
+the `dirctl` command are
+[available on GitHub](https://github.com/agntcy/dir/pkgs/container/dir-ctl).
+Details on other uses of the `dirctl` command to interact with the
+Agent Directory are
+[available in the documentation](https://github.com/agntcy/dir/pkgs/container/dir-ctl).
 
-Use the `dirctl hub` command to list the available commands.
+After installation, use the `dirctl hub` command to list the available commands.
 
-#### Initialize the Repository
+#### Create an Agent Data Model
 
-In order to start with the process, an `agent.json` object needs to be created.
-This can be done by initializing local code repo using:
+An agent data model should be contained in a JSON file. The data therein is described
+by the [Open Agentic Schema Framework](https://schema.oasf.agntcy.org/objects/agent)
+starting at the root with an `Agent` model.
 
-```dirctl init repo ```
 
-#### Logging in
+#### Signing Agent Data Models
+
+You must sign the agent data models before pushing to Hub. Unsigned models are
+rejected by the API. 
+
+To sign an agent data model, for example in the file `agent.json` using
+identity-based OIDC signing, run:
+
+```shell
+dirctl sign ./agent.json
+```
+
+#### Logging In
 
 Use the `dirctl hub login` command to log in. The login page opens in your
 browser. Use your credentials to log in.
@@ -182,14 +196,6 @@ browser. Use your credentials to log in.
 #### Listing Organizations
 
 Use the `dirctl hub orgs` command to list the organizations you are a member of.
-
-#### Signing Agent Data Models
-
-You must sign the agent data models before pushing to Hub. Unsigned models are
-rejected by the API. 
-
-To sign an agent data model using identity-based OIDC signing, run `dirctl sign
-./agent.json`.
 
 #### Pushing and Pulling Agent Data Models
 
