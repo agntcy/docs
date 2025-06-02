@@ -112,8 +112,12 @@ repository.
 
 * Click **Open Details** to [view the agent details](#agent-details).
 * Click **Edit** to edit the agent.
+<<<<<<< HEAD
 * Click **Delete** to remove the agent repo from the directory, including all
 of its agent records.
+=======
+* Click **Delete** to remove the agent from the directory, including all of its versions.
+>>>>>>> 7946c68 (chore: update docs to match release.)
 
 #### Agent Details
 
@@ -122,7 +126,11 @@ information on the agent repository.
 
 ![The Agent Details Page](../_static/agent.png)
 
+<<<<<<< HEAD
 The **General** tab lists the following information from the agent record:
+=======
+The **General** tab lists the following information:
+>>>>>>> 7946c68 (chore: update docs to match release.)
 
 * A description of the agent.
 * The skills associated with the agent.
@@ -188,6 +196,7 @@ You can reload the listed items by clicking the **Reload** button (**⟳**).
 ### Using the Hub through CLI
 
 You can use the Hub through the CLI. Binary packages and installation of
+<<<<<<< HEAD
 the `dirctl` command line tool are available in multiple forms on GitHub:
 * [container image](https://github.com/agntcy/dir/pkgs/container/dir-ctl)
 * [homebrew](https://github.com/agntcy/dir/tree/main/HomebrewFormula)
@@ -225,6 +234,35 @@ in JSON format. The new signed agent record can be pushed to the Hub.
 For further details on signing, please see
 [the Agent Directory HOWTO](dir-howto.md#signing-and-verification).
 
+=======
+the `dirctl` command are
+[available on GitHub](https://github.com/agntcy/dir/pkgs/container/dir-ctl).
+Details on other uses of the `dirctl` command to interact with the
+Agent Directory are
+[available in the documentation](https://github.com/agntcy/dir/pkgs/container/dir-ctl).
+
+After installation, use the `dirctl hub` command to list the available commands.
+
+#### Create an Agent Data Model
+
+An agent data model should be contained in a JSON file. The data therein is described
+by the [Open Agentic Schema Framework](https://schema.oasf.agntcy.org/objects/agent)
+starting at the root with an `Agent` model.
+
+
+#### Signing Agent Data Models
+
+You must sign the agent data models before pushing to Hub. Unsigned models are
+rejected by the API. 
+
+To sign an agent data model, for example in the file `agent.json` using
+identity-based OIDC signing, run:
+
+```shell
+dirctl sign ./agent.json
+```
+
+>>>>>>> 7946c68 (chore: update docs to match release.)
 #### Logging In
 
 Use the `dirctl hub login` command to log in. The login page opens in your
@@ -234,6 +272,7 @@ browser. Use your credentials to log in.
 
 Use the `dirctl hub orgs` command to list the organizations you are a member of.
 
+<<<<<<< HEAD
 #### Pushing and Pulling Agent Directory Records
 To push the agent record stored in the file `agent.json`, use the command:
 
@@ -246,6 +285,9 @@ To pull the agent record, use the command:
 ```shell
 dirctl hub pull "<org>/<repo>:<version>"
 ```
+=======
+#### Pushing and Pulling Agent Data Models
+>>>>>>> 7946c68 (chore: update docs to match release.)
 
 Alternatively, you can use `dirctl hub pull "<digest>"` instead.
 
