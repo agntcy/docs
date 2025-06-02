@@ -62,7 +62,7 @@ Internet of Agents Components
    :caption: Messaging SDK
    :maxdepth: 1
 
-   pages/messaging_sdk/agp-index.rst
+   pages/messaging_sdk/slim-index.rst
    
 
 .. toctree::
