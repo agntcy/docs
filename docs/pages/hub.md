@@ -20,6 +20,27 @@ organized manner. By offering a secure environment for authentication and user
 management, it ensures that organizations can confidently manage their agent
 directories and related services.
 
+## Core Concepts
+
+The Hub is organized around a few basic concepts:
+
+* Users - A user is the basic unit of authentication and authorization in the 
+hub, usually corresponding to a human or service account.
+* Organization - An organization provides a way to group users for sharing agents
+and handling administrative tasks. A user can belong to many organizations, but
+organizations are flat and cannot belong to one another.
+* Agents - An agent is a record of data and metadata about a particular agentic
+application or service. The schema of the agent data is defined in [OASF](oasf.md)
+and contains, for example, a [collection of skills](oasf-taxonomy.md) for the agent.
+* Repos - A repository collects different versions of the same agent into one
+location to provide an overview of its history and current status. An agent can
+belong to only one repo, while a user or organization may access many different
+repos and by extension their agent records.
+
+The Agent Directory Service (ADS) provides storage for Agents while the Hub
+provides access control with Users and their Organizations and management of
+Agents in their Repos.
+
 ## Features
 
 Hub enables users to:
