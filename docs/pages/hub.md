@@ -197,10 +197,14 @@ You can reload the listed items by clicking the **Reload** button (**⟳**).
 
 You can use the Hub through the CLI. Binary packages and installation of
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c6fcc42 (Apply suggestions from code review)
 the `dirctl` command line tool are available in multiple forms on GitHub:
 * [container image](https://github.com/agntcy/dir/pkgs/container/dir-ctl)
 * [homebrew](https://github.com/agntcy/dir/tree/main/HomebrewFormula)
 * [binary](https://github.com/agntcy/dir/releases)
+<<<<<<< HEAD
 
 Details on other uses of the `dirctl` command to interact with the
 Agent Directory are
@@ -237,6 +241,8 @@ For further details on signing, please see
 =======
 the `dirctl` command are
 [available on GitHub](https://github.com/agntcy/dir/pkgs/container/dir-ctl).
+=======
+>>>>>>> c6fcc42 (Apply suggestions from code review)
 Details on other uses of the `dirctl` command to interact with the
 Agent Directory are
 [available in the documentation](https://github.com/agntcy/dir/pkgs/container/dir-ctl).
@@ -250,12 +256,12 @@ by the [Open Agentic Schema Framework](https://schema.oasf.agntcy.org/objects/ag
 starting at the root with an `Agent` model.
 
 
-#### Signing Agent Data Models
+#### Signing Agent Records
 
-You must sign the agent data models before pushing to Hub. Unsigned models are
+You must sign an agent record before pushing it to the Hub. Unsigned models are
 rejected by the API. 
 
-To sign an agent data model, for example in the file `agent.json` using
+To sign an agent record, for example in the file `agent.json` using
 identity-based OIDC signing, run:
 
 ```shell
@@ -273,6 +279,7 @@ browser. Use your credentials to log in.
 Use the `dirctl hub orgs` command to list the organizations you are a member of.
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #### Pushing and Pulling Agent Directory Records
 To push the agent record stored in the file `agent.json`, use the command:
 
@@ -288,6 +295,10 @@ dirctl hub pull "<org>/<repo>:<version>"
 =======
 #### Pushing and Pulling Agent Data Models
 >>>>>>> 7946c68 (chore: update docs to match release.)
+=======
+#### Pushing and Pulling Agent Records
+To push the agent record, use the `dirctl hub push <org>/<repo>:<version>`.
+>>>>>>> c6fcc42 (Apply suggestions from code review)
 
 Alternatively, you can use `dirctl hub pull "<digest>"` instead.
 
