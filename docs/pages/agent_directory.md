@@ -112,17 +112,8 @@ repository.
 
 * Click **Open Details** to [view the agent details](#agent-details).
 * Click **Edit** to edit the agent.
-<<<<<<< HEAD
-<<<<<<< HEAD
 * Click **Delete** to remove the agent repo from the directory, including all
 of its agent records.
-=======
-* Click **Delete** to remove the agent from the directory, including all of its versions.
->>>>>>> 7946c68 (chore: update docs to match release.)
-=======
-* Click **Delete** to remove the agent repo from the directory, including all
-of its agent records.
->>>>>>> 3118e94 (chore: updates from review)
 
 #### Agent Details
 
@@ -131,15 +122,7 @@ information on the agent repository.
 
 ![The Agent Details Page](../_static/agent.png)
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 The **General** tab lists the following information from the agent record:
-=======
-The **General** tab lists the following information:
->>>>>>> 7946c68 (chore: update docs to match release.)
-=======
-The **General** tab lists the following information from the agent record:
->>>>>>> 3118e94 (chore: updates from review)
 
 * A description of the agent.
 * The skills associated with the agent.
@@ -268,6 +251,7 @@ From your terminal window:
       ```dirctl hub logout```
 
 #### Pulling Agent Directory Records using `dirctl`
+
 You can also pull an agent directory record via `dirctl` using the command listed on the agent details page.
 
 
@@ -292,6 +276,7 @@ For further details on verification, please see
 [the Agent Directory HOWTO](dir-howto.md#signing-and-verification).
 
 ## Managing Organizations and Users
+
 ### Settings
 
 The settings page allows you to manage your organizations and users.
@@ -332,157 +317,13 @@ You can reload the listed items by clicking the **Reload** button (**⟳**).
 `Error: failed to validate access token: invalid session token`
 You forgot to login to your AGNTCY Agent Directory account
 
-<<<<<<< HEAD
-You can use the Hub through the CLI. Binary packages and installation of
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> c6fcc42 (Apply suggestions from code review)
-the `dirctl` command line tool are available in multiple forms on GitHub:
-* [container image](https://github.com/agntcy/dir/pkgs/container/dir-ctl)
-* [homebrew](https://github.com/agntcy/dir/tree/main/HomebrewFormula)
-* [binary](https://github.com/agntcy/dir/releases)
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 `Error: failed to push agent: could not receive response: rpc error: code = InvalidArgument desc = agent: invalid value in agent name`
 The “agent name” attribute in the json file does not match the organization/repository in the Hub.
->>>>>>> 7b32abe (Changed naming, updated add agent workflow)
 
 `Error: failed to push agent: could not receive response: rpc error: code = AlreadyExists desc = agent: data model with same version already exists`
 You are trying to upload a new agent record with the same name and version as one that exists already. Update the version number in the json file.
 
-
-
-
-
-<<<<<<< HEAD
-```shell
-dirctl sign agent.json
-```
-
-The login page to  opens in your browser. Use your credentials to log in. The
-agent record will be augmented with a generated signature and will be output
-in JSON format. The new signed agent record can be pushed to the Hub.
-
-For further details on signing, please see
-[the Agent Directory HOWTO](dir-howto.md#signing-and-verification).
-
-=======
-the `dirctl` command are
-[available on GitHub](https://github.com/agntcy/dir/pkgs/container/dir-ctl).
-=======
->>>>>>> c6fcc42 (Apply suggestions from code review)
-=======
-
->>>>>>> 3118e94 (chore: updates from review)
 Details on other uses of the `dirctl` command to interact with the
 Agent Directory are
 [available in the documentation](https://github.com/agntcy/dir/pkgs/container/dir-ctl).
 After installation, use the `dirctl hub` command to list the available commands.
-
-#### Create a Conforming Agent Directory Record
-
-An Agent Directory record is stored in JSON format. The record is specific
-to one entry in the Agent Directory. The structure of each AD record is
-defined by the
-[Open Agentic Schema Framework](https://schema.oasf.agntcy.org/objects/agent)
-starting at the root with an [Agent object](https://schema.oasf.agntcy.org/objects/agent).
-
-
-#### Signing Agent Directory Records
-
-You must sign the record before pushing to Hub. Unsigned records are
-rejected by the API.
-
-To sign an agent record in the file `agent.json` using the default provider [sigstore](https://www.sigstore.dev/), run:
-
-```shell
-dirctl sign agent.json
-```
-
-<<<<<<< HEAD
->>>>>>> 7946c68 (chore: update docs to match release.)
-=======
-The login page to  opens in your browser. Use your credentials to log in. The
-agent record will be augmented with a generated signature and will be output
-in JSON format. The new signed agent record can be pushed to the Hub.
-
-For further details on signing, please see
-[the Agent Directory HOWTO](dir-howto.md#signing-and-verification).
-
->>>>>>> 3118e94 (chore: updates from review)
-#### Logging In
-
-Use the `dirctl hub login` command to log in. The login page opens in your
-browser. Use your credentials to log in.
-
-#### Listing Organizations
-
-Use the `dirctl hub orgs` command to list the organizations you are a member of.
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-#### Pushing and Pulling Agent Directory Records
-To push the agent record stored in the file `agent.json`, use the command:
-
-```shell
-dirctl hub push "<org>/<repo>:<version>" agent.json
-```
-
-To pull the agent record, use the command:
-
-```shell
-dirctl hub pull "<org>/<repo>:<version>"
-```
-=======
-#### Pushing and Pulling Agent Data Models
->>>>>>> 7946c68 (chore: update docs to match release.)
-=======
-#### Pushing and Pulling Agent Records
-To push the agent record, use the `dirctl hub push <org>/<repo>:<version>`.
->>>>>>> c6fcc42 (Apply suggestions from code review)
-
-Alternatively, you can use `dirctl hub pull "<digest>"` instead.
-
-#### Verifying an Agent Directory Record Signature
-
-=======
-#### Pushing and Pulling Agent Directory Records
-To push the agent record stored in the file `agent.json`, use the command:
-
-```shell
-dirctl hub push "<org>/<repo>:<version>" agent.json
-```
-
-To pull the agent record, use the command:
-
-```shell
-dirctl hub pull "<org>/<repo>:<version>"
-```
-
-Alternatively, you can use `dirctl hub pull "<digest>"` instead.
-
-#### Verifying an Agent Directory Record Signature
-
->>>>>>> 3118e94 (chore: updates from review)
-The verification process allows validation of the agent record signature
-against a specific identity.
-
-To verify that an agent record is properly signed, you can run `dirctl
-verify agent.json`.
-
-To verify the signature against a specific identity, for example to check if an
-agent record originates from GitHub Agntcy users, run:
-
-```bash
-dirctl verify agent.json \ 
-                 --oidc-issuer "(.*)github.com(.*)" \
-                 --oidc-identity "(.*)@agntcy.com"
-```
-
-For further details on verification, please see
-[the Agent Directory HOWTO](dir-howto.md#signing-and-verification).
-=======
->>>>>>> 7b32abe (Changed naming, updated add agent workflow)
