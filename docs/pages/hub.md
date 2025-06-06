@@ -46,7 +46,7 @@ Users and their Organizations and management of agent records in their Repos.
 
 ## Features
 
-AGNTCY Agent Hub enables users to:
+AGNTCY Agent Directory enables users to:
 
 * View and search for public agent records.
 * View your organization's public and private agent records.
