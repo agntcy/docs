@@ -1,4 +1,4 @@
-# AGNTCY Agent Directory Service
+# Hosted AGNTCY Agent Directory
 
 A public hosted instance of the Agent Directory is available at
 [https://hub.agntcy.org/](https://hub.agntcy.org/). In
