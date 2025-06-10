@@ -1,32 +1,11 @@
-# Agent Manifest
+# Agent Manifest Structure
 
-## Introduction
+An Agent Manifest includes the following sections:
+* [Agent Identification and Metadata](#agent-identification-and-metadata)
+* [Agent Interface Data Structure Specification](#agent-interface-data-structure-specification)
+* [Agent Deployment and Consumption](#agent-deployment-and-consumption)
+* [Agent Dependencies](#agent-dependencies)
 
-An Agent Manifest is a document that describes in detail the following:
-* What the agent is capable of.
-* How the agent can be consumed if provided as-a-service.
-* How the agent can be deployed if provided as a deployable artifact.
-* What are the dependencies of the agent, that is, which other agents it relies on.
-
-The manifest is designed to be used by [Agent Connect Protocol](../syntactic-sdk/connect.md) and the Workflow Server and stored in the Agent Directory with the corresponding OASF extensions.
-
-This document describes the principles of the Agent Manifest definition. Manifest definition can be found [here](https://github.com/agntcy/workflow-srv-mgr/blob/main/wfsm/spec/manifest.yaml)
-
-Sample manifests can be found [here](https://github.com/agntcy/workflow-srv-mgr/tree/main/wfsm/spec/examples).
-
-## Agent Manifest Structure
-
-Agent Manifest includes the following sections:
-
-- [Agent Manifest](#agent-manifest)
-  - [Introduction](#introduction)
-  - [Agent Manifest Structure](#agent-manifest-structure)
-    - [Agent Identification and Metadata](#agent-identification-and-metadata)
-    - [Agent Interface Data Structure Specification](#agent-interface-data-structure-specification)
-    - [Agent Deployment and Consumption](#agent-deployment-and-consumption)
-    - [Agent Dependencies](#agent-dependencies)
-
-<a id="agent-identification-and-metadataidentification"></a>
 ### Agent Identification and Metadata
 
 Agent Manifest must uniquely identify an agent within the namespace it is part of. This is done through a unique name and a version.

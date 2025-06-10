@@ -1,11 +1,10 @@
 nav:
-  - INTRODUCTION: index.md
+  - Introduction: index.md
   - OASF: oasf
-  - AGENT DIRECTORY SERVICE: dir
-  - AGENT MANIFEST: manifest
-  - SEMANTIC SDK: semantic-sdk
-  - SYNTACTIC SDK: syntactic-sdk
-  - MESSAGING SDK: messaging-sdk
-  - AGENT WORKFLOW SERVER: agws
+  - Agent Directory Service: dir
+  - Agent Manifest: manifest
+  - Identity and Security: identity
+  - SDKs and Tools: tools
+  - Agent Workflow Server: agws
   - CSIT: csit
   - HOW-TOs: how-to-guides

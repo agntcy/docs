@@ -1,5 +1,7 @@
 nav:
   - Open Agentic Schema Framework: open-agentic-schema-framework.md
-  - Schema: model.proto.md
+  - Open Agentic Schema Framework Server: oasf-server.md
+  - Creating an Agent Data Model: data-model-guide.md
+  - Package schema.model: model.proto.md
   - Taxonomy of AI Agent Skills: taxonomy.md
   - OASF Contribution Guide: workflow.md

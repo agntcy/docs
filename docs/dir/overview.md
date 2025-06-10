@@ -1,4 +1,4 @@
-# Core Concepts
+# Overview
 
 The Agent Directory Service (ADS) is a distributed directory service designed to
 store metadata for AI agent applications. This metadata, stored as directory
@@ -13,17 +13,32 @@ within a DHT (Distributed Hash Table) to locate peer directory servers.
 Similarly, the skill taxonomy is routable in the DHT to map skillsets to records
 that announce those skills.
 
+The Agent Directory leverages the [OASF](../oasf/open-agentic-schema-framework.md) to
+describe agents and provides a set of APIs and tools to build, store, publish
+and discover agents across the network by their attributes and constraints.
+Directory also leverages the [CSIT](../csit/csit.md) for continuous system
+integration and testing across different versions, environments, and features.
+
 Each directory record must include skills from a defined taxonomy, as specified
-in the [Taxonomy of AI Agent Skills](../oasf/taxonomy.md) from [OASF](../oasf/open-agentic-schema-framework.md).
-While all record data is modeled using [OASF](../oasf/open-agentic-schema-framework.md), only skills are
+in the [Taxonomy of AI Agent Skills](../oasf/taxonomy.md) from the [OASF](../oasf/open-agentic-schema-framework.md).
+While all record data is modeled using the [OASF](../oasf/open-agentic-schema-framework.md), only skills are
 leveraged for content routing in the distributed network of directory servers.
 The ADS specification is under active development and is published as an
 Internet Draft at [ADS Spec](https://spec.dir.agntcy.org). The source code is
 available in the [ADS Spec sources](https://github.com/agntcy).
-The current reference implementation, written in Go, prov
+The current reference implementation, written in Go, provides server and client
 nodes with gRPC and protocol buffer interfaces. The directory record storage is
 built on [ORAS](https://oras.land) (OCI Registry As Storage), while data
 distribution uses the [zot](https://zotregistry.dev) OCI server implementation.
+
+## Features
+
+- **Data Models** - Defines a standard schema for data representation and exchange.
+- **Dev Kit** - Provides CLI tooling to simplify development workflows and facilitate API interactions.
+- **Plugins** - Pluggable components to extend the build process of agent data models for custom use-cases.
+- **Announce** - Allows publication of agent data models to the network.
+- **Discover** - Listen, search, and retrieve agents across the network by their attributes and constraints.
+- **Security** - Relies on well-known security principles to provide data provenance, integrity and ownership.
 
 ## Naming
 
@@ -106,93 +121,3 @@ sequenceDiagram
     User->>ServerA: Download record 1
     User->>ServerB: Download record 2
 ```
-
-
-# Agent Directory Records Example
-
-## Skill Tags (Taxonomy)
-```yaml
-skills:
-  language:
-    - text-generation
-    - text-completion
-    - text-summarization
-    - text-translation
-  vision:
-    - image-generation
-    - image-classification
-    - object-detection
-  audio:
-    - speech-to-text
-    - text-to-speech
-  reasoning:
-    - task-planning
-    - decision-making
-    - problem-solving
-```
-
-## Record Examples with Digests
-
-### Text Generation Agent
-```json
-{
-  "digest": "sha256:4e8c72f126b2e4a318911ba11b39432978d0611a56d53a2cfb6fdb42853df0e2",
-  "skills": [
-    "language/text-generation",
-    "language/text-completion"
-  ],
-  "metadata": {
-    "name": "gpt4-agent",
-    "version": "1.0.0",
-    "locator": {
-      "type": "github",
-      "url": "github.com/agntcy/agents/gpt4-agent"
-    }
-  }
-}
-```
-
-### Vision Processing Agent
-```json
-{
-  "digest": "sha256:9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
-  "skills": [
-    "vision/image-generation",
-    "vision/image-classification"
-  ],
-  "metadata": {
-    "name": "dall-e-agent",
-    "version": "2.0.0",
-    "locator": {
-      "type": "github",
-      "url": "github.com/agntcy/agents/dalle-agent"
-    }
-  }
-}
-```
-
-### Multi-Modal Agent
-```json
-{
-  "digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-  "skills": [
-    "language/text-generation",
-    "vision/image-generation",
-    "reasoning/task-planning"
-  ],
-  "metadata": {
-    "name": "multi-modal-agent",
-    "version": "1.0.0",
-    "locator": {
-      "type": "github",
-      "url": "github.com/agntcy/agents/multimodal-agent"
-    }
-  }
-}
-```
-
-The digests are SHA-256 hashes of the record content, making them:
-- Globally unique
-- Content-addressable
-- Collision-resistant
-- Immutable

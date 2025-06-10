@@ -10,28 +10,110 @@ The directory structure of the CSIT is the following:
 
 ```
 csit
-└── integrations
-│   ├── Taskfile.yaml                   # Task definitions
-│   ├── docs                            # Documentations
-│   ├── environment
-│   │   └── kind                        # kind related manifests
-│   ├── agntcy-dir                      # Agent directory related tests, components, and so on
-│   │   ├── components                  # The compontents charts
-│   │   ├── examples                    # The examples that can be used for testing
-│   │   ├── manifests                   # Requred manifests for the tests
-│   │   └── tests                       # Tests
-│   └── agntcy-agp                      # Agent Gateway related tests, components, and so on
-│       └── agentic-apps                # Agentic apps for gateway tests
-│           ├── autogen_agent
-│           └── langchain_agent
-│
-└── samples
-    ├── app1                            # Agentic application example
-    │   ├── model.json                  # Required model file
-    │   ├── build.config.yaml           # Required build configuration file
-    ├── app2                            # Another agentic application example
-    │   ├── model.json
-    │   ├── build.config.yaml
+├── benchmarks                                    # Benchmark tests
+│   ├── agntcy-agp                                # Benchmark tests for AGP
+│   │   ├── Taskfile.yml                          # Tasks for AGP benchmark tests
+│   │   └── tests
+│   ├── agntcy-dir                                # Benchmark tests for ADS
+│   │   ├── Taskfile.yml                          # Tasks for ADS benchmark tests
+│   │   └── tests
+│   ├── go.mod
+│   ├── go.sum
+│   └── Taskfile.yml
+├── integrations                                  # Integration tests
+│   ├── agntcy-agp                                # Integration tests for [agntcy/agp](https://github.com/agntcy/agp)
+│   │   ├── agentic-apps
+│   │   ├── Taskfile.yml                          # Tasks for AGP integration tests
+│   │   └── tests
+│   ├── agntcy-apps                               # Integration tests for [agntcy/agentic-apps](https://github.com/agntcy/agentic-apps)
+│   │   ├── agentic-apps
+│   │   ├── Taskfile.yml                          # Tasks for agentic-apps integration tests
+│   │   └──  tools
+│   ├── agntcy-dir                                # Integration tests for [agntcy/dir](https://github.com/agntcy/dir)
+│   │   ├── components
+│   │   ├── examples
+│   │   ├── manifests
+│   │   ├── Taskfile.yml                          # Tasks for ADS integration tests
+│   │   └── tests
+│   ├── environment                               # Test environment helpers
+│   │   └── kind
+│   ├── Taskfile.yml                              # Tasks for integration tests
+│   └── testutils                                 # Go test utils
+├── samples                                       # Sample applications for testing
+│   ├── crewai
+│   │   └── simple_crew           # Agentic application example
+│   │       ├── agent.base.json   # Required agent base model
+│   │       ├── build.config.yml  # Required build configuration file
+│   ├── model.json        # Required model file
+│   ├── langgraph
+│   └── research              # Agentic application example
+│   │       ├── agent.base.json   # Required agent base model
+│   │       ├── build.config.yml  # Required build configuration file
+│   │       ├── model.json        # Required model file
+│   │       ├── Taskfile.yml      # Tasks for samples tests
+│   │       └── tests
+│   ├── llama-index
+│   │   └── research              # Agentic application example
+│   │       ├── agent.base.json   # Required agent base model
+│   │       ├── build.config.yml  # Required build configuration file
+│   │       ├── model.json        # Required model file
+│   │       ├── Taskfile.yml      # Tasks for samples tests
+│   │       └── tests
+├── ....
+├── ....                             # Tasks for Samples
+└── Taskfile.yml                     # Repository level task definitions
+```
+
+In the Taskfiles, all required tasks and steps are defined in a structured manner. Each CSIT component contains its necessary tasks within dedicated Taskfiles, with higher-level Taskfiles incorporating lower-level ones to efficiently leverage their defined tasks.
+
+## Tasks
+
+You can list all the tasks defined in the Taskfiles using the `task -l` or simply run `task`.
+The following tasks are defined:
+
+```bash
+task: Available tasks for this project:
+* benchmarks:directory:test:                              All ADS benchmark test
+* benchmarks:gateway:test:                                All AGP benchmark test
+* integrations:apps:download:wfsm-bin:                    Get wfsm binary from GitHub
+* integrations:apps:get-marketing-campaign-cfgs:          Populate marketing campaign config file
+* integrations:apps:init-submodules:                      Initialize submodules
+* integrations:apps:run-marketing-campaign:               Run marketing campaign
+* integrations:directory:download:dirctl-bin:             Get dirctl binary from GitHub
+* integrations:directory:test:                            All directory test
+* integrations:directory:test-env:bootstrap:deploy:       Deploy Directory network peers
+* integrations:directory:test-env:cleanup:                Remove agntcy directory test env
+* integrations:directory:test-env:deploy:                 Deploy Agntcy directory test env
+* integrations:directory:test-env:network:cleanup:        Remove Directory network peers
+* integrations:directory:test-env:network:deploy:         Deploy Directory network peers
+* integrations:directory:test:compile:samples:            Agntcy compiler test in samples
+* integrations:directory:test:compiler:                   Agntcy compiler test
+* integrations:directory:test:delete:                     Directory agent delete test
+* integrations:directory:test:list:                       Directory agent list test
+* integrations:directory:test:networking:                 Directory agent networking test
+* integrations:directory:test:push:                       Directory agent push test
+* integrations:gateway:build:agentic-apps:                Build agentic containers
+* integrations:gateway:test-env:cleanup:                  Remove agent gateway test env
+* integrations:gateway:test-env:deploy:                   Deploy agntcy gateway test env
+* integrations:gateway:test:mcp-server:                   Test MCP over AGP
+* integrations:gateway:test:mcp-server:agp-native:        Test AGP native MCP server
+* integrations:gateway:test:mcp-server:mcp-proxy:         Test MCP server via MCP proxy
+* integrations:gateway:test:sanity:                       Sanity gateway test
+* integrations:kind:create:                               Create kind cluster
+* integrations:kind:destroy:                              Destroy kind cluster
+* integrations:version:                                   Get version
+* samples:agents:run:test:                                Run test
+* samples:autogen:kind:                                   Run app in kind
+* samples:autogen:lint:                                   Run lint with black
+* samples:autogen:lint-fix:                               Run lint and autofix with black
+* samples:autogen:run:test:                               Run tests
+* samples:crewai:run:crew:                                Run crew
+* samples:crewai:run:test:                                Run crew
+* samples:evaluation:run:crew:                            Run application main
+* samples:langgraph:run:test:                             Run tests
+* samples:llama-deploy:run:app:                           Run application main
+* samples:llama-deploy:run:test:                          Run tests
+* samples:llama-index:run:test:                           Run tests
 ```
 
 ## Integration Tests
@@ -59,20 +141,29 @@ To run tests locally:
 1. Create the cluster and deploy the environment:
 
     ```bash
+    task integrations:kind:create
+    task integrations:directory:test-env:deploy
+    # Or change dir to integratons directory:
     cd integrations
     task kind:create
-    task test:env:directory:deploy
+    task directory:test-env:deploy
     ```
 
 1. Run the tests:
 
     ```bash
-    task test:directory
+    task integrations:directory:test
+    # Or change dir to integratons directory:
+    cd integrations
+    task directory:test
     ```
 
 1. When finished, the test cluster can be cleared:
 
     ```bash
+    task integrations:kind:destroy
+    # Or change dir to integratons directory:
+    cd integrations
     task kind:destroy
     ```
 
@@ -121,17 +212,17 @@ To add your tests:
 
     ```yaml
     tasks:
-      test:env:new-component:deploy:
+      new-component:test-env:deploy:
         desc: Desription of deployig new component elements
         cmds:
           - # Command for deploying your components if needed
 
-      test:env:new-component:cleanup:
+      new-component:test-env:cleanup:
         desc: Desription of cleaning up component elements
         cmds:
           - # Command for cleaning up your components if needed
 
-      test:new-component:
+      new-component:test:
         desc: Desription of the test
         cmds:
           - # Commands to set up and run your test
@@ -143,11 +234,11 @@ To add your tests:
     expected.
 
     ```bash
-    task kind:create
-    task test:env:new-componet:deploy
-    task test:new-component
-    task test:env:new-componet:cleanup
-    task kind:destroy
+    task integrations:kind:create
+    task integrations:new-componet:test-env:deploy
+    task integrations:new-component:test
+    task integrations:new-componet:test-env:cleanup
+    task integrations:kind:destroy
     ```
 
 1. Document your test
@@ -190,7 +281,9 @@ For running tests locally, we need the following tools to build the sample appli
 Run the test:
 
 ```bash
-cd samples/[app-name]
+task samples:<app-name>:run:test
+# Or change dir to integratons directory:
+cd samples/<app-name>
 task run:test
 ```
 

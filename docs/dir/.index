@@ -1,3 +1,5 @@
 nav:
-  - Core Concepts: core-concepts.md
-  - Getting Started: getting-started.md
+  - Overview: overview.md
+  - Using the Agent Directory: agent-directory.md
+  - Usage Scenarios: scenarios.md
+  - Agent Directory Records Example: dir-record-example.md

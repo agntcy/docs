@@ -1,3 +1,5 @@
 nav:
   - HOW-TOs:
     - Build your first app: mas-creation-tutorial
+    - Building Applications with ACP Threads: thread.md
+    - Building Applications with ACP Interrupts: interrupts.md
