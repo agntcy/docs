@@ -62,13 +62,13 @@ To build the documentation locally, you need to install required dependencies.
 
 ## Building the Documentation
 
-- To build the documentation, run the following command:
+To build the documentation, run the following command:
 
    ```sh
    task build
    ```
 
-- This will generate the HTML documentation in the .build/docs/html directory.
+This will generate the HTML documentation in the *.build/site* directory.
 
 ## Contributing
 
