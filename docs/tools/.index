@@ -1,0 +1,9 @@
+nav:
+ - IO Mapper: io_mapper.md
+ - Semantic Router Agent: semantic_router.md
+ - Agent Connect Protocol: connect.md
+ - Agntcy ACP Client SDK: agntcy_acp_sdk.md
+ - API Bridge Models: api_bridge_agent.md
+ - Human In the Loop: hil.md
+ - Secure Low-Latency Interactive Messaging (SLIM): slim-core.md
+ - SLIM MCP: slim-mcp.md

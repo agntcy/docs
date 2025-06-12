@@ -1,0 +1,5 @@
+nav:
+ - Identity: identity.md
+ - Identifiers: identifiers.md
+ - Verifiable Credentials: credentials.md
+ - Flow Diagrams: flow.md

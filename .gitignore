@@ -1,9 +1,14 @@
 # Build
 .build/
 venv/
+.venv
+site
 
 # Dependencies
 .dep/
 
 # Secrets
 .env
+
+# Generated files
+generated/
