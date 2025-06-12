@@ -30,10 +30,8 @@ tasks:
       - deps/proto-diagrams
     preconditions:
       - which go
-    env:
-      SCHEMA_DIR:     "{{.ROOT_DIR}}/schema"
-      BUILD_DOCS_DIR: "{{.BUILD_DIR}}/docs"
     vars:
+      SCHEMA_DIR:     "{{.ROOT_DIR}}/schema"
       BUILD_SITE_DIR: "{{.BUILD_DIR}}/site"
     cmds:
       - mkdir -p docs/generated
@@ -47,8 +45,6 @@ tasks:
       - deps/patch
       - deps/proto-diagrams
     desc: Run documentation website in live editing mode
-    vars:
-      BUILD_SITE_DIR: "{{.BUILD_DIR}}/docs/html"
     cmds:
       - pushd mkdocs && uv run mkdocs serve
 
