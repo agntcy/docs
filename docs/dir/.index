@@ -1,5 +1,4 @@
 nav:
   - Overview: overview.md
-  - Using the Agent Directory: agent-directory.md
   - Usage Scenarios: scenarios.md
   - Agent Directory Records Example: dir-record-example.md

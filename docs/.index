@@ -1,5 +1,6 @@
 nav:
   - Introduction: index.md
+  - How-To Guides: how-to-guides
   - OASF: oasf
   - Agent Directory Service: dir
   - Agent Manifest: manifest
@@ -7,4 +8,3 @@ nav:
   - SDKs and Tools: tools
   - Agent Workflow Server: agws
   - CSIT: csit
-  - HOW-TOs: how-to-guides

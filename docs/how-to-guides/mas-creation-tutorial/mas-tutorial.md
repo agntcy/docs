@@ -1,10 +1,10 @@
 # Getting Started: Build Your First Multi-Agent Software
 
-This tutorial guides you through the process of building a distributed multi-agent application using [LangGraph](https://www.langchain.com/langgraph) and leveraging [Agent Connect Protocol (ACP)](https://docs.agntcy.org/pages/syntactic_sdk/connect.html) and other **AGNTCY** components and tools.
+This tutorial guides you through the process of building a distributed multi-agent application using [LangGraph](https://www.langchain.com/langgraph) and leveraging [Agent Connect Protocol (ACP)](../../tools/agntcy_acp_sdk.md) and other **AGNTCY** components and tools.
 
 The sample app used for this tutorial is a **Marketing Campaign Manager** agent. A "pre-cooked" version of this application is available [here](https://github.com/agntcy/agentic-apps/tree/main/marketing-campaign).
 
-> For this tutorial we are using LangGraph, but other frameworks can also be used.
+For this tutorial we are using LangGraph, but other frameworks can also be used.
 
 
 ## Overview

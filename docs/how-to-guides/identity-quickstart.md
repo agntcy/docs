@@ -1,10 +1,12 @@
-# Quick Start Guide
+# Identity Quick Start Guide
 
 ## Get Started
 
 This short guide allows you to setup the Identity `Issuer CLI` as well as the Identity `Node Backend`.
 The `Issuer CLI` allows to generate, register, search for, and verify badges for Agents and MCP Servers. The CLI includes a library enabling storage and retrieval of the keys required to sign the badges, both on local storage or using a 3rd party wallet or vault.
 The `Node Backend` comprises the APIs and the backend core. It stores, maintains, and binds org:sub-org IDs, PubKeys, Subject IDs and metadata, including badges, ResolverMetadata and Verifiable Credentials (VCs).
+
+For detailed information in the Agent Directory Service, see the [Identity documentation](../identity/identity.md).
 
 ### Prerequisites
 
