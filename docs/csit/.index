@@ -1,0 +1,3 @@
+nav:
+  - CSIT:
+    - Continuous System Integration Testing: csit.md

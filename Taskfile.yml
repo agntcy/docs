@@ -3,14 +3,14 @@
 
 version: "3"
 
-interval: "500ms"
+interval: '500ms'
 
-dotenv: [".env"]
+dotenv: ['.env']
 
 env:
   BUILD_DIR: "{{.ROOT_DIR}}/.build"
-  DEPS_DIR: "{{.ROOT_DIR}}/.dep"
-  VENV_DIR: "{{.ROOT_DIR}}/.dep/.venv"
+  DEPS_DIR:  "{{.ROOT_DIR}}/.dep"
+  VENV_DIR:  "{{.ROOT_DIR}}/.dep/.venv"
   # Taskfile env does not override the actual shell env, see:
   # https://github.com/go-task/task/issues/202
   PATH: "{{.DEPS_DIR}}:{{.VENV_DIR}}/bin:$PATH"
@@ -26,49 +26,45 @@ tasks:
   build:
     desc: Build documentation website
     deps:
-      - deps/venv
+      - deps/patch
       - deps/proto-diagrams
     preconditions:
       - which go
-      - which python3
-    env:
-      SOURCE_DIR: "{{.ROOT_DIR}}/docs"
-      SCHEMA_DIR: "{{.ROOT_DIR}}/schema"
-      BUILD_DOCS_DIR: "{{.BUILD_DIR}}/docs"
     vars:
-      BUILD_SITE_DIR: "{{.BUILD_DIR}}/docs/html"
+      SCHEMA_DIR:     "{{.ROOT_DIR}}/schema"
+      BUILD_SITE_DIR: "{{.BUILD_DIR}}/site"
     cmds:
-      - PATH={{.PATH}} ./docs/build-docs.sh
+      - mkdir -p docs/generated
+      - "{{.DEPS_DIR}}/proto-gen-md-diagrams -d ${SCHEMA_DIR} -o docs/generated"
+      - pushd mkdocs && uv run mkdocs build --site-dir {{.BUILD_SITE_DIR}} && popd
       - |
         echo "Docs available at: file://{{.BUILD_SITE_DIR}}/index.html"
 
-  # TODO(ramizpolic): This usually works well to regenerate context, but it's not a real hot-reload.
-  # Note that sometimes it crashes and goes into reload loop. Investigate or find alternative.
   run:
+    deps:
+      - deps/patch
+      - deps/proto-diagrams
     desc: Run documentation website in live editing mode
-    preconditions:
-      - which go
-      - which python3
-    watch: true
-    sources:
-      - "docs/**/*"
-      - "schema/**/*"
-    vars:
-      BUILD_SITE_DIR: "{{.BUILD_DIR}}/docs/html"
     cmds:
-      - task: build
-      - |
-        echo "Docs available at: file://{{.BUILD_SITE_DIR}}/index.html"
+      - pushd mkdocs && uv run mkdocs serve
 
   ##
   ## Dependencies
   ##
-  deps/venv:
+  # TODO(msardara): This is a workaround, the __init__.py files shohuld be in the acp-sdk repo
+  deps/patch:
     internal: true
+    dir: mkdocs
+    vars:
+      PYTHON_VERSION:
+        sh: echo "python$(cat .python-version)"
     cmds:
-      - python3 -m venv {{.VENV_DIR}}
-    status:
-      - test -f {{.VENV_DIR}}
+      - uv sync
+      - touch .venv/lib/{{.PYTHON_VERSION}}/site-packages/agntcy_acp/acp_v0/sync_client/__init__.py
+      - touch .venv/lib/{{.PYTHON_VERSION}}/site-packages/agntcy_acp/acp_v0/async_client/__init__.py
+    generates:
+      - .venv/lib/{{.PYTHON_VERSION}}/site-packages/agntcy_acp/acp_v0/sync_client
+      - .venv/lib/{{.PYTHON_VERSION}}/site-packages/agntcy_acp/acp_v0/async_client
 
   deps/proto-diagrams:
     internal: true
