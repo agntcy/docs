@@ -1,5 +1,5 @@
 Secure Low-Latency Interactive Messaging
-=============================
+=========================================
 
 .. toctree::
    :maxdepth: 1
