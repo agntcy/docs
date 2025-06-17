@@ -61,7 +61,7 @@ Install the dependencies:
 
 ```bash
 # Add all dependencies
-poetry add python-dotenv langgraph langchain-openai langchain agntcy-acp
+poetry add python-dotenv langgraph langchain-openai langchain "agntcy-acp[iomapper-langgraph]"
 
 # Install the current project (marketing-campaign) and dependencies
 poetry install
@@ -432,6 +432,14 @@ def build_app_graph() -> CompiledStateGraph:
     return graph
 ```
 
+At this point, if you want to run your application to see if it compiles [(as at the end of Step 1 above)](#skeleton-code-example), you will
+need to set the `SENDGRID_API_KEY` in your environment. This depends on your operating system and
+shell, but an example for most shells in most Unix-like OSes:
+
+```shell
+export SENDGRID_API_KEY="enter API key here"
+```
+
 For a complete setup guide including Tyk gateway configuration and SendGrid API details, see the [SendGrid API Bridge example in the ACP SDK documentation](https://docs.agntcy.org/pages/syntactic_sdk/api_bridge_agent.html#an-example-with-sendgrid-api).
 
 
@@ -670,6 +678,15 @@ With these additions, our application now has a complete workflow that can:
 6. Provide meaningful output back to the user
 
 
+At this point, if you want to run your application to see if it compiles [(as at the end of Step 1 above)](#skeleton-code-example), you will
+need to set some variables for Azure in your environment. This depends on your operating system 
+and shell, but an example for most shells in most Unix-like OSes:
+
+```shell
+export AZURE_OPENAI_API_KEY="enter API key here"
+export AZURE_OPENAI_ENDPOINT="https://resource.azure.openai.com/openai/"
+```
+
 ## Step 7: Generate Application Manifest
 
 In this step, we will **generate the Agent Manifest** for our Marketing Campaign application. The manifest generation enables our application to be used by other applications and to be deployed through an [Agent Workflow Server](https://github.com/agntcy/workflow-srv).
@@ -685,94 +702,163 @@ Let's create a new file called `generate_manifest.py` in the `src/marketing_camp
 
 ```python
 # src/marketing_campaign/generate_manifest.py
+from datetime import datetime, timezone
 from pathlib import Path
-from pydantic import AnyUrl
-from marketing_campaign.state import OverallState, ConfigModel
+
 from agntcy_acp.manifest import (
-    AgentManifest,
-    AgentDeployment,
-    DeploymentOptions,
-    LangGraphConfig,
-    EnvVar,
-    AgentMetadata,
     AgentACPSpec,
+    AgentDependency,
+    AgentDeployment,
+    AgentManifest,
     AgentRef,
     Capabilities,
+    DeploymentManifest,
+    DeploymentOptions,
+    EnvVar,
+    LangGraphConfig,
+    Locator,
+    Manifest,
+    Skill,
     SourceCodeDeployment,
-    AgentDependency
+    OASF_EXTENSION_NAME_MANIFEST,
 )
+from pydantic import AnyUrl
 
-mailcomposer_dependency_manifest = "./manifests/mailcomposer.json"
-email_reviewer_dependency_manifest = "./manifests/email_reviewer.json"
+from marketing_campaign.state import ConfigModel, OverallState
+
+# Deps are relative to the main manifest file.
+mailcomposer_dependency_manifest = "mailcomposer.json"
+email_reviewer_dependency_manifest = "email_reviewer.json"
 
 manifest = AgentManifest(
-    metadata=AgentMetadata(
-        ref=AgentRef(name="org.agntcy.marketing-campaign", version="0.0.1", url=None),
-        description="Offer a chat interface to compose an email for a marketing campaign. Final output is the email that could be used for the campaign"),
-    specs=AgentACPSpec(
-        input=OverallState.model_json_schema(),
-        output=OverallState.model_json_schema(),
-        config=ConfigModel.model_json_schema(),
-        capabilities=Capabilities(
-            threads=False,
-            callbacks=False,
-            interrupts=False,
-            streaming=None
+    name="org.agntcy.marketing-campaign",
+    authors=["AGNTCY Internet of Agents Collective"],
+    annotations={"type": "langgraph"},
+    version="0.3.1",
+    locators=[
+        Locator(
+            url="https://github.com/agntcy/agentic-apps/tree/main/marketing-campaign",
+            type="source-code",
         ),
-        custom_streaming_update=None,
-        thread_state=None,
-        interrupts=None
-    ),
-    deployment=AgentDeployment(
-        deployment_options=[
-            DeploymentOptions(
-                root = SourceCodeDeployment(
-                    type="source_code",
-                    name="source_code_local",
-                    url=AnyUrl("file://."),
-                    framework_config=LangGraphConfig(
-                        framework_type="langgraph",
-                        graph="marketing_campaign.app:graph"
-                    )
-                )
-            )
-        ],
-        env_vars=[EnvVar(name="AZURE_OPENAI_API_KEY", desc="Azure key for the OpenAI service"),
-                  EnvVar(name="AZURE_OPENAI_ENDPOINT", desc="Azure endpoint for the OpenAI service"),
-                  EnvVar(name="SENDGRID_API_KEY", desc="Sendgrid API key")],
-        dependencies=[
-            AgentDependency(
-                name="mailcomposer",
-                ref=AgentRef(name="org.agntcy.mailcomposer", version="0.0.1", url=f"file://{mailcomposer_dependency_manifest}"),
-                deployment_option = None,
-                env_var_values = None
+    ],
+    description="Offer a chat interface to compose an email for a marketing campaign. Final output is the email that could be used for the campaign",
+    created_at=datetime.now(timezone.utc).isoformat(timespec="seconds"),
+    schema_version="0.1.3",
+    skills=[
+        Skill(
+            category_name="Natural Language Processing",
+            category_uid=1,
+            class_name="Dialogue Generation",
+            class_uid=10204,
+        ),
+        Skill(
+            category_name="Natural Language Processing",
+            category_uid=1,
+            class_name="Text Completion",
+            class_uid=10201,
+        ),
+        Skill(
+            category_name="Natural Language Processing",
+            category_uid=1,
+            class_name="Text Paraphrasing",
+            class_uid=10203,
+        ),
+        Skill(
+            category_name="Natural Language Processing",
+            category_uid=1,
+            class_name="Knowledge Synthesis",
+            class_uid=10303,
+        ),
+        Skill(
+            category_name="Natural Language Processing",
+            category_uid=1,
+            class_name="Text Style Transfer",
+            class_uid=10206,
+        ),
+        Skill(
+            category_name="Natural Language Processing",
+            category_uid=1,
+            class_name="Tone and Style Adjustment",
+            class_uid=10602,
+        ),
+    ],
+    extensions=[
+        Manifest(
+            name=OASF_EXTENSION_NAME_MANIFEST,
+            version="v0.2.2",
+            data=DeploymentManifest(
+                acp=AgentACPSpec(
+                    input=OverallState.model_json_schema(),
+                    output=OverallState.model_json_schema(),
+                    config=ConfigModel.model_json_schema(),
+                    capabilities=Capabilities(
+                        threads=False, callbacks=False, interrupts=False, streaming=None
+                    ),
+                    custom_streaming_update=None,
+                    thread_state=None,
+                    interrupts=None,
+                ),
+                deployment=AgentDeployment(
+                    deployment_options=[
+                        DeploymentOptions(
+                            root=SourceCodeDeployment(
+                                type="source_code",
+                                name="source_code_local",
+                                url=AnyUrl("file://../"),
+                                framework_config=LangGraphConfig(
+                                    framework_type="langgraph",
+                                    graph="marketing_campaign.app:graph",
+                                ),
+                            )
+                        )
+                    ],
+                    env_vars=[
+                        EnvVar(
+                            name="AZURE_OPENAI_API_KEY",
+                            desc="Azure key for the OpenAI service",
+                        ),
+                        EnvVar(
+                            name="AZURE_OPENAI_ENDPOINT",
+                            desc="Azure endpoint for the OpenAI service",
+                        ),
+                        EnvVar(name="SENDGRID_API_KEY", desc="Sendgrid API key"),
+                    ],
+                    agent_deps=[
+                        AgentDependency(
+                            name="mailcomposer",
+                            ref=AgentRef(
+                                name="org.agntcy.mailcomposer",
+                                version="0.0.1",
+                                url=AnyUrl(f"file://{mailcomposer_dependency_manifest}"),
+                            ),
+                            deployment_option=None,
+                            env_var_values=None,
+                        ),
+                        AgentDependency(
+                            name="email_reviewer",
+                            ref=AgentRef(
+                                name="org.agntcy.email_reviewer",
+                                version="0.0.1",
+                                url=AnyUrl(f"file://{email_reviewer_dependency_manifest}"),
+                            ),
+                            deployment_option=None,
+                            env_var_values=None,
+                        ),
+                    ],
+                ),
             ),
-           AgentDependency(
-                name="email_reviewer",
-                ref=AgentRef(name="org.agntcy.email_reviewer", version="0.0.1", url=f"file://{email_reviewer_dependency_manifest}"),
-                deployment_option = None,
-                env_var_values = None
-            )
-        ]
-    )
+        ),
+    ],
 )
 
-with open(f"{Path(__file__).parent.parent.parent}/manifests/marketing-campaign.json", "w") as f:
+with open(
+    f"{Path(__file__).parent.parent.parent}/manifests/marketing-campaign.json", "w"
+) as f:
     json_content = manifest.model_dump_json(
-        exclude_unset=True,
-        exclude_none=True,
-        indent=2
-    )
-    # Replace URLs with filesystem paths because file:// schema not yet supported on dependencies
-    json_content = json_content.replace(
-        f"file://{mailcomposer_dependency_manifest}",
-        mailcomposer_dependency_manifest
-    )
-    json_content = json_content.replace(
-        f"file://{email_reviewer_dependency_manifest}",
-        email_reviewer_dependency_manifest
+        exclude_unset=True, exclude_none=True, indent=2
     )
     f.write(json_content)
+    f.write("\n")
 ```
 
 ### Understanding the Manifest Generator Structure
@@ -836,11 +922,14 @@ After generating the manifest, we can deploy and run our application using the W
 
 ### Installing the Workflow Server Manager
 
-First, download the Workflow Server Manager CLI appropriate for your operating system from the [releases page](https://github.com/agntcy/workflow-srv-mgr/releases).  Make sure to execute these commands from the root directory of your project:
+First, download the Workflow Server Manager CLI appropriate for your operating system from
+the [releases page](https://github.com/agntcy/workflow-srv-mgr/releases). Note that the
+latest version may be later (semantically) than the version in the example below. Make sure
+to execute these commands from the root directory of your project:
 
 ```bash
 # For macOS with Apple Silicon (run from project root)
-curl -L https://github.com/agntcy/workflow-srv-mgr/releases/download/v0.1.1/wfsm0.1.1_darwin_arm64.tar.gz -o wfsm.tar.gz
+curl -L https://github.com/agntcy/workflow-srv-mgr/releases/download/v0.3.2/wfsm0.3.2_darwin_arm64.tar.gz -o wfsm.tar.gz
 tar -xzf wfsm.tar.gz # Keep the extracted wfsm binary it in the project root
 chmod +x wfsm
 # For other platforms, download the appropriate binary from the releases page
@@ -854,21 +943,32 @@ Before starting the workflow server, create a configuration file that provides t
 
 ```yaml
 # marketing_campaign_config.yaml
-values:
-  AZURE_OPENAI_API_KEY: your_secret
-  AZURE_OPENAI_ENDPOINT: "the_url.com"
-  API_HOST: 0.0.0.0
-  SENDGRID_HOST: http://host.docker.internal:8080
-  SENDGRID_API_KEY: SG.your-api-key
-dependencies:
-  - name: mailcomposer
-    values:
-      AZURE_OPENAI_API_KEY: your_secret
-      AZURE_OPENAI_ENDPOINT: "the_url.com"
-  - name: email_reviewer
-    values:
-      AZURE_OPENAI_API_KEY: your_secret
-      AZURE_OPENAI_ENDPOINT: "the_url.com"
+config:
+    email_reviewer:
+        port: 0
+        apiKey: 799cccc7-49e4-420a-b0a8-e4de949ae673
+        id: 45fb3f84-c0d7-41fb-bae3-363ca8f8092a
+        envVars:
+          AZURE_OPENAI_API_KEY: "[YOUR AZURE OPEN API KEY]"
+          AZURE_OPENAI_ENDPOINT: "https://[YOUR ENDPOINT].openai.azure.com"
+          AZURE_OPENAI_API_VERSION: "2024-08-01-preview"
+    mailcomposer:
+        port: 0
+        apiKey: a9ee3d6a-6950-4252-b2f0-ad70ce57d603
+        id: 76363e34-d684-4cab-b2b7-2721c772e42f
+        envVars:
+          AZURE_OPENAI_API_KEY: "[YOUR AZURE OPEN API KEY]"
+          AZURE_OPENAI_ENDPOINT: "https://[YOUR ENDPOINT].openai.azure.com"
+    org.agntcy.marketing-campaign:
+        port: 65222
+        apiKey: 12737451-d333-41c2-b3dd-12f15fa59b38
+        id: d6306461-ea6c-432f-b6a6-c4feaa81c19b
+        envVars:
+          AZURE_OPENAI_API_KEY: "[YOUR AZURE OPEN API KEY]"
+          AZURE_OPENAI_ENDPOINT: "https://[YOUR ENDPOINT].openai.azure.com"
+          SENDGRID_HOST: "http://host.docker.internal:8080"
+          SENDGRID_API_KEY: "[YOUR SENDGRID_API_KEY]"
+          LOG_LEVEL: debug
 ```
 
 > **Note**: Replace placeholder values with your actual API keys and endpoints. The `SENDGRID_HOST` is set to `http://host.docker.internal:8080` to allow communication with a API Bridge service that will locally run in Docker.
@@ -882,17 +982,18 @@ Before testing the full application workflow, you need to set up the SendGrid AP
 Now, deploy the Marketing Campaign workflow server using the manifest we generated. Run this command from the root directory of your project:
 
 ```bash
-./wfsm deploy -m ./manifests/marketing-campaign.json -e ./marketing_campaign_config.yaml
+./wfsm deploy -m ./manifests/marketing-campaign.json -c ./marketing_campaign_config.yaml --dryRun=false
 ```
 
 If the deployment is successful, you'll see output similar to:
 ```plaintext
-2025-03-28T12:31:04+01:00 INF ---------------------------------------------------------------------
-2025-03-28T12:31:04+01:00 INF ACP agent deployment name: org.agntcy.marketing-campaign
-2025-03-28T12:31:04+01:00 INF ACP agent running in container: org.agntcy.marketing-campaign, listening for ACP request on: http://127.0.0.1:62609
-2025-03-28T12:31:04+01:00 INF Agent ID: eae32ada-aaf8-408c-bf0c-7654455ce6e3
-2025-03-28T12:31:04+01:00 INF API Key: 08817517-7000-48e9-94d8-01d22cf7d20a
-2025-03-28T12:31:04+01:00 INF ---------------------------------------------------------------------
+2025-06-16T15:53:19+02:00 INF ---------------------------------------------------------------------
+2025-06-16T15:53:19+02:00 INF ACP agent deployment name: org.agntcy.marketing-campaign
+2025-06-16T15:53:19+02:00 INF ACP agent running in container: org.agntcy.marketing-campaign, listening for ACP requests on: http://127.0.0.1:65222
+2025-06-16T15:53:19+02:00 INF Agent ID: d6306461-ea6c-432f-b6a6-c4feaa81c19b
+2025-06-16T15:53:19+02:00 INF API Key: 12737451-d333-41c2-b3dd-12f15fa59b38
+2025-06-16T15:53:19+02:00 INF API Docs: http://127.0.0.1:65222/agents/d6306461-ea6c-432f-b6a6-c4feaa81c19b/docs
+2025-06-16T15:53:19+02:00 INF ---------------------------------------------------------------------
 ```
 
 Take note of the **Agent ID**, **API Key**, and **Host** information, as you'll need them to interact with the deployed application.
@@ -908,11 +1009,11 @@ To test our application, we'll use an ACP client that allows us to communicate w
     curl https://raw.githubusercontent.com/agntcy/agentic-apps/refs/heads/main/marketing-campaign/src/marketing_campaign/main_acp_client.py -o src/marketing_campaign/main_acp_client.py
     ```
 
-2. Set the environment variables with the information from your deployment logs:
+2. Set the environment variables with the information from your configuration:
     ```bash
-    export MARKETING_CAMPAIGN_HOST="http://localhost:62609"  # Use the host from your logs
-    export MARKETING_CAMPAIGN_ID="eae32ada-aaf8-408c-bf0c-7654455ce6e3"  # Use your actual Agent ID
-    export MARKETING_CAMPAIGN_API_KEY='{"x-api-key": "08817517-7000-48e9-94d8-01d22cf7d20a"}'  # Use your actual API Key
+    export MARKETING_CAMPAIGN_HOST="http://localhost:65222"  # Use the host from your logs
+    export MARKETING_CAMPAIGN_ID="d6306461-ea6c-432f-b6a6-c4feaa81c19b"  # Use your actual Agent ID
+    export MARKETING_CAMPAIGN_API_KEY='{"x-api-key": "12737451-d333-41c2-b3dd-12f15fa59b38"}'  # Use your actual API Key
 
     # Configuration of the application
     export RECIPIENT_EMAIL_ADDRESS="recipient@example.com"
