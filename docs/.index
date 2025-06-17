@@ -5,7 +5,6 @@ nav:
   - Agent Directory Service: dir
   - Agent Manifest: manifest
   - Identity and Security: identity
-  - Service Discovery: discovery
   - Semantic SDK: semantic
   - Syntactic SDK: syntactic
   - Messaging SDK: messaging
