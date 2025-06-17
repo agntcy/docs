@@ -13,6 +13,7 @@ point for organizing and accessing agent records. This hosted service is enhance
 gRPC API that supports efficient service communication and integration, ensuring
 seamless interaction between components.
 
+
 AGNTCY Hub serves as a central platform for hosting and managing various
 agent-related services. The main purpose of the Agent Directory Service
 component of Hub is to provide a comprehensive solution
@@ -32,15 +33,15 @@ and handling administrative tasks. A user can belong to many organizations, but
 organizations are flat and cannot belong to one another.
 * Agent Records - An Agent Record is a collection of data and metadata about a
 particular agentic application or service. The schema of the Record is defined
-in [OASF](../oasf/open-agentic-schema-framework.md) and contains, for example, a
-[collection of skills](../oasf/taxonomy.md).
+in [OASF](oasf.md) and contains, for example, a
+[collection of skills](oasf-taxonomy.md).
 * Repositories - A agent repository collects agent records that describe
 different versions of the same agent into one location to provide an overview of
 its history and current status. A Record can belong to only one repo, while a
 user or organization may access many different repos and by extension their
 agent records.
 
-The [Agent Directory Service (ADS)](../dir/overview.md) provides storage for agent records
+The [Agent Directory Service (ADS)](dir.md) provides storage for agent records
 while the frontend hosted AGNTCY Agent Directory provides access control with
 Users and their Organizations and management of agent records in their Repos.
 
@@ -65,13 +66,13 @@ When first logging in, you are prompted to create a name for your default
 organization. This organization is a personal space where all repositories
 belong to you.
 
-![Logging in](../assets/login.png)
+![Logging in](../_static/login.png)
 
 ### View and Search for Agents
 
 "The Explore page allows users to browse and search through available agent repositories.
 
-![The Explore Page](../assets/explore.png)
+![The Explore Page](../_static/explore.png)
 
 You can refine the results using predefined filters and open search:
 
@@ -102,7 +103,7 @@ name. To clear the search, click the **×**.
 * Use the drop-down **Sort by** list to sort the displayed items by Most Recent
 or Oldest.
 
-![The Agent Directory Page](../assets/directory.png)
+![The Agent Directory Page](../_static/directory.png)
 
 #### Agent Actions
 
@@ -120,7 +121,7 @@ of its agent records.
 Clicking on an agent repository opens the Agent Details page with further
 information on the agent repository.
 
-![The Agent Details Page](../assets/agent.png)
+![The Agent Details Page](../_static/agent.png)
 
 The **General** tab lists the following information from the agent record:
 
@@ -142,7 +143,7 @@ exist first for an agent record to be added to it.
 To add an agent repository in the AGNTCY Agent Directory:
 
 1. Click the **+ New Repository** button.
-1. Enter the repository name and description.
+1. Enter the repository name.
 1. Select the visibility for your agent repository.
     * Public agent repositories appear in search results.
     * Private agent repositories are only visible in your organization.
@@ -279,39 +280,45 @@ For further details on verification, please see
 
 ### Settings
 
-The settings page allows you to manage your organizations and users.
+The settings page allows you to manage your organizations and their users.
 
-#### Organizations
+#### List Organizations
 
 Organizations represent groups of users within the Hub, each with its own
 repositories. Users can be member of many organizations. The organizations
 available to you are listed under the **Organizations** tab.
 
-Clicking the three dots (**⁝**) at the end of any row in the table opens a
-drop-down list of actions you can perform on that organization.
+#### Switch Organization
+The organization the user is currently signed in is displayed in bold in the organization list and indicated in the dropdown at the top of the left side menu.
 
-* Click **Switch** to switch to the organization.
+To switch organization:
 
-You can reload the listed items by clicking the **Reload** button (**⟳**).
+1. Click on the dropdown at the top of the left side menu
+1. Select the organization to switch to
+1. Follow the login procedure
 
-#### Users
+#### Create a new organization
 
-The users in a organization are listed under the **Users** tab.
+To create a new organization:
+
+1. Click the **+ Create Organization** button.
+1. Enter the organization name.
+1. Click the **Create organization** button.
+1. Click the **Finish** button.
+
+
+#### Manage Users
+
+The list of users of the current organization are accessible by clicking on the organization (in bold) in the list.
 
 You can invite other users to the organization by clicking the **+ Invite User**
 button.
 
-> Note: You cannot invite other users to your personal organization created
-> during signing up. To collaborate with others, create a new organization and
-> invite them to it.
+```{NOTE}
+You cannot invite other users to your personal organization created
+during signing up. To collaborate with others, create a new organization and invite them to it.
+```
 
-Clicking the three dots (**⁝**) at the end of any row in the table opens a
-drop-down list of actions you can perform on that user.
-
-* Click **Edit** to edit the user's role.
-* Click **Delete** to delete the user.
-
-You can reload the listed items by clicking the **Reload** button (**⟳**).
 
 ## Troubleshooting pushing agents to the AGNTCY Agent Directory
 `Error: failed to validate access token: invalid session token`
