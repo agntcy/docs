@@ -704,34 +704,43 @@ Let's create a new file called `generate_manifest.py` in the `src/marketing_camp
 # src/marketing_campaign/generate_manifest.py
 from datetime import datetime, timezone
 from pathlib import Path
-from pydantic import AnyUrl
-from marketing_campaign.state import OverallState, ConfigModel
+
 from agntcy_acp.manifest import (
-    AgentManifest,
-    AgentDeployment,
-    DeploymentOptions,
-    LangGraphConfig,
-    EnvVar,
     AgentACPSpec,
+    AgentDependency,
+    AgentDeployment,
+    AgentManifest,
     AgentRef,
     Capabilities,
-    SourceCodeDeployment,
-    AgentDependency,
     DeploymentManifest,
-    Skill,
+    DeploymentOptions,
+    EnvVar,
+    LangGraphConfig,
+    Locator,
     Manifest,
+    Skill,
+    SourceCodeDeployment,
     OASF_EXTENSION_NAME_MANIFEST,
 )
+from pydantic import AnyUrl
 
-mailcomposer_dependency_manifest = "./manifests/mailcomposer.json"
-email_reviewer_dependency_manifest = "./manifests/email_reviewer.json"
+from marketing_campaign.state import ConfigModel, OverallState
+
+# Deps are relative to the main manifest file.
+mailcomposer_dependency_manifest = "mailcomposer.json"
+email_reviewer_dependency_manifest = "email_reviewer.json"
 
 manifest = AgentManifest(
     name="org.agntcy.marketing-campaign",
     authors=["AGNTCY Internet of Agents Collective"],
     annotations={"type": "langgraph"},
-    version="0.1.0",
-    locators=[],
+    version="0.3.1",
+    locators=[
+        Locator(
+            url="https://github.com/agntcy/agentic-apps/tree/main/marketing-campaign",
+            type="source-code",
+        ),
+    ],
     description="Offer a chat interface to compose an email for a marketing campaign. Final output is the email that could be used for the campaign",
     created_at=datetime.now(timezone.utc).isoformat(timespec="seconds"),
     schema_version="0.1.3",
@@ -814,13 +823,13 @@ manifest = AgentManifest(
                         ),
                         EnvVar(name="SENDGRID_API_KEY", desc="Sendgrid API key"),
                     ],
-                    dependencies=[
+                    agent_deps=[
                         AgentDependency(
                             name="mailcomposer",
                             ref=AgentRef(
                                 name="org.agntcy.mailcomposer",
                                 version="0.0.1",
-                                url=f"file://{mailcomposer_dependency_manifest}",
+                                url=AnyUrl(f"file://{mailcomposer_dependency_manifest}"),
                             ),
                             deployment_option=None,
                             env_var_values=None,
@@ -830,7 +839,7 @@ manifest = AgentManifest(
                             ref=AgentRef(
                                 name="org.agntcy.email_reviewer",
                                 version="0.0.1",
-                                url=f"file://{email_reviewer_dependency_manifest}",
+                                url=AnyUrl(f"file://{email_reviewer_dependency_manifest}"),
                             ),
                             deployment_option=None,
                             env_var_values=None,
@@ -847,14 +856,6 @@ with open(
 ) as f:
     json_content = manifest.model_dump_json(
         exclude_unset=True, exclude_none=True, indent=2
-    )
-    # Replace URLs with filesystem paths because file:// schema not yet supported on dependencies
-    json_content = json_content.replace(
-        f"file://{mailcomposer_dependency_manifest}", mailcomposer_dependency_manifest
-    )
-    json_content = json_content.replace(
-        f"file://{email_reviewer_dependency_manifest}",
-        email_reviewer_dependency_manifest,
     )
     f.write(json_content)
     f.write("\n")
@@ -950,6 +951,7 @@ config:
         envVars:
           AZURE_OPENAI_API_KEY: "[YOUR AZURE OPEN API KEY]"
           AZURE_OPENAI_ENDPOINT: "https://[YOUR ENDPOINT].openai.azure.com"
+          AZURE_OPENAI_API_VERSION: "2024-08-01-preview"
     mailcomposer:
         port: 0
         apiKey: a9ee3d6a-6950-4252-b2f0-ad70ce57d603
@@ -966,6 +968,7 @@ config:
           AZURE_OPENAI_ENDPOINT: "https://[YOUR ENDPOINT].openai.azure.com"
           SENDGRID_HOST: "http://host.docker.internal:8080"
           SENDGRID_API_KEY: "[YOUR SENDGRID_API_KEY]"
+          LOG_LEVEL: debug
 ```
 
 > **Note**: Replace placeholder values with your actual API keys and endpoints. The `SENDGRID_HOST` is set to `http://host.docker.internal:8080` to allow communication with a API Bridge service that will locally run in Docker.
@@ -1006,11 +1009,11 @@ To test our application, we'll use an ACP client that allows us to communicate w
     curl https://raw.githubusercontent.com/agntcy/agentic-apps/refs/heads/main/marketing-campaign/src/marketing_campaign/main_acp_client.py -o src/marketing_campaign/main_acp_client.py
     ```
 
-2. Set the environment variables with the information from your deployment logs:
+2. Set the environment variables with the information from your configuration:
     ```bash
-    export MARKETING_CAMPAIGN_HOST="http://localhost:62609"  # Use the host from your logs
-    export MARKETING_CAMPAIGN_ID="eae32ada-aaf8-408c-bf0c-7654455ce6e3"  # Use your actual Agent ID
-    export MARKETING_CAMPAIGN_API_KEY='{"x-api-key": "08817517-7000-48e9-94d8-01d22cf7d20a"}'  # Use your actual API Key
+    export MARKETING_CAMPAIGN_HOST="http://localhost:65222"  # Use the host from your logs
+    export MARKETING_CAMPAIGN_ID="d6306461-ea6c-432f-b6a6-c4feaa81c19b"  # Use your actual Agent ID
+    export MARKETING_CAMPAIGN_API_KEY='{"x-api-key": "12737451-d333-41c2-b3dd-12f15fa59b38"}'  # Use your actual API Key
 
     # Configuration of the application
     export RECIPIENT_EMAIL_ADDRESS="recipient@example.com"
