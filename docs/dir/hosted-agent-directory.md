@@ -33,15 +33,15 @@ and handling administrative tasks. A user can belong to many organizations, but
 organizations are flat and cannot belong to one another.
 * Agent Records - An Agent Record is a collection of data and metadata about a
 particular agentic application or service. The schema of the Record is defined
-in [OASF](oasf.md) and contains, for example, a
-[collection of skills](oasf-taxonomy.md).
+in [OASF](../oasf/open-agentic-schema-framework.md) and contains, for example, a
+[collection of skills](../oasf/taxonomy.md).
 * Repositories - A agent repository collects agent records that describe
 different versions of the same agent into one location to provide an overview of
 its history and current status. A Record can belong to only one repo, while a
 user or organization may access many different repos and by extension their
 agent records.
 
-The [Agent Directory Service (ADS)](dir.md) provides storage for agent records
+The [Agent Directory Service (ADS)](../dir/overview.md) provides storage for agent records
 while the frontend hosted AGNTCY Agent Directory provides access control with
 Users and their Organizations and management of agent records in their Repos.
 
@@ -66,13 +66,13 @@ When first logging in, you are prompted to create a name for your default
 organization. This organization is a personal space where all repositories
 belong to you.
 
-![Logging in](../_static/login.png)
+![Logging in](../assets/login.png)
 
 ### View and Search for Agents
 
 "The Explore page allows users to browse and search through available agent repositories.
 
-![The Explore Page](../_static/explore.png)
+![The Explore Page](../assets/explore.png)
 
 You can refine the results using predefined filters and open search:
 
@@ -103,7 +103,7 @@ name. To clear the search, click the **×**.
 * Use the drop-down **Sort by** list to sort the displayed items by Most Recent
 or Oldest.
 
-![The Agent Directory Page](../_static/directory.png)
+![The Agent Directory Page](../assets/directory.png)
 
 #### Agent Actions
 
@@ -121,7 +121,7 @@ of its agent records.
 Clicking on an agent repository opens the Agent Details page with further
 information on the agent repository.
 
-![The Agent Details Page](../_static/agent.png)
+![The Agent Details Page](../assets/agent.png)
 
 The **General** tab lists the following information from the agent record:
 
@@ -221,7 +221,7 @@ agent record will be augmented with a generated signature and will be output
 in JSON format. The new signed agent record can be pushed to the Hub.
 
 For further details on signing, please see
-[the Agent Directory HOWTO](dir-howto.md#signing-and-verification).
+[the Agent Directory HOWTO](../dir/scenarios.md#signing-and-verification).
 
 #### Pushing Agent Directory Records using `dirctl`
 Once all pre-requisites are complete, you are ready to push an agent record to an agent repository
@@ -274,7 +274,7 @@ dirctl verify agent.json \
 ```
 
 For further details on verification, please see
-[the Agent Directory HOWTO](dir-howto.md#signing-and-verification).
+[the Agent Directory HOWTO](../dir/scenarios.md#signing-and-verification).
 
 ## Managing Organizations and Users
 

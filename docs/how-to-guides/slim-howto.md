@@ -2,7 +2,7 @@
 
 Secure Low-Latency Interactive Messaging (SLIM) aims to provide a secure, scalable, and user-friendly communication framework that unifies state-of-the-art capabilities from all mentioned frameworks into a single implementation.
 
-For more information on SLIM, see the [detailed documentation](../tools/slim-core.md).
+For more information on SLIM, see the [detailed documentation](../messaging/slim-core.md).
 
 ## Prerequisites
 

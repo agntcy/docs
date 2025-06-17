@@ -1,6 +1,6 @@
 # Getting Started with API Bridge Agent
 
-For a detailed description on the API Bridge Agent, see [API Bridge Agent documentation](../tools/api_bridge_agent.md).
+For a detailed description on the API Bridge Agent, see [API Bridge Agent documentation](../syntactic/api_bridge_agent.md).
 
 ### Prerequisites
 
