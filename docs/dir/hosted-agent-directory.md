@@ -4,7 +4,7 @@ A public hosted instance of the Agent Directory is available at
 [https://hub.agntcy.org/](https://hub.agntcy.org/). In
 this section we describe the main features of this instance which is provided __AS
 IS__ to the community to help users familiarize themselves with the Agent
-Directory. 
+Directory.
 
 AGNTCY Agent Directory is designed to provide a robust multi-organization platform for hosting and
 managing Agent Directory Records, which we will refer to as simply "records" or
@@ -14,7 +14,7 @@ gRPC API that supports efficient service communication and integration, ensuring
 seamless interaction between components.
 
 AGNTCY Hub serves as a central platform for hosting and managing various
-agent-related services. The main purpose of the Agent Directory Service 
+agent-related services. The main purpose of the Agent Directory Service
 component of Hub is to provide a comprehensive solution
 for developers and IT admins to register, discover, and manage records in an
 organized manner. By offering a secure environment for authentication and user
@@ -25,23 +25,23 @@ directories and related services.
 
 The AGNTCY Agent Directory is organized around a few basic concepts:
 
-* Users - A user is the basic unit of authentication and authorization in the 
+* Users - A user is the basic unit of authentication and authorization in the
 Hub, usually corresponding to a human or service account.
 * Organization - An organization provides a way to group users for sharing agents
 and handling administrative tasks. A user can belong to many organizations, but
 organizations are flat and cannot belong to one another.
 * Agent Records - An Agent Record is a collection of data and metadata about a
 particular agentic application or service. The schema of the Record is defined
-in [OASF](oasf.md) and contains, for example, a
-[collection of skills](oasf-taxonomy.md).
+in [OASF](../oasf/open-agentic-schema-framework.md) and contains, for example, a
+[collection of skills](../oasf/taxonomy.md).
 * Repositories - A agent repository collects agent records that describe
 different versions of the same agent into one location to provide an overview of
 its history and current status. A Record can belong to only one repo, while a
 user or organization may access many different repos and by extension their
 agent records.
 
-The [Agent Directory Service (ADS)](dir.md) provides storage for agent records
-while the frontend hosted AGNTCY Agent Directory provides access control with 
+The [Agent Directory Service (ADS)](../dir/overview.md) provides storage for agent records
+while the frontend hosted AGNTCY Agent Directory provides access control with
 Users and their Organizations and management of agent records in their Repos.
 
 ## Features
@@ -159,13 +159,13 @@ Adding an Agent Directory Record has these prerequisites:
 1. You need to sign your agent record.
 
 #### Pre-req 1: Install `dirctl`
-Binary packages and installation of the AGNTCY Agent Directory `dirctl` 
+Binary packages and installation of the AGNTCY Agent Directory `dirctl`
 command line tool are available in multiple forms on GitHub:
 * [container image](https://github.com/agntcy/dir/pkgs/container/dir-ctl)
 * [homebrew](https://github.com/agntcy/dir/tree/main/HomebrewFormula)
 * [binary](https://github.com/agntcy/dir/releases)
 
-After installation, use the `dirctl` and `dirctl hub` commands to list the 
+After installation, use the `dirctl` and `dirctl hub` commands to list the
 available commands.
 
 #### Pre-req 2: Create a Conforming Agent Directory Record
@@ -176,10 +176,10 @@ defined by the
 starting at the root with an [Agent object](https://schema.oasf.agntcy.org/objects/agent).
 
 To be useful, an agent record should include at least the following:
-* Name of the agent (the name MUST match the organization and repository name in the AGNTCY Agent Directory), 
+* Name of the agent (the name MUST match the organization and repository name in the AGNTCY Agent Directory),
 * Version of the agent (use semantic convention)
 * Description (something to help any viewer understand what your agent does, what is the use case it is applicable to, expected inputs and outputs, LLM used, runtime, etc)
-* Locator, per [OASF locator objects](https://schema.oasf.agntcy.org/objects/locator?extensions=) 
+* Locator, per [OASF locator objects](https://schema.oasf.agntcy.org/objects/locator?extensions=)
    * type(s) (source code, agent as a service, docker image, etc) matching the supported types in the OASF locator objects
    *  url (corresponding address to find the agent)
 * Skills - MUST follow the [OASF skills schema](https://schema.oasf.agntcy.org/skills?extensions=)
@@ -230,24 +230,24 @@ Pushing and pulling agent directory records is done using thd `dirctl` tool.
 
 From your terminal window:
 1. Login to your AGNTCY Agent Directory account
-   
+
       ```dirctl hub login```
-   
+
    The login page opens in your browser. Use your credentials to log in.
 3. Verify your AGNTCY Agent Directory organizations and which one you are currently logged into:
-   
+
       ```dirctl hub orgs```
-   
+
    Switch organizations as needed to the organization that you want to push your agent record to:
-   
+
       ```dirctl hub orgs switch```
-   
+
 5. Push your signed, conforming agent record to the desired organization/repository:
-   
+
       ```dirctl hub push <organization/repository_name> <local filename of your signed agent json file>```
-   
+
 7. When you're done, logout of your hub account
-   
+
       ```dirctl hub logout```
 
 #### Pulling Agent Directory Records using `dirctl`
@@ -267,7 +267,7 @@ To verify the signature against a specific identity, for example to check if an
 agent record originates from GitHub Agntcy users, run:
 
 ```bash
-dirctl verify agent.json \ 
+dirctl verify agent.json \
                  --oidc-issuer "(.*)github.com(.*)" \
                  --oidc-identity "(.*)@agntcy.com"
 ```

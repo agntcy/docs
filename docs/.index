@@ -5,6 +5,9 @@ nav:
   - Agent Directory Service: dir
   - Agent Manifest: manifest
   - Identity and Security: identity
-  - SDKs and Tools: tools
+  - Service Discovery: discovery
+  - Semantic SDK: semantic
+  - Syntactic SDK: syntactic
+  - Messaging SDK: messaging
   - Agent Workflow Server: agws
   - CSIT: csit

@@ -3,12 +3,12 @@
 The [Agent Workflow Server](https://github.com/agntcy/workflow-srv)
 enables participation in the Internet of Agents. It accommodates AI
 Agents from diverse frameworks and exposes them through Agent Connect
-Protocol ([ACP](../syntactic-sdk/agntcy_acp_sdk.md)), regardless of
+Protocol ([ACP](../syntactic/agntcy_acp_sdk.md)), regardless of
 their underlying implementation.
 
 !!! note
     If you wish to quickly deploy and run your Agent, please check out the
-    user-facing [Workflow Server Manager](workflow_server_manager.md)
+    user-facing [Workflow Server Manager](../agws/workflow-server-manager.md)
     instead.
 
 ## Getting Started

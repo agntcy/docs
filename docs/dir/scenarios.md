@@ -2,7 +2,8 @@
 
 The following section showcases a few usage scenarios of the Agent Directory.
 
-Although the following example is shown for CLI-based usage scenario, there is an effort on exposing the same functionality via SDKs.
+Although the following example is shown for CLI-based usage scenario, there is
+an effort on exposing the same functionality via SDKs.
 
 ## Requirements
 
@@ -11,9 +12,11 @@ Although the following example is shown for CLI-based usage scenario, there is a
 
 ## Build
 
-This example demonstrates the examples of a data model and how to build such models using provided tooling to prepare for publication.
+Some [examples](../dir/dir-record-example.md) are reported to show how to describe data in a record
+and how to build such data models using directory cli to prepare for publication.
 
-Generate an example agent that matches the data model schema defined in [Agent Data Model](api/core/v1alpha1/agent.proto) specification.
+Generate an example agent that matches the data model schema defined in
+[Agent Data Model](api/core/v1alpha1/agent.proto) specification.
 
 ```bash
 cat << EOF > model.json

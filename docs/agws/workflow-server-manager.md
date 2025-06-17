@@ -2,7 +2,7 @@
 
 The Workflow Server Manager (WFSM) is a command line tool that streamlines the process of wrapping an agent into a container image, starting the container, and exposing the agent functionality through the Agent Connect Protocol (ACP).
 
-The WFSM tool takes an [Agent Manifest](../manifest/agent-manifest.md) as input and based on it spins up a web server container exposing the agent through ACP through REST api.
+The WFSM tool takes an [Agent Manifest](../manifest/manifest.md) as input and based on it spins up a web server container exposing the agent through ACP through REST api.
 
 ## Getting Started
 
@@ -49,13 +49,13 @@ Installation complete. The 'wfsm' binary is located at /Users/johndoe/.wfsm/bin/
 Listed variables can be overridden by providing the values as variables to the script
 
 
-## Run 
+## Run
 
 Execute the unpacked binary. This outputs the usage string with the available flags and options.
 
 ```bash
 
-$ wfsm                                                                                                                                                                                   
+$ wfsm
 
 ACP Workflow Server Manager Tool
 
@@ -94,13 +94,13 @@ Example manifests can be found in the [WFSM Tool](https://github.com/agntcy/work
 > Paths to the manifests and the paths inside the manifest definitions in the example commands need to be correct on the environment they are executed in!
 
 
-### Expose the [Mail Composer](https://github.com/agntcy/acp-sdk/tree/main/examples/mailcomposer) LangGraph agent through ACP workflow server 
+### Expose the [Mail Composer](https://github.com/agntcy/acp-sdk/tree/main/examples/mailcomposer) LangGraph agent through ACP workflow server
 
 ```bash
 wfsm deploy -m examples/langgraph_manifest.json -e examples/env_vars.yaml
 ```
 
-### Expose the [Email Reviewer](https://github.com/agntcy/acp-sdk/tree/main/examples/email_reviewer) llama deploy workflow agent through ACP workflow server 
+### Expose the [Email Reviewer](https://github.com/agntcy/acp-sdk/tree/main/examples/email_reviewer) llama deploy workflow agent through ACP workflow server
 
 ```bash
 wfsm deploy -m examples/llama_manifest.json -e examples/env_vars.yaml
@@ -133,9 +133,9 @@ Get the image tag from console athset in the manifest.
         "name": "docker",
         "image": "agntcy/wfsm-mailcomposer:<YOUR_TAG>"
       }
-      ...       
+      ...
     ]
-```    
+```
 
 Run `wfsm` again now with `--deploymentOption=docker`:
 
