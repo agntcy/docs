@@ -1,4 +1,4 @@
-# Agent Directory Records Example
+# Agent Directory Record Example
 
 ## Skill Tags (Taxonomy)
 ```yaml
@@ -238,5 +238,3 @@ The content identifier of the record is a SHA-256 hash digests which makes it
 - Content-addressable
 - Collision-resistant
 - Immutable
-
-The digest is not stored in the record but in the storage layer.
