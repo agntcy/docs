@@ -16,7 +16,7 @@ Some [examples](../dir/dir-record-example.md) are reported to show how to descri
 and how to build such data models using directory cli to prepare for publication.
 
 Generate an example agent that matches the data model schema defined in
-[Agent Data Model](api/core/v1alpha1/agent.proto) specification.
+[OASF](../oasf/open-agentic-schema-framework.md) specification.
 
 ```bash
 cat << EOF > model.json

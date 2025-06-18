@@ -1,6 +1,6 @@
 # Getting Started: Build Your First Multi-Agent Software
 
-This tutorial guides you through the process of building a distributed multi-agent application using [LangGraph](https://www.langchain.com/langgraph) and leveraging [Agent Connect Protocol (ACP)](../../tools/agntcy_acp_sdk.md) and other **AGNTCY** components and tools.
+This tutorial guides you through the process of building a distributed multi-agent application using [LangGraph](https://www.langchain.com/langgraph) and leveraging [Agent Connect Protocol (ACP)](../../syntactic/agntcy_acp_sdk.md) and other **AGNTCY** components and tools.
 
 The sample app used for this tutorial is a **Marketing Campaign Manager** agent. A "pre-cooked" version of this application is available [here](https://github.com/agntcy/agentic-apps/tree/main/marketing-campaign).
 
@@ -288,7 +288,7 @@ This enables remote invocation, configuration, and output retrieval with the goa
 > 1. **Remote Execution**: ACP nodes run on a Agent Workflow Server, making it possible to execute tasks remotely.
 > 2. **Technology Independence**: ACP allows agents to be implemented in various technologies, such as LangGraph, LlamaIndex, etc., without compatibility issues.
 > 3. **Interoperability**: ACP ensures that agents can communicate and work together, regardless of the underlying technology, by adhering to a standardized protocol.
-> [Learn more about ACP](https://docs.agntcy.org/pages/syntactic_sdk/connect.html)
+> [Learn more about ACP](../../syntactic/agntcy_acp_sdk.md)
 
 
 ### Add Mail Composer and Email Reviewer ACP Nodes
@@ -609,7 +609,7 @@ The conditional edge is implemented with the I/O Mapper, which ensures that the 
     # Add import for I/O Mapper in src/marketing_campaign/app.py
     from agntcy_acp.langgraph.io_mapper import add_io_mapped_conditional_edge
 
-    # Update build_app_graph 
+    # Update build_app_graph
     def build_app_graph() -> CompiledStateGraph:
         sg = StateGraph(OverallState)
 
@@ -679,7 +679,7 @@ With these additions, our application now has a complete workflow that can:
 
 
 At this point, if you want to run your application to see if it compiles [(as at the end of Step 1 above)](#skeleton-code-example), you will
-need to set some variables for Azure in your environment. This depends on your operating system 
+need to set some variables for Azure in your environment. This depends on your operating system
 and shell, but an example for most shells in most Unix-like OSes:
 
 ```shell

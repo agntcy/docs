@@ -125,7 +125,7 @@ Different agents may implement different parts of the protocol. For example: an 
 
 The ACP must define an endpoint that provides details about the specific capabilities that the agent supports.
 
-Schemas, agent capabilities, and other essential information that describe an agent are also needed in what we call the [Agent Manifest](manifest.md). 
+Schemas, agent capabilities, and other essential information that describe an agent are also needed in what we call the [Agent Manifest](../manifest/manifest.md).
 
 <a id="errors"></a>
 ### Error Definitions
@@ -228,7 +228,7 @@ sequenceDiagram
     participant S as ACP Server
     C->>+S: POST /runs {agent_id, input, config, metadata}
     S->>-C: Run={run_id, status="pending"}
-    C->>+S: GET /runs/{run_id}/wait 
+    C->>+S: GET /runs/{run_id}/wait
     S->>-C: RunOutput={type="result", result}
 ```
 
@@ -283,7 +283,7 @@ sequenceDiagram
     participant S as ACP Server
     C->>+S: POST /runs {agent_id, input, config, metadata}
     S->>-C: Run={run_id, status="pending"}
-    C->>+S: GET /runs/{run_id}/wait 
+    C->>+S: GET /runs/{run_id}/wait
     S->>-C: RunOutput={type="interrupt", interrupt_type, interrupt_payload}
     note over C: collect needed input
     C->>+S: POST /runs/{run_id} {interrupt_type, resume_payload}
@@ -327,18 +327,18 @@ sequenceDiagram
     S->>-C: Thread={thread_id, status="idle"}
     C->>+S: POST /threads/{thread_id}/runs {agent_id, message="Hello, my name is John?", config, metadata}
     S->>-C: Run={run_id, status="pending"}
-    C->>+S: GET /threads/{thread_id}/runs/{run_id}/wait 
+    C->>+S: GET /threads/{thread_id}/runs/{run_id}/wait
     S->>-C: RunOutput={type="result", result={"message"="Hello John, how can I help?"}}
     end
     note right of S: state=[<br/>"Hello, my name is John?",<br/>"Hello John, how can I help?"<br/>]
     rect rgb(240,240,240)
     C->>+S: POST /threads/{thread_id}/runs {agent_id, message="Can you remind my name?", config, metadata}
     S->>-C: Run={run_id, status="pending"}
-    C->>+S: GET /threads/{thread_id}/runs/{run_id}/wait 
+    C->>+S: GET /threads/{thread_id}/runs/{run_id}/wait
     S->>-C: RunOutput={type="result", result={"message"="Yes, your name is John"}}
     end
     note right of S: state=[<br/>"Hello, my name is John?",<br/>"Hello John, how can I help?"<br/>"Can you remind my name?",<br/>"Yes, your name is John"<br/>]
-    C->>+S: GET /threads/{thread_id} 
+    C->>+S: GET /threads/{thread_id}
     S->>-C: Thread{thread_id, status="idle", values=[<br/>"Hello, my name is John?",<br/>"Hello John, how can I help?"<br/>"Can you remind my name?",<br/>"Yes, your name is John"<br/>]}
 ```
 In the sequence above:
@@ -386,7 +386,7 @@ sequenceDiagram
 ```
 
 In the sequence above:
-1. The client requests to start a run on a specific agent specifying stream_mode = 'values' and waits immediately for the streaming. 
+1. The client requests to start a run on a specific agent specifying stream_mode = 'values' and waits immediately for the streaming.
 1. The client requests the output streaming and keeps the connection open.
 1. The server returns an event with message="Hello".
 1. The server returns an event with updated message "Hello, how".

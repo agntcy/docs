@@ -4,10 +4,10 @@ Interconnecting these systems at scale requires meeting strict latency and respo
 
 The main components of SLIM are:
 
-- [Security layer](./agp-security-layer.md)
-- [Data plane](./agp-data-plane.md)
-- [Session layer](./agp-session-layer.md)
-- [Control plane](./agp-control-plane.md)
+- [Security layer](../messaging/slim-security-layer.md)
+- [Data plane](../messaging/slim-data-plane.md)
+- [Session layer](../messaging/slim-session-layer.md)
+- [Control plane](../messaging/slim-control-plane.md)
 
 ## Security Layer
 
