@@ -8,7 +8,6 @@ an effort on exposing the same functionality via SDKs.
 ## Requirements
 
 - Directory CLI client, distributed via [GitHub Releases](https://github.com/agntcy/dir/releases)
-- Directory API server, outlined in the [Deployment](#deployment) section.
 
 ## Build
 
@@ -16,7 +15,7 @@ Some [examples](../dir/dir-record-example.md) are reported to show how to descri
 and how to build such data models using directory cli to prepare for publication.
 
 Generate an example agent that matches the data model schema defined in
-[OASF](../oasf/open-agentic-schema-framework.md) specification.
+[OASF](../oasf/oasf-data-model.md) specification.
 
 ```bash
 cat << EOF > model.json

@@ -22,7 +22,7 @@ Learn how to use the API by looking at [API Usage Flows](#api-usage-flows)
 
 Learn about Agent ACP Descriptor and its usage [here](#agent-acp-descriptor)
 
-Explore tools for ACP and Agent ACP Descriptors in the [Agent Connect SDK Documentation](agntcy.github.io/acp-sdk)
+Explore tools for ACP and Agent ACP Descriptors in the [Agent Connect SDK Documentation](../syntactic/agntcy_acp_sdk.md)
 
 ## ACP Requirements
 

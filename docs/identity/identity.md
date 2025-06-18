@@ -45,9 +45,9 @@ Independently of whether the identity is assigned following a convention or a st
 
 The figure above depicts the main elements of an Agent's subject identifier:
 
-- Each Agent subject has a universally unique identifier named [`ID`](#identifiers).
-- Each `ID` is associated 1:1 to a [`ResolverMetadata`](#identifiers) object, enabling automated resolution and trustworthy verification of Agent IDs.
-- Each `ID` is also associated 1:n to an [`Agent Badge`](#verifiable-credentials).
+- Each Agent subject has a universally unique identifier named [`ID`](../identity/identifiers.md).
+- Each `ID` is associated 1:1 to a [`ResolverMetadata`](../identity/identifiers.md) object, enabling automated resolution and trustworthy verification of Agent IDs.
+- Each `ID` is also associated 1:n to an [`Agent Badge`](../identity/credentials.md).
 
 Hence, in the [`AGNTCY`](https://agntcy.org/), an Agent subject is tied to a unique identifier linked to one or more `Verifiable Credentials (VCs)`, which contain information about the Agent, such as its ID, a schema definition (e.g., an OASF schema), and other metadata used for defining locators, authentication, MFA, etc. Agents can use this Badge for secure presentation, verification, and enabling trusted communications across multi-agent systems.
 

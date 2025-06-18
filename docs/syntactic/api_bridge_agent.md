@@ -101,4 +101,4 @@ MCP client.
 - API Bridge Agent invoke again the LLM with the NLQ, the list of tools, the first response and the list of result of call tools.
 - If LLM still need some informations, API Bridge Agent loop again and call tools.
 
-See the [Getting Started with API Bridge Agent](bridge-getting-started) section for step-by-step instructions.
+See the [Getting Started with API Bridge Agent](../how-to-guides/bridge-howto.md) section for step-by-step instructions.
