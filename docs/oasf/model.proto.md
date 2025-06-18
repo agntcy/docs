@@ -2,20 +2,6 @@
 
 <div class="comment"><span></span><br/></div>
 
-## Imports
-
-| Import | Description |
-|--------|-------------|
-
-
-
-## Options
-
-| Name | Value | Description |
-|------|-------|-------------|
-
-
-
 
 ### Agent Diagram
 
