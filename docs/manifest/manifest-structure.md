@@ -46,6 +46,7 @@ Agent Connect Protocol specifies a standard for this interface. However, it spec
 The specification of these data structures is included in what we call the Agent ACP descriptor, which can be provided by ACP itself, but it is also defined as part of the Agent Manifest.
 
 Agent `specs` section includes ACP invocation capabilities, e.g. `streaming`, `callbacks`, `interrupts` etc.,  and the JSON schema definitions for ACP interactions:
+
    * Agent Configuration.
    * Run Input.
    * Run Output.
@@ -171,6 +172,7 @@ Agent `specs` section includes ACP invocation capabilities, e.g. `streaming`, `c
 The agent supports threads, interrupts, and callback.
 
 It declares schemas for input, output, and config:
+
 * As input, it expects the next message of the chat from the user.
 * As output, it produces the next message of the chat from the agent.
 * As config it expects the style of the email to be written.
@@ -188,12 +190,14 @@ Agents can be provided in two different forms, which we call deployment options:
 
 * **As a service**: a network endpoint that exposes an interface to the agent (for example, Agent Connect Protocol).
 * **As a deployable artifact**, for example:
-   * A docker image, which once deployed exposes an interface to the agent (for example, Agent Connect Protocol).
-   * A source code bundle, which can be executed within the specific runtime and framework it is built on.
+   
+    * A docker image, which once deployed exposes an interface to the agent (for example, Agent Connect Protocol).
+    * A source code bundle, which can be executed within the specific runtime and framework it is built on.
 
 The same agent can support one or more deployment options.
 
 Agent Manifest currently supports three deployment otions:
+
 * Source Code Deployment: In this case the agent can be deployed starting from its code. For this deployment mode, the manifest provides:
     * The location where the code is available
     * The framework used for this agent

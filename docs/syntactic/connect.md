@@ -37,6 +37,7 @@ Agent Connect Protocol needs to formally specify the network interactions needed
     * Streaming
 
     This should include interrupt handling. That is, how agents notify the caller about execution suspension to ask for additional input.
+
 * **Capabilities and Schema definitions**: Retrieve details about the agent supported capabilities and the data structures definitions for configuration, input, and output.
 * **Error definitions**: Receive error notifications with meaningful error codes and explanations.
 
@@ -107,6 +108,7 @@ Once an agent is invoked, it can provide output as a result of its operations.
 Output can be provided to the caller synchronously (as a response of the invocation endpoint) or asynchronously (through a callback provided as input of the invocation endpoint).
 
 Output can be provided when the following conditions occur:
+
 * The agent has terminated its execution and provides the final result of the execution.
 * The agent has interrupted its execution because it needs additional input. For example approval or chat interaction.
 * The agent is still running but it provides partial results, that is, streaming.
@@ -137,6 +139,7 @@ Errors can be provided synchronously by each of the invoked endpoints or asynchr
 The ACP must define errors for the most common error conditions.
 
 Each definition must include the following details:
+
 * Error code.
 * Description of the error condition.
 * A flag that says if the error is transient or permanent.
@@ -205,6 +208,7 @@ sequenceDiagram
     S->>-C: RunOutput={type="result", result}
 ```
 In the sequence above:
+
 1. The client requests to start a run on a specific agent, providing its `agent_id`, and specifying:
     * Configuration: a run configuration is flavoring the behavior of this agent for this run.
     * Input: run input provides the data the agent will operate on.
@@ -215,9 +219,9 @@ In the sequence above:
 1. The client request the output of the run with the `wait` endpoint, which returns immediately, since the run is done.
 1. The server returns the final result of the run.
 
->
-> Note that the format of the input and the configuration are not specified by ACP, but they are defined in the agent descriptor.
->
+!!! note
+    Note that the format of the input and the configuration are not specified by ACP, but they are defined in the agent descriptor.
+
 
 #### Start a Run of an Agent and block until completion
 In this case, the client starts a background run of an agent and immediately tries to retrieve the run output blocking on this call until completion or timeout.
@@ -254,6 +258,7 @@ sequenceDiagram
     S->>-C: RunOutput={type="result", result}
 ```
 In the sequence above:
+
 1. The client requests to start a run on a specific agent, providing an additional `callback`.
 1. The server returns a run object.
 1. Upon status change, the server calls the provided call back with the run object.
@@ -267,9 +272,9 @@ When an interrupt occurs, the server provides the client with an interrupt paylo
 
 The client can collect the needed input for the specific interrupt and resume the run by providing the resume payload, i.e. the additional input requested by the interrupt.
 
->
-> Note that the type of interrupts and the correspondent interrupt and resume payload are not specified by ACP, because they are agent dependent. They are instead specified in the agent ACP descriptor.
->
+!!! note
+    Note that the type of interrupts and the correspondent interrupt and resume payload are not specified by ACP, because they are agent dependent. They are instead specified in the agent ACP descriptor.
+
 
 The interrupt is provided by the server when the client requests the output.
 
@@ -292,6 +297,7 @@ sequenceDiagram
     S->>-C: RunOutput={type="result", result}
 ```
 In the sequence above:
+
 1. The client start the run.
 1. The server returns the run object.
 1. The client requests the output.
@@ -311,9 +317,8 @@ The server offers ways to retrieve the current thread state, the history of the 
 
 Runs over the same thread can be executed on different agents, as long as the agents support the same thread state format.
 
-```{eval-rst}
-.. note:: Note that the format of the thread state is not specified by ACP, but it is (optionally) defined in the agent ACP descriptor. If specified, it can be retrieved by the client, if not it's not accessible to the client.
-```
+!!! note
+    Note that the format of the thread state is not specified by ACP, but it is (optionally) defined in the agent ACP descriptor. If specified, it can be retrieved by the client, if not it's not accessible to the client.
 
 #### Start of multiple runs over the same thread
 In this case the client starts a sequence of runs on the same thread accumulating a state in the server. In this specific example the input is a chat message, while the state kept in the server is the chat history.
@@ -342,6 +347,7 @@ sequenceDiagram
     S->>-C: Thread{thread_id, status="idle", values=[<br/>"Hello, my name is John?",<br/>"Hello John, how can I help?"<br/>"Can you remind my name?",<br/>"Yes, your name is John"<br/>]}
 ```
 In the sequence above:
+
 1. The client requests to create a thread on the server
 1. The server returns a thread object that contains a thread ID
 1. The client starts the first run on the created thread and provides the first message of the chat.
@@ -358,11 +364,12 @@ In the sequence above:
 ### Output Streaming
 ACP supports output streaming. Agent can stream partial results of a Run to provide better response time and user experience.
 
-ACP implements streaming using Server Sent Events specified here: https://html.spec.whatwg.org/multipage/server-sent-events.html.
+ACP implements streaming using Server Sent Events specified [here](https://html.spec.whatwg.org/multipage/server-sent-events.html).
 
 In a nutshell, the client keeps the HTTP connection open and receives a stream of events from the server, where each event carries an update of the run result.
 
 ACP supports 2 streaming modes:
+
 1. **values** where each event contains a full instance of the agent output, which fully replace the previous update.
 2. **custom** where the schema of the event is left unspecified by ACP, which it can be specified in the specific agent ACP descriptor under `spec.custom_streaming_update`
 
@@ -386,6 +393,7 @@ sequenceDiagram
 ```
 
 In the sequence above:
+
 1. The client requests to start a run on a specific agent specifying stream_mode = 'values' and waits immediately for the streaming.
 1. The client requests the output streaming and keeps the connection open.
 1. The server returns an event with message="Hello".
@@ -399,36 +407,145 @@ In the sequence above:
 ## Agent ACP descriptor
 
 Agent ACP Descriptor is a descriptor that contains all the needed information to know how:
+
 * [Identify an agent.](#agent-metadata)
 * [Know its capabilities.](#agent-specs)
 * Consume its capabilities.
 
-The Agent ACP Descriptor can be obtained from the [Agent Directory](https://docs.agntcy.org/pages/dir.html) or can be obtained through an [ACP call](#retrieve-agent-descriptor-from-its-identifier).
+The Agent ACP Descriptor can be obtained from the Agent Directory or can be obtained through an [ACP call](#retrieve-agent-descriptor-from-its-identifier).
 
 ### Agent descriptor sections and examples
 
 We present the details of a sample agent ACP descriptor through the various descriptor sections.
 
-```{eval-rst}
-.. admonition:: Full sample Descriptor
-    :collapsible: closed
-
-    .. literalinclude:: sample_acp_descriptors/mailcomposer.json
-        :language: JSON
-```
+??? "Full sample descriptor"
+    ```
+    {
+        "metadata": {
+            "ref": {
+            "name": "org.agntcy.mailcomposer",
+            "version": "0.0.1",
+            "url": "https://github.com/agntcy/acp-spec/blob/main/docs/sample_acp_descriptors/mailcomposer.json"
+            },
+            "description": "This agent is able to collect user intent through a chat interface and compose wonderful emails based on that."
+        },
+        "specs": {
+            "capabilities": {
+            "threads": true,
+            "interrupts": true,
+            "callbacks": true
+            },
+            "input": {
+            "type": "object",
+            "description": "Agent Input",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "description": "Last message of the chat from the user"
+                }
+            }
+            },
+            "thread_state": {
+            "type": "object",
+            "description": "The state of the agent",
+            "properties": {
+                "messages": {
+                "type": "array",
+                "description": "Full chat history",
+                "items": {
+                    "type": "string",
+                    "description": "A message in the chat"
+                }
+                }
+            }
+            },
+            "output": {
+            "type": "object",
+            "description": "Agent Input",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "description": "Last message of the chat from the user"
+                }
+            }
+            },
+            "config": {
+            "type": "object",
+            "description": "The configuration of the agent",
+            "properties": {
+                "style": {
+                "type": "string",
+                "enum": ["formal", "friendly"]
+                }
+            }
+            },
+            "interrupts": [
+            {
+                "interrupt_type": "mail_send_approval",
+                "interrupt_payload": {
+                "type": "object",
+                "title": "Mail Approval Payload",
+                "description": "Description of the email",
+                "properties": {
+                    "subject": {
+                    "title": "Mail Subject",
+                    "description": "Subject of the email that is about to be sent",
+                    "type": "string"
+                    },
+                    "body": {
+                    "title": "Mail Body",
+                    "description": "Body of the email that is about to be sent",
+                    "type": "string"
+                    },
+                    "recipients": {
+                    "title": "Mail recipients",
+                    "description": "List of recipients of the email",
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "email"
+                    }
+                    }
+                },
+                "required": [
+                    "subject",
+                    "body",
+                    "recipients"
+                ]
+                },
+                "resume_payload": {
+                "type": "object",
+                "title": "Email Approval Input",
+                "description": "User Approval for this email",
+                "properties": {
+                    "reason": {
+                    "title": "Approval Reason",
+                    "description": "Reason to approve or decline",
+                    "type": "string"
+                    },
+                    "approved": {
+                    "title": "Approval Decision",
+                    "description": "True if approved, False if declined",
+                    "type": "boolean"
+                    }
+                },
+                "required": [
+                    "approved"
+                ]
+                }
+            }
+            ]
+        }
+    }    
+    ```
 
 #### Agent Metadata
 
 Agent Metadata section contains all the information about agent identification and a description of what the agent does.
 It contains unique name which together with a version constitutes the unique identifier of the agent. The uniqueness must be guaranteed within the server it is part of and more generally in the Agent Directory domain it belongs to.
 
-```{eval-rst}
-.. admonition:: Sample descriptor metadata section for the mailcomposer agent
-    :collapsible: open
-
-    .. code-block:: json
-        :caption: Metadata for a mail composer agent named `org.agntcy.mailcomposer` version `0.0.1`.
-
+???+ "Sample descriptor metadata section for the mailcomposer agent"
+    ```
         {
             "metadata": {
                 "ref": {
@@ -440,7 +557,7 @@ It contains unique name which together with a version constitutes the unique ide
             }
             ...
         }
-```
+    ```
 
 #### Agent Specs
 
@@ -449,6 +566,7 @@ Agent Specs section includes ACP invocation capabilities and the schema definiti
 The ACP capabilities that the agent support, e.g. `streaming`, `callbacks`, `interrupts` etc.
 
 The schemas of all the objects that this agent supports for:
+
    * Agent Configuration.
    * Run Input.
    * Run Output.
@@ -457,12 +575,8 @@ The schemas of all the objects that this agent supports for:
 
 Note that these schemas are needed in the agent ACP descriptor, since they are agent specific and are not defined by ACP, i.e. ACP defines a generic JSON object for the data structures listed above.
 
-```{eval-rst}
-.. admonition:: Sample metadata specs section for the mailcomposer agent
-    :collapsible: closed
-
-    .. code-block:: json
-
+??? "Sample metadata specs section for the mailcomposer agent"
+    ```
         {
             ...
             "specs": {
@@ -574,10 +688,12 @@ Note that these schemas are needed in the agent ACP descriptor, since they are a
             }
             ...
         }
+    ```
 
     The agent supports threads, interrupts, and callback.
 
     It declares schemas for input, output, and config:
+    
     * As input, it expects the next message of the chat from the user.
     * As output, it produces the next message of the chat from the agent.
     * As config it expects the style of the email to be written.
@@ -585,4 +701,4 @@ Note that these schemas are needed in the agent ACP descriptor, since they are a
     It supports one kind of interrupt, which is used to ask user for approval before sending the email. It provides subject, body, and recipients of the email as interrupt payload and expects approval as input to resume.
 
     It supports a thread state which holds the chat history.
-```
+    

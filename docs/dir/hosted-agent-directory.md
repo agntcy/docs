@@ -70,7 +70,7 @@ belong to you.
 
 ### View and Search for Agents
 
-"The Explore page allows users to browse and search through available agent repositories.
+The Explore page allows users to browse and search through available agent repositories.
 
 ![The Explore Page](../assets/explore.png)
 
@@ -155,6 +155,7 @@ At this point, you have an empty repository ready for agent records.
 
 ### Adding an Agent Directory Record to a Repository
 Adding an Agent Directory Record has these prerequisites:
+
 1. You need to install the AGNTCY Agent Directory command line tool, `dirctl`.
 1. You need an agent record that conforms to AGNTCY Agent Directory requirements.
 1. You need to sign your agent record.
@@ -162,6 +163,7 @@ Adding an Agent Directory Record has these prerequisites:
 #### Pre-req 1: Install `dirctl`
 Binary packages and installation of the AGNTCY Agent Directory `dirctl`
 command line tool are available in multiple forms on GitHub:
+
 * [container image](https://github.com/agntcy/dir/pkgs/container/dir-ctl)
 * [homebrew](https://github.com/agntcy/dir/tree/main/HomebrewFormula)
 * [binary](https://github.com/agntcy/dir/releases)
@@ -177,6 +179,7 @@ defined by the
 starting at the root with an [Agent object](https://schema.oasf.agntcy.org/objects/agent).
 
 To be useful, an agent record should include at least the following:
+
 * Name of the agent (the name MUST match the organization and repository name in the AGNTCY Agent Directory),
 * Version of the agent (use semantic convention)
 * Description (something to help any viewer understand what your agent does, what is the use case it is applicable to, expected inputs and outputs, LLM used, runtime, etc)
@@ -230,24 +233,26 @@ that you have write access to.
 Pushing and pulling agent directory records is done using thd `dirctl` tool.
 
 From your terminal window:
+
 1. Login to your AGNTCY Agent Directory account
 
       ```dirctl hub login```
 
-   The login page opens in your browser. Use your credentials to log in.
-3. Verify your AGNTCY Agent Directory organizations and which one you are currently logged into:
+1. The login page opens in your browser. Use your credentials to log in.
+
+1. Verify your AGNTCY Agent Directory organizations and which one you are currently logged into:
 
       ```dirctl hub orgs```
 
-   Switch organizations as needed to the organization that you want to push your agent record to:
+1. Switch organizations as needed to the organization that you want to push your agent record to:
 
       ```dirctl hub orgs switch```
 
-5. Push your signed, conforming agent record to the desired organization/repository:
+1. Push your signed, conforming agent record to the desired organization/repository:
 
       ```dirctl hub push <organization/repository_name> <local filename of your signed agent json file>```
 
-7. When you're done, logout of your hub account
+1. When you're done, logout of your hub account
 
       ```dirctl hub logout```
 
@@ -314,10 +319,9 @@ The list of users of the current organization are accessible by clicking on the 
 You can invite other users to the organization by clicking the **+ Invite User**
 button.
 
-```{NOTE}
-You cannot invite other users to your personal organization created
-during signing up. To collaborate with others, create a new organization and invite them to it.
-```
+!!! note
+    You cannot invite other users to your personal organization created
+    during signing up. To collaborate with others, create a new organization and invite them to it.
 
 
 ## Troubleshooting pushing agents to the AGNTCY Agent Directory

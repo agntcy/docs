@@ -1,5 +1,5 @@
 nav:
  - Agent Connect Protocol: connect.md
  - Agntcy ACP Client SDK: agntcy_acp_sdk.md
- - API Bridge Models: api_bridge_agent.md
+ - API Bridge Agent: api_bridge_agent.md
  - Human In the Loop: hil.md
