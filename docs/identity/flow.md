@@ -75,4 +75,3 @@ Agent Consumer->>Identity CLI: Verify the Agent Badge
 ```
 
 Additional flow diagrams can be found in the [`Identity Spec`](https://spec.identity.agntcy.org/docs/category/sequence-flows).
-

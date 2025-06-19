@@ -30,13 +30,12 @@ or using `wget`:
 sh -c "$(wget -qO- https://raw.githubusercontent.com/agntcy/identity/refs/heads/main/deployments/scripts/identity/install_issuer.sh)"
 ```
 
-```{NOTE}
-> You can also download the `Issuer CLI` binary corresponding to your platform from the [latest releases](https://github.com/agntcy/identity/releases).
->
-> On some platforms you might need to add execution permissions and/or approve the binary in `System Security Settings`.
->
-> For easier use, consider moving the binary to your `$PATH` or to the `/usr/local/bin` folder.
-```
+!!! note
+    > You can also download the `Issuer CLI` binary corresponding to your platform from the [latest releases](https://github.com/agntcy/identity/releases).
+    >
+    > On some platforms you might need to add execution permissions and/or approve the binary in `System Security Settings`.
+    >
+    > For easier use, consider moving the binary to your `$PATH` or to the `/usr/local/bin` folder.
 
 If you have `Golang` set up locally, you could also use the `go install command`:
 
@@ -64,6 +63,9 @@ go install github.com/agntcy/identity/cmd/issuer@latest && \
    ```bash
    make start_node
    ```
+
+!!! note
+    > You can also install the `Node Backend` using our helm chart, for which instructions are available in the [chart's](https://github.com/agntcy/identity/tree/main/charts/identity-node/README.md) directory.
 
 ### Step 3: Verify the Installation
 
@@ -142,12 +144,11 @@ With Ollama installed, you can download and run the model (which is approximatel
 For this demo we will use Okta as an IdP to create an application for the Issuer.
 The quickly create a trial account and application, we have provided a script to automate the process using the Okta CLI.
 
-```{IMPORTANT}
-> If you already have an Okta account, you can use the `okta login` command to log in to your existing organization.
->
-> If registering a new Okta developer account fails, proceed with manual trial signup and then use the `okta login` command,
-> as instructed by the Okta CLI.
-```
+!!! important
+    > If you already have an Okta account, you can use the `okta login` command to log in to your existing organization.
+    >
+    > If registering a new Okta developer account fails, proceed with manual trial signup and then use the `okta login` command,
+    > as instructed by the Okta CLI.
 
 1. Run the following command from the root repository to create a new Okta application:
 
@@ -166,10 +167,9 @@ The quickly create a trial account and application, we have provided a script to
        -c "$OKTA_OAUTH2_CLIENT_ID" -s "$OKTA_OAUTH2_CLIENT_SECRET" -u "$OKTA_OAUTH2_ISSUER"
    ```
 
-```{NOTE}
-> You can now access the `Issuer's Well-Known Public Key` at [`http://localhost:4000/v1alpha1/issuer/{common_name}/.well-known/jwks.json`](http://localhost:4000/v1alpha1/issuer/{common_name}/.well-known/jwks.json),
-> where `{common_name}` is the common name you provided during registration.
-```
+!!! note
+    > You can now access the `Issuer's Well-Known Public Key` at [`http://localhost:4000/v1alpha1/issuer/{common_name}/.well-known/jwks.json`](http://localhost:4000/v1alpha1/issuer/{common_name}/.well-known/jwks.json),
+    > where `{common_name}` is the common name you provided during registration.
 
 ### Step 4: Generate metadata for an MCP Server
 
@@ -192,8 +192,8 @@ Create a second application for the MCP Server metadata using Okta, similar to t
        -s "$OKTA_OAUTH2_CLIENT_SECRET" -u "$OKTA_OAUTH2_ISSUER"
    ```
 
-> [!NOTE]
-> When successful, this command will print the metadata ID, which you will need in the next step to view published badges that are linked to this metadata.
+!!! note
+    > When successful, this command will print the metadata ID, which you will need in the next step to view published badges that are linked to this metadata.
 
 ### Step 5: Issue and Publish a Badge for the MCP Server
 
@@ -209,10 +209,9 @@ Create a second application for the MCP Server metadata using Okta, similar to t
    identity badge publish
    ```
 
-```{NOTE}
-> You can now access the `VCs as a Well-Known` at [`http://localhost:4000/v1alpha1/vc/{metadata_id}/.well-known/vcs.json`](http://localhost:4000/v1alpha1/vc/{client_id}/.well-known/vcs.json),
-> where `{metadata_id}` is the metadata ID you generated in the previous step.
-```
+!!! note
+    > You can now access the `VCs as a Well-Known` at [`http://localhost:4000/v1alpha1/vc/{metadata_id}/.well-known/vcs.json`](http://localhost:4000/v1alpha1/vc/{client_id}/.well-known/vcs.json),
+    > where `{metadata_id}` is the metadata ID you generated in the previous step.
 
 ### (Optional) Step 6: Verify a Published Badge
 
@@ -230,6 +229,8 @@ This allows others to verify the Agent and MCP badges you publish.
    ```bash
    identity verify -f vcs.json
    ```
+!!! note
+    > You can also use our Python SDK to verify the badge programmatically. See the [Python SDK](https://github.com/agntcy/identity/tree/main/sdk/python/README.md) for more details.
 
 ## Development
 
