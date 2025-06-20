@@ -136,10 +136,13 @@ The **Settings** tab allows the owner to change the
 visibility of the agent.
 
 ## Add an Agent Directory Record to the AGNTCY Agent Directory
-Agent directory records are associated with a repository. A repository must
-exist first for an agent record to be added to it.
+
+Agent directory records are associated with a repository. If the repository
+does not already exist, it will be created automatically with visibility set as
+private.
 
 ### Create a new agent repository
+
 To add an agent repository in the AGNTCY Agent Directory:
 
 1. Click the **+ New Repository** button.
@@ -148,12 +151,12 @@ To add an agent repository in the AGNTCY Agent Directory:
     * Public agent repositories appear in search results.
     * Private agent repositories are only visible in your organization.
 1. Click **Publish**.
-1. You can also publish the agent repository using the generated CLI command.
 1. Click **Finish**.
 
 At this point, you have an empty repository ready for agent records.
 
 ### Adding an Agent Directory Record to a Repository
+
 Adding an Agent Directory Record has these prerequisites:
 
 1. You need to install the AGNTCY Agent Directory command line tool, `dirctl`.
@@ -161,6 +164,7 @@ Adding an Agent Directory Record has these prerequisites:
 1. You need to sign your agent record.
 
 #### Pre-req 1: Install `dirctl`
+
 Binary packages and installation of the AGNTCY Agent Directory `dirctl`
 command line tool are available in multiple forms on GitHub:
 
@@ -172,6 +176,7 @@ After installation, use the `dirctl` and `dirctl hub` commands to list the
 available commands.
 
 #### Pre-req 2: Create a Conforming Agent Directory Record
+
 An Agent Directory record is stored in JSON format. The record is specific
 to one entry in the Agent Directory. The structure of each AD record is
 defined by the
@@ -184,32 +189,33 @@ To be useful, an agent record should include at least the following:
 * Version of the agent (use semantic convention)
 * Description (something to help any viewer understand what your agent does, what is the use case it is applicable to, expected inputs and outputs, LLM used, runtime, etc)
 * Locator, per [OASF locator objects](https://schema.oasf.agntcy.org/objects/locator?extensions=)
-   * type(s) (source code, agent as a service, docker image, etc) matching the supported types in the OASF locator objects
-   *  url (corresponding address to find the agent)
+  * type(s) (source code, agent as a service, docker image, etc) matching the supported types in the OASF locator objects
+  *  url (corresponding address to find the agent)
 * Skills - MUST follow the [OASF skills schema](https://schema.oasf.agntcy.org/skills?extensions=)
 
 And it will look like this
-```
+
+```json
 {
   "name": "organization/my-agent",
   "version": "2.0",
   "description": "This agent takes any text input and condenses it down to 3 bullets of less than 100 characters each using any LLM.",
-  "locators": \[
+  "locators": [
     {
       "url": "https://github.com/example/agent_A",
       "type": "package-source-code"
     }
-  \],
-  "skills": \[
+  ],
+  "skills": [
     {
       "class_uid": 10201
     }
-  \]
+  ]
 }
 ```
 
-
 #### Pre-req 3: Signing Agent Directory Records using `dirctl`
+
 You must sign the record before pushing it to the AGNTCY Agent Directory. Unsigned records are
 rejected by the API.
 
@@ -227,10 +233,12 @@ For further details on signing, please see
 [the Agent Directory HOWTO](../dir/scenarios.md#signing-and-verification).
 
 #### Pushing Agent Directory Records using `dirctl`
-Once all pre-requisites are complete, you are ready to push an agent record to an agent repository
-that you have write access to.
 
-Pushing and pulling agent directory records is done using thd `dirctl` tool.
+Once all pre-requisites are complete, you are ready to push an agent record to an agent repository
+that you have write access to. If the repository does not exist, it will be
+created automatically with visibility set as private.
+
+Pushing and pulling agent directory records is done using the `dirctl` tool.
 
 From your terminal window:
 
@@ -259,7 +267,6 @@ From your terminal window:
 #### Pulling Agent Directory Records using `dirctl`
 
 You can also pull an agent directory record via `dirctl` using the command listed on the agent details page.
-
 
 #### Verifying an Agent Directory Record Signature
 
@@ -294,6 +301,7 @@ repositories. Users can be member of many organizations. The organizations
 available to you are listed under the **Organizations** tab.
 
 #### Switch Organization
+
 The organization the user is currently signed in is displayed in bold in the organization list and indicated in the dropdown at the top of the left side menu.
 
 To switch organization:
@@ -311,7 +319,6 @@ To create a new organization:
 1. Click the **Create organization** button.
 1. Click the **Finish** button.
 
-
 #### Manage Users
 
 The list of users of the current organization are accessible by clicking on the organization (in bold) in the list.
@@ -323,8 +330,8 @@ button.
     You cannot invite other users to your personal organization created
     during signing up. To collaborate with others, create a new organization and invite them to it.
 
-
 ## Troubleshooting pushing agents to the AGNTCY Agent Directory
+
 `Error: failed to validate access token: invalid session token`
 You forgot to login to your AGNTCY Agent Directory account
 
