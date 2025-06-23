@@ -20,7 +20,7 @@ In case the command signals error you can pass the `-v` flag to display verbose 
 
 ## Installation
 
-Download and unpack the executable binary from the [releases page](https://github.com/agntcy/workflow-srv-mgr/releases)
+Download and unpack the executable binary from the [releases page](https://github.com/agntcy/workflow-srv-mgr/releases).
 
 Alternatively you can execute the installer script by running the following command:
 ```bash
@@ -94,13 +94,13 @@ Example manifests can be found in the [WFSM Tool](https://github.com/agntcy/work
 > Paths to the manifests and the paths inside the manifest definitions in the example commands need to be correct on the environment they are executed in!
 
 
-### Expose the [Mail Composer](https://github.com/agntcy/acp-sdk/tree/main/examples/mailcomposer) LangGraph agent through ACP workflow server
+### Expose the [Mail Composer](https://github.com/agntcy/workflow-srv-mgr/tree/main/examples) LangGraph agent through ACP workflow server
 
 ```bash
 wfsm deploy -m examples/langgraph_manifest.json -e examples/env_vars.yaml
 ```
 
-### Expose the [Email Reviewer](https://github.com/agntcy/acp-sdk/tree/main/examples/email_reviewer) llama deploy workflow agent through ACP workflow server
+### Expose the [Email Reviewer](https://github.com/agntcy/workflow-srv-mgr/tree/main/examples) llama deploy workflow agent through ACP workflow server
 
 ```bash
 wfsm deploy -m examples/llama_manifest.json -e examples/env_vars.yaml

@@ -1,8 +1,8 @@
-# Creating an Agent Data Model
+# Creating an Agent Record
 
-Follow the steps below to ensure that your data model is complete and compliant.
+Follow the steps below to ensure that your agent record is complete and compliant.
 The model provides a structured way to describe your agent's features, capabilities, and dependencies.
-You can find the template for the data model [here](https://github.com/agntcy/csit/blob/main/samples/crewai/simple_crew/model.json).
+You can find the template for the agent record [here](https://github.com/agntcy/csit/blob/main/samples/crewai/simple_crew/model.json).
 
 ## Basic Information
 
@@ -11,7 +11,7 @@ Start by filling out the basic metadata of your agent:
 * `name`: Provide a descriptive name for your agent.
 * `version`: Use semantic versioning to indicate the current version of your agent.
 * `authors`: List the authors in the `Name <email>` format. Replace `Your Name` and `you@example.com` with the appropriate details.
-* `created_at`: Use ISO 8601 format to specify when the agent was created.
+* `created_at`: Use RFC 3339 format to specify when the agent was created.
 
 ## Define Skills
 

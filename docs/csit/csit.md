@@ -129,6 +129,7 @@ environment, deploy the components to be tested, and run the tests.
 
 For running tests locally, we need to create a test cluster and deploy the test environment on it before running the tests.
 Make sure the following tools are installed:
+
   - [Taskfile](https://taskfile.dev/installation/)
   - [Go](https://go.dev/doc/install)
   - [Docker](https://docs.docker.com/get-started/get-docker/)
@@ -271,6 +272,7 @@ to the testing of agentic applications.
 ### Running Samples Tests Locally
 
 For running tests locally, we need the following tools to build the sample applications:
+
   - [Taskfile](https://taskfile.dev/installation/)
   - [Python 3.12.X](https://www.python.org/downloads/)
   - [Poetry](https://python-poetry.org/docs/#installation)

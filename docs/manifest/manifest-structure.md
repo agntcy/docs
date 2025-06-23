@@ -1,6 +1,7 @@
 # Agent Manifest Structure
 
 An Agent Manifest includes the following sections:
+
 * [Agent Identification and Metadata](#agent-identification-and-metadata)
 * [Agent Interface Data Structure Specification](#agent-interface-data-structure-specification)
 * [Agent Deployment and Consumption](#agent-deployment-and-consumption)
@@ -269,5 +270,3 @@ Mailcomposer agent in the example above depends on `sample-agent-2` and `sample-
 </details>
 
 <a id="agent-deployments"></a>
-
-

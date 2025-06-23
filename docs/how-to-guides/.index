@@ -1,7 +1,7 @@
 nav:
   - How-To Guides:
     - Setting Up the Agent Directory: agent-directory.md
-    - Creating an Agent Data Model: data-model-guide.md
+    - Creating an Agent Record: agent-record-guide.md
     - Getting Started with Identity: identity-quickstart.md
     - Getting Started with API Bridge Agent: bridge-howto.md
     - Getting Started with SLIM: slim-howto.md

@@ -48,7 +48,7 @@ export OPENAI_ENDPOINT=https://REPLACE_WITH_YOUR_ENDPOINT.openai.azure.com
 export OPENAI_MODEL=gpt-4o-mini
 ```
 
-#### Build the Plugin and Start Tyk Locally on [Tyk](http://localhost:8080)
+#### Build the Plugin and Start Tyk Locally on Tyk
 
 Dependencies are managed so that you can just run:
 
@@ -56,9 +56,9 @@ Dependencies are managed so that you can just run:
 make start_tyk
 ```
 
-This will automatically build "Tyk", "search" and the plugin, then install the plugin and start Tyk gateway.
+This will automatically build "Tyk", "search" and the plugin, then install the plugin and start [Tyk gateway](http://localhost:8080).
 
-#### Load and Configure Tyk with an Example API (httpbin.org)
+#### Load and Configure Tyk with an [Example API](httpbin.org)
 
 ```shell
 make load_plugin
@@ -1097,7 +1097,7 @@ For example, you could provide the following examples which could help improve t
 
 In the OpenAPI specification, add the `x-nl-output-examples` field to the operation definition:
 
-```{code-block} json
+```json
 ---
 lineno-start: 123
 emphasize-lines: 7-11
@@ -1329,6 +1329,7 @@ curl 'http://localhost:8080/mcp/'  \
 ```
 
 and you will receive a response that looks like
+
 ```
 Here's the weather forecast for California:
 

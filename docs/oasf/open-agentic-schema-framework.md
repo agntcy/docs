@@ -22,7 +22,7 @@ A core component in OASF is to implement data types and core objects that define
 
 A convenient way to browse and use the OASF schema is through the [Open Agentic Schema Framework Server](oasf-server.md).
 
-See [Creating an Agent Data Model](../how-to-guides/data-model-guide.md) for more information on the Agent Data Model.
+See [Creating an Agent Record](../how-to-guides/agent-record-guide.md) for more information on the Agent Record.
 
 The current skill set taxonomy is described in [Taxonomy of AI Agent Skills](taxonomy.md).
 

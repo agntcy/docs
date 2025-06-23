@@ -2,9 +2,12 @@
 
 This tutorial guides you through creating an agentic mail composer application with interrupts capability. Interrupts allow your agent to pause execution, prompt the user for additional information, and then resume processing.
 
+For more information on the Agent Connect Protocol, see [here](../syntactic/connect.md).
+
 ## Overview
 
 We'll build a mail composer agent that helps users draft marketing emails. The agent follows this workflow:
+
 1. Engage in conversation with the user to gather email content details
 2. Generate a well-structured marketing email
 3. Use interrupts to ask for email format preferences
@@ -41,228 +44,229 @@ Let's start by creating the basic mail composer agent without interrupt function
 
 1. First, create the state models:
 
-```python
-# filepath: src/mailcomposer_agent/state.py
-from enum import Enum
-from typing import Optional, Annotated
+    ```python
+    # filepath: src/mailcomposer_agent/state.py
+    from enum import Enum
+    from typing import Optional, Annotated
 
-from pydantic import BaseModel, Field
-import operator
+    from pydantic import BaseModel, Field
+    import operator
 
-class Type(Enum):
-    human = 'human'
-    assistant = 'assistant'
-    ai = 'ai'
-
-
-class Message(BaseModel):
-    type: Type = Field(
-        ...,
-        description='indicates the originator of the message, a human or an assistant',
-    )
-    content: str = Field(..., description='the content of the message')
+    class Type(Enum):
+        human = 'human'
+        assistant = 'assistant'
+        ai = 'ai'
 
 
-class ConfigSchema(BaseModel):
-    test: bool
+    class Message(BaseModel):
+        type: Type = Field(
+            ...,
+            description='indicates the originator of the message, a human or an assistant',
+        )
+        content: str = Field(..., description='the content of the message')
 
 
-class AgentState(BaseModel):
-    messages: Annotated[Optional[list[Message]], operator.add] = []
-    is_completed: Optional[bool] = None
-
-class StatelessAgentState(BaseModel):
-    messages: Optional[list[Message]] = []
-    is_completed: Optional[bool] = None
+    class ConfigSchema(BaseModel):
+        test: bool
 
 
-class OutputState(AgentState):
-    final_email: Optional[str] = Field(
-        default=None,
-        description="Final email produced by the mail composer, in html format"
-    )
+    class AgentState(BaseModel):
+        messages: Annotated[Optional[list[Message]], operator.add] = []
+        is_completed: Optional[bool] = None
 
-class StatelessOutputState(StatelessAgentState):
-    final_email: Optional[str] = Field(
-        default=None,
-        description="Final email produced by the mail composer, in html format"
-    )
-```
+    class StatelessAgentState(BaseModel):
+        messages: Optional[list[Message]] = []
+        is_completed: Optional[bool] = None
+
+
+    class OutputState(AgentState):
+        final_email: Optional[str] = Field(
+            default=None,
+            description="Final email produced by the mail composer, in html format"
+        )
+
+    class StatelessOutputState(StatelessAgentState):
+        final_email: Optional[str] = Field(
+            default=None,
+            description="Final email produced by the mail composer, in html format"
+        )
+    ```
 
 2. Now, let's create the logic for our mail composer agent:
 
-```python
-# filepath: src/mailcomposer_agent/mailcomposer.py
-import os
-from langchain_core.messages import BaseMessage, HumanMessage, AIMessage
-from langgraph.checkpoint.memory import InMemorySaver
-from langgraph.graph import StateGraph, START, END
-from langchain_openai import AzureChatOpenAI
-from pydantic import SecretStr
-from langchain.prompts import PromptTemplate
+    ```python
+    # filepath: src/mailcomposer_agent/mailcomposer.py
+    import os
+    from langchain_core.messages import BaseMessage, HumanMessage, AIMessage
+    from langgraph.checkpoint.memory import InMemorySaver
+    from langgraph.graph import StateGraph, START, END
+    from langchain_openai import AzureChatOpenAI
+    from pydantic import SecretStr
+    from langchain.prompts import PromptTemplate
 
-from .state import (
-    OutputState,
-    AgentState,
-    StatelessAgentState,
-    StatelessOutputState,
-    Message,
-    Type as MsgType,
-)
-
-api_key = os.getenv("AZURE_OPENAI_API_KEY")
-if not api_key:
-    raise ValueError("AZURE_OPENAI_API_KEY must be set as an environment variable.")
-
-azure_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
-if not azure_endpoint:
-    raise ValueError("AZURE_OPENAI_ENDPOINT must be set as an environment variable.")
-
-is_stateless = os.getenv("STATELESS", "true").lower() == "true"
-
-llm = AzureChatOpenAI(
-    api_key=SecretStr(api_key),
-    azure_endpoint=azure_endpoint,
-    model="gpt-4o",
-    openai_api_type="azure_openai",
-    api_version="2024-07-01-preview",
-    temperature=0,
-    max_retries=10,
-    seed=42,
-)
-
-# Writer and subject role prompts
-MARKETING_EMAIL_PROMPT_TEMPLATE = PromptTemplate.from_template(
-    """
-You are a highly skilled writer and you are working for a marketing company.
-Your task is to write formal and professional emails. We are building a publicity campaign and we need to send a massive number of emails to many clients.
-The email must be compelling and adhere to our marketing standards.
-
-If you need more details to complete the email, please ask me.
-Once you have all the necessary information, please create the email body. The email must be engaging and persuasive. The subject that cannot exceed 5 words (no bold).
-The email should be in the following format
-{{separator}}
-subject
-body
-{{separator}}
-DO NOT FORGET TO ADD THE SEPARATOR BEFORE THE SUBECT AND AFTER THE EMAIL BODY!
-SHOULD NEVER HAPPPEN TO HAVE THE SEPARATOR AFTER THE SUBJECT AND BEFORE THE EMAIL BODY! NEVER AFTER THE SUBJECT!
-DO NOT ADD EXTRA TEXT IN THE EMAIL, LIMIT YOURSELF IN GENERATING THE EMAIL
-""",
-    template_format="jinja2",
-)
-
-SEPARATOR = "**************"
-
-def extract_mail(messages) -> str:
-    for m in reversed(messages):
-        splits: list[str] = []
-        if isinstance(m, Message):
-            if m.type == MsgType.human:
-                continue
-            splits = m.content.split(SEPARATOR)
-        if isinstance(m, dict):
-            if m.get("type", "") == "human":
-                continue
-            splits = m.get("content", "").split(SEPARATOR)
-        if len(splits) >= 3:
-            return splits[len(splits) - 2].strip()
-        elif len(splits) == 2:
-            return splits[1].strip()
-        elif len(splits) == 1:
-            return splits[0]
-    return ""
-
-def should_format_email(state: AgentState | StatelessAgentState):
-    # In the basic version, we just return END
-    return END
-
-def convert_messages(messages: list) -> list[BaseMessage]:
-    converted = []
-    for m in messages:
-        if isinstance(m, Message):
-            mdict = m.model_dump()
-        else:
-            mdict = m
-        if mdict["type"] == "human":
-            converted.append(HumanMessage(content=mdict["content"]))
-        else:
-            converted.append(AIMessage(content=mdict["content"]))
-
-    return converted
-
-# Define mail_agent function
-def email_agent(
-    state: AgentState | StatelessAgentState,
-) -> OutputState | AgentState | StatelessOutputState | StatelessAgentState:
-    """This agent is a skilled writer for a marketing company, creating formal and professional emails for publicity campaigns.
-    It interacts with users to gather the necessary details.
-    Once the user approves by sending "is_completed": true, the agent outputs the finalized email in "final_email".
-    """
-    # Check subsequent messages and handle completion
-    return final_output(state) if state.is_completed else generate_email(state)
-
-def final_output(
-    state: AgentState | StatelessAgentState,
-) -> OutputState | AgentState | StatelessOutputState | StatelessAgentState:
-    final_mail = extract_mail(state.messages)
-
-    output_state: OutputState = OutputState(
-        messages=state.messages,
-        is_completed=state.is_completed,
-        final_email=final_mail,
+    from .state import (
+        OutputState,
+        AgentState,
+        StatelessAgentState,
+        StatelessOutputState,
+        Message,
+        Type as MsgType,
     )
-    return output_state
 
-def generate_email(
-    state: AgentState | StatelessAgentState,
-) -> (
-    OutputState | AgentState | StatelessOutputState | StatelessAgentState
-):  # Append messages from state to initial prompt
-    messages = [
-        Message(
-            type=MsgType.human,
-            content=MARKETING_EMAIL_PROMPT_TEMPLATE.format(separator=SEPARATOR),
+    api_key = os.getenv("AZURE_OPENAI_API_KEY")
+    if not api_key:
+        raise ValueError("AZURE_OPENAI_API_KEY must be set as an environment variable.")
+
+    azure_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
+    if not azure_endpoint:
+        raise ValueError("AZURE_OPENAI_ENDPOINT must be set as an environment variable.")
+
+    is_stateless = os.getenv("STATELESS", "true").lower() == "true"
+
+    llm = AzureChatOpenAI(
+        api_key=SecretStr(api_key),
+        azure_endpoint=azure_endpoint,
+        model="gpt-4o",
+        openai_api_type="azure_openai",
+        api_version="2024-07-01-preview",
+        temperature=0,
+        max_retries=10,
+        seed=42,
+    )
+
+    # Writer and subject role prompts
+    MARKETING_EMAIL_PROMPT_TEMPLATE = PromptTemplate.from_template(
+        """
+    You are a highly skilled writer and you are working for a marketing company.
+    Your task is to write formal and professional emails. We are building a publicity campaign and we need to send a massive number of emails to many clients.
+    The email must be compelling and adhere to our marketing standards.
+
+    If you need more details to complete the email, please ask me.
+    Once you have all the necessary information, please create the email body. The email must be engaging and persuasive. The subject that cannot exceed 5 words (no bold).
+    The email should be in the following format
+    {{separator}}
+    subject
+    body
+    {{separator}}
+    DO NOT FORGET TO ADD THE SEPARATOR BEFORE THE SUBECT AND AFTER THE EMAIL BODY!
+    SHOULD NEVER HAPPPEN TO HAVE THE SEPARATOR AFTER THE SUBJECT AND BEFORE THE EMAIL BODY! NEVER AFTER THE SUBJECT!
+    DO NOT ADD EXTRA TEXT IN THE EMAIL, LIMIT YOURSELF IN GENERATING THE EMAIL
+    """,
+        template_format="jinja2",
+    )
+
+    SEPARATOR = "**************"
+
+    def extract_mail(messages) -> str:
+        for m in reversed(messages):
+            splits: list[str] = []
+            if isinstance(m, Message):
+                if m.type == MsgType.human:
+                    continue
+                splits = m.content.split(SEPARATOR)
+            if isinstance(m, dict):
+                if m.get("type", "") == "human":
+                    continue
+                splits = m.get("content", "").split(SEPARATOR)
+            if len(splits) >= 3:
+                return splits[len(splits) - 2].strip()
+            elif len(splits) == 2:
+                return splits[1].strip()
+            elif len(splits) == 1:
+                return splits[0]
+        return ""
+
+    def should_format_email(state: AgentState | StatelessAgentState):
+        # In the basic version, we just return END
+        return END
+
+    def convert_messages(messages: list) -> list[BaseMessage]:
+        converted = []
+        for m in messages:
+            if isinstance(m, Message):
+                mdict = m.model_dump()
+            else:
+                mdict = m
+            if mdict["type"] == "human":
+                converted.append(HumanMessage(content=mdict["content"]))
+            else:
+                converted.append(AIMessage(content=mdict["content"]))
+
+        return converted
+
+    # Define mail_agent function
+    def email_agent(
+        state: AgentState | StatelessAgentState,
+    ) -> OutputState | AgentState | StatelessOutputState | StatelessAgentState:
+        """This agent is a skilled writer for a marketing company, creating formal and professional emails for publicity campaigns.
+        It interacts with users to gather the necessary details.
+        Once the user approves by sending "is_completed": true, the agent outputs the finalized email in "final_email".
+        """
+        # Check subsequent messages and handle completion
+        return final_output(state) if state.is_completed else generate_email(state)
+
+    def final_output(
+        state: AgentState | StatelessAgentState,
+    ) -> OutputState | AgentState | StatelessOutputState | StatelessAgentState:
+        final_mail = extract_mail(state.messages)
+
+        output_state: OutputState = OutputState(
+            messages=state.messages,
+            is_completed=state.is_completed,
+            final_email=final_mail,
         )
-    ] + state.messages
+        return output_state
 
-    # Call the LLM
-    ai_message = Message(
-        type=MsgType.ai, content=str(llm.invoke(convert_messages(messages)).content)
-    )
+    def generate_email(
+        state: AgentState | StatelessAgentState,
+    ) -> (
+        OutputState | AgentState | StatelessOutputState | StatelessAgentState
+    ):  # Append messages from state to initial prompt
+        messages = [
+            Message(
+                type=MsgType.human,
+                content=MARKETING_EMAIL_PROMPT_TEMPLATE.format(separator=SEPARATOR),
+            )
+        ] + state.messages
+
+        # Call the LLM
+        ai_message = Message(
+            type=MsgType.ai, content=str(llm.invoke(convert_messages(messages)).content)
+        )
+
+        if is_stateless:
+            return {"messages": state.messages + [ai_message]}
+        else:
+            return {"messages": [ai_message]}
+
+    # Build the graph
+    if is_stateless:
+        graph_builder = StateGraph(StatelessAgentState, output=StatelessOutputState)
+    else:
+        graph_builder = StateGraph(AgentState, output=OutputState)
+
+    graph_builder.add_node("email_agent", email_agent)
+
+    graph_builder.add_edge(START, "email_agent")
+    graph_builder.add_edge("email_agent", END)
 
     if is_stateless:
-        return {"messages": state.messages + [ai_message]}
+        print("mailcomposer - running in stateless mode")
+        graph = graph_builder.compile()
     else:
-        return {"messages": [ai_message]}
+        print("mailcomposer - running in stateful mode")
+        checkpointer = InMemorySaver()
+        graph = graph_builder.compile(checkpointer=checkpointer)
+    ```
 
-# Build the graph
-if is_stateless:
-    graph_builder = StateGraph(StatelessAgentState, output=StatelessOutputState)
-else:
-    graph_builder = StateGraph(AgentState, output=OutputState)
+!!! note
+    The checkpointer setup in `build_graph()` is critical for interrupts to work properly.
+    When using interrupts, we must run the agent in stateful mode with a checkpointer configured:
 
-graph_builder.add_node("email_agent", email_agent)
-
-graph_builder.add_edge(START, "email_agent")
-graph_builder.add_edge("email_agent", END)
-
-if is_stateless:
-    print("mailcomposer - running in stateless mode")
-    graph = graph_builder.compile()
-else:
-    print("mailcomposer - running in stateful mode")
-    checkpointer = InMemorySaver()
-    graph = graph_builder.compile(checkpointer=checkpointer)
-```
-
-> **Note**: The checkpointer setup in `build_graph()` is critical for interrupts to work properly.
-> When using interrupts, we must run the agent in stateful mode with a checkpointer configured:
->
-> * The checkpointer preserves the graph's execution state when an interrupt occurs,
-> allowing it to resume from exactly where it left off after receiving user input.\
-> Without this persistence mechanism, the graph would have no memory of what happened
-> before the interrupt, making it impossible to continue execution correctly.
+    The checkpointer preserves the graph's execution state when an interrupt occurs,
+    allowing it to resume from exactly where it left off after receiving user input.
+    Without this persistence mechanism, the graph would have no memory of what happened
+    before the interrupt, making it impossible to continue execution correctly.
 
 ## Step 2: Generating the Agent Manifest
 
@@ -394,75 +398,76 @@ We need to make the following additions to `mailcomposer.py`:
 
 1. First, add the import for interrupts at the top of the file:
 
-```python
-from langgraph.graph import StateGraph, START, END
-from langgraph.types import interrupt  # Add this import for interrupts
-```
+    ```python
+    from langgraph.graph import StateGraph, START, END
+    from langgraph.types import interrupt  # Add this import for interrupts
+    ```
 
 2. Add the `format_email` function after the `SEPARATOR` constant:
 
-```python
-def format_email(state):
-    answer = interrupt(
-        Message(
-            type=MsgType.assistant,
-            content="In what format would like your email to be?",
+    ```python
+    def format_email(state):
+        answer = interrupt(
+            Message(
+                type=MsgType.assistant,
+                content="In what format would like your email to be?",
+            )
         )
-    )
-    answer_content = Message(**answer)
-    email = extract_mail(state.messages)
-    answer_content.content += " This is the email: " + email
-    state.messages = (state.messages or []) + [answer_content]
-    state_after_formating = generate_email(state)
+        answer_content = Message(**answer)
+        email = extract_mail(state.messages)
+        answer_content.content += " This is the email: " + email
+        state.messages = (state.messages or []) + [answer_content]
+        state_after_formating = generate_email(state)
 
-    interrupt(
-        Message(
-            type=MsgType.assistant, content="The email is formatted, please confirm"
+        interrupt(
+            Message(
+                type=MsgType.assistant, content="The email is formatted, please confirm"
+            )
         )
-    )
 
-    state_after_formating = StatelessAgentState(
-        **state_after_formating, is_completed=True
-    )
-    return final_output(state_after_formating)
-```
+        state_after_formating = StatelessAgentState(
+            **state_after_formating, is_completed=True
+        )
+        return final_output(state_after_formating)
+    ```
 
 3. Update the `should_format_email` function to check for format requests:
 
-```python
-def should_format_email(state: AgentState | StatelessAgentState):
-    if state.is_completed and not is_stateless:
-        return "format_email"
-    return END
-```
+    ```python
+    def should_format_email(state: AgentState | StatelessAgentState):
+        if state.is_completed and not is_stateless:
+            return "format_email"
+        return END
+    ```
 
 4. Finally, update the `graph` structure to add the `format_email` node and conditional edges:
 
-```python
-if is_stateless:
-    graph_builder = StateGraph(StatelessAgentState, output=StatelessOutputState)
-else:
-    graph_builder = StateGraph(AgentState, output=OutputState)
+    ```python
+    if is_stateless:
+        graph_builder = StateGraph(StatelessAgentState, output=StatelessOutputState)
+    else:
+        graph_builder = StateGraph(AgentState, output=OutputState)
 
-graph_builder.add_node("email_agent", email_agent)
-graph_builder.add_node("format_email", format_email)  # Add this node
+    graph_builder.add_node("email_agent", email_agent)
+    graph_builder.add_node("format_email", format_email)  # Add this node
 
-graph_builder.add_edge(START, "email_agent")
-# This node will only be added in stateful mode since langgraph requires checkpointer if any node should interrupt
-graph_builder.add_conditional_edges("email_agent", should_format_email)
-graph_builder.add_edge("format_email", END)
-graph_builder.add_edge("email_agent", END)
+    graph_builder.add_edge(START, "email_agent")
+    # This node will only be added in stateful mode since langgraph requires checkpointer if any node should interrupt
+    graph_builder.add_conditional_edges("email_agent", should_format_email)
+    graph_builder.add_edge("format_email", END)
+    graph_builder.add_edge("email_agent", END)
 
-if is_stateless:
-    print("mailcomposer - running in stateless mode")
-    graph = graph_builder.compile()
-else:
-    print("mailcomposer - running in stateful mode")
-    checkpointer = InMemorySaver()
-    graph = graph_builder.compile(checkpointer=checkpointer)
-```
+    if is_stateless:
+        print("mailcomposer - running in stateless mode")
+        graph = graph_builder.compile()
+    else:
+        print("mailcomposer - running in stateful mode")
+        checkpointer = InMemorySaver()
+        graph = graph_builder.compile(checkpointer=checkpointer)
+    ```
 
 The additions we've made implement a formatting feature that:
+
 1. Interrupts the normal flow to ask for formatting preferences
 2. Processes the user's response to format the email accordingly
 3. Interrupts again to confirm the formatting
@@ -470,77 +475,77 @@ The additions we've made implement a formatting feature that:
 
 ## Step 4: Updating the Manifest for Interrupts
 
-Now we need to** update our generated manifest JSON file to include interrupt support**. Open the generated `mailcomposer.json` and make the following key changes:
+Now we need to **update our generated manifest JSON file to include interrupt support**. Open the generated `mailcomposer.json` and make the following key changes:
 
 1. In the capabilities section, change `interrupts` from `false` to `true`:
 
-```json
-"capabilities": {
-  "threads": false,
-  "interrupts": true,  // Change from false to true
-  "callbacks": false
-}
-```
+    ```json
+    "capabilities": {
+      "threads": false,
+      "interrupts": true,  // Change from false to true
+      "callbacks": false
+    }
+    ```
 
 2. Add the interrupts array in the `specs` section:
 
-```json
-"interrupts": [
-  {
-    "interrupt_type": "format_email",
-    "interrupt_payload": {
-      "$defs": {
-        "Message": {
-          "properties": {
-            "type": {
-              "$ref": "#/$defs/Type",
-              "description": "indicates the originator of the message, a human or an assistant"
+    ```json
+    "interrupts": [
+      {
+        "interrupt_type": "format_email",
+        "interrupt_payload": {
+          "$defs": {
+            "Message": {
+              "properties": {
+                "type": {
+                  "$ref": "#/$defs/Type",
+                  "description": "indicates the originator of the message, a human or an assistant"
+                },
+                "content": {
+                  "description": "the content of the message",
+                  "title": "Content",
+                  "type": "string"
+                }
+              },
+              "required": ["type", "content"],
+              "title": "Message",
+              "type": "object"
             },
-            "content": {
-              "description": "the content of the message",
-              "title": "Content",
+            "Type": {
+              "enum": ["human", "assistant", "ai"],
+              "title": "Type",
               "type": "string"
             }
-          },
-          "required": ["type", "content"],
-          "title": "Message",
-          "type": "object"
+          }
         },
-        "Type": {
-          "enum": ["human", "assistant", "ai"],
-          "title": "Type",
-          "type": "string"
-        }
-      }
-    },
-    "resume_payload": {
-      "$defs": {
-        "Message": {
-          "properties": {
-            "type": {
-              "$ref": "#/$defs/Type",
-              "description": "indicates the originator of the message, a human or an assistant"
+        "resume_payload": {
+          "$defs": {
+            "Message": {
+              "properties": {
+                "type": {
+                  "$ref": "#/$defs/Type",
+                  "description": "indicates the originator of the message, a human or an assistant"
+                },
+                "content": {
+                  "description": "the content of the message",
+                  "title": "Content",
+                  "type": "string"
+                }
+              },
+              "required": ["type", "content"],
+              "title": "Message",
+              "type": "object"
             },
-            "content": {
-              "description": "the content of the message",
-              "title": "Content",
+            "Type": {
+              "enum": ["human", "assistant", "ai"],
+              "title": "Type",
               "type": "string"
             }
-          },
-          "required": ["type", "content"],
-          "title": "Message",
-          "type": "object"
-        },
-        "Type": {
-          "enum": ["human", "assistant", "ai"],
-          "title": "Type",
-          "type": "string"
+          }
         }
       }
-    }
-  }
-]
-```
+    ]
+    ```
 
 These changes inform the ACP infrastructure that our agent uses interrupts and specify the format and structure of the interrupt payloads.
 
@@ -641,7 +646,7 @@ poetry run python -m mailcomposer_agent.main
 
 ## Step 6: Running with Workflow Server Manager
 
-Now that we've created our mail composer agent with interrupt support, we can deploy and run it using the Workflow Server Manager (wfsm).
+Now that we've created our mail composer agent with interrupt support, we can deploy and run it using the [Workflow Server Manager](../agws/workflow-server-manager.md).
 
 ### Setting up the Environment
 
@@ -654,7 +659,8 @@ tar -xzf wfsm.tar.gz
 chmod +x wfsm
 ```
 
-> For other platforms, download the appropriate binary from the [releases page](https://github.com/agntcy/workflow-srv-mgr/releases)
+!!! note
+    For other platforms, download the appropriate binary from the [releases page](https://github.com/agntcy/workflow-srv-mgr/releases)
 
 Next, create a configuration file for our mail composer agent:
 

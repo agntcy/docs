@@ -2,7 +2,7 @@
 
 The Agent Directory (dir) allows publication, exchange and discovery of information about AI agents over a distributed peer-to-peer network.
 
-For detailed information in the Agent Directory Service, see the [Agent Directory Service documentation](../dir/overview.md).
+For detailed information in the Agent Directory Service, see the [Agent Directory Service documentation](../dir/overview.md#features).
 
 ## Prerequisites
 

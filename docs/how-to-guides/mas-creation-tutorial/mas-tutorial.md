@@ -8,11 +8,13 @@ For this tutorial we are using LangGraph, but other frameworks can also be used.
 
 
 ## Overview
+
 The **Marketing Campaign Manager** we are building implements a LangGraph graph which:
+
 * Interacts with a user to gather the description of the email marketing campaign to launch.
 * Uses an already existing [Mail Composer Agent](https://github.com/agntcy/agentic-apps/tree/main/mailcomposer), capable of composing emails for the marketing campaign. This agent is written using LangGraph, it provides an Agent Manifest which allows to deploy it through the Agent Workflow Server and be consumed through ACP.
-* Uses an already existing [Email Reviewer Agent](https://github.com/agntcy/agentic-apps/tree/main/email_reviewer) capable of reviewing an email and adjust it for a specific target audience. This agent is written using [LlamaIndex](https://www.llamaindex.ai/framework) and similarly to the previous agent, it provides a Agent Manifest which allows to deploy it through the [Agent Workflow Server](https://docs.agntcy.org/pages/agws/workflow_server.html) and be consumed through ACP.
-* Uses [Twilio Sendgrid](https://sendgrid.com/) API to deliver the marketing campaign email to the intended recipient. We will consume this API leveraging the capabilities of the [API Bridge Agent](https://docs.agntcy.org/pages/syntactic_sdk/api_bridge_agent.html).
+* Uses an already existing [Email Reviewer Agent](https://github.com/agntcy/agentic-apps/tree/main/email_reviewer) capable of reviewing an email and adjust it for a specific target audience. This agent is written using [LlamaIndex](https://www.llamaindex.ai/framework) and similarly to the previous agent, it provides a Agent Manifest which allows to deploy it through the [Agent Workflow Server](../../agws/workflow-server.md) and be consumed through ACP.
+* Uses [Twilio Sendgrid](https://sendgrid.com/) API to deliver the marketing campaign email to the intended recipient. We will consume this API leveraging the capabilities of the [API Bridge Agent](../../syntactic/api_bridge_agent.md).
 
 This tutorial is structured in the following steps:
 
@@ -163,7 +165,7 @@ You should see the output:
 In this step, you will **generate** models based on the agent manifests to define the **input, output and config schemas** for each agent involved in MAS. The models are created using the `acp generate-agent-models` cli command, which reads the agent manifest files and produces Python files that encapsulate the agent's data structures and interfaces necessary for integration.
 
 > **What is an Agent Manifest?**\
-> An Agent Manifest is a detailed document outlining an agent's capabilities, deployment methods, data structure specifications and dependencies on other agents. It provides **essential information** for ensuring agents can communicate and work together within the **Agent Connect Protocol** and **Workflow Server ecosystem**. [Learn more](https://docs.agntcy.org/pages/agws/manifest.html)
+> An Agent Manifest is a detailed document outlining an agent's capabilities, deployment methods, data structure specifications and dependencies on other agents. It provides **essential information** for ensuring agents can communicate and work together within the **Agent Connect Protocol** and **Workflow Server ecosystem**. [Learn more](../../manifest/manifest.md)
 
 ### Schema and Type Generation
 
@@ -370,7 +372,7 @@ def build_app_graph() -> CompiledStateGraph:
 
 The API Bridge **converts natural language outputs into structured API requests**. The input to the API Bridge is in natural language, but APIs like [SendGrid APIs](https://github.com/twilio/sendgrid-oai/blob/main/spec/json/tsg_mail_v3.json) require specifically structured formats. The API Bridge ensures that the **correct endpoint and request format** are used.
 
-For more detailed information about the API Bridge Agent implementation and configuration, please refer to the [API Bridge documentation](https://docs.agntcy.org/pages/syntactic_sdk/api_bridge_agent.html).
+For more detailed information about the API Bridge Agent implementation and configuration, please refer to the [API Bridge documentation](../../syntactic/api_bridge_agent.md).
 
 ### Add SendGrid API Bridge Node
 
@@ -406,7 +408,7 @@ send_email = APIBridgeAgentNode(
 
 > **Explanation**:
 > - The `_path` fields indicate where to find the input and output in the `OverallState`, as explained in [Step 4](#step-4-multi-agent-application-development).
-> - The `service_name` field specifies the endpoint manually (`sendgrid/v3/mail/send`). However, the API Bridge can **automatically determine** the correct endpoint based on the natural language request if this field is not provided. [Learn more](https://docs.agntcy.org/pages/syntactic_sdk/api_bridge_agent.html)
+> - The `service_name` field specifies the endpoint manually (`sendgrid/v3/mail/send`). However, the API Bridge can **automatically determine** the correct endpoint based on the natural language request if this field is not provided. [Learn more](../../syntactic/api_bridge_agent.md)
 
 
 Finally, update your `build_app_graph` function to **replace** the placeholder `send_mail` function defined in [Step 1](#step-1-create-a-basic-langgraph-skeleton-application) with the new `send_email` API Bridge node:
@@ -440,8 +442,7 @@ shell, but an example for most shells in most Unix-like OSes:
 export SENDGRID_API_KEY="enter API key here"
 ```
 
-For a complete setup guide including Tyk gateway configuration and SendGrid API details, see the [SendGrid API Bridge example in the ACP SDK documentation](https://docs.agntcy.org/pages/syntactic_sdk/api_bridge_agent.html#an-example-with-sendgrid-api).
-
+For a complete setup guide including Tyk gateway configuration and SendGrid API details, see the [SendGrid API Bridge example in the ACP SDK documentation](../bridge-howto.md#an-example-with-sendgrid-api).
 
 ## Step 6: I/O Mapper Integration
 
@@ -457,7 +458,7 @@ To achieve this, we not only add the **I/O Mapper**, a powerful tool that automa
 > - **Text Translation**: Translating text between languages.
 > - **Text Manipulation**: Reformulating or extracting specific information.
 >
-> For more details on I/O Mapper functionality and implementation, see the [official I/O Mapper documentation](https://docs.agntcy.org/pages/semantic_sdk/io_mapper.html).
+> For more details on I/O Mapper functionality and implementation, see the [official I/O Mapper documentation](../../semantic/io_mapper.md).
 
 
 ### I/O Processing Overview
@@ -935,7 +936,7 @@ chmod +x wfsm
 # For other platforms, download the appropriate binary from the releases page
 ```
 
-Follow these [instructions](https://docs.agntcy.org/pages/agws/workflow_server_manager.html#installation) to install the Agent Workflow Server Manager
+Follow these [instructions](../../agws/workflow-server-manager.md#installation) to install the Agent Workflow Server Manager.
 
 ### Configuring the Application Environment
 
@@ -975,7 +976,7 @@ config:
 
 ### Setting Up the SendGrid API Bridge
 
-Before testing the full application workflow, you need to set up the SendGrid API Bridge locally. Follow the detailed guide in the [API Bridge documentation](https://docs.agntcy.org/pages/syntactic_sdk/api_bridge_agent.html#an-example-with-sendgrid-api) for complete instructions.
+Before testing the full application workflow, you need to set up the SendGrid API Bridge locally. Follow the detailed guide in the [API Bridge documentation](../bridge-howto.md#an-example-with-sendgrid-api) for complete instructions.
 
 ### Deploying the Application
 
