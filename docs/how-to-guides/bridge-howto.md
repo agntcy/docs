@@ -56,7 +56,7 @@ Dependencies are managed so that you can just run:
 make start_tyk
 ```
 
-This will automatically build "Tyk", "search" and the plugin, then install the plugin and start [Tyk gateway](http://localhost:8080).
+This will automatically build "Tyk", "search" and the plugin, then install the plugin and start Tyk gateway at [http://localhost:8080](http://localhost:8080).
 
 #### Load and Configure Tyk with an [Example API](httpbin.org)
 
