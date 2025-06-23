@@ -77,4 +77,4 @@ task down
 
 ## Artifacts distribution
 
-For more information, see [AGNTCY GitHub](https://github.com/orgs/agntcy/packages?repo_name=oasf).
+For more information, see [AGNTCY GitHub Registry](https://github.com/orgs/agntcy/packages?repo_name=oasf).
