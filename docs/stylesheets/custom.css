@@ -1,0 +1,12 @@
+[data-md-color-scheme="default"] .md-header {
+  background-color: #e3e9fb !important;
+  color: rgba(0,0,0,.9)
+}
+
+[data-md-color-scheme="slate"] .md-header {
+  background-color: #00142B !important;
+}
+
+[data-md-color-scheme="default"] .md-header__button.md-icon {
+  color: #187adc !important;
+}
