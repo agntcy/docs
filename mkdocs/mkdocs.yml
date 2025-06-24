@@ -5,6 +5,7 @@ docs_dir: ../docs
 
 repo_name: agntcy/docs
 repo_url: https://github.com/agntcy/docs
+edit_uri: edit/main/docs/
 
 # extra:
 #   generator: false

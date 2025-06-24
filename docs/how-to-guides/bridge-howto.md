@@ -58,7 +58,7 @@ make start_tyk
 
 This will automatically build "Tyk", "search" and the plugin, then install the plugin and start Tyk gateway at [http://localhost:8080](http://localhost:8080).
 
-#### Load and Configure Tyk with an [Example API](httpbin.org)
+#### Load and Configure Tyk with an [Example API](https://httpbin.org/)
 
 ```shell
 make load_plugin
