@@ -7,9 +7,6 @@ repo_name: agntcy/docs
 repo_url: https://github.com/agntcy/docs
 edit_uri: edit/main/docs/
 
-# extra:
-#   generator: false
-
 extra_css:
   - stylesheets/custom.css
 
@@ -40,7 +37,7 @@ plugins:
                 schema: true
 theme:
   name: material
-  # custom_dir: overrides
+  custom_dir: overrides
 
   features:
     - announce.dismiss
@@ -93,4 +90,5 @@ theme:
     text: Roboto
     code: Roboto Mono
   favicon: assets/favicon.ico
-  logo: assets/img/logo.png
+  logo_light: assets/img/logo-light.svg
+  logo_dark: assets/img/logo-dark.svg
