@@ -1,12 +1,116 @@
-[data-md-color-scheme="default"] .md-header {
-  background-color: #e3e9fb !important;
-  color: rgba(0,0,0,.9)
+[data-md-color-scheme="default"] {
+  --md-primary-fg-color: rgb(243, 246, 253);
+  --md-primary-bg-color: rgb(2, 81, 175);
+  --md-primary-fg-color--dark: rgb(243, 246, 253);
+
+  --md-accent-fg-color: rgb(2, 81, 175);
+
+  --md-default-fg-color: rgb(28, 30, 33);
+  --md-default-fg-color--light: rgb(28, 30, 33);
+  --md-default-fg-color--lighter: #00000052;
+  --md-default-fg-color--lightest: #00000012;
+
+  --md-default-bg-color: rgb(239, 243, 252);
+  --md-default-bg-color--light: #e8eefb;
+  --md-default-bg-color--lighter: #eff3fc;
+  --md-default-bg-color--lightest: #f5f8fd;
+
+  --md-footer-fg-color: rgb(2, 81, 175);
+  --md-footer-fg-color--light: rgb(28, 30, 33);
+  --md-footer-fg-color--lighter: rgb(28, 30, 33);
+  --md-footer-bg-color:  rgb(232, 238, 251);
+  --md-footer-bg-color--dark: #00000052;
+  --md-typeset-a-color: rgb(2, 81, 175);
+
+  --md-typeset-table-color--light: #e8eefb;
 }
 
-[data-md-color-scheme="slate"] .md-header {
-  background-color: #00142B !important;
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: rgb(3, 20, 43);
+  --md-primary-bg-color: rgb(251, 175, 70);
+
+  --md-accent-fg-color: rgb(251, 175, 70);
+
+  --md-default-fg-color: rgb(227, 227, 227);
+  --md-default-fg-color--light: rgb(227, 227, 227);
+  --md-default-fg-color--lighter: rgb(237, 237, 237);
+  --md-default-fg-color--lightest: rgb(3, 20, 43);
+
+  --md-default-bg-color: rgb(3, 20, 43);
+  --md-code-bg-color: rgb(0, 42, 77);
+  --md-typeset-color: rgb(227, 227, 227);
+
+
+  --md-footer-fg-color: rgb(251, 175, 70);
+  --md-footer-fg-color--light: rgb(227, 227, 227);
+  --md-footer-fg-color--lighter: rgb(227, 227, 227);
+  --md-footer-bg-color:  rgb(3, 20, 43);
+  --md-footer-bg-color--dark: #00000052;
+  --md-typeset-a-color: rgb(2, 81, 175);
+
+  --md-typeset-a-color: rgb(251, 175, 70) !important;
+  --md-typeset-a-color--hover: rgb(251, 175, 70) !important;
+
+  --md-footer-meta-bg-color: rgb(232, 238, 251);
+
+  --md-typeset-table-color--light: rgb(0, 42, 77);
 }
 
-[data-md-color-scheme="default"] .md-header__button.md-icon {
-  color: #187adc !important;
+[data-md-color-primary=black] .md-header {
+  background-color: var(--md-primary-fg-color) !important;
+}
+
+[data-md-color-scheme="default"] .md-search__form {
+  background-color: rgb(236, 237, 240);
+  color: var(--md-primary-bg-color);
+}
+
+[data-md-color-scheme="default"] .md-search__form:hover {
+  background-color: rgb(236, 237, 240);
+}
+
+[data-md-color-scheme="slate"] .md-search__form {
+  background-color: rgb(0, 42, 77);
+  color: var(--md-primary-bg-color) !important;
+}
+
+[data-md-color-scheme="slate"] .md-search__form:hover {
+  background-color: rgb(0, 42, 77);
+}
+
+[data-md-color-scheme="default"] .md-search__input::placeholder {
+  color: #9ea2a8;
+}
+
+[data-md-color-scheme="slate"] .md-search__input::placeholder {
+  color: #59616b;
+}
+
+.md-footer {
+  box-shadow: 0 0 .2rem #0000001a, 0 .2rem .4rem #0003;
+  background-color: var(--md-footer-bg-color);
+  color: var(--md-default-fg-color);
+}
+
+.md-footer-meta {
+  background-color: var(--md-footer-bg-color);
+}
+
+.md-footer__link {
+  color: var(--md-default-fg-color);
+}
+
+.md-footer__link:hover {
+  color: var(--md-typeset-a-color);
+}
+
+html [data-md-color-primary=black] .md-nav--primary .md-nav__title[for=__drawer] {
+  background-color: var(--md-default-bg-color);
+}
+
+[data-md-color-scheme="default"] .logo-dark {
+  display: none !important;
+}
+[data-md-color-scheme="slate"] .logo-light {
+  display: none !important;
 }
