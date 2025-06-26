@@ -18,7 +18,7 @@
   --md-footer-fg-color: rgb(2, 81, 175);
   --md-footer-fg-color--light: rgb(28, 30, 33);
   --md-footer-fg-color--lighter: rgb(28, 30, 33);
-  --md-footer-bg-color:  rgb(232, 238, 251);
+  --md-footer-bg-color: rgb(232, 238, 251);
   --md-footer-bg-color--dark: #00000052;
   --md-typeset-a-color: rgb(2, 81, 175);
 
@@ -40,11 +40,10 @@
   --md-code-bg-color: rgb(0, 42, 77);
   --md-typeset-color: rgb(227, 227, 227);
 
-
   --md-footer-fg-color: rgb(251, 175, 70);
   --md-footer-fg-color--light: rgb(227, 227, 227);
   --md-footer-fg-color--lighter: rgb(227, 227, 227);
-  --md-footer-bg-color:  rgb(3, 20, 43);
+  --md-footer-bg-color: rgb(3, 20, 43);
   --md-footer-bg-color--dark: #00000052;
   --md-typeset-a-color: rgb(2, 81, 175);
 
@@ -111,6 +110,27 @@ html [data-md-color-primary=black] .md-nav--primary .md-nav__title[for=__drawer]
 [data-md-color-scheme="default"] .logo-dark {
   display: none !important;
 }
+
 [data-md-color-scheme="slate"] .logo-light {
   display: none !important;
+}
+
+.md-sidebar--primary .md-nav__link--active {
+  font-weight: bold;
+  border: 0px solid transparent;
+  border-radius: 0.25rem;
+}
+
+.md-sidebar--primary .md-nav__link {
+  padding-left: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+[data-md-color-scheme="default"] .md-sidebar--primary .md-nav__link--active {
+  background-color: rgb(220, 226, 238);
+}
+
+[data-md-color-scheme="slate"] .md-sidebar--primary .md-nav__link--active {
+  background-color: rgb(12, 31, 54);
 }
