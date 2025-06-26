@@ -64,6 +64,25 @@ The following diagram shows a simplified architecture of the core components des
 
 ![IoA Arch](assets/ioa_arch.png)
 
+## Compability Matrix
+
+| Operator             | OASF  | Agent Directory | Semantic SDK  | Syntactic SDK | Messaging SDK | Agent Workflow Server | Identity | SLIM | ACP              | CSIT |
+| -------------------- | ----- | --------------- | ------------- | ------------- | ------------- | --------------------- | -------- | ---- | ---------------- | ---- |
+| **Taskfile**         | ?     | ?               |               |               |               |                       |          | ?    |                  | ?    |
+| **Docker**           | ?     | ?               |               |               | ?             |                       | ?        |      |                  | ?    |
+| **Golang**           |       | ?               |               |               |               |                       |          | ?    |                  | ?    |
+| **Search**           |       |                 |               | ?             |               |                       |          |      |                  |      |
+| **Tyk**              |       |                 |               | ?             |               |                       |          |      |                  |      |
+| **Rust**             |       |                 |               |               |               |                       |          | ?    |                  |      |
+| **Poetry**           |       |                 | ?             |               |               | 2.0 or higher         |          |      | 2.0 or higher    |      |
+| **Python**           |       |                 |               | 3.9 or higher |               | 3.9 or higher         |          |      | 3.9 or higher    |      |
+| **cmkae**            |       |                 | ?             |               |               |                       |          |      |                  |      |
+| **UV**               |       |                 |               |               | ?             |                       |          |      |                  |      |
+| **Kind**             |       |                 |               |               |               |                       |          |      |                  | ?    |
+| **Kubectl**          |       |                 |               |               |               |                       |          |      |                  | ?    |
+| **Helm**             |       |                 |               |               |               |                       |          |      |                  | ?    |
+| **curl**             |       |                 |               |               |               |                       |          |      | ?                |      |
+
 ## Benefits
 
 * **Enhanced Collaboration**: By enabling seamless communication and data exchange, IoA fosters collaboration between AI agents, leading to more sophisticated and integrated solutions.
