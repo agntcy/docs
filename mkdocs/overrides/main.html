@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block extrahead %}
+    <script type="text/javascript" src="//www.cisco.com/c/dam/cdc/t/ctm-core.js"></script>
+    {{ super() }}
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <!-- Cisco CTM (Cisco Tag Manager) script -->
+    <script type="text/javascript" src="//www.cisco.com/c/dam/cdc/t/ctm.js"></script>
+{% endblock %}
