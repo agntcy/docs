@@ -37,6 +37,8 @@ plugins:
           extensions:
             - griffe_pydantic:
                 schema: true
+  swagger-ui-tag:
+
 theme:
   name: material
   custom_dir: overrides
