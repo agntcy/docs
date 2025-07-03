@@ -53,6 +53,8 @@
   --md-footer-meta-bg-color: rgb(232, 238, 251);
 
   --md-typeset-table-color--light: rgb(0, 42, 77);
+
+  --md-code-fg-color: rgb(248, 248, 242);
 }
 
 [data-md-color-primary=black] .md-header {
@@ -146,3 +148,8 @@ html [data-md-color-primary=black] .md-nav--primary .md-nav__title[for=__drawer]
 .md-header__ellipsis > :first-child {
   display: none !important;
 }
+
+[data-md-color-scheme="default"] code {
+    background-color: rgb(246,248,250) !important; 
+}
+
