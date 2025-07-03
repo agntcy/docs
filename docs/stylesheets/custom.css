@@ -138,18 +138,17 @@ html [data-md-color-primary=black] .md-nav--primary .md-nav__title[for=__drawer]
 }
 
 .md-nav__title {
-  font-size: 0 !important; 
+  font-size: 0 !important;
 }
 
 .md-nav__title img {
-  font-size: initial !important; 
+  font-size: initial !important;
 }
 
-.md-header__ellipsis > :first-child {
+.md-header__ellipsis> :first-child {
   display: none !important;
 }
 
 [data-md-color-scheme="default"] code {
-    background-color: rgb(246,248,250) !important; 
+  background-color: rgb(246, 248, 250) !important;
 }
-
