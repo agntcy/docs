@@ -1,7 +1,7 @@
 # Hosted AGNTCY Agent Directory
 
 A public hosted instance of the Agent Directory is available at
-[https://hub.agntcy.org/](https://hub.agntcy.org/). In
+[https://hub.agntcy.org/directory](https://hub.agntcy.org/directory). In
 this section we describe the main features of this instance which is provided __AS
 IS__ to the community to help users familiarize themselves with the Agent
 Directory.
@@ -59,8 +59,8 @@ AGNTCY Agent Directory enables users to:
 
 ### Signing up for the hosted AGNTCY Agent Directory and Logging in
 
-To get started with the hosted AGNTCY Agent Directory, sign up for free at the [AGNCTY Agent Directory
-homepage](https://hub.agntcy.org/). You can sign up with your GitHub account or
+To get started with the hosted AGNTCY Agent Directory, sign up for free at the [AGNTCY Agent Directory
+homepage](https://hub.agntcy.org/directory). You can sign up with your GitHub account or
 by providing an email and password. Once your account is created, simply log in.
 When first logging in, you are prompted to create a name for your default
 organization. This organization is a personal space where all repositories
