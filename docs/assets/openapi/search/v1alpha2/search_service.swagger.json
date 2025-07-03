@@ -1,0 +1,86 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "search/v1alpha2/search_service.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "SearchService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {},
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "searchv1alpha2RecordQuery": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/definitions/searchv1alpha2RecordQueryType",
+          "description": "The type of the query to match against."
+        },
+        "value": {
+          "type": "string",
+          "description": "The query value to match against."
+        }
+      },
+      "title": "A query to match the record against during discovery.\nFor example:\n { type: RECORD_QUERY_TYPE_SKILL_NAME, value: \"Natural Language Processing\" }\n { type: RECORD_QUERY_TYPE_LOCATOR, value: \"docker-image:https://example.com/docker-image\" }"
+    },
+    "searchv1alpha2RecordQueryType": {
+      "type": "string",
+      "enum": [
+        "RECORD_QUERY_TYPE_UNSPECIFIED",
+        "RECORD_QUERY_TYPE_NAME",
+        "RECORD_QUERY_TYPE_VERSION",
+        "RECORD_QUERY_TYPE_SKILL_ID",
+        "RECORD_QUERY_TYPE_SKILL_NAME",
+        "RECORD_QUERY_TYPE_LOCATOR",
+        "RECORD_QUERY_TYPE_EXTENSION"
+      ],
+      "default": "RECORD_QUERY_TYPE_UNSPECIFIED",
+      "description": "Defines a list of supported record query types.\n\n - RECORD_QUERY_TYPE_UNSPECIFIED: Unspecified query type.\n - RECORD_QUERY_TYPE_NAME: Query for an agent name.\n - RECORD_QUERY_TYPE_VERSION: Query for an agent version.\n - RECORD_QUERY_TYPE_SKILL_ID: Query for a skill ID.\n - RECORD_QUERY_TYPE_SKILL_NAME: Query for a skill name.\n - RECORD_QUERY_TYPE_LOCATOR: Query for a locator.\n - RECORD_QUERY_TYPE_EXTENSION: Query for an extension."
+    },
+    "searchv1alpha2SearchResponse": {
+      "type": "object",
+      "properties": {
+        "recordCid": {
+          "type": "string",
+          "description": "The CID of the record that matches the search criteria."
+        }
+      }
+    }
+  }
+}

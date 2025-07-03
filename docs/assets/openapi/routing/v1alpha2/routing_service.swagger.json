@@ -1,0 +1,146 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "routing/v1alpha2/routing_service.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "RoutingService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {},
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "routingv1alpha2ListResponse": {
+      "type": "object",
+      "properties": {
+        "recordCid": {
+          "type": "string",
+          "description": "The record that matches the list queries."
+        }
+      }
+    },
+    "routingv1alpha2Peer": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "ID of a given peer, typically described by a protocol.\nFor example:\n - SPIFFE:   \"spiffe://example.org/service/foo\"\n - JWT:      \"jwt:sub=alice,iss=https://issuer.example.com\"\n - Tor:      \"onion:abcdefghijklmno.onion\"\n - DID:      \"did:example:123456789abcdefghi\"\n - IPFS:     \"ipfs:QmYwAPJzv5CZsnAzt8auVZRn2E6sD1c4x8pN5o6d5cW4D5\""
+        },
+        "addrs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "Multiaddrs for a given peer.\nFor example:\n- \"/ip4/127.0.0.1/tcp/4001\"\n- \"/ip6/::1/tcp/4001\"\n- \"/dns4/example.com/tcp/443/https\""
+        },
+        "annotations": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Additional metadata about the peer."
+        },
+        "connection": {
+          "$ref": "#/definitions/v1alpha2PeerConnectionType",
+          "description": "Used to signal the sender's connection capabilities to the peer."
+        }
+      }
+    },
+    "routingv1alpha2RecordQuery": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/definitions/routingv1alpha2RecordQueryType",
+          "description": "The type of the query to match against."
+        },
+        "value": {
+          "type": "string",
+          "description": "The query value to match against."
+        }
+      },
+      "title": "A query to match the record against during discovery.\nFor example:\n { type: RECORD_QUERY_TYPE_SKILL, value: \"Natural Language Processing\" }\n { type: RECORD_QUERY_TYPE_LOCATOR, value: \"helm-chart\" }"
+    },
+    "routingv1alpha2RecordQueryType": {
+      "type": "string",
+      "enum": [
+        "RECORD_QUERY_TYPE_UNSPECIFIED",
+        "RECORD_QUERY_TYPE_SKILL",
+        "RECORD_QUERY_TYPE_LOCATOR"
+      ],
+      "default": "RECORD_QUERY_TYPE_UNSPECIFIED",
+      "description": "Defines a list of supported record query types.\n\n - RECORD_QUERY_TYPE_UNSPECIFIED: Unspecified query type.\n - RECORD_QUERY_TYPE_SKILL: Query for a skill name.\n - RECORD_QUERY_TYPE_LOCATOR: Query for a locator type."
+    },
+    "routingv1alpha2SearchResponse": {
+      "type": "object",
+      "properties": {
+        "recordCid": {
+          "type": "string",
+          "description": "The record that matches the search query."
+        },
+        "peer": {
+          "$ref": "#/definitions/routingv1alpha2Peer",
+          "description": "The peer that provided the record."
+        },
+        "matchQueries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/routingv1alpha2RecordQuery"
+          },
+          "description": "The queries that were matched."
+        },
+        "matchScore": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The score of the search match."
+        }
+      }
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v1alpha2PeerConnectionType": {
+      "type": "string",
+      "enum": [
+        "PEER_CONNECTION_TYPE_NOT_CONNECTED",
+        "PEER_CONNECTION_TYPE_CONNECTED",
+        "PEER_CONNECTION_TYPE_CAN_CONNECT",
+        "PEER_CONNECTION_TYPE_CANNOT_CONNECT"
+      ],
+      "default": "PEER_CONNECTION_TYPE_NOT_CONNECTED",
+      "description": " - PEER_CONNECTION_TYPE_NOT_CONNECTED: Sender does not have a connection to peer, and no extra information (default)\n - PEER_CONNECTION_TYPE_CONNECTED: Sender has a live connection to peer.\n - PEER_CONNECTION_TYPE_CAN_CONNECT: Sender recently connected to peer.\n - PEER_CONNECTION_TYPE_CANNOT_CONNECT: Sender made strong effort to connect to peer repeatedly but failed."
+    }
+  }
+}
