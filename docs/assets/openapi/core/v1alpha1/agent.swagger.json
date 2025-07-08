@@ -1,8 +1,8 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "core/v1alpha1/agent.proto",
-    "version": "version not set"
+    "title": "Agent",
+    "version": "v1alpha1"
   },
   "consumes": [
     "application/json"

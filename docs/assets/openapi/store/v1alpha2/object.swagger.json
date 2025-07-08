@@ -1,8 +1,8 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "store/v1alpha2/object.proto",
-    "version": "version not set"
+    "title": "Object",
+    "version": "v1alpha2"
   },
   "consumes": [
     "application/json"

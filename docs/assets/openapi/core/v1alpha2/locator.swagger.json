@@ -1,8 +1,8 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "core/v1alpha2/locator.proto",
-    "version": "version not set"
+    "title": "Locator",
+    "version": "v1alpha2"
   },
   "consumes": [
     "application/json"

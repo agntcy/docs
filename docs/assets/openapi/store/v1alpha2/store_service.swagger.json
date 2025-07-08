@@ -1,8 +1,8 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "store/v1alpha2/store_service.proto",
-    "version": "version not set"
+    "title": "Store Service",
+    "version": "v1alpha2"
   },
   "tags": [
     {
