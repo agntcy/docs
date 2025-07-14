@@ -77,11 +77,11 @@ cat model.json
 
 ## Signing and Verification
 
-There are varuous methods availabe for siging and verifying data miodels.
+There are various methods available for signing and verifying data models.
 
 ### OIDC-based Interactive
 
-This process relies on attaching signature to the agent data model using identity-based OIDC signing flow which can be verified by other clients.
+This process involves attaching a signature to the agent data model using identity-based OIDC signing flow which can be verified by other clients.
 The signing process opens a browser window to authenticate the user
 with an OIDC identity provider.
 The verification process validates the agent signature against the identity provider and signature transparency services.
@@ -184,7 +184,7 @@ This example demonstrates how to publish agent data models to allow content disc
 To avoid stale data, it is recommended to republish the data periodically as the data across the network has TTL.
 
 !!! note
-    this operation only works for the objects already pushed to the local storage layer, meaning it is required to first push the data before publication.
+    This operation only works for the objects already pushed to the local storage layer, meaning it is required to first push the data before publication.
 
 ```bash
 # Publish the data to your local data store
@@ -202,15 +202,15 @@ Network publication may fail if you are not connected to the network.
 ## Discover
 
 This example demonstrates how to discover published data locally or across the network.
-The API supports both unicast- mode for routing to specific objects,
-and multicast- mode for attribute-based matching and routing.
+The API supports both unicast mode for routing to specific objects,
+and multicast mode for attribute-based matching and routing.
 
 There are two modes of operation:
 
 - Local mode, where the data is queried from the local data store.
 - Network mode, where the data is queried across the network.
 
-Discovery is performed using full-set label matching, ie. the results always fully match the requested query.
+Discovery is performed using full-set label matching, that is the results always fully match the requested query.
 
 !!! note
     It is not guaranteed that the returned data is available, valid, or up to date.
