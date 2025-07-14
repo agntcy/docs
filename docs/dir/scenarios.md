@@ -2,12 +2,13 @@
 
 The following section showcases a few usage scenarios of the Agent Directory.
 
-Although the following example is shown for CLI-based usage scenario, there is
-an effort on exposing the same functionality via SDKs.
+!!! note
+    Although the following example is shown for a CLI-based usage scenario, there is an effort to expose the same functionality through language-specific SDKs.
 
-## Requirements
+## Prerequisites
 
 - Directory CLI client, distributed via [GitHub Releases](https://github.com/agntcy/dir/releases)
+- Directory API server, outlined in the [Directory Deployment](../how-to-guides/agent-directory.md#deployment) section.
 
 ## Build
 
@@ -18,43 +19,67 @@ Generate an example agent that matches the data model schema defined in
 [OASF](../oasf/oasf-data-model.md) specification.
 
 ```bash
+# Generate an example data model
 cat << EOF > model.json
 {
-  "name": "my-agent",
-  "skills": [
-    {"category_name": "Text Generation"},
-    {"category_name": "Fact Extraction"}
-  ]
+ "name": "my-agent",
+ "skills": [
+    {
+      "category_name": "Natural Language Processing",
+      "category_uid": 1,
+      "class_name": "Text Completion",
+      "class_uid": 10201
+    },
+    {
+      "category_name": "Natural Language Processing",
+      "category_uid": 1,
+      "class_name": "Fact Extraction",
+      "class_uid": 10201
+    }
+ ]
 }
 EOF
 ```
 
 Alternatively, build the same agent data model using the CLI client.
-The build process allows additional operations to be performed,
-which is useful for agent model enrichment and other custom use-cases.
+The build process allows the execution of additional user-defined operations,
+which is useful for data model enrichment and other custom use cases.
 
 ```bash
+# Use the model above as the base model
+mv model.json model.base.json
+
 # Define the build config
 cat << EOF > build.config.yml
 builder:
-  # Base agent model path
-  base-model: "model.json"
+ # Base agent model path
+ base-model: "model.base.json"
 
-  # Disable the LLMAnalyzer plugin
-  llmanalyzer: false
+ # Disable the LLMAnalyzer plugin
+ llmanalyzer: false
 
-  # Disable the runtime plugin
-  runtime: false
+ # Disable the runtime plugin
+ runtime: false
+
+ # Disable the pyprojectparser plugin
+ pyprojectparser: false
+
+ # Enable OASF validation
+ oasf-validation: true
 EOF
 
 # Build the agent
-dirctl build . > built.model.json
+dirctl build . > model.json
 
-# Override above example
-mv built.model.json model.json
+# Preview built agent
+cat model.json
 ```
 
 ## Signing and Verification
+
+There are varuous methods availabe for siging and verifying data miodels.
+
+### OIDC-based Interactive
 
 This process relies on attaching signature to the agent data model using identity-based OIDC signing flow which can be verified by other clients.
 The signing process opens a browser window to authenticate the user
@@ -82,77 +107,157 @@ rm -rf model.json
 mv signed.model.json model.json
 ```
 
-## Store
+### OIDC-based Non-Interactive
 
-This example demonstrates the interaction with the local storage layer.
-It is used as an content-addressable object store for directory-specific models and serves both the local and network-based operations (if enabled).
+This method is designed for automated environments such as CI/CD pipelines where browser-based authentication is not available. It uses OIDC tokens provided by the execution environment (like GitHub Actions) to sign agent data models. The signing process uses a pre-obtained OIDC token along with provider-specific configuration to establish identity without user interaction. The verification process validates the agent signature against the specified OIDC issuer and identity pattern.
+
+```
+      - name: Run sign command
+        run: |
+          echo "Running dir sign command"
+          bin/dirctl sign agent.json \
+            --oidc-token ${{ steps.oidc-token.outputs.token }} \
+            --oidc-provider-url "https://token.actions.githubusercontent.com" \
+            --oidc-client-id "https://github.com/${{ github.repository }}/.github/workflows/demo.yaml@${{ github.ref }}" \
+            --stdin > signed.model.json
+          echo "Signed agent.json to signed.model.json"
+          cat signed.model.json
+          mv signed.model.json agent.json
+
+      - name: Run verify command
+        run: |
+          echo "Running dir verify command"
+          bin/dirctl verify agent.json \
+            --oidc-issuer "https://token.actions.githubusercontent.com" \
+            --oidc-identity "https://github.com/${{ github.repository }}-custom/.github/workflows/demo.yaml@${{ github.ref }}"
+```
+
+### Self-Managed Keys
+
+This method is suitable for non-interactive use cases, such as CI/CD pipelines, where browser-based authentication is not possible or desired. Instead of OIDC, a signing keypair is generated (that is, with Cosign), and the private key is used to sign the agent model. The corresponding public key is then required to verify the agent, therefore, it must be distributed to any party that needs to verify signed agent models.
 
 ```bash
-# push and store content digest
+# Generate a key-pair for signing
+# This creates 'cosign.key' (private) and 'cosign.pub' (public)
+cosign generate-key-pair
+
+# Set COSIGN_PASSWORD shell variable if password protected the private key
+# Sign the agent data model using the private key:
+cat model.json | dirctl sign --stdin --key cosign.key > signed.model.json
+
+# Verify the signed agent using the public key:
+cat signed.model.json | dirctl verify --stdin --key cosign.pub
+
+# (Optional) Replace the base agent model with the signed one:
+rm -rf model.json
+mv signed.model.json model.json
+```
+
+## Store
+
+This example demonstrates the interaction with the local storage layer using the CLI client.
+The storage layer is used as a content-addressable object store for Directory-specific models and serves both the local and network-based operations (if enabled).
+
+
+```bash
+# Push and store content digest
 dirctl push model.json > model.digest
 DIGEST=$(cat model.digest)
 
-# pull
+# Pull the agent
+# Returns the same data as model.json
 dirctl pull $DIGEST
 
-# lookup
+# Lookup basic metadata about the agent
 dirctl info $DIGEST
+
+#> {
+#>   "digest": "sha256:<hash>",
+#>   "type": "OBJECT_TYPE_AGENT",
+#>   "size": 143
+#> }
 ```
 
 ## Announce
 
-This examples demonstrates how to publish the data to allow content discovery.
-To avoid stale data, it is recommended to republish the data periodically
-as the data across the network has TTL.
+This example demonstrates how to publish agent data models to allow content discovery across the network.
+To avoid stale data, it is recommended to republish the data periodically as the data across the network has TTL.
 
-Note that this operation only works for the objects already pushed to local storage layer, ie.
-you must first push the data before being able to perform publication.
+!!! note
+    this operation only works for the objects already pushed to the local storage layer, meaning it is required to first push the data before publication.
 
 ```bash
-# Publish the data to your local data store.
+# Publish the data to your local data store
 dirctl publish $DIGEST
 
-# Publish the data across the network.
+# Publish the data across the network
 dirctl publish $DIGEST --network
 ```
 
 If the data is not published to the network, it cannot be discovered by other peers.
-For published data, peers may try to reach out over network
-and request specific objects for verification and replication.
-Network publication may fail if you are not connected to any peers.
+For published data, peers may try to reach out over the network
+to request specific objects for verification and replication.
+Network publication may fail if you are not connected to the network.
 
 ## Discover
 
-This examples demonstrates how to discover published data locally or across the network.
-This API supports both unicast- mode for routing to specific objects,
-and multicast mode for attribute-based matching and routing.
+This example demonstrates how to discover published data locally or across the network.
+The API supports both unicast- mode for routing to specific objects,
+and multicast- mode for attribute-based matching and routing.
 
-There are two modes of operation, a) local mode where the data is queried from the local data store, and b) network mode where the data is queried across the network.
+There are two modes of operation:
+
+- Local mode, where the data is queried from the local data store.
+- Network mode, where the data is queried across the network.
 
 Discovery is performed using full-set label matching, ie. the results always fully match the requested query.
-Note that it is not guaranteed that the data is available, valid, or up to date as results.
+
+!!! note
+    It is not guaranteed that the returned data is available, valid, or up to date.
+
 
 ```bash
 # Get a list of peers holding a specific agent data model
 dirctl list --digest $DIGEST
 
-# Discover the agent data models in your local data store that can fully satisfy your search query.
+#> Peer 12D3KooWQffoFP8ePUxTeZ8AcfReTMo4oRPqTiN1caDeG5YW3gng
+#>   Digest: sha256:<hash>
+#>   Labels: /skills/Text Generation, /skills/Fact Extraction
+
+# Discover the agent data models in your local data store
 dirctl list "/skills/Text Generation"
 dirctl list "/skills/Text Generation" "/skills/Fact Extraction"
 
-# Discover the agent data models across the network that can fully satisfy your search query.
+#> Peer HOST
+#>   Digest: sha256:<hash>
+#>   Labels: /skills/Text Generation, /skills/Fact Extraction
+
+# Discover the agent data models across the network
 dirctl list "/skills/Text Generation" --network
 dirctl list "/skills/Text Generation" "/skills/Fact Extraction" --network
 ```
 
-It is also possible to get an aggregated summary about the data held in your local data store or across the network.
+It is also possible to get an aggregated summary of the data held in your local data store or across the network.
 This is used for routing decisions when traversing the network.
-Note that for network search, you will not query your own data, but only the data of other peers.
 
 ```bash
-# Get a list of labels and basic summary details about the data you currently have in your local data store.
+# Get label summary details in your local data store
 dirctl list info
 
-# Get a list of labels and basic summary details about the data you across the reachable network.
+#> Peer HOST | Label: /skills/Text Generation | Total: 1
+#> Peer HOST | Label: /skills/Fact Extraction | Total: 1
+
+# Get label summary details across the network
 dirctl list info --network
 ```
+## gRPC Error Codes
+
+The following table lists the gRPC error codes returned by the server APIs, along with a description of when each code is used:
+
+| Error Code                 | Description                                                                                                                                                                 |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `codes.InvalidArgument`    | Returned when the client provides an invalid or malformed argument, such as a missing or invalid object reference or agent.                                                 |
+| `codes.NotFound`           | Returned when the requested object does not exist in the local store or across the network.                                                                                 |
+| `codes.FailedPrecondition` | Returned when the server environment or configuration is not in the required state (that is, failed to create a directory or temp file, or unsupported provider in config). |
+| `codes.Internal`           | Returned for unexpected internal errors, such as I/O failures, serialization errors, or other server-side issues.                                                           |
+| `codes.Canceled`           | Returned when the operation is canceled by the client or context expires.                                                                                                   |
