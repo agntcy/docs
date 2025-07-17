@@ -4,3 +4,5 @@ nav:
   - Package schema.model: model.proto.md
   - Taxonomy of AI Agent Skills: taxonomy.md
   - OASF Contribution Guide: workflow.md
+  - API Reference: oasf-api-ref.md
+
