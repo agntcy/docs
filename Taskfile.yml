@@ -40,6 +40,154 @@ tasks:
       - |
         echo "Docs available at: file://{{.BUILD_SITE_DIR}}/index.html"
 
+  generate:
+    desc: Download proto files from AGNTCY Buf registry and generate markdown documentation
+    deps:
+      - deps/proto-diagrams
+    preconditions:
+      - which buf
+      - which go
+    vars:
+      SCHEMA_DIR: "{{.ROOT_DIR}}/schema"
+      DOCS_DIR: "{{.ROOT_DIR}}/docs"
+      GENERATED_DIR: "{{.DOCS_DIR}}/generated"
+      # List of known AGNTCY modules to download
+      MODULES: "dir oasf"
+    cmds:
+      # Clean up existing generated files
+      - rm -rf {{.GENERATED_DIR}}
+      - mkdir -p {{.GENERATED_DIR}}
+      
+      # Download proto files for each module
+      - |
+        for module in {{.MODULES}}; do
+          echo "Downloading module: $module"
+          if buf export buf.build/agntcy/$module --output {{.SCHEMA_DIR}}/$module 2>/dev/null; then
+            echo "Successfully downloaded $module"
+          else
+            echo "Module $module not found, skipping..."
+            continue
+          fi
+        done
+      
+      # Generate markdown documentation with Mermaid diagrams for each proto-containing directory
+      - |
+        for module in {{.MODULES}}; do
+          if [ -d "{{.SCHEMA_DIR}}/$module" ]; then
+            echo "Processing module: $module"
+            
+            # Find all directories containing proto files
+            find {{.SCHEMA_DIR}}/$module -type d | while read -r dir; do
+              # Check if this directory contains any proto files
+              if [ -n "$(find "$dir" -maxdepth 1 -name "*.proto" -type f)" ]; then
+                echo "Processing directory: $dir"
+                
+                # Get relative path from schema root
+                rel_path=$(python3 -c "import os,sys; print(os.path.relpath(sys.argv[1], sys.argv[2]))" "$dir" "{{.SCHEMA_DIR}}")
+                
+                # Create corresponding output directory
+                output_dir="{{.GENERATED_DIR}}/$rel_path"
+                mkdir -p "$output_dir"
+                
+                # Generate markdown for this directory
+                {{.DEPS_DIR}}/proto-gen-md-diagrams -d "$dir" -o "$output_dir"
+              fi
+            done
+          fi
+        done
+      
+      # Create API reference markdown files for each module
+      - |
+        for module in {{.MODULES}}; do
+          echo "Creating API reference for module: $module"
+          api_ref_file="{{.DOCS_DIR}}/$module/${module}-api-ref.md"
+
+          echo "# $module API Reference" > "$api_ref_file"
+          echo "" >> "$api_ref_file"
+          echo "This document contains the complete API reference for the $module." >> "$api_ref_file"
+          echo "" >> "$api_ref_file"
+          
+          # Create hierarchical folder structure
+          declare -A folder_files
+          declare -A folder_subfolders
+          
+          # First pass: collect all files and organize by folder hierarchy
+          find {{.GENERATED_DIR}}/$module -name "*.md" -type f 2>/dev/null | sort | while read -r md_file; do
+            rel_path=$(python3 -c "import os,sys; print(os.path.relpath(sys.argv[1], sys.argv[2]))" "$md_file" "{{.GENERATED_DIR}}/$module")
+            dir_path=$(dirname "$rel_path")
+            
+            if [ "$dir_path" = "." ]; then
+              # Root level files
+              folder_files["root"]="${folder_files["root"]} $md_file"
+            else
+              # Get the top-level folder
+              top_folder=$(echo "$dir_path" | cut -d'/' -f1)
+              folder_files["$top_folder"]="${folder_files["$top_folder"]} $md_file"
+              
+              # Track subfolders for each top-level folder
+              if [ "$dir_path" != "$top_folder" ]; then
+                folder_subfolders["$top_folder"]="${folder_subfolders["$top_folder"]} $dir_path"
+              fi
+            fi
+          done
+          
+          # Second pass: process each top-level folder
+          for top_folder in $(printf '%s\n' "${!folder_files[@]}" | sort); do
+            if [ "$top_folder" = "root" ]; then
+              echo "" >> "$api_ref_file"
+              echo "## Root Files" >> "$api_ref_file"
+              echo "" >> "$api_ref_file"
+            else
+              echo "" >> "$api_ref_file"
+              echo "## $top_folder" >> "$api_ref_file"
+              echo "" >> "$api_ref_file"
+            fi
+            
+            # Get unique subfolders for this top-level folder
+            unique_subfolders=$(echo "${folder_subfolders["$top_folder"]}" | tr ' ' '\n' | sort -u)
+            
+            # Process files in this top-level folder
+            for md_file in ${folder_files["$top_folder"]}; do
+              rel_path=$(python3 -c "import os,sys; print(os.path.relpath(sys.argv[1], sys.argv[2]))" "$md_file" "{{.GENERATED_DIR}}/$module")
+              dir_path=$(dirname "$rel_path")
+              filename=$(basename "$rel_path")
+              
+              # If this file is in a subfolder, create subfolder heading first
+              if [ "$dir_path" != "." ] && [ "$dir_path" != "$top_folder" ]; then
+                # Check if we already created this subfolder heading
+                if ! grep -q "### $dir_path" "$api_ref_file"; then
+                  echo "" >> "$api_ref_file"
+                  echo "### $dir_path" >> "$api_ref_file"
+                  echo "" >> "$api_ref_file"
+                fi
+                echo "" >> "$api_ref_file"
+                echo "#### $filename" >> "$api_ref_file"
+                echo "" >> "$api_ref_file"
+              else
+                # Root level file in this top folder
+                echo "" >> "$api_ref_file"
+                echo "### $filename" >> "$api_ref_file"
+                echo "" >> "$api_ref_file"
+              fi
+              
+              # Process the file content to indent all headers by one level
+              while IFS= read -r line; do
+                if [[ "$line" =~ ^[[:space:]]*# ]]; then
+                  # Add one # to the beginning of the line (indent header by one level)
+                  echo "#$line" >> "$api_ref_file"
+                else
+                  echo "$line" >> "$api_ref_file"
+                fi
+              done < "$md_file"
+              echo "" >> "$api_ref_file"
+            done
+          done
+          
+          echo "Created API reference: $api_ref_file"
+        done
+      
+      - echo "Documentation generation complete. Check {{.GENERATED_DIR}} for generated files."
+
   run:
     deps:
       - deps/patch
