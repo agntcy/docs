@@ -10,3 +10,4 @@ nav:
   - Agent Workflow Server: agws
   - CSIT: csit
   - How-To Guides: how-to-guides
+  - How to Contribute: contributing.md

@@ -1,8 +1,7 @@
-# Documentation Repository Internet of Agent
+# Documentation Repository for AGNTCY
 
-This repository contains the documentation for the project, built using Sphinx
-with the Read the Docs template. The documentation sources are written in
-Markdown.
+This repository contains the documentation for the project, built using Material for MkDocs.
+The documentation sources are written in Markdown.
 
 ## Table of Contents
 
@@ -19,9 +18,9 @@ Markdown.
 
 ## Installation
 
-To build the documentation locally, you need to install required dependencies.
+### Prerequisites
 
-**Prerequisites**
+To build the documentation locally, you need to install the following dependencies:
 
 - [Taskfile](https://taskfile.dev/)
 - [Uv](https://docs.astral.sh/uv/getting-started/installation/)
@@ -72,10 +71,7 @@ This will generate the HTML documentation in the *.build/site* directory.
 
 ## Contributing
 
-Contributions are welcome! Please follow these steps to contribute:
-
-Fork the repository. Create a new branch for your feature or bugfix. Make your
-changes. Submit a pull request.
+See the [How to Contribute](/docs/contributing.md) page for more information.
 
 # Copyright Notice
 
