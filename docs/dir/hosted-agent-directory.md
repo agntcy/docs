@@ -1,14 +1,14 @@
-# Hosted AGNTCY Agent Directory
+# Hosted Outshift Agent Directory, powered by AGNTCY
 
 A public hosted instance of the Agent Directory is available at
-[https://hub.agntcy.org/directory](https://hub.agntcy.org/directory). In
+[https://agent-directory.outshift.com/](https://agent-directory.outshift.com/). In
 this section we describe the main features of this instance which is provided __AS
 IS__ to the community to help users familiarize themselves with the Agent
 Directory.
 
-AGNTCY Agent Directory is designed to provide a robust multi-organization platform for hosting and
+Outshift Agent Directory is designed to provide a robust multi-organization platform for hosting and
 managing Agent Directory Records, which we will refer to as simply "records" or
-"agent records." AGNTCY Agent Directory acts as a centralized
+"agent records." Outshift Agent Directory acts as a centralized
 point for organizing and accessing agent records. This hosted service is enhanced by a
 gRPC API that supports efficient service communication and integration, ensuring
 seamless interaction between components.
@@ -24,7 +24,7 @@ directories and related services.
 
 ## Core Concepts
 
-The AGNTCY Agent Directory is organized around a few basic concepts:
+The Outshift Agent Directory is organized around a few basic concepts:
 
 * Users - A user is the basic unit of authentication and authorization in the
 Hub, usually corresponding to a human or service account.
@@ -47,7 +47,7 @@ Users and their Organizations and management of agent records in their Repos.
 
 ## Features
 
-AGNTCY Agent Directory enables users to:
+Outshift Agent Directory, powered by AGNTCY, enables users to:
 
 * View and search for public agent records.
 * View your organization's public and private agent records.
@@ -57,10 +57,10 @@ AGNTCY Agent Directory enables users to:
 
 ## Using the Hub
 
-### Signing up for the hosted AGNTCY Agent Directory and Logging in
+### Signing up for the hosted Outshift Agent Directory and Logging in
 
-To get started with the hosted AGNTCY Agent Directory, sign up for free at the [AGNTCY Agent Directory
-homepage](https://hub.agntcy.org/directory). You can sign up with your GitHub account or
+To get started with the hosted Outshift Agent Directory, sign up for free at the [AGNCTY Agent Directory
+homepage](https://agent-directory.outshift.com/). You can sign up with your GitHub account or
 by providing an email and password. Once your account is created, simply log in.
 When first logging in, you are prompted to create a name for your default
 organization. This organization is a personal space where all repositories
@@ -88,7 +88,7 @@ another organization.
 ### Manage Agents associated with Your Organization
 
 The Agent Directory Page allows you to view, edit, and create agent repositories
-in the AGNTCY Agent Directory. Here the records are displayed in a table with customizable columns.
+in the Outshift Agent Directory. Here the records are displayed in a table with customizable columns.
 
 You can select which columns are displayed, and in which order, by clicking the
 **Arrange Columns** button (**▥**).
@@ -135,15 +135,14 @@ The **Versions** tab lists the published versions of the agent.
 The **Settings** tab allows the owner to change the
 visibility of the agent.
 
-## Add an Agent Directory Record to the AGNTCY Agent Directory
+## Add an Agent Directory Record to the Outshift Agent Directory
 
-Agent directory records are associated with a repository. If the repository
-does not already exist, it will be created automatically with visibility set as
-private.
+Agent directory records are associated with a repository. A repository must
+exist first for an agent record to be added to it.
 
 ### Create a new agent repository
 
-To add an agent repository in the AGNTCY Agent Directory:
+To add an agent repository in the Outshift Agent Directory:
 
 1. Click the **+ New Repository** button.
 1. Enter the repository name.
@@ -159,13 +158,13 @@ At this point, you have an empty repository ready for agent records.
 
 Adding an Agent Directory Record has these prerequisites:
 
-1. You need to install the AGNTCY Agent Directory command line tool, `dirctl`.
-1. You need an agent record that conforms to AGNTCY Agent Directory requirements.
+1. You need to install the Outshift Agent Directory command line tool, `dirctl`.
+1. You need an agent record that conforms to Outshift Agent Directory requirements.
 1. You need to sign your agent record.
 
 #### Pre-req 1: Install `dirctl`
 
-Binary packages and installation of the AGNTCY Agent Directory `dirctl`
+Binary packages and installation of the Outshift Agent Directory `dirctl`
 command line tool are available in multiple forms on GitHub:
 
 * [container image](https://github.com/agntcy/dir/pkgs/container/dir-ctl)
@@ -184,8 +183,7 @@ defined by the
 starting at the root with an [Agent object](https://schema.oasf.agntcy.org/objects/agent).
 
 To be useful, an agent record should include at least the following:
-
-* Name of the agent (the name MUST match the organization and repository name in the AGNTCY Agent Directory),
+* Name of the agent (the name MUST match the organization and repository name in the Outshift Agent Directory), 
 * Version of the agent (use semantic convention)
 * Description (something to help any viewer understand what your agent does, what is the use case it is applicable to, expected inputs and outputs, LLM used, runtime, etc)
 * Locator, per [OASF locator objects](https://schema.oasf.agntcy.org/objects/locator?extensions=)
@@ -216,7 +214,7 @@ And it will look like this
 
 #### Pre-req 3: Signing Agent Directory Records using `dirctl`
 
-You must sign the record before pushing it to the AGNTCY Agent Directory. Unsigned records are
+You must sign the record before pushing it to the Outshift Agent Directory. Unsigned records are
 rejected by the API.
 
 To sign an agent record in the file `agent.json` using the default provider [sigstore](https://www.sigstore.dev/), run:
@@ -242,13 +240,13 @@ Pushing and pulling agent directory records is done using the `dirctl` tool.
 
 From your terminal window:
 
-1. Login to your AGNTCY Agent Directory account
+1. Login to your Outshift Agent Directory account
 
       ```dirctl hub login```
 
 1. The login page opens in your browser. Use your credentials to log in.
 
-1. Verify your AGNTCY Agent Directory organizations and which one you are currently logged into:
+1. Verify your Outshift Agent Directory organizations and which one you are currently logged into:
 
       ```dirctl hub orgs```
 
@@ -330,10 +328,10 @@ button.
     You cannot invite other users to your personal organization created
     during signing up. To collaborate with others, create a new organization and invite them to it.
 
-## Troubleshooting pushing agents to the AGNTCY Agent Directory
+## Troubleshooting pushing agents to the Outshift Agent Directory
 
 `Error: failed to validate access token: invalid session token`
-You forgot to login to your AGNTCY Agent Directory account
+You forgot to login to your Outshift Agent Directory account
 
 `Error: failed to push agent: could not receive response: rpc error: code = InvalidArgument desc = agent: invalid value in agent name`
 The “agent name” attribute in the json file does not match the organization/repository in the Hub.
