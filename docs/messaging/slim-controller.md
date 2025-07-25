@@ -34,7 +34,7 @@ The southbound interface allows SLIM nodes to register with the Controller and r
 
 ### Container Diagram
 
-![System Context Diagram](/docs/assets/slim-container-controller.png)
+![Container Diagram](/docs/assets/slim-container-controller.png)
 
 ### Configuring the SLIM Controller
 
@@ -64,7 +64,7 @@ Task runner is recommended for Taskfile commands.
 
 ### Building the Controller
 
-The Controller can be built buy running the following task:
+The Controller can be built by running the following task:
 
 ```
 # Build all Controller components
@@ -76,7 +76,7 @@ task control-plane:control-plane:build
 
 ### Starting the Controller
 
-The Controller can be started buy running the following task:
+The Controller can be started by running the following task:
 
 ```bash
 # Start the Controller service
@@ -87,7 +87,7 @@ task control-plane:control-plane:run
 
 Nodes register themselves upon startup with the Controller. Once registered, the controller can communicate with nodes using the same connection.
 
-Nodes can be managed through the slimctl. For more information, see the [slimctl](#slimctl). 
+Nodes can be managed through slimctl. For more information, see the [slimctl](#slimctl). 
 
 ## slimctl
 
@@ -156,7 +156,7 @@ For full reference of connection_config.json, see the [client-config-schema.json
 
 ### Managing SLIM Nodes Directly
 
-SLIM nodes can be configured to expose a Controller endpoint of a SLIM instance, slimctl can connect to this endpoint to manage the SLIM instance directly by using slimctl `node-control` sub-command. In this case, in the configuration file, the server should point to the SLIM instance endpoint.
+SLIM nodes can be configured to expose a Controller endpoint of a SLIM instance, slimctl can connect to this endpoint to manage the SLIM instance directly by using slimctl `node-connect` sub-command. In this case, in the configuration file, the server should point to the SLIM instance endpoint.
 
 List connection on a SLIM instance:
 `slimctl node-connect connection list --server=<node_control_endpoint>`
