@@ -1,4 +1,5 @@
 nav:
  - Secure Low-Latency Interactive Messaging (SLIM): slim-core.md
+ - Getting Started with SLIM: slim-howto.md
  - SLIM MCP: slim-mcp.md
  - SLIM Controller: slim-controller.md

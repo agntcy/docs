@@ -54,23 +54,23 @@ instructions in the golang website.
 For more information, see (https://crates.io/users/artifacts-agntcy).
 
 ```bash
-cargo install agp-gw
+cargo install slim-gw
 ```
 
 ### Container Images
 
 ```bash
-docker pull ghcr.io/agntcy/agp/gw:latest
+docker pull ghcr.io/agntcy/slim/gw:latest
 ```
 
 ### Helm Charts
 
 ```bash
-helm pull ghcr.io/agntcy/agp/helm/agp:latest
+helm pull ghcr.io/agntcy/slim/helm/slim:latest
 ```
 
 ### Pypi Packages
 
 ```bash
-pip install agp-bindings
+pip install slim-bindings
 ```

@@ -52,7 +52,7 @@ The initial set of IoA components and architecture is outlined below. This is a 
     * **API-bridge Agent** to connect an Agent with any API end-point (tools or data sources)
     * **Human in the Loop Agent** to interface with human input/output seamlessly. (coming soon)
 1. **Messaging SDK**:
-    * **Agent Gateway Protocol (AGP)**: A protocol that defines the standards and guidelines for secure and efficient network-level communication between AI agents. AGP ensures interoperability and seamless data exchange by specifying message formats, transport mechanisms, and interaction patterns.
+    * **Secure Low-Latency Interactive Messaging (SLIM)**: A protocol that defines the standards and guidelines for secure and efficient network-level communication between AI agents. SLIM ensures interoperability and seamless data exchange by specifying message formats, transport mechanisms, and interaction patterns.
     * **Agent Gateway**: Offers handy secure (MLS and quantum safe) network-level communication services to a group of agents (typically those of a given multi-agent application) through SDK/Libraries. It extends gRPC to support  pub/sub interactions in addition to request/reply, streaming, fire & forget and more.
 1. **Agent Workflow Server**: Deploys and supervises agent workflows written in various frameworks and makes them available through the Agent Connect Protocol. Such workflows could be multi-agent applications including a mix of toolkit agents, local and remote agents. 
 1. **Agentic Ensemble Observability & Evaluation**: Telemetry collectors, tools and services to enable multi-agent application observability and evaluation
