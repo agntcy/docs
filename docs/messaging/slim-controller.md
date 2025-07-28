@@ -58,7 +58,7 @@ southbound:
 
 ## Prerequisites
 
-Go 1.23.6 or later is required for running the SLIM Controller.
+Go 1.24 or later is required for running the SLIM Controller.
 
 Task runner is recommended for Taskfile commands.
 
@@ -83,9 +83,47 @@ The Controller can be started by running the following task:
 task control-plane:control-plane:run
 ```
 
+Alternatively, start the Controller with the Docker image:
+
+```
+docker run ghcr.io/agntcy/slim/control-plane:0.0.1
+```
+
+Or use the following to also add a configuration file:
+
+```
+docker run -v ./config.yaml:/config.yaml  ghcr.io/agntcy/slim/control-plane:0.0.1 -c /config.yaml
+```
+
 ### Managing Nodes
 
-Nodes register themselves upon startup with the Controller. Once registered, the controller can communicate with nodes using the same connection.
+Nodes can register themselves with the Controller upon startup. Once registered, the controller can communicate with nodes using the same connection.
+
+To enable self-registration, configure the nodes with the Controller address:
+
+```yaml
+  tracing:
+    log_level: info
+    display_thread_names: true
+    display_thread_ids: true
+
+  runtime:
+    n_cores: 0
+    thread_name: "slim-data-plane"
+    drain_timeout: 10s
+
+  services:
+    slim/1:
+      pubsub:
+        servers: []
+        clients: []
+      controller:
+        servers: []
+        clients:
+          - endpoint: "http://<controller-address>:50052"
+            tls:
+              insecure: true
+```
 
 Nodes can be managed through slimctl. For more information, see the [slimctl](#slimctl). 
 
@@ -97,12 +135,12 @@ Nodes can be managed through slimctl. For more information, see the [slimctl](#s
 
 `slimctl` supports configuration through a configuration file, environment variables, or command-line flags.
 
-By default, `slimctl` looks for a configuration file at `$HOME/.slimctl/config.yaml` or in the current working directory. 
+By default, `slimctl` looks for a configuration file at `$HOME/.slimctl/config.yaml` or in the current working directory.
 
 An example `config.yaml`:
 
 ```yaml
-server: "127.0.0.1:46358"
+server: "127.0.0.1:50001"
 timeout: "10s"
 tls:
   insecure: false
@@ -117,7 +155,7 @@ The `server` endpoint should point to a [SLIM Control](https://github.com/agntcy
 
 List connection on a SLIM instance:
 
-`slimctl connection list --node-id=<slim_node_id>` List connection on a SLIM instance.
+`slimctl connection list --node-id=<slim_node_id>`
 
 List routes on a SLIM instance:
 
@@ -125,11 +163,11 @@ List routes on a SLIM instance:
 
 Add a route to the SLIM instance:
 
-`slimctl route add <organization/namespace/agentName/agentId> via <config_file> --node-id=<slim_node_id>` 
+`slimctl route add <organization/namespace/agentName/agentId> via <config_file> --node-id=<slim_node_id>`
 
 Delete a route from the SLIM instance:
 
-`slimctl route del <organization/namespace/agentName/agentId> via <host:port> --node-id=<slim_node_id>` 
+`slimctl route del <organization/namespace/agentName/agentId> via <host:port> --node-id=<slim_node_id>`
 
 Print version information:
 
@@ -141,10 +179,11 @@ Run `slimctl <command> --help` for more details on flags and usage.
 
 ```bash
 # Add a new route
-cat >> connection_config.json <<EOF
-{
-"endpoint": "http://127.0.0.1:46357"
-}
+cat > connection_config.json <<EOF  
+{  
+"endpoint": "http://127.0.0.1:46357"  
+}  
+EOF  
 slimctl route add org/default/alice/0 via connection_config.json
 
 
@@ -157,6 +196,32 @@ For full reference of connection_config.json, see the [client-config-schema.json
 ### Managing SLIM Nodes Directly
 
 SLIM nodes can be configured to expose a Controller endpoint of a SLIM instance, slimctl can connect to this endpoint to manage the SLIM instance directly by using slimctl `node-connect` sub-command. In this case, in the configuration file, the server should point to the SLIM instance endpoint.
+
+To enable this, configure the node to host a server allowing the client to connect:
+
+```yaml
+  tracing:
+    log_level: info
+    display_thread_names: true
+    display_thread_ids: true
+
+  runtime:
+    n_cores: 0
+    thread_name: "slim-data-plane"
+    drain_timeout: 10s
+
+  services:
+    slim/1:
+      pubsub:
+        servers: []
+        clients: []
+      controller:
+        servers:
+            - endpoint: "0.0.0.0:46358"
+              tls:
+                insecure: true # Or specify tls cert and key
+        clients: []
+```
 
 List connection on a SLIM instance:
 `slimctl node-connect connection list --server=<node_control_endpoint>`
