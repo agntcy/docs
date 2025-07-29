@@ -74,7 +74,7 @@ The following tasks are defined:
 ```bash
 task: Available tasks for this project:
 * benchmarks:directory:test:                              All ADS benchmark test
-* benchmarks:slim:test:                            .      All SLIM benchmark test
+* benchmarks:slim:test:                                   All SLIM benchmark test
 * integrations:apps:download:wfsm-bin:                    Get wfsm binary from GitHub
 * integrations:apps:get-marketing-campaign-cfgs:          Populate marketing campaign config file
 * integrations:apps:init-submodules:                      Initialize submodules
