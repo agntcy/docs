@@ -1,13 +1,10 @@
-# Introduction
+# AGNTCY Origins
 
-The AGNTCY is an open source collective building the infrastructure for The Internet of Agents (IoA): an open, interoperable internet for agent to agent collaboration.
+AGNTCY began with Outshift by Cisco's vision of an [Internet of Agents](https://outshift.cisco.com/the-internet-of-agents)—recognizing that AI agents were being built in isolated silos, unable to collaborate across organizational boundaries. Their foundational white paper identified the critical infrastructure gap preventing agents from working together at scale.
 
-The IoA represents a transformative initiative in the field
-of artificial intelligence designed to create a standardized ecosystem for AI
-agent discovery, interconnection, and collaboration. This comprehensive
-framework addresses the growing need for interoperability and secure
-communication between AI agents developed across different frameworks and
-platforms.
+What started as a concept became reality in March 2025 when Outshift launched AGNTCY on GitHub with complete code, specifications, and services, alongside Galileo and LangChain as core maintainers. They built the discovery, identity, messaging, and observability components that agents need to find each other, verify their capabilities, and collaborate securely.
+
+By July 2025, over 75 companies had joined the effort, leading to AGNTCY's donation to the Linux Foundation with Cisco, Dell Technologies, Google Cloud, Oracle, and Red Hat as formative members. What began as one company's vision became the community-owned infrastructure for the Internet of Agents. 
 
 ## Vision
 
