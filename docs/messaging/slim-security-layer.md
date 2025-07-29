@@ -1,6 +1,6 @@
 # Security Layer
 
-The Security Layer implements secure group communications using the Message Layer Security (MLS) protocol. This layer ensures end-to-end encryption, authentication, and access control across agent groups within the SLIM ecosystem.
+The [SLIM](slim-core.md) Security Layer implements secure group communications using the Message Layer Security (MLS) protocol. This layer ensures end-to-end encryption, authentication, and access control across agent groups within the SLIM ecosystem.
 
 ## Overview
 
@@ -13,28 +13,28 @@ The security layer leverages MLS to provide:
 
 ## Key Components
 
-### 1. Group State Management
+### Group State Management
 
 - Maintains cryptographic group state
 - Handles member additions and removals
 - Manages group epoch changes
 - Processes key updates
 
-### 2. Key Schedule
+### Key Schedule
 
 - Derives encryption keys from group secrets
 - Implements MLS key schedule
 - Manages key rotations
 - Ensures forward secrecy
 
-### 3. Message Protection
+### Message Protection
 
 - Encrypts group messages
 - Provides integrity protection
 - Implements sender authentication
 - Handles message sequencing
 
-### 4. Authentication
+### Authentication
 
 - Validates group members
 - Verifies message signatures

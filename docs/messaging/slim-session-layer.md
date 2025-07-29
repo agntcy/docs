@@ -1,6 +1,6 @@
 # Session Layer
 
-The Secure Low-Latency Interactive Messaging (SLIM) Session Layer manages and maintains the communication state between agents and their respective SLIM nodes. It provides essential services for establishing, maintaining, and terminating sessions between communicating entities in the SLIM ecosystem.
+The [SLIM](slim-core.md) Session Layer manages and maintains the communication state between agents and their respective SLIM nodes. It provides essential services for establishing, maintaining, and terminating sessions between communicating entities in the SLIM ecosystem.
 
 ## Flow Diagram
 
@@ -18,7 +18,7 @@ sequenceDiagram
     rect rgb(200, 200, 200)
         note right of Agent: Active Session
         Agent->>SessionLayer: Data Exchange
-        SessionLayer->>SLIM: Session-managed Communication
+        SessionLayer->>SLIM: Session-Managed Communication
         SLIM->>SessionLayer: Response
         SessionLayer->>Agent: Processed Response
     end

@@ -1,6 +1,6 @@
 # Getting Started with SLIM
 
-Secure Low-Latency Interactive Messaging (SLIM) aims to provide a secure, scalable, and user-friendly communication framework that unifies state-of-the-art capabilities from all mentioned frameworks into a single implementation.
+SLIM is a secure, scalable, and user-friendly communication framework that unifies state-of-the-art capabilities from all mentioned frameworks into a single implementation.
 
 For more information on SLIM, see the [detailed documentation](../messaging/slim-core.md).
 
@@ -13,7 +13,7 @@ installed components in your system:
 
 Taskfile is required to run all the build operations. Follow the
 [installation instructions](https://taskfile.dev/installation/) in the Taskfile
-documentations to find the best installation method for your system.
+documentation to find the best installation method for your system.
 
 <details>
   <summary>with brew</summary>
@@ -34,7 +34,7 @@ For more information, see [Taskfile](https://taskfile.dev/).
 
 ### Rust
 
-The data-plane components are implemented in rust. Install with rustup:
+The data-plane components are implemented in Rust. Install with rustup:
 
 ```bash
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
@@ -42,16 +42,16 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 For more information, see [Rust](https://rustup.rs/).
 
-### Golang
+### Go
 
-The control-plane components are implemented in Golang. Follow the installation
-instructions in the golang website.
+The control-plane components are implemented in Go. Follow the installation
+instructions in the Go website.
 
 ## Artifacts distribution
 
 ### Crates
 
-For more information, see (https://crates.io/users/artifacts-agntcy).
+For more information, see [crates.io](https://crates.io/users/artifacts-agntcy).
 
 ```bash
 cargo install slim-gw
@@ -69,7 +69,7 @@ docker pull ghcr.io/agntcy/slim/gw:latest
 helm pull ghcr.io/agntcy/slim/helm/slim:latest
 ```
 
-### Pypi Packages
+### PyPI Packages
 
 ```bash
 pip install slim-bindings
