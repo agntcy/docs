@@ -36,6 +36,7 @@ sequenceDiagram
 - **Security**: Implements session-level security measures and token management.
 - **Error Recovery**: Provides mechanisms for handling session interruptions and failures.
 - **Session Termination**: Manages graceful session closure and cleanup.
+- **Embedded MLS Client**: Provides a client for the Message Layer Security (MLS) protocol.
 
 ## Architecture
 

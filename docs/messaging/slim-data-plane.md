@@ -60,3 +60,32 @@ The diagram shows the message flow through the SLIM data plane components:
 3. The Forwarding Table determines routing strategy.
 4. The Connection Table manages delivery to connected agents.
 5. Messages are delivered through direct, multicast, or anycast methods.
+
+## Group Management and Encryption
+
+Agents can be grouped together to form a group. To create a group, create a session as moderator.
+
+The following needs to be defined:
+
+- `remote_organization`
+- `remote_namespace`
+- `broadcast_topic`
+
+Encryption can be enabled through a JSON Web Token (JWT) in the session creation request by setting `mls_enable` to `true`.
+
+To enable group encryption:
+
+1. Define 'jwt_identity'
+2. Define shared secret
+3. Set `mls_enable` to `true`
+
+The group is created by sending a message to the broadcast topic.
+
+## Authentication
+
+Authentication can be configured when running `create_pyservice`. The following needs to be defined through `shared_secret_identity`:
+
+- `PyIdentityProvider`
+- `PyIdentityVerifier`
+
+The provider is JWT and the verifier is a public key.
