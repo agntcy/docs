@@ -2,16 +2,17 @@
 
 One of the most important caracteristics of SLIM is that it allows secure group communincation.
 A gruop in SLIM is a set of clients that can communicate together using a shared channel. The channel is
-identified by a name, as described in [SLIM Messaging Layer](slim-data-plane.md). In addition, when MLS is
+identified by a name, as described in [SLIM Messaging Layer](slim-data-plane.md). In addition, when 
+[MLS](https://www.rfc-editor.org/rfc/rfc9420.html) is
 enable, the group communincation is protected by end-to-end encryption.
 
 Here you will find all the information required to create a gruop
 in a SLIM network.
 
- ## Gruop Creation Using a Moderator
+## Gruop Creation Using a Moderator
 
  As descibe in [SLIM Messaging Layer](slim-data-plane.md), a gruop is managed by a moderator.
- A moderator is a particular client that is able to create a Channel, add and remove clients and performs the 
+ A moderator is a particular client that is able to create a channel, add and remove clients and performs the 
  functions delegeated to the delivery service by the MLS protocol.
 
  The moderator uses the SLIM python bindings in order to setup a group session and configure all the 
@@ -21,7 +22,7 @@ in a SLIM network.
  can be found in the [SLIM Group Communication Tutorial](slim-group-tutorila.md). Here we report the basic steps to follow
  with snipets of python code to setup a group.
 
-- **Create the moderator**:  The moderator is created by creating a Streaming bidirectional session that
+- **Step 1: Create the moderator**  The moderator is created by creating a Streaming bidirectional session that
 will create the corresponding state in the SLIM session layer. In this example the communication between 
 partcipants will be encrypted end-to-end as MLS is enabled.
 
@@ -44,8 +45,9 @@ partcipants will be encrypted end-to-end as MLS is enabled.
     )
 ```
 
--  **Invite Client to the Channel**:  Now the moderator needs to invite other partcipants to the 
-channel. Notice that not all particpants needs to be added at the beginning but they can be add also later.
+-  **Step 2: Invite clients to the channel**  Now the moderator needs to invite other partcipants to the 
+channel. Notice that not all particpants needs to be added at the beginning but they can be add also later when
+the communincation on the channel is already started.
 
 ```python
     # Invite other members to the session.
@@ -57,9 +59,9 @@ channel. Notice that not all particpants needs to be added at the beginning but 
         )  # Send an invitation to the invitee.
 ```
 
--  **The participants need to listen**: In other to receive the invitation to the channel each participant 
+-  **Step 3: Listen from invites** In other to receive the invitation to the channel each participant 
 needs to listen for incoming messages. Notice the the invite message will be sent on the name of the particpant
-and not on the channel as the partcipant doesn't know the channel yet
+and not on the channel as the partcipant does not know the channel name yet
 
 ```python
     async with participant_slim_app:
@@ -76,11 +78,12 @@ and not on the channel as the partcipant doesn't know the channel yet
         print(f"Received: {msg_rcv.decode()}")
 ```
 
-At this point the group it set and the clients can start to exchange messages.
-However this configuration is not reflected the SLIM Controller automatically and so it as to be reported manually
-into the controller. In particular, if the SLIM network is composed by multiple nodes the registration to
+At this point the group is set up and the clients can start to exchange messages.
+However this configuration is not reflected the [SLIM Controller](slim-controller.md) 
+automatically and so it as to be reported manually.
+In particular, if the SLIM network is composed by multiple nodes the registration to
 the control plane is mandatory in order to properly setup the routes between nodes as the goup setup 
-by the moderator itself can work out of the box only is a singlo SLIM node is present in the network.
+by the moderator itself can work out of the box only if a singlo SLIM node is present in the network.
 
 In the next session we will describe out to register the new created group in the SLIM controller and 
 how to properly set the routes between the nodes
