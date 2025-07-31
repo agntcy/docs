@@ -6,7 +6,7 @@ this section we describe the main features of this instance which is provided __
 IS__ to the community to help users familiarize themselves with the Agent
 Directory.
 
-Outshift Agent Directory is designed to provide a robust multi-organization platform for hosting and
+Outshift Agent Directory (aka "Hub") is designed to provide a robust multi-organization platform for hosting and
 managing Agent Directory Records, which we will refer to as simply "records" or
 "agent records." Outshift Agent Directory acts as a centralized
 point for organizing and accessing agent records. This hosted service is enhanced by a
@@ -14,9 +14,9 @@ gRPC API that supports efficient service communication and integration, ensuring
 seamless interaction between components.
 
 
-AGNTCY Hub serves as a central platform for hosting and managing various
+Outshift Agent Directory serves as a central platform for hosting and managing various
 agent-related services. The main purpose of the Agent Directory Service
-component of Hub is to provide a comprehensive solution
+component is to provide a comprehensive solution
 for developers and IT admins to register, discover, and manage records in an
 organized manner. By offering a secure environment for authentication and user
 management, it ensures that organizations can confidently manage their agent
@@ -42,7 +42,7 @@ user or organization may access many different repos and by extension their
 agent records.
 
 The [Agent Directory Service (ADS)](../dir/overview.md) provides storage for agent records
-while the frontend hosted AGNTCY Agent Directory provides access control with
+while the frontend hosted Outshift Agent Directory provides access control with
 Users and their Organizations and management of agent records in their Repos.
 
 ## Features
@@ -59,7 +59,7 @@ Outshift Agent Directory, powered by AGNTCY, enables users to:
 
 ### Signing up for the hosted Outshift Agent Directory and Logging in
 
-To get started with the hosted Outshift Agent Directory, sign up for free at the [AGNCTY Agent Directory
+To get started with the hosted Outshift Agent Directory, sign up for free at the [Outshift Agent Directory
 homepage](https://agent-directory.outshift.com/). You can sign up with your GitHub account or
 by providing an email and password. Once your account is created, simply log in.
 When first logging in, you are prompted to create a name for your default
