@@ -110,110 +110,126 @@ groups, and set routes between SLIM nodes.
 You can generate gRPC API SDKs from the [schema
 registry](https://buf.build/agntcy/slim/sdks/main:protobuf).
 
-The following sections show example Go code fragments:
+The following sections show example Python code fragments:
 
 ### Creating a SLIM Channel
 
-```go
-	conn, err := grpc.NewClient("localhost:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
-	client := controlplaneApi.NewControlPlaneServiceClient(conn)
+```python
+import grpc
+from controlplane.v1 import controlplane_pb2_grpc as controlplane_api
+from controlplane.v1 import controlplane_pb2
 
-	if err != nil {
-		log.Fatalf("did not connect: %v", err)
-	}
-	defer conn.Close()
+# Create gRPC connection
+channel = grpc.insecure_channel("localhost:50051")
+client = controlplane_api.ControlPlaneServiceStub(channel)
 
-	createChannelRequest := &controlplaneApi.CreateChannelRequest{
-		Moderators: []string{"agncty/namespace/moderator"}, // This is the name of the moderator
-	}
-	resp, err := client.CreateChannel(context.Background(), createChannelRequest)
-	if err != nil {
-		fmt.Printf("send request: %v", err.Error())
-	}
-	channelId := resp.GetChannelId()
-	if resp == nil {
-		fmt.Println("\nNo channels found")
-		return
-	}
-	fmt.Printf("Received response: %v\n", channelId)
+# Create channel request
+create_channel_request = controlplane_pb2.CreateChannelRequest(
+    moderators=["agncty/namespace/moderator"]  # Name of the moderator
+)
+
+try:
+    response = client.CreateChannel(create_channel_request)
+    channel_id = response.channel_id
+
+    if not response:
+        print("\nNo channels found")
+        return
+
+    print(f"Channel created with ID: {channel_id}")
+
+except grpc.RpcError as e:
+    print(f"Request failed: {e}")
+finally:
+    channel.close()
 ```
 
 ### Adding Participants to a SLIM Group
 
-```go
-	conn, err := grpc.NewClient("localhost:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
-	client := controlplaneApi.NewControlPlaneServiceClient(conn)
+```python
+import grpc
+from controlplane.v1 import controlplane_pb2_grpc as controlplane_api
+from controlplane.v1 import controlplane_pb2
 
-	if err != nil {
-		log.Fatalf("did not connect: %v", err)
-	}
-	defer conn.Close()
+# Create gRPC connection
+channel = grpc.insecure_channel("localhost:50051")
+client = controlplane_api.ControlPlaneServiceStub(channel)
 
-	addParticipantRequest := &controlplaneApi.AddParticipantRequest{
-		ParticipantId: "agncty/namespace/participant_1",
-		ChannelId:     "agncty/namespace/group_channel",
-	}
-	ack, err := client.AddParticipant(context.Background(), addParticipantRequest)
-	if err != nil {
-		fmt.Printf("send request: %v", err.Error())
-	}
+# Add participant request
+add_participant_request = controlplane_pb2.AddParticipantRequest(
+    participant_id="agncty/namespace/participant_1",
+    channel_id="agncty/namespace/group_channel"
+)
 
-	fmt.Printf(
-		"ACK received for %s: success=%t\n",
-		ack.OriginalMessageId,
-		ack.Success,
-	)
+try:
+    ack = client.AddParticipant(add_participant_request)
+
+    print(f"ACK received for {ack.original_message_id}: success={ack.success}")
+
+except grpc.RpcError as e:
+    print(f"Request failed: {e}")
+finally:
+    channel.close()
 ```
 
 ### Setting Routes Between SLIM Nodes
 
-```go
-	conn, err := grpc.NewClient("localhost:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
-	client := controlplaneApi.NewControlPlaneServiceClient(conn)
+```python
+import grpc
+from controlplane.v1 import controlplane_pb2_grpc as controlplane_api
+from controlplane.v1 import controlplane_pb2
+from grpc_api import grpc_api_pb2 as grpcapi
 
-	if err != nil {
-		log.Fatalf("did not connect: %v", err)
-	}
-	defer conn.Close()
+# Create gRPC connection
+channel = grpc.insecure_channel("localhost:50051")
+client = controlplane_api.ControlPlaneServiceStub(channel)
 
-	createConnectionResponse, err := client.CreateConnection(context.Background(),
-		&controlplaneApi.CreateConnectionRequest{
-			Connection: &grpcapi.Connection{
-				ConnectionId: "http://127.0.0.1:46357",
-				ConfigData:   "{\"endpoint\": \"http://127.0.0.1:46357\"}",
-			},
-			NodeId: "slim/0",
-		})
-	if err != nil {
-		log.Fatalf("failed to create connection: %w", err)
-	}
+try:
+    # Create connection to the target node
+    connection = grpcapi.Connection(
+        connection_id="http://127.0.0.1:46357",
+        config_data='{"endpoint": "http://127.0.0.1:46357"}'
+    )
 
-	connectionID := createConnectionResponse.ConnectionId
-	if !createConnectionResponse.Success {
-		log.Fatal("failed to create connection")
-	}
-	fmt.Printf("Connection created successfully with ID: %v\n", connectionID)
+    create_connection_request = controlplane_pb2.CreateConnectionRequest(
+        connection=connection,
+        node_id="slim/0"
+    )
 
-    // add subscription for a group a SLIM node
-	subscription := &grpcapi.Subscription{
-		Component_0:  "agncty",
-		Component_1:  "namespace",
-		Component_2:  "group_channel",
-		ConnectionId: connectionID,
-	}
+    create_connection_response = client.CreateConnection(create_connection_request)
 
-	createSubscriptionResponse, err := client.CreateSubscription(context.Background(), &controlplaneApi.CreateSubscriptionRequest{
-		NodeId:       "slim/0",
-		Subscription: subscription,
-	})
-	if err != nil {
-		log.Fatalf("failed to create subscription: %w", err)
-	}
-	if !createSubscriptionResponse.Success {
-		log.Fatalf("failed to create subscription")
-	}
-	fmt.Printf("Subscrption created successfully with ID: %v\n", createSubscriptionResponse.SubscriptionId)
+    if not create_connection_response.success:
+        raise Exception("Failed to create connection")
 
+    connection_id = create_connection_response.connection_id
+    print(f"Connection created successfully with ID: {connection_id}")
+
+    # Add subscription for a group to a SLIM node
+    subscription = grpcapi.Subscription(
+        component_0="agncty",
+        component_1="namespace",
+        component_2="group_channel",
+        connection_id=connection_id
+    )
+
+    create_subscription_request = controlplane_pb2.CreateSubscriptionRequest(
+        node_id="slim/0",
+        subscription=subscription
+    )
+
+    create_subscription_response = client.CreateSubscription(create_subscription_request)
+
+    if not create_subscription_response.success:
+        raise Exception("Failed to create subscription")
+
+    print(f"Subscription created successfully with ID: {create_subscription_response.subscription_id}")
+
+except grpc.RpcError as e:
+    print(f"gRPC error: {e}")
+except Exception as e:
+    print(f"Error: {e}")
+finally:
+    channel.close()
 ```
 
 ## Identity Management
