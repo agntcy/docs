@@ -1,8 +1,9 @@
 # Data Plane
 
-The [SLIM](slim-core.md) Data Plane implements an efficient message routing and delivery system between applications.
+The [SLIM](slim-core.md) Data Plane implements an efficient message routing and
+delivery system between applications.
 
-## Endpoints and Channel Naming 
+## Endpoints and Channel Naming
 
 In SLIM, all endpoints are identified by a routable name. To send a message to a specific endpoint, an application
 sends the message to its unique name. Client names follow this pattern:
@@ -56,94 +57,430 @@ In an N:N (group) session, multiple clients can exchange messages on the same ch
 
 As for the naming more information on the session layer are availbe in the [SLIM Specifications](https://spec.slim.agntcy.org/379-internet-draft-version-0-which-covers-all-main-components/draft-agntcy-slim.html) 
 
-## Example: Group Communication 
+## Example: Group Communication
 
-Tutorial using https://github.com/agntcy/slim/blob/main/data-plane/python-bindings/examples/src/slim_bindings_examples/pubsub.py
+This tutorial will show how to set up a secure group communication system using
+SLIM. The group will be created by defining a pubsub session with a moderator,
+which will invite the other members. Messages will be sent to the shared
+channel, where every member can read and write. Messages are end-to-end
+encrypted using the [MLS
+protocol](https://datatracker.ietf.org/doc/html/rfc9420).
 
-------
+### Key Features
 
-In SLIM all endpoint have a name messages use a channel-based addressing scheme for content routing:
+- **Name-based Addressing**: In SLIM, all endpoints (channels and clients) have a name, and messages
+  use a name-based addressing scheme for content routing.
+- **Session Management**: Allows for the creation and management of sessions
+  with moderators.
+- **Broadcast Messaging**: Facilitates broadcast messaging to multiple
+  subscribers.
+- **End-to-End Encryption**: Ensures secure communication using the [MLS
+  protocol](https://datatracker.ietf.org/doc/html/rfc9420).
 
-```protobuf
-message SLIMMessage {
-    string channel_id = 1;
-    string message_id = 2;
-    bytes payload = 3;
-    MessageMetadata metadata = 4;
-}
+### Setting up the SLIM instance
+
+As all the member of the group will be communicating via a SLIM network, we can set
+up a SLIM instance representing the SLIM network. We will use the pre-built docker image for this purpose.
+
+First execute this command to create the SLIM configuration file. Details about
+the configuration can be found in the [SLIM
+Repo](https://github.com/agntcy/slim/tree/main/data-plane/config).
+
+```bash
+cat << EOF > ./config.yaml
+tracing:
+  log_level: info
+  display_thread_names: true
+  display_thread_ids: true
+
+runtime:
+  n_cores: 0
+  thread_name: "slim-data-plane"
+  drain_timeout: 10s
+
+services:
+  slim/0:
+    pubsub:
+      servers:
+        - endpoint: "0.0.0.0:46357"
+          tls:
+            insecure: true
+
+      clients: []
+EOF
 ```
 
-## Connection Table
+This configuration will start a SLIM instance with a server listening on port
+46357, without TLS encryption for simplicity. Messages will be still encrypted
+using the MLS protocol, but the connections between SLIM nodes will not use TLS. In a
+production environment, it is recommended to always use TLS and
+configure proper authentication and authorization mechanisms.
 
-The connection table maintains agent connectivity information by mapping channel IDs to connected agents and tracking connection state and capabilities.
+You can run the SLIM instance using Docker:
 
-## Forwarding Table
-
-The forwarding table implements intelligent message routing by providing the following:
-
-- Maps message patterns to delivery strategies.
-- Supports content-based routing.
-- Maintains routing metrics and preferences.
-- Handles multicast and anycast delivery.
-
-## Message Buffer
-
-The message buffer provides temporary storage by implementing the following:
-
-- Caches messages for reliable delivery.
-- Implements store-and-forward when needed.
-- Supports message deduplication.
-- Handles out-of-order delivery.
-
-## Data Plane Flow
-
-```mermaid
-graph LR
-    A([Input]) --> B[Buffer]
-    B --> C{Forwarding}
-    C --> D[Connection]
-    D -->|Direct| E([Output])
-    D -->|Multicast| E
-    D -->|Anycast| E
-
-    style B fill:#ffffff,stroke:#000000,stroke-width:2px
-    style C fill:#f0f0f0,stroke:#000000,stroke-width:2px
-    style D fill:#e0e0e0,stroke:#000000,stroke-width:2px
+```bash
+docker run -it \
+    -v ./config.yaml:/config.yaml -p 46357:46357 \
+    ghcr.io/agntcy/slim:latest /slim --config /config.yaml
 ```
 
-The diagram shows the message flow through the SLIM data plane components:
+If everything goes fine, you should see an output like this one:
 
-1. Messages enter the system and are processed by the Message Buffer.
-2. The Message Buffer handles deduplication and store-and-forward.
-3. The Forwarding Table determines routing strategy.
-4. The Connection Table manages delivery to connected agents.
-5. Messages are delivered through direct, multicast, or anycast methods.
+```
+2025-07-31T09:07:45.859161Z  INFO main ThreadId(01) application_lifecycle: slim: Runtime started
+2025-07-31T09:07:45.859213Z  INFO main ThreadId(01) application_lifecycle: slim: Starting service: slim/0
+2025-07-31T09:07:45.859624Z  INFO main ThreadId(01) application_lifecycle: slim_service: starting service
+2025-07-31T09:07:45.859683Z  INFO main ThreadId(01) application_lifecycle: slim_service: starting server 0.0.0.0:46357
+2025-07-31T09:07:45.859793Z  INFO main ThreadId(01) application_lifecycle: slim_service: server configured: setting it up config=ServerConfig { endpoint: 0.0.0.0:46357, tls_setting: TlsServerConfig { config: Config { ca_file: None, ca_pem: None, include_system_ca_certs_pool: false, cert_file: None, cert_pem: None, key_file: None, key_pem: None, tls_version: "tls1.3", reload_interval: None }, insecure: true, client_ca_file: None, client_ca_pem: None, reload_client_ca_file: false }, http2_only: true, max_frame_size: None, max_concurrent_streams: None, max_header_list_size: None, read_buffer_size: None, write_buffer_size: None, keepalive: KeepaliveServerParameters { max_connection_idle: 3600s, max_connection_age: 7200s, max_connection_age_grace: 300s, time: 120s, timeout: 20s }, auth: None }
+2025-07-31T09:07:45.861393Z  INFO slim-data-plane ThreadId(11) slim_service: running service
+```
 
-## Group Management and Encryption
+### Configure clients Identity and implementing the SLIM App
 
-Agents can be grouped together to form a group. To create a group, create a session as moderator.
+Each member of the group will run a local slim app instance that will be used to
+communicate with the SLIM network. Also each member will have a unique identity
+that will be used to authenticate the member in the SLIM network.
 
-The following needs to be defined:
+#### Identity
 
-- `remote_organization`
-- `remote_namespace`
-- `broadcast_topic`
+Each member of the group must have a unique identity. This is a requirement to
+setup the end-to-end encryption using the MLS protocol. The identity can be
+represented by a JWT, or a shared secret. For simplicity, we will use a shared
+secret. You can find examples using JWT in the [SLIM Repo](https://github.com/agntcy/slim/blob/main/data-plane/python-bindings/examples/src/slim_bindings_examples/common.py#L71-L112).
 
-Encryption can be enabled through a JSON Web Token (JWT) in the session creation request by setting `mls_enable` to `true`.
+The python objects managing the identity are called `PyIdentityProvider` and
+`PyIdentityVerifier`. The `PyIdentityProvider` is responsible for providing the
+identity, while the `PyIdentityVerifier` is responsible for verifying the
+identity.
 
-To enable group encryption:
+```python
+from slim_bindings import PyIdentityProvider, PyIdentityVerifier
 
-1. Define 'jwt_identity'
-2. Define shared secret
-3. Set `mls_enable` to `true`
+def shared_secret_identity(identity, secret):
+    """
+    Create a provider and verifier using a shared secret.
 
-The group is created by sending a message to the broadcast topic.
+    :param identity: A unique string, identifier of the app.
+    :param secret: A shared secret used for authentication.
+    :return: A tuple of (provider, verifier).
+    """
+    provider: PyIdentityProvider = PyIdentityProvider.SharedSecret(
+        identity=identity, shared_secret=secret
+    )
+    verifier: PyIdentityVerifier = PyIdentityVerifier.SharedSecret(
+        identity=identity, shared_secret=secret
+    )
 
-## Authentication
+    return provider, verifier
+```
 
-Authentication can be configured when running `create_pyservice`. The following needs to be defined through `shared_secret_identity`:
+#### SLIM App
 
-- `PyIdentityProvider`
-- `PyIdentityVerifier`
+The provider and the verifier will be used to create a local SLIM app, that can
+be used to exchange messages with other apps via the SLIM network.
 
-The provider is JWT and the verifier is a public key.
+```python
+from slim_bindings import PyName
+
+async def create_slim_app(secret, local_name):
+    """
+    Create a SLIM app instance with the given shared secret.
+    This app will be used to communicate with other SLIM nodes in the network.
+
+    :param secret: A shared secret used for authentication.
+    :param local_name: A unique name for the SLIM app instance.
+                       It will be used to identify the app in the SLIM network.
+    :return: A SLIM app instance.
+    """
+
+    # Create the provider and verifier using the shared secret.
+    provider, verifier = shared_secret_identity(
+        identity=f"{local_name}",
+        secret=secret,
+    )
+
+    # Create the SLIM app. This is a in-process SLIM client that can be used to
+    # exchange messages with other SLIM nodes in the network.
+    slim_app = await slim_bindings.Slim.new(local_name, provider, verifier)
+
+    # Connect the SLIM app to the SLIM network.
+    _ = await slim_app.connect({
+        "endpoint": "http://127.0.0.1:46357",
+        "tls": {"insecure": True}
+    })
+
+    # Return the SLIM app instance.
+    return slim_app
+```
+
+### Implementing the moderator
+
+The moderator will be responsible for creating the group and inviting other
+members. The moderator will create a session and send an invitation message to
+the other members. The invitation will contain the session ID and the channel ID
+for the group communication.
+
+The moderator can be implemented as a Python service using the SLIM SDK. We will
+explain the steps to create the moderator service.
+
+#### Creating the Session and inviting members
+
+The moderator will create a session and invite other members to join the group.
+The session will be identified by a unique session ID, and the group
+communication will take place over a specific channel ID. The moderator will be
+responsible for managing the session lifecycle, including creating, updating,
+and terminating the session as needed.
+
+As each participant is provided with an identity, setting up MLS for end-to-end
+encryption is straightforward. The moderator will create a session with the
+`mls_enabled` flag set to `True`, which will enable the MLS protocol for the
+session. This ensures that all messages exchanged within the session are
+end-to-end encrypted, providing confidentiality and integrity for the group
+communication.
+
+```python
+import datetime
+
+from slim_bindings import PyService, PyName, PySessionConfiguration
+
+async def create_session_and_invite_members(slim_app: PyService, invitees: list[PyName]):
+    """
+    Create a session with the given session ID and channel ID.
+
+    :param slim_app: The SLIM app instance.
+    :return: The created session.
+    """
+
+    # Define the shared channel for group communication.
+    # This channel will be used by all members of the group to exchange messages.
+    shared_channel = PyName("agntcy", "namespace", "group_channel")
+
+    # Create a new session. The group session is a bidirectional streaming session.
+    # Here is where we enable the MLS protocol for end-to-end encryption.
+    session_info = await slim_app.create_session(
+        PySessionConfiguration.Streaming(
+            slim_bindings.PySessionDirection.BIDIRECTIONAL,
+            topic=shared_channel, # The channel ID for group communication.
+            moderator=True, # This session is created by the moderator.
+            max_retries=5, # Maximum number of retries for reliability.
+            timeout=datetime.timedelta(seconds=5), # Timeout for message delivery.
+            mls_enabled=True, # Enable MLS for end-to-end encryption.
+        )
+    )
+
+    # Invite other members to the session.
+    for invitee in invitees:
+        await slim_app.set_route(invitee) # Allow messages to be sent to the invitee.
+        await slim_app.invite(session_info, invitee) # Send an invitation to the invitee.
+
+    # Return the created session.
+    return session_info
+
+async def run_moderator(secret):
+    """ Run the moderator"""
+
+    # Create the moderator SLIM app instance.
+    moderator_slim_app = await create_slim_app(secret, local_name=PyName("agntcy", "namespace", "moderator"))
+
+    # Define the invitees for the group session.
+    invitees = [
+        PyName("agntcy", "namespace", "participant1"),
+        PyName("agntcy", "namespace", "participant2"),
+        PyName("agntcy", "namespace", "participant3"),
+    ]
+
+    # Create a session and invite the members.
+    session_info = await create_session_and_invite_members(moderator_slim_app, invite)
+
+    print(f"Session created: {session_info}")
+```
+
+### Implementing the group participants
+
+The group participants will be implemented similarly to the moderator, but they
+will not create the session. They will create the SLIM service instance and wait
+for invites sent by the moderator. Once they receive the invite, they can read
+and write on the shared channel.
+
+```python
+async def run_participant(secret):
+    participant_slim_app = await create_slim_app(secret, local_name=PyName("agntcy", "namespace", "participant1"))
+
+    # Listen for new sessions opened by moderators
+    recv_session, _ = await participant_slim_app.receive()
+
+    # Session is received, now we can read and write on the shared channel.
+    print(f"Received session: {recv_session}")
+
+    # Receive messages from the session
+    recv_session, msg_rcv = await participant_slim_app.receive(
+        session=recv_session.id
+    )
+```
+
+### Sending Messages
+
+Once the members are invited and the sessions are created, anyone in the group
+can send messages to the shared channel. The messages will be end-to-end
+encrypted using the MLS protocol, ensuring that only the members of the group
+can read the messages.
+
+Here we will show how any group member can use the SLIM app to send a message to
+the group channel.
+
+```python
+async def send_message(slim_app: PyService, session_info, message: str):
+    """
+    Send a message to the group channel.
+
+    :param slim_app: The SLIM app instance.
+    :param session_info: The session information.
+    :param message: The message to send.
+    """
+
+    # Send the message to the shared channel.
+    await local_app.publish(
+        session_info,
+        message.encode(),
+        broadcast_topic,
+    )
+```
+
+### Putting all together
+
+Here is the complete code to run the moderator and the participants in a single
+script. You can run this script to see how the group communication works using
+SLIM.
+
+The same example can be found in the [SLIM examples
+folder](https://github.com/agntcy/slim/tree/main/data-plane/python-bindings/examples).
+In particular this tutorial is based on the
+[pubsub.py](https://github.com/agntcy/slim/blob/main/data-plane/python-bindings/examples/src/slim_bindings_examples/pubsub.py)
+example
+
+#### moderator.py
+
+```python
+import asyncio
+from slim_bindings import PyName
+from slim_bindings import PyService
+
+from slim_bindings import PyIdentityProvider, PyIdentityVerifier
+
+def shared_secret_identity(identity, secret):
+    """
+    Create a provider and verifier using a shared secret.
+
+    :param identity: A unique string, identifier of the app.
+    :param secret: A shared secret used for authentication.
+    :return: A tuple of (provider, verifier).
+    """
+    provider: PyIdentityProvider = PyIdentityProvider.SharedSecret(
+        identity=identity, shared_secret=secret
+    )
+    verifier: PyIdentityVerifier = PyIdentityVerifier.SharedSecret(
+        identity=identity, shared_secret=secret
+    )
+
+    return provider, verifier
+
+async def create_slim_app(secret, local_name):
+    """
+    Create a SLIM app instance with the given shared secret.
+    This app will be used to communicate with other SLIM nodes in the network.
+
+    :param secret: A shared secret used for authentication.
+    :param local_name: A unique name for the SLIM app instance.
+                       It will be used to identify the app in the SLIM network.
+    :return: A SLIM app instance.
+    """
+
+    # Create the provider and verifier using the shared secret.
+    provider, verifier = shared_secret_identity(
+        identity=f"{local_name}",
+        secret=secret,
+    )
+
+    # Create the SLIM app. This is a in-process SLIM client that can be used to
+    # exchange messages with other SLIM nodes in the network.
+    slim_app = await slim_bindings.Slim.new(local_name, provider, verifier)
+
+    # Connect the SLIM app to the SLIM network.
+    _ = await slim_app.connect({
+        "endpoint": "http://127.0.0.1:46357",
+        "tls": {"insecure": True}
+    })
+
+    # Return the SLIM app instance.
+    return slim_app
+
+async def create_session_and_invite_members(slim_app: PyService, invitees: list[PyName]):
+    """
+    Create a session with the given session ID and channel ID.
+
+    :param slim_app: The SLIM app instance.
+    :return: The created session.
+    """
+
+    # Define the shared channel for group communication.
+    # This channel will be used by all members of the group to exchange messages.
+    shared_channel = PyName("agntcy", "namespace", "group_channel")
+
+    # Create a new session. The group session is a bidirectional streaming session.
+    # Here is where we enable the MLS protocol for end-to-end encryption.
+    session_info = await slim_app.create_session(
+        PySessionConfiguration.Streaming(
+            slim_bindings.PySessionDirection.BIDIRECTIONAL,
+            topic=shared_channel, # The channel ID for group communication.
+            moderator=True, # This session is created by the moderator.
+            max_retries=5, # Maximum number of retries for reliability.
+            timeout=datetime.timedelta(seconds=5), # Timeout for message delivery.
+            mls_enabled=True, # Enable MLS for end-to-end encryption.
+        )
+    )
+
+    # Invite other members to the session.
+    for invitee in invitees:
+        await slim_app.set_route(invitee) # Allow messages to be sent to the invitee.
+        await slim_app.invite(session_info, invitee) # Send an invitation to the invitee.
+
+    # Return the created session.
+    return session_info
+
+async def send_message(slim_app: PyService, session_info, message: str):
+    """
+    Send a message to the group channel.
+
+    :param slim_app: The SLIM app instance.
+    :param session_info: The session information.
+    :param message: The message to send.
+    """
+
+    # Send the message to the shared channel.
+    await local_app.publish(
+        session_info,
+        message.encode(),
+        broadcast_topic,
+    )
+
+async def run_moderator(secret):
+    """ Run the moderator"""
+
+    # Create the moderator SLIM app instance.
+    moderator_slim_app = await create_slim_app(secret, local_name=PyName("agntcy", "namespace", "moderator"))
+
+    # Define the invitees for the group session.
+    invitees = [
+        PyName("agntcy", "namespace", "participant1"),
+        PyName("agntcy", "namespace", "participant2"),
+        PyName("agntcy", "namespace", "participant3"),
+    ]
+
+    # Create a session and invite the members.
+    session_info = await create_session_and_invite_members(moderator_slim_app, invitees)
+
+    print(f"Session created: {session_info}")
+
+    # Send a message to the group channel.
+    await send_message(moderator_slim_app, session_info, "Hello group!")
+```
