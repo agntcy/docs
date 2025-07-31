@@ -98,7 +98,7 @@ with the SLIM Controller and how to properly configure routes between nodes.
 
 ## Gruop Creation Using SLIM Controller
 
-The controller northbound API exposes operations to manage SLIM groups. Client
+The controller API exposes operations to manage SLIM groups. Client
 applications can use this API to create and manage SLIM groups, add clients to
 groups, and set routes between SLIM nodes.
 
