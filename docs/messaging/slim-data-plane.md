@@ -45,7 +45,7 @@ same structure as client names, but the last component is left empty, as it is
 shared among all connected clients.
 
 For further details, please refer to the [SLIM
-Specification](https://spec.slim.agntcy.org/379-internet-draft-version-0-which-covers-all-main-components/draft-agntcy-slim.html)
+Specification](https://spec.slim.agntcy.org/draft-agntcy-slim.html)
 
 ## SLIM Sessions Layer
 
@@ -112,7 +112,7 @@ moderator. The moderator is a special client that has the following functionalit
   order to keep the state always updated.
 
 As for the naming, for more information on the session layer, see the [SLIM
-Specifications](https://spec.slim.agntcy.org/379-internet-draft-version-0-which-covers-all-main-components/draft-agntcy-slim.html)
+Specifications](https://spec.slim.agntcy.org/draft-agntcy-slim.html)
 
 A comprehensive tutorial on how to set up a secure group communication system using
 SLIM can be found in the [Group Communication Tutorial](./slim-group-tutorial.md).
