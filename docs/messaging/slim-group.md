@@ -1,4 +1,4 @@
-# SLIM Group Managment
+# SLIM Group Management
 
 One of the key features of SLIM is its support for secure group communication.
 In SLIM, a group consists of multiple clients that communicate through a shared
