@@ -22,7 +22,7 @@ participants. The moderator is part of a Python application and can either
 participate activelly in the communication process -possibly implementing some
 of the application logic- or serve solely as a channel moderator. A complete
 example on how to use the moderator can be found in the [SLIM Group
-Communication Tutorial](slim-group-tutorila.md). Here, we provide the basic
+Communication Tutorial](slim-group-tutorial.md). Here, we provide the basic
 steps to follow, along with Python code snippets, for setting up a group.
 
 - **Step 1: Create the Moderator** The moderator is created by instantiating a

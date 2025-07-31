@@ -30,11 +30,11 @@ The southbound interface allows SLIM nodes to register with the Controller and r
 
 ### System Context Diagram
 
-![System Context Diagram](/docs/assets/slim-system-context-controller.png)
+![System Context Diagram](../assets/slim-system-context-controller.png)
 
 ### Container Diagram
 
-![Container Diagram](/docs/assets/slim-container-controller.png)
+![Container Diagram](../assets/slim-container-controller.png)
 
 ### Configuring the SLIM Controller
 
