@@ -11,7 +11,7 @@ SLIM network.
 
 ## Group Creation Using a Moderator
 
-As described in the [SLIM Messaging Layer](slim-data-plane.md), a gruop is
+As described in the [SLIM Messaging Layer](slim-data-plane.md), a group is
 managed by a moderator. A moderator is a specific client with the ability to
 create a channel, add or remove clients, and perform the functions that are
 generly delegated to the Delivery Service in the MLS protocol.
