@@ -161,7 +161,53 @@ Example golang code fragments:
 
 ### Set routes for the group name between slim nodes
 
-TBD
+```go
+	conn, err := grpc.NewClient("localhost:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	client := controlplaneApi.NewControlPlaneServiceClient(conn) // Replace nil with actual gRPC client connection
+
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+
+	createConnectionResponse, err := client.CreateConnection(context.Background(),
+		&controlplaneApi.CreateConnectionRequest{
+			Connection: &grpcapi.Connection{
+				ConnectionId: "http://127.0.0.1:46357",
+				ConfigData:   "{\"endpoint\": \"http://127.0.0.1:46357\"}",
+			},
+			NodeId: "slim/0",
+		})
+	if err != nil {
+		log.Fatalf("failed to create connection: %w", err)
+	}
+
+	connectionID := createConnectionResponse.ConnectionId
+	if !createConnectionResponse.Success {
+		log.Fatal("failed to create connection")
+	}
+	fmt.Printf("Connection created successfully with ID: %v\n", connectionID)
+
+	subscription := &grpcapi.Subscription{
+		Component_0:  "organization",
+		Component_1:  "namespace",
+		Component_2:  "appName",
+		ConnectionId: connectionID,
+	}
+
+	createSubscriptionResponse, err := client.CreateSubscription(context.Background(), &controlplaneApi.CreateSubscriptionRequest{
+		NodeId:       "slim/0",
+		Subscription: subscription,
+	})
+	if err != nil {
+		log.Fatalf("failed to create subscription: %w", err)
+	}
+	if !createSubscriptionResponse.Success {
+		log.Fatalf("failed to create subscription")
+	}
+	fmt.Printf("Subscrption created successfully with ID: %v\n", createSubscriptionResponse.SubscriptionId)
+	
+```
 
 ## Identity management
 
