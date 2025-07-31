@@ -32,16 +32,24 @@ streaming bidirectional session, which initializes the corresponding state in
 the SLIM session layer. In this example, communication between participants
 will be encrypted end-to-end, as MLS is enabled.
 
-1. Create the Moderator
-    The moderator is created by instantiating a
-    streaming bidirectional session, which initializes the corresponding state in
-    the SLIM session layer. In this example, communication between participants
-    will be encrypted end-to-end, as MLS is enabled.
-
   ```python
-      # Define the shared channel for group communication.
-      # This channel will be used by all members of the group to exchange messages.
-      shared_channel = PyName("agntcy", "namespace", "group_channel")
+    # Define the shared channel for group communication.
+    # This channel will be used by all members of the group to exchange messages.
+    shared_channel = PyName("agntcy", "namespace", "group_channel")
+
+    # Create a new session. The group session is a bidirectional streaming session.
+    # Here is where we enable the MLS protocol for end-to-end encryption.
+    session_info = await slim_app.create_session(
+        PySessionConfiguration.Streaming(
+            PySessionDirection.BIDIRECTIONAL,
+            topic=shared_channel,  # The channel ID for group communication.
+            moderator=True,  # This session is created by the moderator.
+            max_retries=5,  # Maximum number of retries for reliability.
+            timeout=datetime.timedelta(seconds=5),  # Timeout for message delivery.
+            mls_enabled=True,  # Enable MLS for end-to-end encryption.
+        )
+    )
+  ```
 
 ### Step 2: Invite Participants to the Channel
 
