@@ -38,9 +38,9 @@ The session layer offers several functionalities:
 - Channel Menagment: The session layer enables clients to be invited to or removed from a channel as needed.
 - Message Delivery: The session layer abstracts message passing between applications and the SLIM message distribution network. It handles message formatting, routing, and delivery confirmation, while providing simple send and receive primitives to applications.
 
-The session layer provides two main APIs: a 1:1 session, where two clients communicate directly, and a group session (N:N), where multiple clients exchange messages on a shared channel.
+The session layer provides two main APIs: a 1:1 session, where two clients communicate directly, and a group session, where multiple clients exchange messages on a shared channel.
 
-### 1:1 Session
+### One-to-one Session
 A one-to-one (1:1) session is used when an application needs to communicate with a single endpoint. It supports several modes:
 
 - **Reliable or Unreliable**: Applications can choose whether the session layer implements retransmission mechanisms for reliable communication or disables them for lower overhead.
@@ -49,7 +49,7 @@ A one-to-one (1:1) session is used when an application needs to communicate with
 
 By default, all sessions are secure using MLS. In a 1:1 session, the group consists of only two clients, which must maintain some state for the MLS protocol. When MLS is enabled, the session is automatically forced to use the sticky mode, so that all the messages will be sent to the same client.
 
-### N:N Session
+### Group Session
 
 In an N:N (group) session, multiple clients can exchange messages on the same channel. There are two types of clients in this session: a standard participant that can only be invited to the channel and participate in messaging, and a moderator. The moderator is a special client that has the has two main functionalities:
 
@@ -218,17 +218,16 @@ async def create_slim_app(secret, local_name):
 
 The moderator will be responsible for creating the group and inviting other
 members. The moderator will create a session and send an invitation message to
-the other members. The invitation will contain the session ID and the channel ID
+the other members. The invitation will contain the session ID and the channel name
 for the group communication.
 
-The moderator can be implemented as a Python service using the SLIM SDK. We will
-explain the steps to create the moderator service.
+The moderator can be implemented as a Python service using the SLIM SDK.
 
 #### Creating the Session and inviting members
 
-The moderator will create a session and invite other members to join the group.
+The moderator creates a session and invites other members to join the group.
 The session will be identified by a unique session ID, and the group
-communication will take place over a specific channel ID. The moderator will be
+communication will take place over a specific channel name. The moderator will be
 responsible for managing the session lifecycle, including creating, updating,
 and terminating the session as needed.
 
@@ -486,3 +485,10 @@ async def run_moderator(secret):
     await send_message(moderator_slim_app, session_info, "Hello group!")
 ```
 
+## Example: 1:1 Communincation
+
+The slim repository also includes examples of 1:1 communication sessions. Using the SLIM SDK for 1:1 sessions is very similar to the approach demonstrated in the group communication example. For reference, see the [fire_and_forget.py](https://github.com/agntcy/slim/blob/main/data-plane/python-bindings/examples/src/slim_bindings_examples/fire_and_forget.py) and [request_reply.py](https://github.com/agntcy/slim/blob/main/data-plane/python-bindings/examples/src/slim_bindings_examples/request_reply.py) files.
+
+1:1 communication is particularly useful when you want to use SLIM as a transport layer for protocols that are inherently point-to-point, such as MCP or A2A. In these cases, you typically need to communicate with a single server, but you can still benefit from the simplicity and security that the SLIM messaging layer provides. 
+
+For a detailed guide on using MCP on top of SLIM, please refer to the [SLIM and MCP Integration](slim-mcp.md) page
