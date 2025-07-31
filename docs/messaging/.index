@@ -1,8 +1,8 @@
 nav:
  - Secure Low-Latency Interactive Messaging (SLIM): slim-core.md
  - Getting Started with SLIM: slim-howto.md
- - SLIM messaging Layer: slim-data-plane.md
+ - SLIM Messaging Layer: slim-data-plane.md
  - SLIM Controller: slim-controller.md
- - SLIM Group Managment: slim-group.md
+ - SLIM Group Management: slim-group.md
  - SLIM Group Communication Tutorial: slim-group-tutorial.md
  - SLIM and MCP Integration: slim-mcp.md
