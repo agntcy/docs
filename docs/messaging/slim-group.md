@@ -88,7 +88,8 @@ At this point, the group is set up and clients can start exchanging messages.
 However, this configuration is not automatically reflected in the [SLIM
 Controller](slim-controller.md) and must be reported manually. In particular, if
 the SLIM network is composed of multiple nodes, registration with the control
-plane is mandatory to properly set up routes between nodes. The group setup by
+plane is mandatory to properly set up routes between nodes. In the future, we
+will automate this process to make it easier for developers. The group setup by
 the moderator will work out of the box only if a single SLIM node is present in
 the network.
 
@@ -432,3 +433,10 @@ def jwt_identity(
 A complete example of how to use the JWT SVID in a SLIM client can be found in
 the examples in the [SLIM Python
 Bindings](https://github.com/agntcy/slim/blob/main/data-plane/python-bindings/examples/src/slim_bindings_examples/common.py#L71-L112).
+
+The provider and verifier can then be used to create a SLIM application exatly
+as described in the [SLIM Group Tutorial](slim-group-tutorial.md#identity). In
+the future we will provide even more provider and verifier implementations to
+facilitate integrations with SLIM. Also we will give developers the ability to
+create their own providers and verifiers, so that they can use any identity
+management system they want.
