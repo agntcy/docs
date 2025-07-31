@@ -11,7 +11,7 @@ The directory structure of the CSIT is the following:
 ```
 csit
 ├── benchmarks                                    # Benchmark tests
-│   ├── agntcy-slim                                # Benchmark tests for SLIM
+│   ├── agntcy-slim                               # Benchmark tests for SLIM
 │   │   ├── Taskfile.yml                          # Tasks for SLIM benchmark tests
 │   │   └── tests
 │   ├── agntcy-dir                                # Benchmark tests for ADS
@@ -21,7 +21,7 @@ csit
 │   ├── go.sum
 │   └── Taskfile.yml
 ├── integrations                                  # Integration tests
-│   ├── agntcy-slim                                # Integration tests for [agntcy/slim](https://github.com/agntcy/slim)
+│   ├── agntcy-slim                               # Integration tests for [agntcy/agp](https://github.com/agntcy/slim)
 │   │   ├── agentic-apps
 │   │   ├── Taskfile.yml                          # Tasks for SLIM integration tests
 │   │   └── tests
@@ -74,7 +74,7 @@ The following tasks are defined:
 ```bash
 task: Available tasks for this project:
 * benchmarks:directory:test:                              All ADS benchmark test
-* benchmarks:gateway:test:                                All SLIM benchmark test
+* benchmarks:slim:test:                                   All SLIM benchmark test
 * integrations:apps:download:wfsm-bin:                    Get wfsm binary from GitHub
 * integrations:apps:get-marketing-campaign-cfgs:          Populate marketing campaign config file
 * integrations:apps:init-submodules:                      Initialize submodules
