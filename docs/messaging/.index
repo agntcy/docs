@@ -1,8 +1,9 @@
 nav:
  - Secure Low-Latency Interactive Messaging (SLIM): slim-core.md
  - Getting Started with SLIM: slim-howto.md
- - SLIM MCP: slim-mcp.md
- - Security Layer: slim-security-layer.md
- - Data Plane: slim-data-plane.md
- - Session Layer: slim-session-layer.md
- - SLIM Controller: slim-controller.md
+ - SLIM messaging Layer: slim-data-plane.md
+ - SLIM Controller: slim-controller.md 
+ - SLIM and MCP Integration: slim-mcp.md
+ #- Security Layer: slim-security-layer.md
+ #- Session Layer: slim-session-layer.md
+ #- SLIM Controller: slim-controller.md

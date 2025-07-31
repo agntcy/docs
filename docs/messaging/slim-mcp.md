@@ -1,4 +1,4 @@
-# SLIM MCP
+# SLIM and MCP integration
 
 This tutorial demonstrates how to use SLIM to transport
 MCP (Model Context Protocol) messages. SLIM offers two primary integration

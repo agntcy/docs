@@ -12,9 +12,7 @@ SLIM provides the following features:
 
 The main components of SLIM are:
 
-- [Security layer](../messaging/slim-security-layer.md)
-- [Data plane](../messaging/slim-data-plane.md)
-- [Session layer](../messaging/slim-session-layer.md)
-- [SLIMController](../messaging/slim-controller.md)
+- [SLIM Messaging Layer](../messaging/slim-data-plane.md)
+- [SLIM Controller](../messaging/slim-controller.md)
 
 To get started with SLIM, see the [Getting Started with SLIM](../messaging/slim-howto.md) guide.
