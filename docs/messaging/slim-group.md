@@ -434,7 +434,7 @@ A complete example of how to use the JWT SVID in a SLIM client can be found in
 the examples in the [SLIM Python
 Bindings](https://github.com/agntcy/slim/blob/main/data-plane/python-bindings/examples/src/slim_bindings_examples/common.py#L71-L112).
 
-The provider and verifier can then be used to create a SLIM application exatly
+The provider and verifier can then be used to create a SLIM application exactly
 as described in the [SLIM Group Tutorial](slim-group-tutorial.md#identity). In
 the future we will provide even more provider and verifier implementations to
 facilitate integrations with SLIM. Also we will give developers the ability to
