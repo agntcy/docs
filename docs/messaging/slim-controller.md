@@ -1,8 +1,15 @@
 # SLIM Controller
 
-The [SLIM](slim-core.md) Controller is a central management component that orchestrates and manages SLIM nodes in a distributed messaging system. It provides a unified interface for configuring routes, managing node registration, and coordinating communication between nodes.
+The [SLIM](slim-core.md) Controller is a central management component that
+orchestrates and manages SLIM nodes in a distributed messaging system. It
+provides a unified interface for configuring routes, managing node registration,
+and coordinating communication between nodes.
 
-The Controller serves as the central coordination point for SLIM infrastructure, offering both northbound and southbound interfaces. The northbound interface allows external systems and administrators to configure and manage the SLIM network. The southbound interface enables SLIM nodes to register and receive configuration updates.
+The Controller serves as the central coordination point for SLIM infrastructure,
+offering both northbound and southbound interfaces. The northbound interface
+allows external systems and administrators to configure and manage the SLIM
+network. The southbound interface enables SLIM nodes to register and receive
+configuration updates.
 
 ## Key Features
 
@@ -15,26 +22,129 @@ The Controller serves as the central coordination point for SLIM infrastructure,
 
 The Controller implements northbound and southbound gRPC interfaces.
 
-The northbound interface provides management capabilities for external systems and administrators, such as [slimctl](#slimctl). It includes:
+The northbound interface provides management capabilities for external systems
+and administrators, such as [slimctl](#slimctl). It includes:
 
 - **Route Management**: Create, list, and manage message routes between nodes.
 - **Connection Management**: Set up and monitor connections between SLIM nodes.
 - **Node Discovery**: List registered nodes and their status.
 
-The southbound interface allows SLIM nodes to register with the Controller and receive configuration updates. It includes:
+The southbound interface allows SLIM nodes to register with the Controller and
+receive configuration updates. It includes:
 
 - **Node Registration**: Nodes can register themselves with the Controller.
 - **Node De-registration**: Nodes can unregister when shutting down.
 - **Configuration Distribution**: The Controller can push configuration updates to registered nodes.
 - **Bidirectional Communication**: Supports real-time communication between the Controller and nodes.
 
-### System Context Diagram
+### Control Plane Architecture
 
-![System Context Diagram](../assets/slim-system-context-controller.png)
+```mermaid
+graph TB
+    %% User and CLI
+    User[👤 User/Administrator]
+    CLI[slimctl CLI Tool]
 
-### Container Diagram
+    %% Control Plane Components
+    subgraph "Control Plane"
+        Controller[SLIM Controller<br/>- Northbound API<br/>- Southbound API<br/>- Node Registry]
+        Config[Configuration<br/>Store]
+    end
 
-![Container Diagram](../assets/slim-container-controller.png)
+    %% Data Plane Nodes
+    subgraph "Data Plane"
+        Node1[SLIM Node 1<br/>- Message Routing<br/>- Client Connections]
+        Node2[SLIM Node 2<br/>- Message Routing<br/>- Client Connections]
+        Node3[SLIM Node 3<br/>- Message Routing<br/>- Client Connections]
+    end
+
+    %% Client Applications
+    subgraph "Applications"
+        App1[Client App 1]
+        App2[Client App 2]
+        App3[Client App 3]
+    end
+
+    %% User interactions
+    User -->|Commands| CLI
+    CLI -->|gRPC Northbound<br/>Port 50051| Controller
+
+    %% Control plane interactions
+    Controller <-->|Store/Retrieve<br/>Configuration| Config
+
+    %% Southbound connections
+    Controller <-->|gRPC Southbound<br/>Port 50052<br/>Registration & Config| Node1
+    Controller <-->|gRPC Southbound<br/>Port 50052<br/>Registration & Config| Node2
+    Controller <-->|gRPC Southbound<br/>Port 50052<br/>Registration & Config| Node3
+
+    %% Inter-node communication
+    Node1 <-->|Message Routing| Node2
+    Node2 <-->|Message Routing| Node3
+    Node1 <-->|Message Routing| Node3
+
+    %% Application connections
+    App1 -->|SLIM Protocol| Node1
+    App2 -->|SLIM Protocol| Node2
+    App3 -->|SLIM Protocol| Node3
+
+    %% Styling for light/dark mode compatibility
+    classDef user fill:#4A90E2,stroke:#2E5D8A,stroke-width:2px,color:#FFFFFF
+    classDef control fill:#9B59B6,stroke:#6A3A7C,stroke-width:2px,color:#FFFFFF
+    classDef data fill:#27AE60,stroke:#1E8449,stroke-width:2px,color:#FFFFFF
+    classDef app fill:#F39C12,stroke:#D68910,stroke-width:2px,color:#FFFFFF
+
+    class User,CLI user
+    class Controller,Config control
+    class Node1,Node2,Node3 data
+    class App1,App2,App3 app
+```
+
+### Control Flow Sequence
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant CLI as slimctl CLI
+    participant Controller as SLIM Controller
+    participant Node as SLIM Node
+    participant App as Client App
+
+    %% Node Registration
+    Note over Node,Controller: Node Startup & Registration
+    Node->>Controller: Register Node (Southbound)
+    Controller->>Node: Registration Ack
+    Controller->>Controller: Store Node Info
+
+    %% Route Management via CLI
+    Note over User,Controller: Route Management
+    User->>CLI: slimctl route add org/ns/agent via config.json
+    CLI->>Controller: CreateRoute Request (Northbound)
+    Controller->>Controller: Validate & Store Route
+    Controller->>Node: Push Route Configuration (Southbound)
+    Node->>Controller: Configuration Ack
+    Controller->>CLI: Route Created Response
+    CLI->>User: Success Message
+
+    %% Connection Management
+    Note over User,Controller: Connection Management
+    User->>CLI: slimctl connection list --node-id=slim/1
+    CLI->>Controller: ListConnections Request (Northbound)
+    Controller->>Controller: Retrieve Connection Info
+    Controller->>CLI: Connections List Response
+    CLI->>User: Display Connections
+
+    %% Application Communication
+    Note over App,Node: Application Messaging
+    App->>Node: Connect & Subscribe
+    Node->>App: Connection Established
+    App->>Node: Publish Message
+    Node->>Node: Route Message via Controller Config
+
+    %% Node Status Updates
+    Note over Node,Controller: Status Monitoring
+    Node->>Controller: Status Update (Southbound)
+    Controller->>Controller: Update Node Status
+```
 
 ### Configuring the SLIM Controller
 
@@ -125,7 +235,7 @@ To enable self-registration, configure the nodes with the Controller address:
               insecure: true
 ```
 
-Nodes can be managed through slimctl. For more information, see the [slimctl](#slimctl). 
+Nodes can be managed through slimctl. For more information, see the [slimctl](#slimctl).
 
 ## slimctl
 
@@ -179,11 +289,11 @@ Run `slimctl <command> --help` for more details on flags and usage.
 
 ```bash
 # Add a new route
-cat > connection_config.json <<EOF  
-{  
-"endpoint": "http://127.0.0.1:46357"  
-}  
-EOF  
+cat > connection_config.json <<EOF
+{
+"endpoint": "http://127.0.0.1:46357"
+}
+EOF
 slimctl route add org/default/alice/0 via connection_config.json
 
 
