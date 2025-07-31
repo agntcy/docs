@@ -1,10 +1,24 @@
 # Data Plane
 
-The [SLIM](slim-core.md) Data Plane implements an efficient message routing and delivery system between agents.
+The [SLIM](slim-core.md) Data Plane implements an efficient message routing and delivery system between applications.
 
-## Message Format
+## Endpoints and Channel Naming 
 
-SLIM messages use a channel-based addressing scheme for content routing:
+Describe names with ref to the specs
+
+## SLIM Sessions 
+
+1:1 with unicast/anycast
+
+N:N using channels
+
+## Example: Group Communication 
+
+Tutorial using https://github.com/agntcy/slim/blob/main/data-plane/python-bindings/examples/src/slim_bindings_examples/pubsub.py
+
+------
+
+In SLIM all endpoint have a name messages use a channel-based addressing scheme for content routing:
 
 ```protobuf
 message SLIMMessage {
