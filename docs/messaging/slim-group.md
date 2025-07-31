@@ -7,10 +7,11 @@ This document provides all the information you need to create a group within a S
 ## Group Creation Using a Moderator
 
  As described in the [SLIM Messaging Layer](slim-data-plane.md), a gruop is managed by a moderator.
- A moderator is a specific client with the ability to create a channel, add or remove clients, and perform the functions delegated to the delivery service by the MLS protocol.
+ A moderator is a specific client with the ability to create a channel, add or remove clients, and perform the functions 
+ that are generly delegated to the Delivery Service in the MLS protocol.
  
- The moderator uses the SLIM Python bindings to set up a group session and configure all the required state to enable secure communication between participants. The moderator is part of a Python application and can either participate in the communication process -implementing some of the application logic- or serve solely as a channel moderator. 
- A complete example of how to use the moderator can be found in the [SLIM Group Communication Tutorial](slim-group-tutorila.md). Here, we provide the basic steps to follow, along with Python code snippets, for setting up a group.
+ The moderator uses the SLIM Python bindings to set up a group session and configure all the required state to enable secure communication between participants. The moderator is part of a Python application and can either participate activelly in the communication process -possibly implementing some of the application logic- or serve solely as a channel moderator. 
+ A complete example on how to use the moderator can be found in the [SLIM Group Communication Tutorial](slim-group-tutorila.md). Here, we provide the basic steps to follow, along with Python code snippets, for setting up a group.
 
 - **Step 1: Create the Moderator**  The moderator is created by instantiating a streaming bidirectional session, which
  initializes the corresponding state in the SLIM session layer. In this example, communication between participants will be encrypted end-to-end, as MLS is enabled.
@@ -46,7 +47,8 @@ This document provides all the information you need to create a group within a S
         )  # Send an invitation to the invitee.
 ```
 
--  **Step 3: Listen from invites** In order to receive an invitation to the channel, each participant needs to listen for incoming messages. The invite message will be sent by the moderator to the participant by name, not to the channel, since the participant does not yet know the channel name.
+-  **Step 3: Listen from invites** To receive an invitation to the channel, each participant must listen for incoming messages
+The moderator will send the invite directly to the participant’s name, not via the channel, since the participant does not yet know the channel name.
 
 ```python
     async with participant_slim_app:
