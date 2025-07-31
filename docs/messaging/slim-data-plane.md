@@ -80,7 +80,7 @@ a single endpoint. It supports several modes:
 - **Reliable or Unreliable**: Applications can choose whether the session layer
   implements retransmission mechanisms for reliable communication or disables
   them for lower overhead.
-- **Fire-and-Foreget or Requet/Reply**: In fire-and-forget mode, the application
+- **Fire-and-Foreget or Request/Reply**: In fire-and-forget mode, the application
   sends a message to the other endpoint without waiting for a reply. For
   reliable sessions, retransmissions are handled transparently by the session
   layer. In request/reply mode, the session layer sets up a timeout for the
