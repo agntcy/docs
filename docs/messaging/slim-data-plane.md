@@ -56,14 +56,14 @@ distribution from the application.
 
 The session layer offers several functionalities:
 
-- Security: All messages in SLIM are encrypted by default using the [MLS
+- **Security**: All messages in SLIM are encrypted by default using the [MLS
   protocol](https://www.rfc-editor.org/rfc/rfc9420.html), which guarantees
   end-to-end encryption even when messages traverse intermediate nodes where TLS
   connections are terminated. The session layer is responsible for MLS group
   creation and updates, as well as message encryption and decryption.
-- Channel Managment: The session layer enables clients to be invited to or
+- **Channel Management**: The session layer enables clients to be invited to or
   removed from a channel as needed.
-- Message Delivery: The session layer abstracts message passing between
+- **Message Delivery**: The session layer abstracts message passing between
   applications and the SLIM message distribution network. It handles message
   formatting, routing, and delivery confirmation, while providing simple send
   and receive primitives to applications.
