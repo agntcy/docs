@@ -4,7 +4,6 @@ nav:
     - Creating an Agent Record: agent-record-guide.md
     - Getting Started with Identity: identity-quickstart.md
     - Getting Started with API Bridge Agent: bridge-howto.md
-    - Getting Started with SLIM: slim-howto.md
     - Build your first app: mas-creation-tutorial
     - Building Applications with ACP Threads: thread.md
     - Building Applications with ACP Interrupts: interrupts.md

@@ -1,6 +1,6 @@
 # SLIM MCP
 
-This tutorial demonstrates how to use SLIM (Secure Low-Latency Interactive Messaging) to transport
+This tutorial demonstrates how to use SLIM to transport
 MCP (Model Context Protocol) messages. SLIM offers two primary integration
 options, depending on whether you're building a new system or integrating with
 an existing MCP server:
@@ -1054,11 +1054,11 @@ local proxy instance:
      display_thread_names: true
      display_thread_ids: true
 
-   # Runtime configuration
-   runtime:
-     n_cores: 0
-     thread_name: "slim-data-plae"
-     drain_timeout: 10s
+     # Runtime configuration
+  runtime:
+    n_cores: 0
+    thread_name: "slim-data-plane"
+    drain_timeout: 10s
 
    # Service configuration for connecting to the SLIM node
    services:

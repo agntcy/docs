@@ -95,8 +95,8 @@ task: Available tasks for this project:
 * integrations:gateway:build:agentic-apps:                Build agentic containers
 * integrations:gateway:test-env:cleanup:                  Remove agent gateway test env
 * integrations:gateway:test-env:deploy:                   Deploy agntcy gateway test env
-* integrations:gateway:test:mcp-server:                   Test MCP over AGP
-* integrations:gateway:test:mcp-server:agp-native:        Test AGP native MCP server
+* integrations:gateway:test:mcp-server:                   Test MCP over SLIM
+* integrations:gateway:test:mcp-server:slim-native:       Test SLIM native MCP server
 * integrations:gateway:test:mcp-server:mcp-proxy:         Test MCP server via MCP proxy
 * integrations:gateway:test:sanity:                       Sanity gateway test
 * integrations:kind:create:                               Create kind cluster

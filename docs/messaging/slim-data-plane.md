@@ -1,6 +1,6 @@
 # Data Plane
 
-The Secure Low-Latency Interactive Messaging (SLIM) data plane implements an efficient message routing and delivery system between agents.
+The [SLIM](slim-core.md) Data Plane implements an efficient message routing and delivery system between agents.
 
 ## Message Format
 
@@ -21,7 +21,7 @@ The connection table maintains agent connectivity information by mapping channel
 
 ## Forwarding Table
 
-The forwarding table implements intelligent message routing by implementing the following:
+The forwarding table implements intelligent message routing by providing the following:
 
 - Maps message patterns to delivery strategies.
 - Supports content-based routing.
