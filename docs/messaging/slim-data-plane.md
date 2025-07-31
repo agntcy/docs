@@ -3,7 +3,7 @@
 The [SLIM](slim-core.md) Data Plane implements an efficient message routing and
 delivery system between applications.
 
-## Endpoints and Channel Naming
+## Clients and Channels Naming
 
 In SLIM, all endpoints are identified by a routable name. To send a message to a
 specific endpoint, an application sends the message to its unique name. Client
