@@ -1,30 +1,19 @@
 # SLIM Group Managment
 
-One of the most important caracteristics of SLIM is that it allows secure group communincation.
-A gruop in SLIM is a set of clients that can communicate together using a shared channel. The channel is
-identified by a name, as described in [SLIM Messaging Layer](slim-data-plane.md). In addition, when 
-[MLS](https://www.rfc-editor.org/rfc/rfc9420.html) is
-enable, the group communincation is protected by end-to-end encryption.
+One of the key features of SLIM is its support for secure group communication. In SLIM, a group consists of multiple clients that communicate through a shared channel. Each channel is identified by a unique name, as described in the [SLIM Messaging Layer](slim-data-plane.md). Additionally, when MLS is enabled, group communication benefits from end-to-end encryption.
 
-Here you will find all the information required to create a gruop
-in a SLIM network.
+This document provides all the information you need to create a group within a SLIM network.
 
-## Gruop Creation Using a Moderator
+## Group Creation Using a Moderator
 
- As descibe in [SLIM Messaging Layer](slim-data-plane.md), a gruop is managed by a moderator.
- A moderator is a particular client that is able to create a channel, add and remove clients and performs the 
- functions delegeated to the delivery service by the MLS protocol.
+ As described in the [SLIM Messaging Layer](slim-data-plane.md), a gruop is managed by a moderator.
+ A moderator is a specific client with the ability to create a channel, add or remove clients, and perform the functions delegated to the delivery service by the MLS protocol.
+ 
+ The moderator uses the SLIM Python bindings to set up a group session and configure all the required state to enable secure communication between participants. The moderator is part of a Python application and can either participate in the communication process -implementing some of the application logic- or serve solely as a channel moderator. 
+ A complete example of how to use the moderator can be found in the [SLIM Group Communication Tutorial](slim-group-tutorila.md). Here, we provide the basic steps to follow, along with Python code snippets, for setting up a group.
 
- The moderator uses the SLIM python bindings in order to setup a group session and configure all the 
- required state to allow secure communication between participants. The moderator is part of a python application
- and it can be part of the communincation process implementing some logic, or it can be just used to moderate 
- the channel. A full example on how to use the moderator
- can be found in the [SLIM Group Communication Tutorial](slim-group-tutorila.md). Here we report the basic steps to follow
- with snipets of python code to setup a group.
-
-- **Step 1: Create the moderator**  The moderator is created by creating a Streaming bidirectional session that
-will create the corresponding state in the SLIM session layer. In this example the communication between 
-partcipants will be encrypted end-to-end as MLS is enabled.
+- **Step 1: Create the Moderator**  The moderator is created by instantiating a streaming bidirectional session, which
+ initializes the corresponding state in the SLIM session layer. In this example, communication between participants will be encrypted end-to-end, as MLS is enabled.
 
 ```python
     # Define the shared channel for group communication.
@@ -45,9 +34,7 @@ partcipants will be encrypted end-to-end as MLS is enabled.
     )
 ```
 
--  **Step 2: Invite clients to the channel**  Now the moderator needs to invite other partcipants to the 
-channel. Notice that not all particpants needs to be added at the beginning but they can be add also later when
-the communincation on the channel is already started.
+-  **Step 2: Invite Clients to the Channel** The moderator now needs to invite other participants to the channel. Note that not all participants need to be added at the beginning; they can also be added later, even after communication on the channel has already started.
 
 ```python
     # Invite other members to the session.
@@ -59,9 +46,7 @@ the communincation on the channel is already started.
         )  # Send an invitation to the invitee.
 ```
 
--  **Step 3: Listen from invites** In other to receive the invitation to the channel each participant 
-needs to listen for incoming messages. Notice the the invite message will be sent on the name of the particpant
-and not on the channel as the partcipant does not know the channel name yet
+-  **Step 3: Listen from invites** In order to receive an invitation to the channel, each participant needs to listen for incoming messages. The invite message will be sent by the moderator to the participant by name, not to the channel, since the participant does not yet know the channel name.
 
 ```python
     async with participant_slim_app:
@@ -78,15 +63,10 @@ and not on the channel as the partcipant does not know the channel name yet
         print(f"Received: {msg_rcv.decode()}")
 ```
 
-At this point the group is set up and the clients can start to exchange messages.
-However this configuration is not reflected the [SLIM Controller](slim-controller.md) 
-automatically and so it as to be reported manually.
-In particular, if the SLIM network is composed by multiple nodes the registration to
-the control plane is mandatory in order to properly setup the routes between nodes as the goup setup 
-by the moderator itself can work out of the box only if a singlo SLIM node is present in the network.
+At this point, the group is set up and clients can start exchanging messages.
+However, this configuration is not automatically reflected in the [SLIM Controller](slim-controller.md)  and must be reported manually. In particular, if the SLIM network is composed of multiple nodes, registration with the control plane is mandatory to properly set up routes between nodes. The group setup by the moderator will work out of the box only if a single SLIM node is present in the network.
 
-In the next session we will describe out to register the new created group in the SLIM controller and 
-how to properly set the routes between the nodes
+In the next section, we will describe how to register the newly created group with the SLIM Controller and how to properly configure routes between nodes.
 
 ## How to use the north bound control plane API
 
