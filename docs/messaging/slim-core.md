@@ -20,8 +20,8 @@ SLIM provides the following features:
 
 The main components of SLIM are:
 
-- [SLIM Messaging Layer](../messaging/slim-data-plane.md)
-- [SLIM Controller](../messaging/slim-controller.md)
+- [SLIM Messaging Layer](./slim-data-plane.md)
+- [SLIM Controller](./slim-controller.md)
 
 To get started with SLIM, see the [Getting Started with
 SLIM](../messaging/slim-howto.md) guide.

@@ -143,11 +143,15 @@ pip install slim-bindings
 dependencies = ["slim-bindings>=0.3.6"]
 ```
 
+A tutorial on how use the bindings in an application can be found in the [data-plane
+documentation](./slim-data-plane.md). Otherwise examples are available in the
+[SLIM Repository](https://github.com/agntcy/slim/tree/main/data-plane/python-bindings/examples).
+
 ### Slimctl
 
 `slimctl` is a command-line tool for managing SLIM Nodes and Controllers. It can
-be installed downloaded from the [releases
-page](https://github.com/agntcy/slim/releases/tag/slimctl-v0.1.4).
+be downloaded downloaded from the [releases
+page](https://github.com/agntcy/slim/releases/tag/slimctl-v0.1.4) in the SLIM repo.
 
 ```bash
 curl -LO https://github.com/agntcy/slim/releases/download/slimctl-v0.1.4/slimctl-linux-amd64
