@@ -15,7 +15,7 @@ instructions. Below are the main components and how to install them.
 ### SLIM Node
 
 The SLIM Node is the core component that handles messaging operations. It can be
-installed either using the provided container image, with
+installed using the provided container image, with
 [cargo](https://github.com/rust-lang/cargo) or with [Helm](https://helm.sh/).
 
 #### Using Docker
