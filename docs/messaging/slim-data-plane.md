@@ -107,7 +107,7 @@ functionalities:
 - **Invite/Remove clients**: The moderator is the only client that can create a
   channel and can modify the list of client participating to the group
   communication.
-- **MLS state management**: A channel as also an associated MLS group to
+- **MLS state management**: A channel has also an associated MLS group to
   guaranty security. The moderator performs the functionalities of the MLS
   delivery service, that routes MLS messages amoung the group participatns in
   order to keep the state always updated.
