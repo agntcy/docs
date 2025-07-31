@@ -687,7 +687,7 @@ def main():
         print("Client interrupted by user.")
 ```
 
-## Example: 1:1 Communincation
+## Example: 1:1 Communication
 
 The slim repository also includes examples of 1:1 communication sessions. Using
 the SLIM SDK for 1:1 sessions is very similar to the approach demonstrated in
