@@ -111,7 +111,7 @@ Example golang code fragments:
 
 ```go
 	conn, err := grpc.NewClient("localhost:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
-	client := controlplaneApi.NewControlPlaneServiceClient(conn) // Replace nil with actual gRPC client connection
+	client := controlplaneApi.NewControlPlaneServiceClient(conn)
 
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
@@ -119,7 +119,7 @@ Example golang code fragments:
 	defer conn.Close()
 
 	createChannelRequest := &controlplaneApi.CreateChannelRequest{
-		Moderators: []string{"moderator1", "moderator2"},
+		Moderators: []string{"agncty/namespace/moderator"}, // This is the name of the moderator
 	}
 	resp, err := client.CreateChannel(context.Background(), createChannelRequest)
 	if err != nil {
@@ -137,7 +137,7 @@ Example golang code fragments:
 
 ```go
 	conn, err := grpc.NewClient("localhost:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
-	client := controlplaneApi.NewControlPlaneServiceClient(conn) // Replace nil with actual gRPC client connection
+	client := controlplaneApi.NewControlPlaneServiceClient(conn)
 
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
@@ -145,8 +145,8 @@ Example golang code fragments:
 	defer conn.Close()
 
 	addParticipantRequest := &controlplaneApi.AddParticipantRequest{
-		ParticipantId: "participant1",                  // Replace with actual participant ID to add
-		ChannelId:     "moderator1-wJcF4BhQbxc4N0icik", // Replace with actual channel ID to delete
+		ParticipantId: "agncty/namespace/participant_1",
+		ChannelId:     "agncty/namespace/group_channel",
 	}
 	ack, err := client.AddParticipant(context.Background(), addParticipantRequest)
 	if err != nil {
@@ -164,7 +164,7 @@ Example golang code fragments:
 
 ```go
 	conn, err := grpc.NewClient("localhost:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
-	client := controlplaneApi.NewControlPlaneServiceClient(conn) // Replace nil with actual gRPC client connection
+	client := controlplaneApi.NewControlPlaneServiceClient(conn)
 
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
@@ -189,10 +189,11 @@ Example golang code fragments:
 	}
 	fmt.Printf("Connection created successfully with ID: %v\n", connectionID)
 
+    // add subscription for a group a SLIM node
 	subscription := &grpcapi.Subscription{
-		Component_0:  "organization",
+		Component_0:  "agncty",
 		Component_1:  "namespace",
-		Component_2:  "appName",
+		Component_2:  "group_channel",
 		ConnectionId: connectionID,
 	}
 
