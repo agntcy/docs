@@ -61,7 +61,7 @@ The session layer offers several functionalities:
   end-to-end encryption even when messages traverse intermediate nodes where TLS
   connections are terminated. The session layer is responsible for MLS group
   creation and updates, as well as message encryption and decryption.
-- Channel Menagment: The session layer enables clients to be invited to or
+- Channel Managment: The session layer enables clients to be invited to or
   removed from a channel as needed.
 - Message Delivery: The session layer abstracts message passing between
   applications and the SLIM message distribution network. It handles message
