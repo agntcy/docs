@@ -6,7 +6,7 @@ delivery system between applications.
 ## Clients and Channels Naming
 
 In SLIM, all endpoints are identified by a routable name. To send a message to a
-specific endpoint, an application sends the message to its unique name. Client
+specific client, an application sends the message to its unique name. Client
 names follow this pattern:
 
 ```
@@ -15,7 +15,7 @@ org/namespace/service/client
 
 - **Organization**: The first component identifies the organization that deploys
   the application.
-- **Namespace**: This can be used to segment endpoint deployments. For example,
+- **Namespace**: This can be used to segment client deployments. For example,
   in a multi-region deployment, the namespace might indicate the application's
   location. It can be adapted to fit other user requirements as well.
 - **Service**: This component specifies the service exposed by the client. When
@@ -112,7 +112,7 @@ functionalities:
   delivery service, that routes MLS messages amoung the group participatns in
   order to keep the state always updated.
 
-As for the naming more information on the session layer are availbe in the [SLIM
+As for the naming, more information on the session layer are availbe in the [SLIM
 Specifications](https://spec.slim.agntcy.org/379-internet-draft-version-0-which-covers-all-main-components/draft-agntcy-slim.html)
 
 ## Example: Group Communication
