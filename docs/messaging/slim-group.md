@@ -207,7 +207,7 @@ Example golang code fragments:
 		log.Fatalf("failed to create subscription")
 	}
 	fmt.Printf("Subscrption created successfully with ID: %v\n", createSubscriptionResponse.SubscriptionId)
-	
+
 ```
 
 ## Identity management
