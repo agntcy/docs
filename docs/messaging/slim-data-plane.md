@@ -105,7 +105,7 @@ moderator. The moderator is a special client that has the has two main
 functionalities:
 
 - **Invite/Remove clients**: The moderator is the only client that can create a
-  channel and can modify the list of client partecipating to the group
+  channel and can modify the list of client participating to the group
   communincation
 - **MLS state management**: A channel as also an associated MLS group to
   guaranty security. The moderator performs the functionalities of the MLS
