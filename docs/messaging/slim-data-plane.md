@@ -484,3 +484,4 @@ async def run_moderator(secret):
     # Send a message to the group channel.
     await send_message(moderator_slim_app, session_info, "Hello group!")
 ```
+
