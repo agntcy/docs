@@ -32,24 +32,16 @@ streaming bidirectional session, which initializes the corresponding state in
 the SLIM session layer. In this example, communication between participants
 will be encrypted end-to-end, as MLS is enabled.
 
-```python
-    # Define the shared channel for group communication.
-    # This channel will be used by all members of the group to exchange messages.
-    shared_channel = PyName("agntcy", "namespace", "group_channel")
+1. Create the Moderator
+    The moderator is created by instantiating a
+    streaming bidirectional session, which initializes the corresponding state in
+    the SLIM session layer. In this example, communication between participants
+    will be encrypted end-to-end, as MLS is enabled.
 
-    # Create a new session. The group session is a bidirectional streaming session.
-    # Here is where we enable the MLS protocol for end-to-end encryption.
-    session_info = await slim_app.create_session(
-        PySessionConfiguration.Streaming(
-            PySessionDirection.BIDIRECTIONAL,
-            topic=shared_channel,  # The channel ID for group communication.
-            moderator=True,  # This session is created by the moderator.
-            max_retries=5,  # Maximum number of retries for reliability.
-            timeout=datetime.timedelta(seconds=5),  # Timeout for message delivery.
-            mls_enabled=True,  # Enable MLS for end-to-end encryption.
-        )
-    )
-```
+  ```python
+      # Define the shared channel for group communication.
+      # This channel will be used by all members of the group to exchange messages.
+      shared_channel = PyName("agntcy", "namespace", "group_channel")
 
 ### Step 2: Invite Participants to the Channel
 
@@ -58,15 +50,15 @@ other participants to the channel. Note that not all participants need to be
 added at the beginning; you can also add them later, even after communication
 on the channel has already started.
 
-```python
-    # Invite other members to the session.
-    for invitee in invitees:
-        print(f"Inviting {invitee}")
-        await slim_app.set_route(invitee)  # Allow messages to be sent to the invitee.
-        await slim_app.invite(
-            session_info, invitee
-        )  # Send an invitation to the invitee.
-```
+  ```python
+      # Invite other members to the session.
+      for invitee in invitees:
+          print(f"Inviting {invitee}")
+          await slim_app.set_route(invitee)  # Allow messages to be sent to the invitee.
+          await slim_app.invite(
+              session_info, invitee
+          )  # Send an invitation to the invitee.
+  ```
 
 ### Step 3: Listen for Invitations
 
@@ -75,20 +67,21 @@ participant must listen for incoming messages. The moderator will send the
 invitation directly to the participant's name, not via the channel, since the
 participant does not yet know the channel name.
 
-```python
-    async with participant_slim_app:
-        # Listen for new sessions opened by moderators
-        recv_session, _ = await participant_slim_app.receive()
+  ```python
+      async with participant_slim_app:
+          # Listen for new sessions opened by moderators
+          recv_session, _ = await participant_slim_app.receive()
 
-        # Session is received, now we can read and write on the shared channel.
-        print(f"Received session: {recv_session.id}")
+          # Session is received, now we can read and write on the shared channel.
+          print(f"Received session: {recv_session.id}")
 
-        # Receive messages from the session
-        recv_session, msg_rcv = await participant_slim_app.receive(session=recv_session.id)
+          # Receive messages from the session
+          recv_session, msg_rcv = await participant_slim_app.receive(session=recv_session.id)
 
-        # Print the message
-        print(f"Received: {msg_rcv.decode()}")
-```
+          # Print the message
+          print(f"Received: {msg_rcv.decode()}")
+  ```
+
 
 At this point, the group is set up and clients can start exchanging messages.
 However, this configuration is not automatically reflected in the [SLIM
@@ -270,25 +263,6 @@ guide](https://artifacthub.io/packages/helm/spiffe/spire#install-instructions)
 to install SPIRE using Helm in a Kubernetes cluster, and to assign a SPIFFE ID
 to each of your workloads.
 
-Here is a quick example of how to install SPIRE and create a ClusterSPIFFEID
-CRD:
-
-```bash
-helm upgrade --install -n spire-server spire-crds spire-crds --repo https://spiffe.github.io/helm-charts-hardened/ --create-namespace
-helm upgrade --install -n spire-server spire spire --repo https://spiffe.github.io/helm-charts-hardened/
-
-kubectl apply -f - <<EOF
-apiVersion: spire.spiffe.io/v1alpha1
-kind: ClusterSPIFFEID
-metadata:
-  name: slim-workloads
-labels:
-    app: slim-client
-spec:
-  spiffeIDTemplate: "spiffe://domain.test/ns/{{ .PodMeta.Namespace }}/sa/{{ .PodSpec.ServiceAccountName }}"
-EOF
-
-```
 
 #### The SPIFFE Helper
 
