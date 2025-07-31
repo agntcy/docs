@@ -1,20 +1,34 @@
 # SLIM Group Managment
 
-One of the key features of SLIM is its support for secure group communication. In SLIM, a group consists of multiple clients that communicate through a shared channel. Each channel is identified by a unique name, as described in the [SLIM Messaging Layer](slim-data-plane.md). Additionally, when MLS is enabled, group communication benefits from end-to-end encryption.
+One of the key features of SLIM is its support for secure group communication.
+In SLIM, a group consists of multiple clients that communicate through a shared
+channel. Each channel is identified by a unique name, as described in the [SLIM
+Messaging Layer](slim-data-plane.md). Additionally, when MLS is enabled, group
+communication benefits from end-to-end encryption.
 
-This document provides all the information you need to create a group within a SLIM network.
+This document provides all the information you need to create a group within a
+SLIM network.
 
 ## Group Creation Using a Moderator
 
- As described in the [SLIM Messaging Layer](slim-data-plane.md), a gruop is managed by a moderator.
- A moderator is a specific client with the ability to create a channel, add or remove clients, and perform the functions 
- that are generly delegated to the Delivery Service in the MLS protocol.
- 
- The moderator uses the SLIM Python bindings to set up a group session and configure all the required state to enable secure communication between participants. The moderator is part of a Python application and can either participate activelly in the communication process -possibly implementing some of the application logic- or serve solely as a channel moderator. 
- A complete example on how to use the moderator can be found in the [SLIM Group Communication Tutorial](slim-group-tutorila.md). Here, we provide the basic steps to follow, along with Python code snippets, for setting up a group.
+As described in the [SLIM Messaging Layer](slim-data-plane.md), a gruop is
+managed by a moderator. A moderator is a specific client with the ability to
+create a channel, add or remove clients, and perform the functions that are
+generly delegated to the Delivery Service in the MLS protocol.
 
-- **Step 1: Create the Moderator**  The moderator is created by instantiating a streaming bidirectional session, which
- initializes the corresponding state in the SLIM session layer. In this example, communication between participants will be encrypted end-to-end, as MLS is enabled.
+The moderator uses the SLIM Python bindings to set up a group session and
+configure all the required state to enable secure communication between
+participants. The moderator is part of a Python application and can either
+participate activelly in the communication process -possibly implementing some
+of the application logic- or serve solely as a channel moderator. A complete
+example on how to use the moderator can be found in the [SLIM Group
+Communication Tutorial](slim-group-tutorila.md). Here, we provide the basic
+steps to follow, along with Python code snippets, for setting up a group.
+
+- **Step 1: Create the Moderator** The moderator is created by instantiating a
+  streaming bidirectional session, which initializes the corresponding state in
+  the SLIM session layer. In this example, communication between participants
+  will be encrypted end-to-end, as MLS is enabled.
 
 ```python
     # Define the shared channel for group communication.
@@ -35,7 +49,10 @@ This document provides all the information you need to create a group within a S
     )
 ```
 
--  **Step 2: Invite Clients to the Channel** The moderator now needs to invite other participants to the channel. Note that not all participants need to be added at the beginning; they can also be added later, even after communication on the channel has already started.
+- **Step 2: Invite Clients to the Channel** The moderator now needs to invite
+  other participants to the channel. Note that not all participants need to be
+  added at the beginning; they can also be added later, even after communication
+  on the channel has already started.
 
 ```python
     # Invite other members to the session.
@@ -47,8 +64,10 @@ This document provides all the information you need to create a group within a S
         )  # Send an invitation to the invitee.
 ```
 
--  **Step 3: Listen from invites** To receive an invitation to the channel, each participant must listen for incoming messages
-The moderator will send the invite directly to the participant’s name, not via the channel, since the participant does not yet know the channel name.
+- **Step 3: Listen from invites** To receive an invitation to the channel, each
+  participant must listen for incoming messages The moderator will send the
+  invite directly to the participant’s name, not via the channel, since the
+  participant does not yet know the channel name.
 
 ```python
     async with participant_slim_app:
@@ -66,15 +85,24 @@ The moderator will send the invite directly to the participant’s name, not via
 ```
 
 At this point, the group is set up and clients can start exchanging messages.
-However, this configuration is not automatically reflected in the [SLIM Controller](slim-controller.md)  and must be reported manually. In particular, if the SLIM network is composed of multiple nodes, registration with the control plane is mandatory to properly set up routes between nodes. The group setup by the moderator will work out of the box only if a single SLIM node is present in the network.
+However, this configuration is not automatically reflected in the [SLIM
+Controller](slim-controller.md) and must be reported manually. In particular, if
+the SLIM network is composed of multiple nodes, registration with the control
+plane is mandatory to properly set up routes between nodes. The group setup by
+the moderator will work out of the box only if a single SLIM node is present in
+the network.
 
-In the next section, we will describe how to register the newly created group with the SLIM Controller and how to properly configure routes between nodes.
+In the next section, we will describe how to register the newly created group
+with the SLIM Controller and how to properly configure routes between nodes.
 
 ## How to use the north bound control plane API
 
-The controller northbound API exposes operations to manage SLIM groups. Client applications can use this API to create and manage SLIM groups, add clients to groups, and set routes between SLIM nodes.
+The controller northbound API exposes operations to manage SLIM groups. Client
+applications can use this API to create and manage SLIM groups, add clients to
+groups, and set routes between SLIM nodes.
 
-GRPC API SDKs can be generated from the [schema registry](https://buf.build/agntcy/slim/sdks/main:protobuf)
+GRPC API SDKs can be generated from the [schema
+registry](https://buf.build/agntcy/slim/sdks/main:protobuf)
 
 Example golang code fragments:
 
@@ -104,7 +132,6 @@ Example golang code fragments:
 	fmt.Printf("Received response: %v\n", channelId)
 ```
 
-
 ### Add clients to a SLIM group
 
 ```go
@@ -133,6 +160,7 @@ Example golang code fragments:
 ```
 
 ### Set routes for the group name between slim nodes
+
 TBD
 
 ## Identity management
@@ -168,11 +196,13 @@ SPIRE with SLIM to manage client identities in a group communication scenario.
 #### Install SPIRE and create a ClusterSPIFFEID CRD
 
 To use SPIRE with SLIM, you need to have a SPIRE server and agent running in
-your environment. You can follow the [SPIRE
-installation guide](https://artifacthub.io/packages/helm/spiffe/spire#install-instructions) to install SPIRE
-using Helm in a Kubernetes cluster, and to assign a spiffe ID to each one of your workloads.
+your environment. You can follow the [SPIRE installation
+guide](https://artifacthub.io/packages/helm/spiffe/spire#install-instructions)
+to install SPIRE using Helm in a Kubernetes cluster, and to assign a spiffe ID
+to each one of your workloads.
 
-Here is a quick example of how to install SPIRE and create a ClusterSPIFFEID CRD:
+Here is a quick example of how to install SPIRE and create a ClusterSPIFFEID
+CRD:
 
 ```bash
 helm upgrade --install -n spire-server spire-crds spire-crds --repo https://spiffe.github.io/helm-charts-hardened/ --create-namespace
@@ -191,29 +221,27 @@ EOF
 
 ```
 
-
-
 #### [The SPIFFE Helper](https://github.com/spiffe/spiffe-helper)
 
 The [SPIFFE Helper](https://github.com/spiffe/spiffe-helper) is a simple utility
-for fetching X.509 SVID certificates and JWT tokens from the SPIFFE Workload API.
-It can be used to obtain the JWT tokens for SLIM clients, which can then be used
-to authenticate clients and establish their identities in the SLIM network.
+for fetching X.509 SVID certificates and JWT tokens from the SPIFFE Workload
+API. It can be used to obtain the JWT tokens for SLIM clients, which can then be
+used to authenticate clients and establish their identities in the SLIM network.
 
 As tokens are normally short-lived, the SPIFFE Helper can be used to
 automatically refresh the tokens when they expire, ensuring that clients always
 have a valid identity.
 
-SPIFFE Helper can be run as a sidecar container in the SLIM client pods, ensuring
-that the client can always access a valid JWT token. The SLIM clients can then
-use the token to authenticate itself with the SLIM network.
+SPIFFE Helper can be run as a sidecar container in the SLIM client pods,
+ensuring that the client can always access a valid JWT token. The SLIM clients
+can then use the token to authenticate itself with the SLIM network.
 
 #### Run SPIFFE Helper as sidecar container
 
 To run the SPIFFE Helper as a sidecar container, you can add it to your SLIM
-client's pod definition. First you need to create a ConfigMap with the SPIFFE Helper
-configuration, which will be mounted as a volume in the pod. Here is an example
-of how to create the ConfigMap:
+client's pod definition. First you need to create a ConfigMap with the SPIFFE
+Helper configuration, which will be mounted as a volume in the pod. Here is an
+example of how to create the ConfigMap:
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -291,10 +319,10 @@ spec:
         path: /run/spire/agent-sockets
 ```
 
-Notice that here we are using the slim node image as the main container, and
-the SPIFFE Helper as a sidecar container. Normally the main container
-will be your SLIM client application, which will use the JWT tokens generated by
-the SPIFFE Helper to authenticate itself with the SLIM network.
+Notice that here we are using the slim node image as the main container, and the
+SPIFFE Helper as a sidecar container. Normally the main container will be your
+SLIM client application, which will use the JWT tokens generated by the SPIFFE
+Helper to authenticate itself with the SLIM network.
 
 #### Use the JWT SVID in your SLIM client
 
@@ -307,8 +335,8 @@ jwt_svid.token	key.jwt  svid_bundle.pem  tls.crt  tls.key
 ```
 
 You can then use the JWT SVID in your SLIM client application to authenticate
-itself with the SLIM network. Here is how you can create a SLIM PyIdentityProvider and
-PyIdentityVerifier using the JWT SVID:
+itself with the SLIM network. Here is how you can create a SLIM
+PyIdentityProvider and PyIdentityVerifier using the JWT SVID:
 
 ```python
 def jwt_identity(
@@ -355,5 +383,6 @@ def jwt_identity(
     return provider, verifier
 ```
 
-A complete example of how to use the JWT SVID in a SLIM client can be found in the
-examples in the [SLIM Python Bindings](https://github.com/agntcy/slim/blob/main/data-plane/python-bindings/examples/src/slim_bindings_examples/common.py#L71-L112).
+A complete example of how to use the JWT SVID in a SLIM client can be found in
+the examples in the [SLIM Python
+Bindings](https://github.com/agntcy/slim/blob/main/data-plane/python-bindings/examples/src/slim_bindings_examples/common.py#L71-L112).
