@@ -1,6 +1,6 @@
 # SLIM Group Management
 
-One of the key features of SLIM is its support for secure group communication.
+One of the key features of [SLIM](slim-core.md) is its support for secure group communication.
 In SLIM, a group consists of multiple clients that communicate through a shared
 channel. Each channel is identified by a unique name, as described in the [SLIM
 Messaging Layer](slim-data-plane.md). Additionally, when MLS is enabled, group
@@ -14,12 +14,12 @@ SLIM network.
 As described in the [SLIM Messaging Layer](slim-data-plane.md), a group is
 managed by a moderator. A moderator is a specific client with the ability to
 create a channel, add or remove clients, and perform the functions that are
-generly delegated to the Delivery Service in the MLS protocol.
+generally delegated to the Delivery Service in the MLS protocol.
 
 The moderator uses the SLIM Python bindings to set up a group session and
 configure all the required state to enable secure communication between
 participants. The moderator is part of a Python application and can either
-participate activelly in the communication process -possibly implementing some
+participate actively in the communication process -possibly implementing some
 of the application logic- or serve solely as a channel moderator. A complete
 example on how to use the moderator can be found in the [SLIM Group
 Communication Tutorial](slim-group-tutorial.md). Here, we provide the basic
