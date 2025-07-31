@@ -587,4 +587,4 @@ you can still benefit from the simplicity and security that the SLIM messaging
 layer provides.
 
 For a detailed guide on using MCP on top of SLIM, please refer to the [SLIM and
-MCP Integration](slim-mcp.md) page
+MCP Integration](slim-mcp.md) page.
