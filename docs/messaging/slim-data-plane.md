@@ -91,7 +91,7 @@ a single endpoint. It supports several modes:
   discover an available client; subsequent messages are sent to the same
   endpoint.
 
-By default, all sessions are secure using MLS. In a 1:1 session, the group
+By default, all sessions are secured using MLS. In a 1:1 session, the group
 consists of only two clients, which must maintain some state for the MLS
 protocol. When MLS is enabled, the session is automatically forced to use the
 sticky mode, so that all the messages will be sent to the same client.
