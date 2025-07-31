@@ -268,7 +268,7 @@ EOF
 
 ```
 
-#### [The SPIFFE Helper](https://github.com/spiffe/spiffe-helper)
+#### The SPIFFE Helper
 
 The [SPIFFE Helper](https://github.com/spiffe/spiffe-helper) is a simple utility
 for fetching X.509 SVID certificates and JWT tokens from the SPIFFE Workload
