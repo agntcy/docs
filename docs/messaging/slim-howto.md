@@ -144,7 +144,7 @@ dependencies = ["slim-bindings>=0.3.6"]
 ```
 
 A tutorial on how to use the bindings in an application can be found in the [messaging layer
-documentation](./slim-messaging-layer.md). Otherwise examples are available in the
+documentation](./slim-data-plane.md). Otherwise examples are available in the
 [SLIM Repository](https://github.com/agntcy/slim/tree/main/data-plane/python-bindings/examples).
 
 ### Slimctl
