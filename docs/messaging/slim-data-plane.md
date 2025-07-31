@@ -1,9 +1,9 @@
-# SLIM messaging Layer
+# SLIM Messaging Layer
 
-The [SLIM](slim-core.md) Data Plane implements an efficient message routing and
+The [SLIM](slim-core.md) Messaging Layer implements an efficient message routing and
 delivery system between applications.
 
-## Clients and Channels Naming
+## Client and Channel Naming
 
 In SLIM, all endpoints are identified by a routable name. To send a message to a
 specific client, an application sends the message to its unique name. Client
@@ -34,8 +34,8 @@ This naming structure supports both Anycast and Unicast message delivery:
   directly to the specified client instance.
 
 This approach enables efficient client discovery in fact the message will be
-deliver by the SLIM network to a client that is able to process it, even if the
-real name of the client is unknow. The anycast forwarding is mostily used in
+delivered by the SLIM network to a client that is able to process it, even if the
+real name of the client is unknown. The anycast forwarding is mostly used in
 this discovery phase.
 
 In addition to client endpoints, SLIM allows messages to be sent to Channels. A
@@ -80,7 +80,7 @@ a single endpoint. It supports several modes:
 - **Reliable or Unreliable**: Applications can choose whether the session layer
   implements retransmission mechanisms for reliable communication or disables
   them for lower overhead.
-- **Fire-and-Foreget or Request/Reply**: In fire-and-forget mode, the
+- **Fire-and-Forget or Request/Reply**: In fire-and-forget mode, the
   application sends a message to the other endpoint without waiting for a reply.
   For reliable sessions, retransmissions are handled transparently by the
   session layer. In request/reply mode, a timeout is setup at application level,
@@ -101,24 +101,23 @@ sticky mode, so that all the messages will be sent to the same client.
 In an N:N (group) session, multiple clients can exchange messages on the same
 channel. There are two types of clients in this session: a standard participant
 that can only be invited to the channel and participate in messaging, and a
-moderator. The moderator is a special client that has the has two main
-functionalities:
+moderator. The moderator is a special client that has the following functionalities:
 
 - **Invite/Remove clients**: The moderator is the only client that can create a
-  channel and can modify the list of client participating to the group
+  channel and can modify the list of clients participating in the group
   communication.
 - **MLS state management**: A channel has also an associated MLS group to
-  guaranty security. The moderator performs the functionalities of the MLS
-  delivery service, that routes MLS messages amoung the group participatns in
+  guarantee security. The moderator performs the functionalities of the MLS
+  delivery service, that routes MLS messages among the group participants in
   order to keep the state always updated.
 
-As for the naming, more information on the session layer are availbe in the [SLIM
+As for the naming, for more information on the session layer, see the [SLIM
 Specifications](https://spec.slim.agntcy.org/379-internet-draft-version-0-which-covers-all-main-components/draft-agntcy-slim.html)
 
 ## Example: Group Communication
 
 This tutorial will show how to set up a secure group communication system using
-SLIM. The group will be created by defining a pubsub session with a moderator,
+SLIM. The group will be created by defining a pub-sub session with a moderator,
 which will invite the other members. Messages will be sent to the shared
 channel, where every member can read and write. Messages are end-to-end
 encrypted using the [MLS
@@ -135,9 +134,9 @@ protocol](https://datatracker.ietf.org/doc/html/rfc9420).
 - **End-to-End Encryption**: Ensures secure communication using the [MLS
   protocol](https://datatracker.ietf.org/doc/html/rfc9420).
 
-### Setting up the SLIM instance
+### Setting up the SLIM Instance
 
-As all the member of the group will be communicating via a SLIM network, we can
+As all members of the group will be communicating via a SLIM network, we can
 set up a SLIM instance representing the SLIM network. We will use the pre-built
 docker image for this purpose.
 
@@ -194,7 +193,7 @@ If everything goes fine, you should see an output like this one:
 2025-07-31T09:07:45.861393Z  INFO slim-data-plane ThreadId(11) slim_service: running service
 ```
 
-### Configure clients Identity and implementing the SLIM App
+### Configure Client Identity and Implementing the SLIM App
 
 Each member of the group will run a local slim app instance that will be used to
 communicate with the SLIM network. Also each member will have a unique identity
@@ -270,7 +269,7 @@ async def create_slim_app(secret: str, local_name: PyName) -> PyService:
     return slim_app
 ```
 
-### Implementing the moderator
+### Implementing the Moderator
 
 The moderator will be responsible for creating the group and inviting other
 members. The moderator will create a session and send an invitation message to
@@ -279,7 +278,7 @@ name for the group communication.
 
 The moderator can be implemented as a Python service using the SLIM SDK.
 
-#### Creating the Session and inviting members
+#### Creating the Session and Inviting Members
 
 The moderator creates a session and invites other members to join the group. The
 session will be identified by a unique session ID, and the group communication
@@ -363,7 +362,7 @@ async def run_moderator(secret: str):
         print(f"Received message from participant: {msg.decode()}")
 ```
 
-### Implementing the group participants
+### Implementing the Group Participants
 
 The group participants will be implemented similarly to the moderator, but they
 will not create the session. They will create the SLIM service instance and wait
@@ -402,7 +401,7 @@ async def run_participant(secret: str):
         await asyncio.sleep(1)
 ```
 
-### Putting all together
+### Putting All Together
 
 Here is the complete code to run the moderator and the participants in a single
 script. You can run this script to see how the group communication works using

@@ -5,7 +5,7 @@ unifies state-of-the-art capabilities from all mentioned frameworks into a
 single implementation.
 
 For more information on SLIM, see the [detailed
-documentation](../messaging/slim-core.md).
+documentation](./slim-core.md).
 
 ## Installation
 
@@ -143,14 +143,14 @@ pip install slim-bindings
 dependencies = ["slim-bindings>=0.3.6"]
 ```
 
-A tutorial on how use the bindings in an application can be found in the [data-plane
-documentation](./slim-data-plane.md). Otherwise examples are available in the
+A tutorial on how to use the bindings in an application can be found in the [messaging layer
+documentation](./slim-messaging-layer.md). Otherwise examples are available in the
 [SLIM Repository](https://github.com/agntcy/slim/tree/main/data-plane/python-bindings/examples).
 
 ### Slimctl
 
 `slimctl` is a command-line tool for managing SLIM Nodes and Controllers. It can
-be downloaded downloaded from the [releases
+be downloaded from the [releases
 page](https://github.com/agntcy/slim/releases/tag/slimctl-v0.1.4) in the SLIM repo.
 
 ```bash

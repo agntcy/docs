@@ -1,4 +1,4 @@
-# SLIM and MCP integration
+# SLIM and MCP Integration
 
 This tutorial demonstrates how to use SLIM to transport
 MCP (Model Context Protocol) messages. SLIM offers two primary integration
@@ -981,7 +981,7 @@ uv run llamaindex-time-agent \
     --city 'New York'
 ```
 
-The agent connects to the MCP server through SLIM, send a time query for the
+The agent connects to the MCP server through SLIM, sends a time query for the
 specified city, and display the response.
 
 ## Using SLIM with a Proxy Server for SSE-based MCP Servers
