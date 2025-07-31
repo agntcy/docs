@@ -4,3 +4,4 @@ nav:
  - SLIM messaging Layer: slim-data-plane.md
  - SLIM Controller: slim-controller.md
  - SLIM and MCP Integration: slim-mcp.md
+ - SLIM Group Communication Tutorial: slim-group-tutorial.md
