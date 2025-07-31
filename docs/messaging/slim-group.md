@@ -70,11 +70,68 @@ In the next section, we will describe how to register the newly created group wi
 
 ## How to use the north bound control plane API
 
-Laszlo - add commands for this part
+The controller northbound API exposes operations to manage SLIM groups. Client applications can use this API to create and manage SLIM groups, add clients to groups, and set routes between SLIM nodes.
 
-- 1 create the group
-- 2 add clients to the group
-- 3 set the routes for the group name between slim nodes
+GRPC API SDKs can be generated from the [schema registry](https://buf.build/agntcy/slim/sdks/main:protobuf)
+
+Example golang code fragments:
+
+### Create a SLIM channel
+
+```go
+	conn, err := grpc.NewClient("localhost:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	client := controlplaneApi.NewControlPlaneServiceClient(conn) // Replace nil with actual gRPC client connection
+
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+
+	createChannelRequest := &controlplaneApi.CreateChannelRequest{
+		Moderators: []string{"moderator1", "moderator2"},
+	}
+	resp, err := client.CreateChannel(context.Background(), createChannelRequest)
+	if err != nil {
+		fmt.Printf("send request: %v", err.Error())
+	}
+	channelId := resp.GetChannelId()
+	if resp == nil {
+		fmt.Println("\nNo channels found")
+		return
+	}
+	fmt.Printf("Received response: %v\n", channelId)
+```
+
+
+### Add clients to a SLIM group
+
+```go
+	conn, err := grpc.NewClient("localhost:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	client := controlplaneApi.NewControlPlaneServiceClient(conn) // Replace nil with actual gRPC client connection
+
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+
+	addParticipantRequest := &controlplaneApi.AddParticipantRequest{
+		ParticipantId: "participant1",                  // Replace with actual participant ID to add
+		ChannelId:     "moderator1-wJcF4BhQbxc4N0icik", // Replace with actual channel ID to delete
+	}
+	ack, err := client.AddParticipant(context.Background(), addParticipantRequest)
+	if err != nil {
+		fmt.Printf("send request: %v", err.Error())
+	}
+
+	fmt.Printf(
+		"ACK received for %s: success=%t\n",
+		ack.OriginalMessageId,
+		ack.Success,
+	)
+```
+
+### Set routes for the group name between slim nodes
+TBD
 
 ## Identity management
 
