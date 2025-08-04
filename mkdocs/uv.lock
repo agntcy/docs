@@ -46,10 +46,10 @@ dependencies = [
     { name = "mkdocs-autorefs" },
     { name = "mkdocs-awesome-pages-plugin" },
     { name = "mkdocs-exclude" },
+    { name = "mkdocs-gen-files" },
     { name = "mkdocs-git-revision-date-plugin" },
     { name = "mkdocs-material" },
     { name = "mkdocs-material-extensions" },
-    { name = "mkdocs-swagger-ui-tag" },
     { name = "mkdocstrings-python" },
     { name = "pygments" },
     { name = "pymdown-extensions" },
@@ -66,10 +66,10 @@ requires-dist = [
     { name = "mkdocs-autorefs", specifier = "==1.4.1" },
     { name = "mkdocs-awesome-pages-plugin", specifier = "==2.10.1" },
     { name = "mkdocs-exclude", specifier = "==1.0.2" },
+    { name = "mkdocs-gen-files", specifier = ">=0.5.0" },
     { name = "mkdocs-git-revision-date-plugin", specifier = "==0.3.2" },
     { name = "mkdocs-material", specifier = "==9.6.12" },
     { name = "mkdocs-material-extensions", specifier = ">=1.0.3" },
-    { name = "mkdocs-swagger-ui-tag", specifier = "==0.7.1" },
     { name = "mkdocstrings-python", specifier = "==1.16.10" },
     { name = "pygments", specifier = ">=2.12" },
     { name = "pymdown-extensions", specifier = ">=9.4" },
@@ -1779,6 +1779,18 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/54/b5/3a8e289282c9e8d7003f8a2f53d673d4fdaa81d493dc6966092d9985b6fc/mkdocs-exclude-1.0.2.tar.gz", hash = "sha256:ba6fab3c80ddbe3fd31d3e579861fd3124513708271180a5f81846da8c7e2a51", size = 6751, upload-time = "2019-02-20T23:34:12.81Z" }
 
 [[package]]
+name = "mkdocs-gen-files"
+version = "0.5.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "mkdocs" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/48/85/2d634462fd59136197d3126ca431ffb666f412e3db38fd5ce3a60566303e/mkdocs_gen_files-0.5.0.tar.gz", hash = "sha256:4c7cf256b5d67062a788f6b1d035e157fc1a9498c2399be9af5257d4ff4d19bc", size = 7539, upload-time = "2023-04-27T19:48:04.894Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/e7/0f/1e55b3fd490ad2cecb6e7b31892d27cb9fc4218ec1dab780440ba8579e74/mkdocs_gen_files-0.5.0-py3-none-any.whl", hash = "sha256:7ac060096f3f40bd19039e7277dd3050be9a453c8ac578645844d4d91d7978ea", size = 8380, upload-time = "2023-04-27T19:48:07.059Z" },
+]
+
+[[package]]
 name = "mkdocs-get-deps"
 version = "0.2.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1835,18 +1847,6 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/79/9b/9b4c96d6593b2a541e1cb8b34899a6d021d208bb357042823d4d2cabdbe7/mkdocs_material_extensions-1.3.1.tar.gz", hash = "sha256:10c9511cea88f568257f960358a467d12b970e1f7b2c0e5fb2bb48cab1928443", size = 11847, upload-time = "2023-11-22T19:09:45.208Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/5b/54/662a4743aa81d9582ee9339d4ffa3c8fd40a4965e033d77b9da9774d3960/mkdocs_material_extensions-1.3.1-py3-none-any.whl", hash = "sha256:adff8b62700b25cb77b53358dad940f3ef973dd6db797907c49e3c2ef3ab4e31", size = 8728, upload-time = "2023-11-22T19:09:43.465Z" },
-]
-
-[[package]]
-name = "mkdocs-swagger-ui-tag"
-version = "0.7.1"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "beautifulsoup4" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/46/3f/0497d3c4d5a543eebd80cdfce130d1abbc4a1f4484b0c8d27e724b0b32c9/mkdocs_swagger_ui_tag-0.7.1.tar.gz", hash = "sha256:aed3c5f15297d74241f38cfba4763a5789bf10a410e005014763c66e79576b65", size = 1273588, upload-time = "2025-05-04T09:41:41.461Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/49/a9/0f1758916e96f254f8dadfda1f9963ea77fa43e62d4702257569ed685a08/mkdocs_swagger_ui_tag-0.7.1-py3-none-any.whl", hash = "sha256:e4a1019c96ef333ec4dab0ef7d80068a345c7526a87fe8718f18852ee5ad34a5", size = 1287286, upload-time = "2025-05-04T09:41:39.123Z" },
 ]
 
 [[package]]

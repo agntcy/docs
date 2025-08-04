@@ -1,24 +1,42 @@
 #!/usr/bin/env python3
 """
-Comprehensive documentation generator for AGNTCY protocol buffer schemas.
-Generates consolidated markdown files with unified Mermaid diagrams.
+Comprehensive protocol buffer documentation generator using mkdocs-gen-files.
+This script handles the complete workflow:
+1. Downloads proto files from buf registry
+2. Creates consolidated proto files per schema version
+3. Runs proto-gen-md-diagrams to generate markdown
+4. Creates virtual documentation pages with unified Mermaid diagrams
 """
 
 import os
 import re
-import sys
 import subprocess
 import tempfile
 from pathlib import Path
-from typing import Dict, List
+import mkdocs_gen_files
 
-def find_proto_directories(schema_dir: Path, modules: List[str]) -> List[Path]:
+def download_proto_modules(schema_dir: Path, modules: list[str]) -> bool:
+    """Download proto files from buf registry."""
+    success = True
+    for module in modules:
+        try:
+            print(f"Downloading module: {module}")
+            result = subprocess.run([
+                "buf", "export", f"buf.build/agntcy/{module}", 
+                "--output", str(schema_dir / module)
+            ], capture_output=True, text=True, check=True)
+            print(f"Successfully downloaded {module}")
+        except subprocess.CalledProcessError as e:
+            print(f"Module {module} not found, skipping...")
+            success = False
+    return success
+
+def find_proto_directories(schema_dir: Path, modules: list[str]) -> list[Path]:
     """Find all directories containing proto files."""
     proto_dirs = []
     for module in modules:
         module_path = schema_dir / module
         if module_path.exists():
-            print(f"Processing module: {module}")
             proto_dirs.extend([
                 Path(root) for root, _, files in os.walk(module_path)
                 if any(f.endswith('.proto') for f in files)
@@ -78,19 +96,36 @@ def run_proto_gen_md_diagrams(proto_dir: Path, output_dir: Path, deps_dir: Path)
 
 def create_unified_diagram(content: str) -> str:
     """Extract and combine all Mermaid diagrams into one unified diagram."""
-    # Extract all class definitions and relationships
     classes = {}
     relationships = []
     
     for diagram in re.findall(r'```mermaid\n(.*?)\n```', content, re.DOTALL):
-        for line in diagram.splitlines():
-            line = line.strip()
+        lines = diagram.splitlines()
+        i = 0
+        while i < len(lines):
+            line = lines[i].strip()
+            
+            # Extract complete class definitions
             if line.startswith('class ') and '{' in line:
-                # Extract multi-line class definition
                 class_name = re.match(r'class\s+([^{]+)', line).group(1).strip()
-                classes[class_name] = line
+                class_def = [line]
+                i += 1
+                
+                # Continue reading until we find the closing brace
+                while i < len(lines):
+                    class_line = lines[i].strip()
+                    class_def.append(class_line)
+                    if '}' in class_line:
+                        break
+                    i += 1
+                
+                classes[class_name] = '\n'.join(class_def)
+            
+            # Extract relationships
             elif '-->' in line:
                 relationships.append(line)
+            
+            i += 1
     
     if not classes:
         return content
@@ -116,27 +151,31 @@ def create_unified_diagram(content: str) -> str:
     
     return content[:insert_pos] + unified_section + content[insert_pos:]
 
-def generate_documentation(schema_dir: Path, docs_dir: Path, deps_dir: Path) -> bool:
-    """Generate all documentation."""
-    modules = ["dir", "oasf"]
-    generated_dir = docs_dir.parent / "generated"
-    proto_dirs = find_proto_directories(schema_dir, modules)
-    
-    if not proto_dirs:
-        print("No proto directories found!")
-        return False
-    
-    success_count = 0
-    
+# Main execution - runs when mkdocs-gen-files loads this script
+root = Path(__file__).parent.parent
+schema_dir = root / "schema"
+deps_dir = root / ".dep"
+modules = ["dir", "oasf"]
+
+# Download proto files
+print("Downloading protocol buffer schemas...")
+download_proto_modules(schema_dir, modules)
+
+# Find all proto directories
+proto_dirs = find_proto_directories(schema_dir, modules)
+print(f"Found {len(proto_dirs)} proto directories")
+
+if proto_dirs:
     for proto_dir in proto_dirs:
         try:
             rel_path = proto_dir.relative_to(schema_dir)
             clean_name = str(rel_path).replace('/', '-')
             module = rel_path.parts[0]
-            output_file = generated_dir / module / f"{clean_name}.md"
             
-            print(f"Processing: {rel_path}")
+            # Create virtual page path
+            virtual_path = f"{module}/{clean_name}.md"
             
+            # Use temporary directory for processing
             with tempfile.TemporaryDirectory() as temp_dir:
                 temp_path = Path(temp_dir)
                 consolidated_proto = temp_path / "consolidated.proto"
@@ -150,42 +189,24 @@ def generate_documentation(schema_dir: Path, docs_dir: Path, deps_dir: Path) -> 
                     continue
                 
                 # Combine generated content with unified diagrams
-                output_file.parent.mkdir(parents=True, exist_ok=True)
-                
                 header = f"# {rel_path} Protocol Buffer Documentation\n\nComplete definitions for {rel_path}.\n\n"
                 
                 generated_content = ""
                 for md_file in temp_output.glob("*.md"):
                     generated_content += md_file.read_text()
                 
-                # Create final file with unified diagram
+                # Create final content with unified diagram
                 final_content = header + create_unified_diagram(generated_content)
-                output_file.write_text(final_content)
                 
-                success_count += 1
+                # Create virtual file
+                with mkdocs_gen_files.open(virtual_path, "w") as f:
+                    f.write(final_content)
+                
+                # Set edit path to point to this generation script
+                mkdocs_gen_files.set_edit_path(virtual_path, "mkdocs/gen_proto_docs.py")
                 
         except Exception as e:
             print(f"Error processing {proto_dir}: {e}")
             continue
-    
-    print(f"\n✅ Generated {success_count}/{len(proto_dirs)} files in {generated_dir}")
-    return success_count > 0
 
-def main():
-    if len(sys.argv) != 4:
-        print("Usage: python generate_docs.py <schema_dir> <docs_dir> <deps_dir>")
-        sys.exit(1)
-    
-    schema_dir, docs_dir, deps_dir = [Path(arg).resolve() for arg in sys.argv[1:4]]
-    
-    print(f"Generating documentation from {schema_dir}")
-    
-    if not schema_dir.exists():
-        print(f"Schema directory not found: {schema_dir}")
-        sys.exit(1)
-    
-    success = generate_documentation(schema_dir, docs_dir, deps_dir)
-    sys.exit(0 if success else 1)
-
-if __name__ == "__main__":
-    main() 
+print(f"✅ Generated virtual documentation pages for {len(proto_dirs)} proto directories") 

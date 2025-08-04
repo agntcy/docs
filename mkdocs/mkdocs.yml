@@ -24,6 +24,9 @@ markdown_extensions:
 
 plugins:
   search:
+  gen-files:
+    scripts:
+      - gen_proto_docs.py
   awesome-pages:
     filename: ".index"
     collapse_single_pages: true
@@ -37,7 +40,6 @@ plugins:
           extensions:
             - griffe_pydantic:
                 schema: true
-  swagger-ui-tag:
 
 theme:
   name: material

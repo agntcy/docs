@@ -20,5 +20,5 @@ dependencies = [
     "griffe==1.7.2",
     "agntcy-acp==1.1.2",
     "agntcy-iomapper==0.2.2",
-    "mkdocs-swagger-ui-tag==0.7.1"
+    "mkdocs-gen-files>=0.5.0",
 ]

@@ -24,49 +24,20 @@ tasks:
   ## Website
   ##
   build:
-    desc: Build documentation website
+    desc: Build documentation website with protocol buffer documentation
     deps:
       - deps/patch
       - deps/proto-diagrams
-      - generate
     preconditions:
       - which go
+      - which buf
     vars:
-      SCHEMA_DIR:     "{{.ROOT_DIR}}/schema"
       BUILD_SITE_DIR: "{{.BUILD_DIR}}/site"
     cmds:
+      # Build the site (mkdocs-gen-files plugin handles everything automatically)
       - pushd mkdocs && uv run mkdocs build --site-dir {{.BUILD_SITE_DIR}} && popd
       - |
         echo "Docs available at: file://{{.BUILD_SITE_DIR}}/index.html"
-
-  generate:
-    desc: Download proto files from AGNTCY Buf registry and generate markdown documentation
-    deps:
-      - deps/proto-diagrams
-    preconditions:
-      - which buf
-      - which go
-    vars:
-      SCHEMA_DIR: "{{.ROOT_DIR}}/schema"
-      DOCS_DIR: "{{.ROOT_DIR}}/docs"
-      DEPS_DIR: "{{.ROOT_DIR}}/.dep"
-      # List of known AGNTCY modules to download
-      MODULES: "dir oasf"
-    cmds:
-      # Download proto files for each module
-      - |
-        for module in {{.MODULES}}; do
-          echo "Downloading module: $module"
-          if buf export buf.build/agntcy/$module --output {{.SCHEMA_DIR}}/$module 2>/dev/null; then
-            echo "Successfully downloaded $module"
-          else
-            echo "Module $module not found, skipping..."
-            continue
-          fi
-        done
-      
-      # Generate all documentation using the comprehensive Python script
-      - python3 generate_docs.py {{.SCHEMA_DIR}} {{.DOCS_DIR}} {{.DEPS_DIR}}
 
   run:
     deps:
