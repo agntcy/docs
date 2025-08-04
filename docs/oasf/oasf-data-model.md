@@ -29,7 +29,7 @@ message Agent {
     map<string, string> annotations = 5;
 
     // List of skills that this agent is capable of performing.
-    // Specs: https://schema.oasf.agntcy.org/skills
+    // Specs: https://schema.oasf.outshift.com/skills
     repeated string skills = 6;
 
     // List of source locators where this agent can be found or used from.

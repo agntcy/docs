@@ -59,7 +59,7 @@ class Extension {
 | authors     | 3       | string         | Repeated | List of agent’s authors in the form of `author-name <author-email>`.                                     |
 | created_at  | 4       | string         |          | Creation timestamp of the agent in the RFC3339 format. Specs: https://www.rfc-editor.org/rfc/rfc3339.html  |
 | annotations | 5       | string, string | Map      | Additional metadata associated with this agent.                                                            |
-| skills      | 6       | string         | Repeated | List of skills that this agent is capable of performing. Specs: https://schema.oasf.agntcy.org/skills      |
+| skills      | 6       | string         | Repeated | List of skills that this agent is capable of performing. Specs: https://schema.oasf.outshift.com/skills      |
 | locators    | 7       | Locator        | Repeated | List of source locators where this agent can be found or used from.                                        |
 | extensions  | 8       | Extension      | Repeated | List of extensions that describe this agent more in depth.                                                 |
 

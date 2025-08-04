@@ -1,6 +1,6 @@
 # Open Agentic Schema Framework
 
-The [Open Agentic Schema Framework (OASF)](https://schema.oasf.agntcy.org/) is a standardized schema system for
+The [Open Agentic Schema Framework (OASF)](https://schema.oasf.outshift.com/) is a standardized schema system for
 defining and managing AI agent capabilities, interactions, and metadata. It
 provides a structured way to describe agent attributes, capabilities, and
 relationships using attribute-based taxonomies. The framework includes

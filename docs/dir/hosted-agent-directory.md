@@ -179,17 +179,17 @@ available commands.
 An Agent Directory record is stored in JSON format. The record is specific
 to one entry in the Agent Directory. The structure of each AD record is
 defined by the
-[Open Agentic Schema Framework](https://schema.oasf.agntcy.org/objects/agent)
-starting at the root with an [Agent object](https://schema.oasf.agntcy.org/objects/agent).
+[OASF](/docs/oasf/open-agentic-schema-framework.md)
+starting at the root with an [Agent object](https://schema.oasf.outshift.com/objects/).
 
 To be useful, an agent record should include at least the following:
 * Name of the agent (the name MUST match the organization and repository name in the Outshift Agent Directory), 
 * Version of the agent (use semantic convention)
 * Description (something to help any viewer understand what your agent does, what is the use case it is applicable to, expected inputs and outputs, LLM used, runtime, etc)
-* Locator, per [OASF locator objects](https://schema.oasf.agntcy.org/objects/locator?extensions=)
+* Locator, per [OASF locator objects](https://schema.oasf.outshift.com/objects/locator?extensions=)
   * type(s) (source code, agent as a service, docker image, etc) matching the supported types in the OASF locator objects
   *  url (corresponding address to find the agent)
-* Skills - MUST follow the [OASF skills schema](https://schema.oasf.agntcy.org/skills?extensions=)
+* Skills - MUST follow the [OASF skills schema](https://schema.oasf.outshift.com/skills?extensions=)
 
 And it will look like this
 
