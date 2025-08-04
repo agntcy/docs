@@ -212,7 +212,7 @@
           ]
         }
       },
-      "name": "schema.oasf.agntcy.org/features/runtime/framework",
+      "name": "schema.oasf.outshift.com/features/runtime/framework",
       "version": "v0.0.0"
     },
     {
@@ -220,7 +220,7 @@
         "type": "python",
         "version": ">=3.9,<4.0"
       },
-      "name": "schema.oasf.agntcy.org/features/runtime/language",
+      "name": "schema.oasf.outshift.com/features/runtime/language",
       "version": "v0.0.0"
     }
   ],

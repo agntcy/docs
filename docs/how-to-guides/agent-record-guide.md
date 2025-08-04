@@ -15,7 +15,7 @@ Start by filling out the basic metadata of your agent:
 
 ## Define Skills
 
-The skills section outlines your agent’s capabilities. Retrieve skills definitions from the [OASF schema catalog](https://schema.oasf.agntcy.org). Each skill must include the following:
+The skills section outlines your agent’s capabilities. Retrieve skills definitions from the [OASF schema catalog](https://schema.oasf.outshift.com). Each skill must include the following:
 
 * `category_name`: The category which the skill belongs to (for example, Natural Language Processing).
 * `category_uid`: The unique identifier for the category.
@@ -39,7 +39,7 @@ You can also provide the source code:
 
 ## Specify Extensions
 
-The extensions section is critical for describing the features and operational parameters of your agent. To ensure compatibility, you must select extensions from the [OASF main features catalog](https://schema.oasf.agntcy.org/main_features?extensions). Examples of common extensions are the following:
+The extensions section is critical for describing the features and operational parameters of your agent. To ensure compatibility, you must select extensions from the [OASF main features catalog](https://schema.oasf.outshift.com/main_features?extensions). Examples of common extensions are the following:
 
 1. Runtime Framework  
     Defines the runtime environment for the agent.
