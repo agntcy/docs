@@ -3,3 +3,9 @@ nav:
   - Usage Scenarios: scenarios.md
   - Hosted AGNTCY Agent Directory: hosted-agent-directory.md
   - Agent Directory Records Example: dir-record-example.md
+  - API Reference:
+    - Core: dir-core-v1-api.md
+    - Routing: dir-routing-v1-api.md
+    - Search: dir-search-v1-api.md
+    - Sign: dir-sign-v1-api.md
+    - Store: dir-store-v1-api.md
