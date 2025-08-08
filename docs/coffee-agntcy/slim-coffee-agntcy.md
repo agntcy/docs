@@ -14,7 +14,7 @@ transport = factory.create_transport("SLIM", endpoint=SLIM_ENDPOINT)
 ```
 
 Here:  
-- `AgntcyFactory` bootstraps the agent’s runtime environment.  
+- `AgntcyFactory` initializes the factory for the agent.  
 - `create_transport("SLIM", ...)` provisions a SLIM transport instance connected to the configured endpoint.  
 
 ### Sending Messages  
