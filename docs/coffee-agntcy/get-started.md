@@ -48,9 +48,9 @@ Lungo is our evolving demo application. As AGNTCY expands, Lungo grows alongside
 
 Each farm is designed to demonstrate different agentic protocols and implementations. For now, the agents are similar to Corto’s: LangGraph-orchestrated A2A agents that communicate with the exchange using both pub/sub and request–response patterns. The farms are distinguished by "location". In addition to being a A2A server, the Colombia farm acts as a MCP client that connects to a Weather MCP Server.
 
-By default, all agents and MCP servers use SLIM as the transport layer, showcasing its flexibility by switching between one-to-many broadcasts via pub/sub and direct agent-to-agent request–response interactions based on the need specified by the prompt.
+By default, all agents and MCP servers use SLIM as the transport layer, showcasing its flexibility by switching between one-to-many broadcasts via pub/sub and direct agent-to-agent request–response interactions based on the need specified by the prompt. To learn more about how this works, explore the [CoffeeAGNTCY SLIM Integration](./slim-coffee-agntcy.md)
 
-AGNTCY’s Agent Identity Service handles authentication between agents, allowing them to verify each other’s identity before establishing a connection. This exemplifies the requirement within larger agentic networks for secure communication and trust. To learn more about how this works in Lungo, explore the [CoffeeAGNTCY Identity Service Architecture](../coffee-agntcy-identity.md) 
+AGNTCY’s Agent Identity Service handles authentication between agents, allowing them to verify each other’s identity before establishing a connection. This exemplifies the requirement within larger agentic networks for secure communication and trust. To learn more about how this works in Lungo, explore the [CoffeeAGNTCY Identity integration](./identity-coffee-agntcy.md) 
 
 ```mermaid
 flowchart TB
