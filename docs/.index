@@ -9,5 +9,6 @@ nav:
   - Messaging SDK: messaging
   - Agent Workflow Server: agws
   - CSIT: csit
+  - CoffeeAGNTCY: coffee-agntcy
   - How-To Guides: how-to-guides
   - How to Contribute: contributing.md
