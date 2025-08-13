@@ -7,3 +7,4 @@ nav:
  - MCP Server Badge Examples: vc_mcp.md
  - Architecture Diagrams: arch_diagrams.md
  - Sequence Flows: flow.md
+ - OpenAPI Reference: openapi.md

@@ -19,5 +19,7 @@ dependencies = [
     "griffe-pydantic==1.1.4",
     "griffe==1.7.2",
     "agntcy-acp==1.1.2",
-    "agntcy-iomapper==0.2.2"
+    "agntcy-iomapper==0.2.2",
+    "beautifulsoup4>=4.13.3",
+    "mkdocs-swagger-ui-tag==0.7.1",
 ]
