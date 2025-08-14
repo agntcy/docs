@@ -28,7 +28,7 @@ Based on advanced protocols, frameworks, and components, the goal of IoA softwar
 
 1. **Interoperability**: Establish a common protocol that enables AI agents from different vendors and platforms to communicate and work together efficiently.
 2. **Security**: Ensure secure interactions between agents through robust authentication, authorization, and encryption mechanisms.
-3. **Scalability**: Design a scalable architecture that leverages the cloud-native stack optiomally, supporting a growing number of agents and interactions without compromising performance.
+3. **Scalability**: Design a scalable architecture that leverages the cloud-native stack optimally, supporting a growing number of agents and interactions without compromising performance.
 4. **Standardization**: Develop standardized data models and schemas to ensure consistent data representation and validation across the ecosystem.
 
 ## Core Components
