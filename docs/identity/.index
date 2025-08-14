@@ -1,5 +1,10 @@
 nav:
- - Identity: identity.md
+ - Introduction: identity.md
  - Identifiers: identifiers.md
+ - Identifier Examples: identifier_examples.md
  - Verifiable Credentials: credentials.md
- - Flow Diagrams: flow.md
+ - Agent Badge Examples: vc_agent_badge.md
+ - MCP Server Badge Examples: vc_mcp.md
+ - Architecture Diagrams: arch_diagrams.md
+ - Sequence Flows: flow.md
+ - OpenAPI Reference: openapi.md
