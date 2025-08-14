@@ -54,17 +54,15 @@ ADS implements capability-based record discovery through a hierarchical skill
 taxonomy. This architecture enables:
 
 1. Capability Announcement:
-   1. Multi-agent systems can publish their capabilities by encoding them as
-      skill taxonomies.
-   2. Each record contains metadata describing the agent's functional abilities.
-   3. Skills are structured in a hierarchical format for efficient matching.
+    1. Multi-agent systems can publish their capabilities by encoding them as skill taxonomies.
+    2. Each record contains metadata describing the agent's functional abilities.
+    3. Skills are structured in a hierarchical format for efficient matching.
 2. Discovery Process: The system performs a two-phase discovery operation:
-   1. Matches queried capabilities against the skill taxonomy to determine
-      records by their identifier.
-   2. Identifies the server nodes storing relevant records.
+    1. Matches queried capabilities against the skill taxonomy to determine records by their identifier.
+    2. Identifies the server nodes storing relevant records.
 3. Distributed Resolution: Local nodes execute targeted retrievals based on:
-   1. Skill matching results: Evaluates capability requirements.
-   2. Server location information: Determines optimal data sources.
+    1. Skill matching results: Evaluates capability requirements.
+    2. Server location information: Determines optimal data sources.
 
 ADS uses libp2p [Kad-DHT](https://docs.libp2p.io/concepts/discovery-routing/kaddht/)
 for server and content discovery.
