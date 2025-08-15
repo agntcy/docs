@@ -80,7 +80,7 @@ See the [How to Contribute](/docs/contributing.md) page for more information.
 
 Before creating a release, ensure that:
 
-- [ ] All necessary features and fixes are merged into the `main` branch
+- All necessary features and fixes are merged into the `main` branch
 
 ### Steps
 
