@@ -14,6 +14,7 @@ The documentation sources are written in Markdown.
   - [Running local live server](#running-local-live-server)
   - [Building the Documentation](#building-the-documentation)
   - [Contributing](#contributing)
+  - [Release guide](#release-guide)
 - [Copyright Notice](#copyright-notice)
 
 ## Installation
@@ -72,6 +73,32 @@ This will generate the HTML documentation in the *.build/site* directory.
 ## Contributing
 
 See the [How to Contribute](/docs/contributing.md) page for more information.
+
+## Release guide
+
+### Prerequisites
+
+Before creating a release, ensure that:
+
+- [ ] All necessary features and fixes are merged into the `main` branch
+
+### Steps
+
+1. Create and annotate the release tag:
+   ```sh
+   git tag -a v0.2.1 -m "v0.2.1"
+   ```
+2. Push the tag to trigger the GitHub Action:
+   ```sh
+   git push origin v0.2.1
+   ```
+3. Wait for the GitHub Action to complete building the documentation artifacts.
+4. Navigate to the [releases page](https://github.com/agntcy/docs/releases) on GitHub.
+5. Find the draft release created by the GitHub Action.
+6. Select the previous version tag to compare against.
+7. Click "Generate release notes" in the draft release.
+8. Review the generated release notes.
+9. Publish the release.
 
 # Copyright Notice
 
