@@ -1,5 +1,8 @@
 # Agent Workflow Server
 
+!!! info
+    This component is not currently under active development. While it remains available, updates and new features are not planned at this time.
+
 The [Agent Workflow Server](https://github.com/agntcy/workflow-srv)
 enables participation in the Internet of Agents. It accommodates AI
 Agents from diverse frameworks and exposes them through Agent Connect
