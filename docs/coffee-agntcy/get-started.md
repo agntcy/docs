@@ -6,7 +6,7 @@ CoffeeAGNTCY is a reference implementation built around a fictitious coffee comp
 This project is meant to exemplify how AGNTCY and open-source agentic standards interoperate through clean, reproducible example code. It is purposefully designed for developers across experience levels, from those taking their first steps in building agentic systems to those with more experience curious about AGNTCY's offerings.
 
 With CoffeeAgntcy, you can:
-* How to leverage the AGNTCY App SDK Factory to write transport and agentic protocol-agnostic clients and server code
+* Learn how to leverage the AGNTCY App SDK Factory to write transport and agentic protocol-agnostic clients and server code.
 
 * Explore SLIM and its support for broadcast and unicast messaging.
 
