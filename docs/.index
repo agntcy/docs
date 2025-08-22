@@ -2,13 +2,13 @@ nav:
   - Introduction: index.md
   - OASF: oasf
   - Agent Directory Service: dir
-  - Agent Manifest: manifest
-  - Identity: identity
-  - Semantic SDK: semantic
-  - Syntactic SDK: syntactic
   - Messaging SDK: messaging
-  - Agent Workflow Server: agws
+  - Identity: identity
   - CSIT: csit
   - CoffeeAGNTCY: coffee-agntcy
+  - Semantic SDK: semantic
+  - Syntactic SDK: syntactic
+  - Agent Workflow Server: agws
+  - Agent Manifest: manifest
   - How-To Guides: how-to-guides
   - How to Contribute: contributing.md

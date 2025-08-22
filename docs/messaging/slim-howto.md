@@ -100,9 +100,9 @@ provided container image or with [Helm](https://helm.sh/).
 ### Using Docker
 
 ```bash
-docker pull ghcr.io/agntcy/slim/controller:latest
+docker pull ghcr.io/agntcy/slim/control-plane:latest
 
-cat << EOF > ./slim-controller.yaml
+cat << EOF > ./slim-control-plane.yaml
 northbound:
   httpHost: localhost
   httpPort: 50051
@@ -117,14 +117,14 @@ southbound:
 EOF
 
 docker run -it \
-    -v ./slim-controller.yaml:/config.yaml -p 50051:50051 -p 50052:50052 \
-    ghcr.io/agntcy/slim/controller:latest -config /config.yaml
+    -v ./slim-control-plane.yaml:/config.yaml -p 50051:50051 -p 50052:50052 \
+    ghcr.io/agntcy/slim/control-plane:latest -config /config.yaml
 ```
 
 ### Using Helm
 
 ```bash
-helm pull oci://ghcr.io/agntcy/slim/helm/slim-controller --version v0.1.3
+helm pull oci://ghcr.io/agntcy/slim/helm/slim-control-plane --version v0.1.3
 ```
 
 ### SLIM Python Bindings
@@ -151,10 +151,10 @@ documentation](./slim-data-plane.md). Otherwise examples are available in the
 
 `slimctl` is a command-line tool for managing SLIM Nodes and Controllers. It can
 be downloaded from the [releases
-page](https://github.com/agntcy/slim/releases/tag/slimctl-v0.1.4) in the SLIM repo.
+page](https://github.com/agntcy/slim/releases/tag/slimctl-v0.2.1) in the SLIM repo.
 
 ```bash
-curl -LO https://github.com/agntcy/slim/releases/download/slimctl-v0.1.4/slimctl-linux-amd64
+curl -LO https://github.com/agntcy/slim/releases/download/slimctl-v0.2.1/slimctl-linux-amd64
 sudo mv slimctl-linux-amd64 /usr/local/bin/slimctl
 ```
 
