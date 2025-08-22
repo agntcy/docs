@@ -13,7 +13,6 @@ point for organizing and accessing agent records. This hosted service is enhance
 gRPC API that supports efficient service communication and integration, ensuring
 seamless interaction between components.
 
-
 Outshift Agent Directory serves as a central platform for hosting and managing various
 agent-related services. The main purpose of the Agent Directory Service
 component is to provide a comprehensive solution
@@ -43,15 +42,15 @@ agent records.
 
 The [Agent Directory Service (ADS)](../dir/overview.md) provides storage for agent records
 while the frontend hosted Outshift Agent Directory provides access control with
-Users and their Organizations and management of agent records in their Repos.
+Users and their Organizations and management of agent records in their Repositories.
 
 ## Features
 
 Outshift Agent Directory, powered by AGNTCY, enables users to:
 
-* View and search for public agent records.
-* View your organization's public and private agent records.
-* Publish agent records to an agent repository.
+* View and search for public agent or MCP server records.
+* View your organization's public and private agent or MCP server records.
+* Publish agent or MCP server records to an agent repository.
 * Access multiple separate organizations.
 * Invite other users your organizations.
 
@@ -126,9 +125,11 @@ information on the agent repository.
 The **General** tab lists the following information from the agent record:
 
 * A description of the agent.
-* The skills associated with the agent.
 * The version number and date of publishing.
+* The extensions of the agent.
+* The skills associated with the agent.
 * The CLI command to push a new version of the agent.
+* The loocators of the agent.
 
 The **Versions** tab lists the published versions of the agent.
 
@@ -140,19 +141,19 @@ visibility of the agent.
 Agent directory records are associated with a repository. A repository must
 exist first for an agent record to be added to it.
 
-### Create a new agent repository
+### Create a New Repository
 
-To add an agent repository in the Outshift Agent Directory:
+To add an agent or MCP server repository in the Outshift Agent Directory:
 
 1. Click the **+ New Repository** button.
 1. Enter the repository name.
-1. Select the visibility for your agent repository.
-    * Public agent repositories appear in search results.
-    * Private agent repositories are only visible in your organization.
+1. Select the visibility for your repository.
+    * Public repositories appear in search results.
+    * Private repositories are only visible in your organization.
 1. Click **Publish**.
 1. Click **Finish**.
 
-At this point, you have an empty repository ready for agent records.
+At this point, you have an empty repository ready for agent or MCP server records.
 
 ### Adding an Agent Directory Record to a Repository
 
@@ -160,7 +161,7 @@ Adding an Agent Directory Record has these prerequisites:
 
 1. You need to install the Outshift Agent Directory command line tool, `dirctl`.
 1. You need an agent record that conforms to Outshift Agent Directory requirements.
-1. You need to sign your agent record.
+1. You need to sign your agent or MCP server record.
 
 #### Pre-req 1: Install `dirctl`
 
@@ -182,16 +183,16 @@ defined by the
 [OASF](/docs/oasf/open-agentic-schema-framework.md)
 starting at the root with an [Agent object](https://schema.oasf.outshift.com/objects/).
 
-To be useful, an agent record should include at least the following:
-* Name of the agent (the name MUST match the organization and repository name in the Outshift Agent Directory), 
-* Version of the agent (use semantic convention)
-* Description (something to help any viewer understand what your agent does, what is the use case it is applicable to, expected inputs and outputs, LLM used, runtime, etc)
+To be useful, an agent or MCP server record should include at least the following:
+* Name of the agent or MCP server (the name MUST match the organization and repository name in the Outshift Agent Directory), 
+* Version of the agent or MCP server (use semantic convention)
+* Description (something to help any viewer understand what your agent or MCP server does, what is the use case it is applicable to, expected inputs and outputs, LLM used, runtime, etc)
 * Locator, per [OASF locator objects](https://schema.oasf.outshift.com/objects/locator?extensions=)
   * type(s) (source code, agent as a service, docker image, etc) matching the supported types in the OASF locator objects
   *  url (corresponding address to find the agent)
 * Skills - MUST follow the [OASF skills schema](https://schema.oasf.outshift.com/skills?extensions=)
 
-And it will look like this
+And it will look like this:
 
 ```json
 {
@@ -217,15 +218,15 @@ And it will look like this
 You must sign the record before pushing it to the Outshift Agent Directory. Unsigned records are
 rejected by the API.
 
-To sign an agent record in the file `agent.json` using the default provider [sigstore](https://www.sigstore.dev/), run:
+To sign an agent or MCP server record in the file `agent.json` using the default provider [Sigstore](https://www.sigstore.dev/), run:
 
 ```shell
 dirctl sign agent.json > agent.signed.json
 ```
 
 The signing service login page opens in your browser. Use your credentials to log in. The
-agent record will be augmented with a generated signature and will be output
-in JSON format. The new signed agent record can be pushed to the Hub.
+agent or MCP server record will be augmented with a generated signature and will be output
+in JSON format. The new signed agent or MCP server record can be pushed to the Hub.
 
 For further details on signing, please see
 [the Agent Directory HOWTO](../dir/scenarios.md#signing-and-verification).
@@ -236,7 +237,7 @@ Once all pre-requisites are complete, you are ready to push an agent record to a
 that you have write access to. If the repository does not exist, it will be
 created automatically with visibility set as private.
 
-Pushing and pulling agent directory records is done using the `dirctl` tool.
+Pushing and pulling Agent Directory records is done using the `dirctl` tool.
 
 From your terminal window:
 
@@ -264,7 +265,7 @@ From your terminal window:
 
 #### Pulling Agent Directory Records using `dirctl`
 
-You can also pull an agent directory record via `dirctl` using the command listed on the agent details page.
+You can also pull an Agent Directory record via `dirctl` using the command listed on the agent details page.
 
 #### Verifying an Agent Directory Record Signature
 
