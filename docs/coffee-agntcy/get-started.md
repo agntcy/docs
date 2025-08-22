@@ -5,18 +5,19 @@ CoffeeAGNTCY is a reference implementation built around a fictitious coffee comp
 
 This project is meant to exemplify how AGNTCY and open-source agentic standards interoperate through clean, reproducible example code. It is purposefully designed for developers across experience levels, from those taking their first steps in building agentic systems to those with more experience curious about AGNTCY's offerings.
 
-With CoffeeAgntcy, you can:
+With CoffeeAGNTCY, you can:
+
 * Learn how to leverage the AGNTCY App SDK Factory to write transport and agentic protocol-agnostic clients and server code.
 
 * Explore SLIM and its support for broadcast and unicast messaging.
 
 * Enable observability with the AGNTCY Observe SDK.
 
-* Learn how to write simple A2A client and server agents
+* Learn how to write simple A2A client and server agents.
 
-* Orchestrate agents using LangGraph via the supervisor-worker agent architecture
+* Orchestrate agents using LangGraph via the supervisor-worker agent architecture.
 
-* Understand how to integrate data sources via MCP
+* Understand how to integrate data sources via MCP.
 
 
 CoffeeAGNTCY exposes two demo apps: Corto and Lungo. 

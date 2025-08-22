@@ -31,3 +31,5 @@ sequenceDiagram
     
 ```
 
+For more information on Identity in AGNTCY, see the [Identity documentation.](../identity/identity.md) 
+
