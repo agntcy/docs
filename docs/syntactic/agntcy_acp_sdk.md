@@ -1,5 +1,8 @@
 # Agntcy ACP Client
 
+!!! info
+    This component is not currently under active development. While it remains available, updates and new features are not planned at this time.
+
 ## Introduction
 
 The Agent Connect Protocol SDK is an open-source library designed to

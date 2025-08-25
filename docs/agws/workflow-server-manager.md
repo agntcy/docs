@@ -1,5 +1,8 @@
 # Workflow Server Manager
 
+!!! info
+    This component is not currently under active development. While it remains available, updates and new features are not planned at this time.
+
 The Workflow Server Manager (WFSM) is a command line tool that streamlines the process of wrapping an agent into a container image, starting the container, and exposing the agent functionality through the Agent Connect Protocol (ACP).
 
 The WFSM tool takes an [Agent Manifest](../manifest/manifest.md) as input and based on it spins up a web server container exposing the agent through ACP through REST api.

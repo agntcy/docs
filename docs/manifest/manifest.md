@@ -1,5 +1,8 @@
 # Agent Manifest
 
+!!! info
+    This component is not currently under active development. While it remains available, updates and new features are not planned at this time.
+
 An Agent Manifest is a document that describes in detail the following:
 
 * What the agent is capable of.

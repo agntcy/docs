@@ -1,5 +1,8 @@
 # Agent Connect Protocol
 
+!!! info
+    This component is not currently under active development. While it remains available, updates and new features are not planned at this time.
+
 ## Introduction
 
 Existing Multi-Agent Systems (MAS) provide convenient ways to build Multi-Agent Applications (MAAs) that combine various agents and enable them to communicate with each other. Such communication occurs within the MAS using internal mechanisms and APIs.
