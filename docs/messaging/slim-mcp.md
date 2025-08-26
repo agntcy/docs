@@ -1036,7 +1036,6 @@ local proxy instance:
    # Verify the IP was found correctly
    echo "Using local IP address: ${LOCAL_ADDRESS}"
    ```
-
    > If the automatic detection doesn't work for your system, you can manually
    > set your IP address:
    > ```bash
@@ -1047,19 +1046,19 @@ local proxy instance:
    ```bash
    cat << EOF > ./config-proxy.yaml
    # SLIM-MCP Proxy Configuration
-
+   
    # Tracing settings for log visibility
    tracing:
      log_level: info
      display_thread_names: true
      display_thread_ids: true
-
+   
      # Runtime configuration
-  runtime:
+   runtime:
     n_cores: 0
     thread_name: "slim-data-plane"
     drain_timeout: 10s
-
+   
    # Service configuration for connecting to the SLIM node
    services:
      slim/0:
@@ -1081,12 +1080,11 @@ local proxy instance:
      --name org/mcp/proxy \
      --mcp-server http://${LOCAL_ADDRESS}:8000/sse
    ```
-
    This command:
-   - Mounts your local configuration file into the container.
-   - Uses the official SLIM-MCP proxy image.
-   - Sets the service name and proxy identifier.
-   - Configures the connection to your SSE-based MCP server.
+     - Mounts your local configuration file into the container.
+     - Uses the official SLIM-MCP proxy image.
+     - Sets the service name and proxy identifier.
+     - Configures the connection to your SSE-based MCP server.
 
 ### Running the Agent with the Proxy
 
