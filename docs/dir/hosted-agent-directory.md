@@ -34,9 +34,9 @@ organizations are flat and cannot belong to one another.
 particular agentic application or service. The schema of the Record is defined
 in [OASF](../oasf/open-agentic-schema-framework.md) and contains, for example, a
 [collection of skills](../oasf/taxonomy.md).
-* Repositories - A agent repository collects agent records that describe
+* Repositories - An agent repository collects agent records that describe
 different versions of the same agent into one location to provide an overview of
-its history and current status. A Record can belong to only one repo, while a
+its history and current status. A record can belong to only one repo, while a
 user or organization may access many different repos and by extension their
 agent records.
 
@@ -48,11 +48,11 @@ Users and their Organizations and management of agent records in their Repositor
 
 Outshift Agent Directory, powered by AGNTCY, enables users to:
 
-* View and search for public agent or MCP server records.
-* View your organization's public and private agent or MCP server records.
-* Publish agent or MCP server records to an agent repository.
+* View and search for public agent, A2A card, or MCP server records.
+* View your organization's public and private agent, A2A card, or MCP server records.
+* Publish agent, A2A card, or MCP server records to an agent repository.
 * Access multiple separate organizations.
-* Invite other users your organizations.
+* Invite other users to your organizations.
 
 ## Using the Hub
 
@@ -75,66 +75,59 @@ The Explore page allows users to browse and search through available agent repos
 
 You can refine the results using predefined filters and open search:
 
-* Use the **Search** bar to search for a text string in a repository name. To
-clear the search bar, click the **×**.
-* Use the drop-down **Filters** list to narrow the results by Agent Skill.
-* Use the drop-down **Sort by** list to sort the displayed items by Most Recent
-or Oldest.
+* Use the **Search** bar to search for a text string in a repository name. To clear the search bar, click the **×**.
+* Use the **Creation** filter to narrow the results by the date of creation of the record.
+* Use the record type drop down menu to filter by agent or MCP server records.
+* Use the drop-down **Agent Skills** list to narrow the results by skill.
+* Use the drop-down **Locators** list to narrow the results by locator type.
+* Use the drop-down **Extensions** list to narrow the results by extension type.
+* Use the drop-down sort by list to sort the displayed items by most recent or oldest.
 
-You can change organizations by clicking the Org drop-down list and selecting
-another organization.
+### Manage Records Associated with Your Organization
 
-### Manage Agents associated with Your Organization
-
-The Agent Directory Page allows you to view, edit, and create agent repositories
-in the Outshift Agent Directory. Here the records are displayed in a table with customizable columns.
-
-You can select which columns are displayed, and in which order, by clicking the
-**Arrange Columns** button (**▥**).
-
-You can reload the listed items by clicking the **Reload** button (**⟳**).
+The My Directory Page allows you to view, edit, and create agent, A2A card, or MCP server repositories in the Outshift Agent Directory. Here the records are displayed in a table.
 
 You can refine the results using predefined filters and open search:
 
-* Use the **Search** bar to search for a text string in an agent repository
-name. To clear the search, click the **×**.
-* Use the drop-down **Filters** list to narrow the results by Agent Skill.
-* Use the drop-down **Sort by** list to sort the displayed items by Most Recent
-or Oldest.
+* Use the **Search** bar to search for a text string in a repository name. To clear the search bar, click the **×**.
+* Use the **Creation** filter to narrow the results by the date of creation of the record.
+* Use the record type drop down menu to filter by agent or MCP server records.
+* Use the drop-down **Agent Skills** list to narrow the results by skill.
+* Use the drop-down **Locators** list to narrow the results by locator type.
+* Use the drop-down **Extensions** list to narrow the results by extension type.
 
-![The Agent Directory Page](../assets/directory.png)
+![The My Directory Page](../assets/directory.png)
 
 #### Agent Actions
 
-Clicking the three dots (**⁝**) at the end of any row in the Agent Directory
-table opens a drop-down list of actions you can perform on that agent
-repository.
+Clicking the three dots (**⁝**) at the end of any row in the Agent Directory table opens a drop-down list of actions you can perform on that record.
 
-* Click **Open Details** to [view the agent details](#agent-details).
-* Click **Edit** to edit the agent.
-* Click **Delete** to remove the agent repo from the directory, including all
-of its agent records.
+* Click **Edit** to edit the record.
+* Click **Delete** to remove the record from the directory, including all of its agent records.
 
-#### Agent Details
+#### Record Details
 
-Clicking on an agent repository opens the Agent Details page with further
-information on the agent repository.
+Clicking on an agent, A2A card, or MCP server repository opens the Record Details page with further
+information on the repository.
 
 ![The Agent Details Page](../assets/agent.png)
 
-The **General** tab lists the following information from the agent record:
+The **General** tab lists the following information from the record:
 
-* A description of the agent.
+* A description and the creator of the record.
 * The version number and date of publishing.
-* The extensions of the agent.
-* The skills associated with the agent.
-* The CLI command to push a new version of the agent.
-* The loocators of the agent.
+* The extensions of the record.
+* For agent records:
+    * The skills associated with the agent.
+    * The locators of the agent.
+* For MCP server records:
+    * The tools of the MCP server.
+    * The resources of the MCP server.
+    * The prompts of the MCP server.
 
-The **Versions** tab lists the published versions of the agent.
+The **Versions** tab lists the published versions of the record and the CLI command to push a new version of the record.
 
-The **Settings** tab allows the owner to change the
-visibility of the agent.
+The **Settings** tab allows the owner to change the visibility of the agent.
 
 ## Add an Agent Directory Record to the Outshift Agent Directory
 
@@ -143,7 +136,7 @@ exist first for an agent record to be added to it.
 
 ### Create a New Repository
 
-To add an agent or MCP server repository in the Outshift Agent Directory:
+To add an agent, A2A card, or MCP server repository in the Outshift Agent Directory:
 
 1. Click the **+ New Repository** button.
 1. Enter the repository name.
@@ -153,29 +146,27 @@ To add an agent or MCP server repository in the Outshift Agent Directory:
 1. Click **Publish**.
 1. Click **Finish**.
 
-At this point, you have an empty repository ready for agent or MCP server records.
+At this point, you have an empty repository ready for agent, A2A card, or MCP server records.
 
 ### Adding an Agent Directory Record to a Repository
 
-Adding an Agent Directory Record has these prerequisites:
+Adding an Agent Directory Record has the following prerequisites:
 
-1. You need to install the Outshift Agent Directory command line tool, `dirctl`.
-1. You need an agent record that conforms to Outshift Agent Directory requirements.
-1. You need to sign your agent or MCP server record.
+1. The Outshift Agent Directory command line tool, `dirctl`.
+1. A signed agent record that conforms to Outshift Agent Directory requirements.
 
-#### Pre-req 1: Install `dirctl`
+#### Installing `dirctl`
 
 Binary packages and installation of the Outshift Agent Directory `dirctl`
 command line tool are available in multiple forms on GitHub:
 
-* [container image](https://github.com/agntcy/dir/pkgs/container/dir-ctl)
-* [homebrew](https://github.com/agntcy/dir/tree/main/HomebrewFormula)
-* [binary](https://github.com/agntcy/dir/releases)
+* [Container image](https://github.com/agntcy/dir/pkgs/container/dir-ctl)
+* [Homebrew](https://github.com/agntcy/dir/tree/main/HomebrewFormula)
+* [Binary](https://github.com/agntcy/dir/releases)
 
-After installation, use the `dirctl` and `dirctl hub` commands to list the
-available commands.
+After installation, use the `dirctl` and `dirctl hub` commands to list the available commands.
 
-#### Pre-req 2: Create a Conforming Agent Directory Record
+#### Creating an Agent Directory Record
 
 An Agent Directory record is stored in JSON format. The record is specific
 to one entry in the Agent Directory. The structure of each AD record is
@@ -183,14 +174,19 @@ defined by the
 [OASF](/docs/oasf/open-agentic-schema-framework.md)
 starting at the root with an [Agent object](https://schema.oasf.outshift.com/objects/).
 
-To be useful, an agent or MCP server record should include at least the following:
-* Name of the agent or MCP server (the name MUST match the organization and repository name in the Outshift Agent Directory), 
-* Version of the agent or MCP server (use semantic convention)
-* Description (something to help any viewer understand what your agent or MCP server does, what is the use case it is applicable to, expected inputs and outputs, LLM used, runtime, etc)
+To be useful, an agent, A2A card, or MCP server record should include at least the following:
+
+* Name of the agent, A2A card, or MCP server.
+
+    !!! note
+        The name must match the organization and repository name in the Outshift Agent Directory. 
+
+* Version of the agent, A2A card, or MCP server (use semantic convention).
+* Description: something to help any viewer understand what your agent, A2A card, or MCP server does, what is the use case it is applicable to, expected inputs and outputs, LLM used, runtime, etc.
 * Locator, per [OASF locator objects](https://schema.oasf.outshift.com/objects/locator?extensions=)
   * type(s) (source code, agent as a service, docker image, etc) matching the supported types in the OASF locator objects
   *  url (corresponding address to find the agent)
-* Skills - MUST follow the [OASF skills schema](https://schema.oasf.outshift.com/skills?extensions=)
+* Skills, following the [OASF skills schema](https://schema.oasf.outshift.com/skills?extensions=)
 
 And it will look like this:
 
@@ -213,27 +209,26 @@ And it will look like this:
 }
 ```
 
-#### Pre-req 3: Signing Agent Directory Records using `dirctl`
+#### Signing Agent Directory Records using `dirctl`
 
 You must sign the record before pushing it to the Outshift Agent Directory. Unsigned records are
 rejected by the API.
 
-To sign an agent or MCP server record in the file `agent.json` using the default provider [Sigstore](https://www.sigstore.dev/), run:
+To sign an agent, A2A card, or MCP server record in the file `record.json` using the default provider [Sigstore](https://www.sigstore.dev/), run:
 
 ```shell
-dirctl sign agent.json > agent.signed.json
+dirctl sign record.json > record.signed.json
 ```
 
 The signing service login page opens in your browser. Use your credentials to log in. The
-agent or MCP server record will be augmented with a generated signature and will be output
-in JSON format. The new signed agent or MCP server record can be pushed to the Hub.
+agent, A2A card, or MCP server record will be augmented with a generated signature and will be output
+in JSON format. The new signed agent, A2A card, or MCP server record can be pushed to the Hub.
 
-For further details on signing, please see
-[the Agent Directory HOWTO](../dir/scenarios.md#signing-and-verification).
+For further details on signing, see the [Agent Directory HOWTO](../dir/scenarios.md#signing-and-verification).
 
-#### Pushing Agent Directory Records using `dirctl`
+### Pushing Agent Directory Records using `dirctl`
 
-Once all pre-requisites are complete, you are ready to push an agent record to an agent repository
+Once all prerequisites are met, you are ready to push an agent record to an agent repository
 that you have write access to. If the repository does not exist, it will be
 created automatically with visibility set as private.
 
@@ -245,7 +240,7 @@ From your terminal window:
 
       ```dirctl hub login```
 
-1. The login page opens in your browser. Use your credentials to log in.
+    The login page opens in your browser. Use your credentials to log in.
 
 1. Verify your Outshift Agent Directory organizations and which one you are currently logged into:
 
@@ -257,7 +252,7 @@ From your terminal window:
 
 1. Push your signed, conforming agent record to the desired organization/repository:
 
-      ```dirctl hub push <organization/repository_name> <local filename of your signed agent json file>```
+      ```dirctl hub push <organization/repository_name> <signed record json>```
 
 1. When you're done, logout of your hub account
 
@@ -296,7 +291,7 @@ The settings page allows you to manage your organizations and their users.
 #### List Organizations
 
 Organizations represent groups of users within the Hub, each with its own
-repositories. Users can be member of many organizations. The organizations
+repositories. Users can be members of many organizations. The organizations
 available to you are listed under the **Organizations** tab.
 
 #### Switch Organization
@@ -320,7 +315,7 @@ To create a new organization:
 
 #### Manage Users
 
-The list of users of the current organization are accessible by clicking on the organization (in bold) in the list.
+The list of users of the current organization is accessible by clicking on the organization (in bold) in the list.
 
 You can invite other users to the organization by clicking the **+ Invite User**
 button.
