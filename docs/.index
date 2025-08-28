@@ -5,6 +5,7 @@ nav:
   - Messaging SDK: messaging
   - Identity: identity
   - CSIT: csit
+  - CoffeeAGNTCY: coffee-agntcy
   - Semantic SDK: semantic
   - Syntactic SDK: syntactic
   - Agent Workflow Server: agws
