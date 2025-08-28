@@ -85,7 +85,7 @@ You can refine the results using predefined filters and open search:
 
 ### Manage Records Associated with Your Organization
 
-The My Directory Page allows you to view, edit, and create agent, A2A card, or MCP server repositories in the Outshift Agent Directory. Here the records are displayed in a table.
+The My Directory Page allows you to manage repositories and view agent, A2A card, or MCP server records in the Outshift Agent Directory. Here the records are displayed in a table.
 
 You can refine the results using predefined filters and open search:
 
@@ -222,7 +222,11 @@ dirctl sign record.json > record.signed.json
 
 The signing service login page opens in your browser. Use your credentials to log in. The
 agent, A2A card, or MCP server record will be augmented with a generated signature and will be output
-in JSON format. The new signed agent, A2A card, or MCP server record can be pushed to the Hub.
+in JSON format.
+
+You can validate the record using the [OASF Schema API](https://schema.oasf.outshift.com/doc/index.html#/Validation/SchemaWeb.SchemaController.validate_object).
+
+The signed agent, A2A card, or MCP server record can be pushed to the Hub.
 
 For further details on signing, see the [Agent Directory HOWTO](../dir/scenarios.md#signing-and-verification).
 
