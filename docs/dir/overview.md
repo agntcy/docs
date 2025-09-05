@@ -25,7 +25,7 @@ While all record data is modeled using the [OASF](../oasf/open-agentic-schema-fr
 leveraged for content routing in the distributed network of directory servers.
 The ADS specification is under active development and is published as an
 Internet Draft at [ADS Spec](https://spec.dir.agntcy.org). The source code is
-available in the [ADS Spec sources](https://github.com/agntcy).
+available in the [ADS Spec sources](https://github.com/agntcy/dir-spec).
 The current reference implementation, written in Go, provides server and client
 nodes with gRPC and protocol buffer interfaces. The directory record storage is
 built on [ORAS](https://oras.land) (OCI Registry As Storage), while data
