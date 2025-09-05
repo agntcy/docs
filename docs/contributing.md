@@ -13,10 +13,9 @@ possible.
 
 ## Sending Pull Requests
 
-All pull requests should solve an existing issue.
+All pull requests should solve an existing issue. Make sure to add the issue number to the pull request, linking them together.
 
-To submit a new pull request, fork the repository. Create a new branch for your feature or fix. Make your
-changes then submit a pull request.
+To submit a new pull request, fork the repository. Create a new branch for your feature or fix. Make your changes then submit a pull request.
 
 ## Markdown and Writing Style
 
