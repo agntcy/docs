@@ -89,7 +89,7 @@ For example, this note:
     This is a note.
 ```
 
-Is disoplayed as:
+Is displayed as:
 
 !!! note
 
