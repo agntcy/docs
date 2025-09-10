@@ -89,7 +89,8 @@ Each member of the group must have a unique identity. This is a requirement to
 setup the end-to-end encryption using the MLS protocol. The identity can be
 represented by a JWT, or a shared secret. For simplicity, we will use a shared
 secret. You can find examples using JWT in the [SLIM
-Repo](https://github.com/agntcy/slim/blob/main/data-plane/python-bindings/examples/src/slim_bindings_examples/common.py#L71-L112).
+Repo](https://github.com/agntcy/slim/tree/slim-v0.4.0/data-plane/python-bindings/examples/src/slim_bindings_examples/common.py#L71-L112).
+
 
 The python objects managing the identity are called `PyIdentityProvider` and
 `PyIdentityVerifier`. The `PyIdentityProvider` is responsible for providing the
@@ -292,9 +293,9 @@ script. You can run this script to see how the group communication works using
 SLIM.
 
 The same example can be found in the [SLIM examples
-folder](https://github.com/agntcy/slim/tree/main/data-plane/python-bindings/examples).
+folder](https://github.com/agntcy/slim/tree/slim-v0.4.0/data-plane/python-bindings/examples/src/slim_bindings_examples).
 In particular this tutorial is based on the
-[pubsub.py](https://github.com/agntcy/slim/blob/main/data-plane/python-bindings/examples/src/slim_bindings_examples/pubsub.py)
+[pubsub.py](https://github.com/agntcy/slim/tree/slim-v0.4.0/data-plane/python-bindings/examples/src/slim_bindings_examples/pubsub.py)
 example
 
 #### moderator.py
@@ -575,9 +576,9 @@ def main():
 The slim repository also includes examples of 1:1 communication sessions. Using
 the SLIM SDK for 1:1 sessions is very similar to the approach demonstrated in
 the group communication example. For reference, see the
-[fire_and_forget.py](https://github.com/agntcy/slim/blob/main/data-plane/python-bindings/examples/src/slim_bindings_examples/fire_and_forget.py)
+[fire_and_forget.py](https://github.com/agntcy/slim/tree/slim-v0.4.0/data-plane/python-bindings/examples/src/slim_bindings_examples/fire_and_forget.py)
 and
-[request_reply.py](https://github.com/agntcy/slim/blob/main/data-plane/python-bindings/examples/src/slim_bindings_examples/request_reply.py)
+[request_reply.py](https://github.com/agntcy/slim/tree/slim-v0.4.0/data-plane/python-bindings/examples/src/slim_bindings_examples/request_reply.py)
 files.
 
 1:1 communication is particularly useful when you want to use SLIM as a
