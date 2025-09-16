@@ -1,6 +1,9 @@
 nav:
   - Overview: overview.md
   - Usage Scenarios: scenarios.md
+  - Directory CLI: directory-cli.md
+  - SPIRE Federation: federation.md
+  - Security: security.md
   - Hosted AGNTCY Agent Directory: hosted-agent-directory.md
   - Agent Directory Records Example: dir-record-example.md
   - API Reference:
