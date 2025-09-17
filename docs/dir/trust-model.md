@@ -288,5 +288,7 @@ task test:spire:cleanup
 ---
 
 For more details, see:
+
 - [SPIRE Documentation](https://spiffe.io/docs/latest/spiffe-about/overview/)
+
 - [SPIRE Federation Guide](https://spiffe.io/docs/latest/spire-helm-charts-hardened-advanced/federation/).
