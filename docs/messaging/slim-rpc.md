@@ -1,29 +1,30 @@
 # SLIMRPC (SLIM Remote Procedure Call)
 
-SLIMRPC, or SLIM Remote Procedure Call, is a mechanism designed to enable Protocol
-Buffers (protobuf) RPC over SLIM (Secure Low-latency Inter-process Messaging).
-This is analogous to gRPC, which leverages HTTP/2 as its underlying transport
-layer for protobuf RPC.
+SLIMRPC, or SLIM Remote Procedure Call, is a mechanism designed to enable
+Protocol Buffers (protobuf) RPC over SLIM (Secure Low-latency Inter-process
+Messaging). This is analogous to gRPC, which leverages HTTP/2 as its underlying
+transport layer for protobuf RPC.
 
-A key advantage of SLIMRPC lies in its ability to seamlessly integrate SLIM as the
-transport protocol for inter-application message exchange. This significantly
-simplifies development: a protobuf file can be compiled to generate code that
-utilizes SLIM for communication. Application developers can then interact with
-the generated code much like they would with standard gRPC, while benefiting
-from the inherent security features and efficiency provided by the SLIM
-protocol.
+A key advantage of SLIMRPC lies in its ability to seamlessly integrate SLIM as
+the transport protocol for inter-application message exchange. This
+significantly simplifies development: a protobuf file can be compiled to
+generate code that utilizes SLIM for communication. Application developers can
+then interact with the generated code much like they would with standard gRPC,
+while benefiting from the inherent security features and efficiency provided by
+the SLIM protocol.
 
-This README provides a guide to understanding how SLIMRPC functions and how you can
-implement it in your applications. For detailed instructions on compiling a
+This README provides a guide to understanding how SLIMRPC functions and how you
+can implement it in your applications. For detailed instructions on compiling a
 protobuf file to obtain the necessary SLIMRPC stub code, please refer to the
 dedicated [SLIMRPC compiler documentation](./slim-slimrpc-compiler.md).
 
 ## SLIM naming in SLIMRPC
 
-In SLIMRPC, each service and its individual RPC handlers are assigned a SLIM name,
-facilitating efficient message routing and processing. Consider the [example
-protobuf](https://github.com/agntcy/slim/blob/main/data-plane/python/integrations/slimrpc/slimrpc/examples/simple/example.proto) definition, which defines four
-distinct services:
+In SLIMRPC, each service and its individual RPC handlers are assigned a SLIM
+name, facilitating efficient message routing and processing. Consider the
+[example
+protobuf](https://github.com/agntcy/slim/blob/main/data-plane/python/integrations/slimrpc/slimrpc/examples/simple/example.proto)
+definition, which defines four distinct services:
 
 ```proto
 syntax = "proto3";
@@ -51,10 +52,10 @@ message ExampleResponse {
 This example showcases the four primary communication patterns supported by
 gRPC: Unary-Unary, Unary-Stream, Stream-Unary, and Stream-Stream.
 
-For SLIMRPC, a specific SLIM name is generated for each handler within a service.
-This naming convention allows an application exposing the service to listen for
-and process messages intended for a particular RPC method. The format for these
-names is:
+For SLIMRPC, a specific SLIM name is generated for each handler within a
+service. This naming convention allows an application exposing the service to
+listen for and process messages intended for a particular RPC method. The format
+for these names is:
 
 ```
 {package-name}.{service-name}-{handler_name}
@@ -81,20 +82,25 @@ component[0]/component[1]/component[2]-example_service.Test-ExampleUnaryUnary/co
 The subscription process is entirely managed by the SLIMRPC package. Application
 developers are not required to explicitly handle SLIM name subscriptions.
 Instead, they only need to implement the specific functions that will be invoked
-when a message arrives for a defined RPC method, exactly as they would with standard gRPC.
+when a message arrives for a defined RPC method, exactly as they would with
+standard gRPC.
 
 ## Example
 
 This section provides a detailed walkthrough of a basic SLIMRPC client-server
 interaction, leveraging the simple example provided in
-[example](https://github.com/agntcy/slim/tree/main/data-plane/python/integrations/slimrpc/slimrpc/examples/simple) folder.
+[example](https://github.com/agntcy/slim/tree/main/data-plane/python/integrations/slimrpc/slimrpc/examples/simple)
+folder.
 
 ### Generated Code
 
-The foundation of this example is the `example.proto` file, which is a
-standard Protocol Buffers definition file. This file is compiled using the [SLIMRPC
-compiler](./slim-slimrpc-compiler.md) to generate the necessary Python stub code. The generated code is
-available in two files: [example_pb2.py](https://github.com/agntcy/slim/blob/main/data-plane/python/integrations/slimrpc/slimrpc/examples/simple/types/example_pb2.py) and [example_pb2_slimrpc.py](https://github.com/agntcy/slim/blob/main/data-plane/python/integrations/slimrpc/slimrpc/examples/simple/types/example_pb2_slimrpc.py).
+The foundation of this example is the `example.proto` file, which is a standard
+Protocol Buffers definition file. This file is compiled using the [SLIMRPC
+compiler](./slim-slimrpc-compiler.md) to generate the necessary Python stub
+code. The generated code is available in two files:
+[example_pb2.py](https://github.com/agntcy/slim/blob/main/data-plane/python/integrations/slimrpc/slimrpc/examples/simple/types/example_pb2.py)
+and
+[example_pb2_slimrpc.py](https://github.com/agntcy/slim/blob/main/data-plane/python/integrations/slimrpc/slimrpc/examples/simple/types/example_pb2_slimrpc.py).
 Specifically, `example_pb2_slimrpc.py` contains the SLIMRPC-specific stubs for
 both client and server implementations. Below are the key classes and functions
 generated by the compiler:
@@ -165,9 +171,9 @@ class TestServicer():
 ```
 
 _Server Registration Function (add_TestServicer_to_server)_: This utility
-function registers an implemented TestServicer instance with an SLIMRPC server. It
-maps RPC method names to their corresponding handlers and specifies the request
-deserialization and response serialization routines.
+function registers an implemented TestServicer instance with an SLIMRPC server.
+It maps RPC method names to their corresponding handlers and specifies the
+request deserialization and response serialization routines.
 
 ```python
 def add_TestServicer_to_server(servicer, server: slimrpc.Server):
@@ -204,11 +210,11 @@ def add_TestServicer_to_server(servicer, server: slimrpc.Server):
 ### Server implementation
 
 The server-side logic is defined in
-[server.py](https://github.com/agntcy/slim/blob/main/data-plane/python/integrations/slimrpc/slimrpc/examples/simple/server.py). Similar to standard gRPC
-implementations, the core service functionality is provided by the TestService
-class, which inherits from TestServicer (as introduced in the previous section).
-This class contains the concrete implementations for each of the defined RPC
-methods.
+[server.py](https://github.com/agntcy/slim/blob/main/data-plane/python/integrations/slimrpc/slimrpc/examples/simple/server.py).
+Similar to standard gRPC implementations, the core service functionality is
+provided by the TestService class, which inherits from TestServicer (as
+introduced in the previous section). This class contains the concrete
+implementations for each of the defined RPC methods.
 
 The SLIM-specific code and configuration is handled within the amain()
 asynchronous function. This function utilizes the create_server helper to
@@ -269,15 +275,17 @@ agntcy/grpc/server-example_service.Test-ExampleStreamUnary
 agntcy/grpc/server-example_service.Test-ExampleStreamStream
 ```
 
-Additionally, the `slim` dictionary configures the server to connect to a
-SLIM node running at `http://localhost:46357`. The tls setting `insecure:
-True` disables TLS for simplicity in this example. The `shared_secret`
-parameter is used for initializing the Message Layer Security (MLS) protocol.
-Note that using a hardcoded shared_secret like "my_shared_secret" is not
-recommended, please refer to [the documentation for proper MLS configuration](./slim-group.md#identity-management).
+Additionally, the `slim` dictionary configures the server to connect to a SLIM
+node running at `http://localhost:46357`. The tls setting `insecure: True`
+disables TLS for simplicity in this example. The `shared_secret` parameter is
+used for initializing the Message Layer Security (MLS) protocol. Note that using
+a hardcoded shared_secret like "my_shared_secret" is not recommended, please
+refer to [the documentation for proper MLS
+configuration](./slim-group.md#identity-management).
 
 Finally, the add_TestServicer_to_server function is called to register the
-implemented TestService with the SLIMRPC server, making its RPC methods available.
+implemented TestService with the SLIMRPC server, making its RPC methods
+available.
 
 ```python
     # Create RPCs
@@ -290,9 +298,9 @@ implemented TestService with the SLIMRPC server, making its RPC methods availabl
 ### Client implementation
 
 The client-side implementation, found in
-[client.py](https://github.com/agntcy/slim/blob/main/data-plane/python/integrations/slimrpc/slimrpc/examples/simple/client.py), largely mirrors the structure of
-a standard gRPC client. The primary distinction and SLIM-specific aspect lies in
-the creation of the SLIMRPC channel:
+[client.py](https://github.com/agntcy/slim/blob/main/data-plane/python/integrations/slimrpc/slimrpc/examples/simple/client.py),
+largely mirrors the structure of a standard gRPC client. The primary distinction
+and SLIM-specific aspect lies in the creation of the SLIMRPC channel:
 
 ```python
     channel_factory = slimrpc.ChannelFactory(
@@ -316,20 +324,21 @@ the creation of the SLIMRPC channel:
 ```
 
 As opposite to the server, the client application only register its local name
-`agntcy/grpc/client` in the SLIM network. This is done through the
-`identity` parameter in the `SLIMAppConfig` class. This name will be then used by
-the server to send back the response to the client.
+`agntcy/grpc/client` in the SLIM network. This is done through the `identity`
+parameter in the `SLIMAppConfig` class. This name will be then used by the
+server to send back the response to the client.
 
 Also, like in the case of the server application, the `slim` dictionary
 specifies the SLIM node endpoint (http://localhost:46357) and TLS settings,
-consistent with the server's configuration, while `shared_secret` is used to initialize
-MLS.
+consistent with the server's configuration, while `shared_secret` is used to
+initialize MLS.
 
 The remote parameter, set to "agntcy/grpc/server", explicitly identifies the
 SLIM name of the target server application. This allows the SLIMRPC channel to
 correctly route messages to the appropriate server endpoint within the SLIM
-network. Since both client and server use the same protobuf definition, the client
-can invoke specific services and methods with type safety and consistency.
+network. Since both client and server use the same protobuf definition, the
+client can invoke specific services and methods with type safety and
+consistency.
 
 ## SLIMRPC under the hood
 
@@ -353,11 +362,11 @@ session creation is implemented in inside SLIMRPC in
         )
 ```
 
-This session used by SLIMRPC is also reliable. For each message, the sender waits
-for an acknowledgment (ACK) packet for 1 second
-(`timeout=datetime.timedelta(seconds=1)`). If no acknowledgment is received,
-the message will be re-sent up to 10 times (`max_retries=10`) before
-notifying the application of a communication error.
+This session used by SLIMRPC is also reliable. For each message, the sender
+waits for an acknowledgment (ACK) packet for 1 second
+(`timeout=datetime.timedelta(seconds=1)`). If no acknowledgment is received, the
+message will be re-sent up to 10 times (`max_retries=10`) before notifying the
+application of a communication error.
 
 Since the session is sticky, all messages in a streaming communication will be
 forwarded to the same application instance. Let's illustrate this with an
@@ -369,8 +378,9 @@ under the general name
 `agntcy/grpc/server-example_service.Test-ExampleStreamUnary`. In SLIM, each
 application receives a unique ID. Thus, the full service name will include a
 fourth component containing the server's ID. This ID is generated by SLIM itself
-(see the [doc](./slim-data-plane.md) for more details). Here we will use instance-1 and instance-2 for
-simplicity. So, the two full names for the services will be:
+(see the [doc](./slim-data-plane.md) for more details). Here we will use
+instance-1 and instance-2 for simplicity. So, the two full names for the
+services will be:
 
 - `agntcy/grpc/server-example_service.Test-ExampleStreamUnary/instance-1`
 - `agntcy/grpc/server-example_service.Test-ExampleStreamUnary/instance-2`
@@ -379,12 +389,12 @@ Now, if a new client wants to use the Stream-Unary service it needs to knows
 only the general name
 `agntcy/grpc/server-example_service.Test-ExampleStreamUnary`. SLIMRPC will
 leverage SLIM's capabilities to first discover one of the available services,
-and then SLIMRPC will use its full, specific name to consistently communicate with
-that same endpoint.
+and then SLIMRPC will use its full, specific name to consistently communicate
+with that same endpoint.
 
-The client will register to SLIM with the name `agntcy/grpc/client`, and it will get an
-unique ID assigned by SLIM, for example `instance-1`. So the full name of the client
-will be `agntcy/grpc/client/instance-1`.
+The client will register to SLIM with the name `agntcy/grpc/client`, and it will
+get an unique ID assigned by SLIM, for example `instance-1`. So the full name of
+the client will be `agntcy/grpc/client/instance-1`.
 
 ```mermaid
 sequenceDiagram
@@ -424,8 +434,9 @@ The initial messages in the sequence diagram are used for the discovery phase.
 After this step, the client application knows the specific name of the service
 running on instance-1. It's important to note that the first message in the
 discovery phase is sent in anycast from the SLIM node, meaning it could be
-forwarded to **either of the two running servers**. For instance, a subsequent call
-of the same RPC from the same client might be served by `Server (instance-2)`.
+forwarded to **either of the two running servers**. For instance, a subsequent
+call of the same RPC from the same client might be served by `Server
+(instance-2)`.
 
 After the discovery, the client will always send messages to the same endpoint,
 as demonstrated in the streaming session phase in the example.
