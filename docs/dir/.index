@@ -1,10 +1,10 @@
 nav:
   - Overview: overview.md
   - Architecture: architecture.md
+  - Records: record-example.md
   - Trust Model: trust-model.md
   - Getting Started: getting-started.md
   - Features and Usage: scenarios.md
-  - ADS Records: record-example.md
   - Hosted AGNTCY Agent Directory: hosted-agent-directory.md
   - CLI Reference: directory-cli.md
   - SDK Reference: directory-sdk.md
