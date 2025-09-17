@@ -148,49 +148,47 @@ Network publication may fail if you are not connected to the network.
 
 ### Discover
 
-This example demonstrates how to discover published data locally or across the network.
-The API supports both unicast- mode for routing to specific objects,
-and multicast- mode for attribute-based matching and routing.
+This example demonstrates how to discover records both locally and across the network using two distinct commands for different use cases.
 
-There are two modes of operation, a) local mode where the data is queried from the local data store, and b) network mode where the data is queried across the network.
+#### Local Discovery
 
-Discovery is performed using full-set label matching, i.e., the results always fully match the requested query.
-Note that it is not guaranteed that the returned data is available, valid, or up to date.
+Use `dirctl routing list` to discover records stored locally on this peer only. This queries the server's local storage index and does not search other peers on the network.
 
 ```bash
-# Get a list of peers holding a specific record
-dirctl list --digest $DIGEST
+# List all local records
+dirctl routing list
 
-#> Peer 12D3KooWQffoFP8ePUxTeZ8AcfReTMo4oRPqTiN1caDeG5YW3gng
-#>   Digest: sha256:<hash>
-#>   Labels: /skills/Text Generation, /skills/Fact Extraction
+# List local records with specific skill
+dirctl routing list --skill "AI"
 
-# Discover the records in your local data store
-dirctl list "/skills/Text Generation"
-dirctl list "/skills/Text Generation" "/skills/Fact Extraction"
+# List records with multiple criteria (AND logic)
+dirctl routing list --skill "AI" --locator "docker-image"
 
-#> Peer HOST
-#>   Digest: sha256:<hash>
-#>   Labels: /skills/Text Generation, /skills/Fact Extraction
-
-# Discover the records across the network
-dirctl list "/skills/Text Generation" --network
-dirctl list "/skills/Text Generation" "/skills/Fact Extraction" --network
+# List specific record by CID
+dirctl routing list --cid $RECORD_CID
 ```
 
-It is also possible to get an aggregated summary of the data held in your local data store or across the network.
-This is used for routing decisions when traversing the network.
+#### Network Discovery
+
+Use `dirctl routing search` to discover records from other peers across the network. This uses cached network announcements and filters out local records.
 
 ```bash
-# Get label summary details in your local data store
-dirctl list info
+# Search for records with exact skill match
+dirctl routing search --skill "Natural Language Processing/Text Completion"
 
-#> Peer HOST | Label: /skills/Text Generation | Total: 1
-#> Peer HOST | Label: /skills/Fact Extraction | Total: 1
+# Search for records with skill prefix match (finds all NLP-related skills)
+dirctl routing search --skill "Natural Language Processing"
 
-# Get label summary details across the network
-dirctl list info --network
+# Search with multiple criteria (OR logic with minimum score)
+dirctl routing search --skill "AI" --skill "ML" --min-score 2
+
+# Search with result limiting
+dirctl routing search --skill "AI" --limit 5
 ```
+
+Network search supports hierarchical matching where skills, domains, and features use both exact and prefix matching (e.g., "AI" matches both "/skills/AI" exactly and "/skills/AI/ML" as a prefix).
+
+Note that network search results are not guaranteed to be available, valid, or up to date as they rely on cached announcements from other peers.
 
 ### Search
 
