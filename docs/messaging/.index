@@ -6,8 +6,9 @@ nav:
  - SLIM Group Management: slim-group.md
  - SLIM Group Communication Tutorial: slim-group-tutorial.md
  - SLIM Integrations:
-    - SLIMRPC: slim-rpc.md
-    - SLIMRPC Protoc Plugin: slim-slimrpc-compiler.md
+    - SLIMRPC: 
+        - Overview: slim-rpc.md
+        - Protoc Plugin: slim-slimrpc-compiler.md
     - SLIMA2A: slim-a2a.md
     - MCP over SLIM: slim-mcp.md
 
