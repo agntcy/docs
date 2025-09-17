@@ -309,12 +309,12 @@ dirctl sync delete <sync id>
 You can combine routing search with sync operations to selectively synchronize records that match specific criteria:
 
 ```bash
-# Search for AI-related agents across the network and sync them automatically
-dirctl routing search --skill "AI" --json | dirctl sync create --stdin
-
-# This creates separate sync operations for each remote peer found in the search results,
-# syncing only the specific CIDs that matched your search criteria
+# Search for agents with a given OASF skill across the network and sync them automatically
+dirctl routing search --skill "Audio" --json | dirctl sync create --stdin
 ```
+
+This creates separate sync operations for each remote peer found in the search results,
+syncing only the specific CIDs that matched your search criteria.
 
 ### gRPC Error Codes
 
