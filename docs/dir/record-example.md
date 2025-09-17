@@ -4,7 +4,7 @@ Directory uses [Open Agent Schema Framework](https://schema.oasf.outshift.com) (
 
 ## Content Identifier
 
-The content identifier of the record is a [CID](https://github.com/multiformats/cid) hash digest which makes it:
+The content identifier of the record is a [Content IIdentifier](https://github.com/multiformats/cid) (CID) hash digest which makes it:
 
 - Globally unique
 - Content-addressable

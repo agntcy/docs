@@ -80,7 +80,10 @@ helm pull oci://ghcr.io/agntcy/dir/helm-charts/dir --version v0.3.0
 
 ### Binaries
 
-All release binaries are distributed via [GitHub Releases](https://github.com/agntcy/dir/releases).
+All release binaries are distributed via [GitHub Releases](https://github.com/agntcy/dir/releases)
+and [Homebrew](https://brew.sh/) `agntcy/dir` tap.
+
+Check [CLI References](directory-cli.md) for detailed installation instructions.
 
 ### SDKs
 

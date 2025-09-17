@@ -1,17 +1,27 @@
-# Directory Security Trust Schema
+# Security Trust Model
 
 ## Overview
 
-Directory is a system designed to provide secure, authenticated, and authorized access to services and resources across multiple environments and organizations. It leverages [SPIRE](https://spiffe.io/) (SPIFFE Runtime Environment) to manage workload identities and enable zero-trust security principles.
+Directory is a system designed to provide secure, authenticated, and authorized access to
+services and resources across multiple environments and organizations. It leverages
+[SPIRE](https://spiffe.io/) to manage workload identities and
+enable zero-trust security principles.
 
-SPIRE is an open-source system that provides automated, cryptographically secure identities to workloads in modern infrastructure. It implements the SPIFFE (Secure Production Identity Framework For Everyone) standard, enabling zero-trust security by assigning each workload a unique, verifiable identity (SVID).
+[SPIRE](https://spiffe.io/docs/latest/spire-about/) (SPIFFE Runtime Environment) is an open-source system that provides automated,
+cryptographically secure identities to workloads in modern infrastructure. It implements the
+[SPIFFE](https://spiffe.io/) (Secure Production Identity Framework For Everyone) standard, enabling zero-trust
+security by assigning each workload a unique, verifiable identity (SVID).
 
 In the Directory project, SPIRE is used to:
 
 - Securely identify and authenticate workloads (services, applications, etc.)
-- Enable mutual TLS (mTLS) between services
+
+- Enable mutual transport layer security (mTLS) between services
+
 - Support dynamic, scalable, and multi-environment deployments
+
 - Enable interconnectivity between different organizations
+
 - Provide primitives for authorization logic
 
 ## Authentication and Authorization
@@ -74,6 +84,7 @@ The Directory's security trust schema supports both single and federated trust d
 ### Single Trust Domain
 
 - **SPIRE Server**: Central authority for the trust domain
+
 - **SPIRE Agents**: Deployed in different environments, connect to the SPIRE Server
 
     - Kubernetes clusters (as DaemonSets or sidecars)
@@ -97,7 +108,7 @@ flowchart LR
 
 ### Federated Trust Domains
 
-- Each environment (e.g., cluster, organization) runs its own SPIRE Server and agents
+- Each environment (e.g., cluster, organization) runs its own SPIRE Server and Agents
 - SPIRE Servers exchange bundles to establish federation
 - Enables secure, authenticated communication between workloads in different domains
 
@@ -122,18 +133,34 @@ flowchart TD
 
 ## Deployment
 
+In order to deploy Directory with Security Trust Model support, it is required
+to deploy SPIRE components.
+
 ### SPIRE Server
 
-- Deployed as a Kubernetes service or as a standalone service.
-- Configured with a unique trust domain name (e.g., `dir.example`).
-- Federation enabled to allow cross-domain trust.
-- Exposes a bundle endpoint for federation.
+The SPIRE Server is configured as follows:
+
+- **Deployment Options**: Can be deployed either as a Kubernetes or 
+as a standalone service, providing flexibility for different infrastructure setups.
+
+- **Trust Domain Configuration**: Requires a unique trust domain name
+(such as dir.example) to establish its identity scope.
+
+- **Federation Support**: Federation is enabled to allow cross-domain
+trust relationships between different SPIRE deployments.
+If the federation is not required, it can be left disabled.
+
+- **Bundle Endpoint**: Exposes a bundle endpoint that enables federation
+by allowing other SPIRE servers to exchange trust bundles.
 
 ```bash
+# Set the trust domain
 export TRUST_DOMAIN="my-service.local"
 
+# Add the SPIFFE Helm chart repository
 helm repo add spiffe https://spiffe.github.io/helm-charts-hardened
 
+# Install SPIRE CRDs
 helm upgrade spire-crds spire-crds \
     --repo https://spiffe.github.io/helm-charts-hardened/ \
     --create-namespace -n spire-crds \
@@ -142,6 +169,7 @@ helm upgrade spire-crds spire-crds \
     --wait-for-jobs \
     --timeout "15m"
 
+# Install SPIRE Server with federation enabled
 helm upgrade spire spire \
     --repo https://spiffe.github.io/helm-charts-hardened/ \
     --set global.spire.trustDomain="$TRUST_DOMAIN" \
@@ -157,16 +185,27 @@ helm upgrade spire spire \
 
 ### SPIRE Agent
 
-- Deployed as DaemonSets in Kubernetes or as services on VMs/bare metal.
-- Connect to the SPIRE Server to obtain workload identities.
-- Attest workloads and provide SVIDs via the Workload API.
+The SPIRE Agent serves as the local identity provider for workloads and has the following characteristics:
+
+- **Deployment Methods**: SPIRE Agents can be deployed in multiple ways depending on the infrastructure - 
+as DaemonSets in Kubernetes environments or as standalone services on VMs and bare metal servers.
+SPIRE Helm chart deploys a K8s SPIRE Agent across all nodes by default.
+
+- **Server Communication**: Agents establish connections to the SPIRE Server to obtain workload identities,
+acting as intermediaries between workloads and the central identity authority.
+
+- **Workload Services**: Agents perform workload attestation (verification of workload identity) and
+distribute SVIDs (SPIFFE Verifiable Identity Documents) through the Workload API, enabling secure
+identity management at the workload level.
 
 ### Directory
 
-Directory components can be deployed in the trust domain and configured to use SPIRE with or without federation:
+Directory components can be deployed in the trust domain and configured
+to use SPIRE with or without federation:
 
 ```yaml
-# Example Directory Server configuration to use SPIRE
+# Example Directory Server configuration to use SPIRE.
+# Add client to server trust domain.
 dir:
   apiserver:
     spire:
@@ -181,7 +220,7 @@ dir:
           trustDomainBundle: |
             ${CLIENT_BUNDLE_CONTENT}
 
-# Example Directory Client configuration to use SPIRE
+# Example Directory Client configuration to use SPIRE.
 dirctl:
   spire:
     enabled: true
@@ -190,16 +229,18 @@ dirctl:
 
 ## Test Example
 
-A test setup can be created using [Kubernetes Kind](https://kind.sigs.k8s.io/) clusters to simulate Federation setup with Authentication and Authorization:
+This test setup relies on using [Kubernetes Kind](https://kind.sigs.k8s.io/) clusters
+running in [Docker](https://www.docker.com/) to simulate Security Trust Model in
+federated setups. In the following example, we will:
 
-- Two Kubernetes Kind clusters (one for each trust domain).
-- SPIRE Servers and Agents deployed in each cluster.
-- Federation is established between the clusters.
-- Directory services are deployed and communicate securely using SPIFFE identities.
+- Setup Two Kubernetes Kind clusters (one for each trust domain)
+- Deploy SPIRE Servers and Agents in each cluster
+- Configure Federation to establish trust between the clusters
+- Deploy Directory services to communicate securely using SPIFFE identities
 
 ```mermaid
 flowchart TD
-  subgraph DIR_Trust_Domain[DIR: dir.example]
+  subgraph DIR_Trust_Domain[**Trust Domain**: dir.example]
     DIR_SPIRE_SERVER[SPIRE Server]
     DIR_API_SERVER[DIR API Server]
     DIRCTL_API_CLIENT[DIRCTL Admin Client]
@@ -209,7 +250,7 @@ flowchart TD
     DIR_SPIRE_AGENT1 -->|"Workload API"| DIRCTL_API_CLIENT
     DIRCTL_API_CLIENT -->|"API Call"| DIR_API_SERVER
   end
-  subgraph DIRCTL_Trust_Domain[DIRCTL: dirctl.example]
+  subgraph DIRCTL_Trust_Domain[**Trust Domain**: dirctl.example]
     DIRCTL_SPIRE_SERVER[SPIRE Server]
     DIRCTL_CLIENT[DIRCTL Client]
     DIRCTL_SPIRE_AGENT1[SPIRE Agent K8s]
@@ -218,15 +259,34 @@ flowchart TD
   end
   DIR_SPIRE_SERVER <-.->|"Federation (SPIFFE Bundle)"| DIRCTL_SPIRE_SERVER
   DIRCTL_CLIENT -->|"API Calls"| DIR_API_SERVER
+
+  style DIRCTL_CLIENT fill:#84c294,stroke:#333,stroke-width:2px
+  style DIR_API_SERVER fill:#84c294,stroke:#333,stroke-width:2px
+  style DIRCTL_API_CLIENT fill:#84c294,stroke:#333,stroke-width:2px
 ```
 
-**Deployment Tasks:**
+**Deployment Tasks**
+
+The test example uses [kubernetes-sigs/cloud-provider-kind](https://github.com/kubernetes-sigs/cloud-provider-kind)
+to expose Kubernetes Directory and SPIRE as *LoadBalancer* services between clusters.
 
 ```bash
-sudo task test:spire      # Deploys the full federation setup
-task test:spire:cleanup   # Cleans up the test environment
+## Fetch Directory source
+git clone https://github.com/agntcy/dir
+cd dir
+
+## Build all components
+task build
+
+## Deploy full federation setup
+task test:spire
+
+## Cleanup test environment
+task test:spire:cleanup
 ```
 
 ---
 
-For more details, see the [SPIRE Documentation](https://spiffe.io/docs/latest/spiffe-about/overview/) and [SPIRE Federation Guide](https://spiffe.io/docs/latest/spire-helm-charts-hardened-advanced/federation/).
+For more details, see:
+- [SPIRE Documentation](https://spiffe.io/docs/latest/spiffe-about/overview/)
+- [SPIRE Federation Guide](https://spiffe.io/docs/latest/spire-helm-charts-hardened-advanced/federation/).

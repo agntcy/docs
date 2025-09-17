@@ -6,6 +6,13 @@ The Directory CLI (dirctl) provides comprehensive command-line tools for interac
 
 The Directory CLI can be installed in the following ways:
 
+### Using Homebrew
+
+```bash
+brew tap agntcy/dir https://github.com/agntcy/dir/
+brew install dirctl
+```
+
 ### Using Release Binaries
 
 ```bash

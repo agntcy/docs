@@ -1,32 +1,46 @@
-# Core API Reference
+# Protocol Documentation
+<a name="top"></a>
 
-<a name="core_v1_record-proto"></a>
+## Table of Contents
+
+- [agntcy/dir/core/v1/record.proto](#agntcy_dir_core_v1_record-proto)
+    - [Record](#agntcy-dir-core-v1-Record)
+    - [RecordMeta](#agntcy-dir-core-v1-RecordMeta)
+    - [RecordMeta.AnnotationsEntry](#agntcy-dir-core-v1-RecordMeta-AnnotationsEntry)
+    - [RecordRef](#agntcy-dir-core-v1-RecordRef)
+  
+- [Scalar Value Types](#scalar-value-types)
 
 
-## core/v1/record.proto
+
+<a name="agntcy_dir_core_v1_record-proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## agntcy/dir/core/v1/record.proto
 
 
 
-<a name="core-v1-Record"></a>
+<a name="agntcy-dir-core-v1-Record"></a>
 
 ### Record
-Record unifies different versions of records into a single message.
-It allows for backward compatibility and easier handling of different
-record versions in the same service or application.
+Record is a generic object that encapsulates data of different Record types.
+
+Supported schemas:
+
+v0.3.1: https://schema.oasf.outshift.com/0.3.1/objects/agent
+v0.7.0: https://schema.oasf.outshift.com/0.7.0/objects/record
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| v1 | [objects.v1.Agent](#objects-v1-Agent) |  |  |
-| v2 | [objects.v2.AgentRecord](#objects-v2-AgentRecord) |  |  |
-| v3 | [objects.v3.Record](#objects-v3-Record) |  |  |
+| data | [google.protobuf.Struct](#google-protobuf-Struct) |  |  |
 
 
 
 
 
 
-<a name="core-v1-RecordMeta"></a>
+<a name="agntcy-dir-core-v1-RecordMeta"></a>
 
 ### RecordMeta
 Defines metadata about a record.
@@ -35,7 +49,7 @@ Defines metadata about a record.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | cid | [string](#string) |  | CID of the record. |
-| annotations | [RecordMeta.AnnotationsEntry](#core-v1-RecordMeta-AnnotationsEntry) | repeated | Annotations attached to the record. |
+| annotations | [RecordMeta.AnnotationsEntry](#agntcy-dir-core-v1-RecordMeta-AnnotationsEntry) | repeated | Annotations attached to the record. |
 | schema_version | [string](#string) |  | Schema version of the record. |
 | created_at | [string](#string) |  | Creation timestamp of the record in the RFC3339 format. Specs: https://www.rfc-editor.org/rfc/rfc3339.html |
 
@@ -44,7 +58,7 @@ Defines metadata about a record.
 
 
 
-<a name="core-v1-RecordMeta-AnnotationsEntry"></a>
+<a name="agntcy-dir-core-v1-RecordMeta-AnnotationsEntry"></a>
 
 ### RecordMeta.AnnotationsEntry
 
@@ -60,7 +74,7 @@ Defines metadata about a record.
 
 
 
-<a name="core-v1-RecordRef"></a>
+<a name="agntcy-dir-core-v1-RecordRef"></a>
 
 ### RecordRef
 Defines a reference or a globally unique content identifier of a record.

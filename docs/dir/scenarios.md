@@ -129,17 +129,17 @@ pre-obtained OIDC token along with provider-specific configuration to establish 
 without user interaction.
 
 ```
-      - name: Push and sign record
-        run: |
-          bin/dirctl push record.json --sign \
-            --oidc-token ${{ steps.oidc-token.outputs.token }} \
-            --oidc-provider-url "https://token.actions.githubusercontent.com" \
-            --oidc-client-id "https://github.com/${{ github.repository }}/.github/workflows/demo.yaml@${{ github.ref }}"
+- name: Push and sign record
+  run: |
+    bin/dirctl push record.json --sign \
+      --oidc-token ${{ steps.oidc-token.outputs.token }} \
+      --oidc-provider-url "https://token.actions.githubusercontent.com" \
+      --oidc-client-id "https://github.com/${{ github.repository }}/.github/workflows/demo.yaml@${{ github.ref }}"
 
-      - name: Run verify command
-        run: |
-          echo "Running dir verify command"
-          bin/dirctl verify $RECORD_CID
+- name: Run verify command
+  run: |
+    echo "Running dir verify command"
+    bin/dirctl verify $RECORD_CID
 ```
 
 ### Method 3: Self-Managed Keys
@@ -155,6 +155,7 @@ cosign generate-key-pair
 
 # Set COSIGN_PASSWORD shell variable if you password-protected the private key
 export COSIGN_PASSWORD=your_password_here
+
 # Push record with signature 
 dirctl push record.json --sign --key cosign.key
 
@@ -197,10 +198,11 @@ the server's local storage index and does not search other peers on the network.
 dirctl routing list
 
 # List local records with specific skill
-dirctl routing list --skill "AI"
+dirctl routing list --skill "images_computer_vision/image_segmentation"
 
 # List records with multiple criteria (AND logic)
-dirctl routing list --skill "AI" --locator "docker-image"
+dirctl routing list --skill "images_computer_vision/image_segmentation" \
+                    --locator "source_code"
 
 # List specific record by CID
 dirctl routing list --cid $RECORD_CID
@@ -213,21 +215,24 @@ uses cached network announcements and filters out local records.
 
 ```bash
 # Search for records with exact skill match
-dirctl routing search --skill "Natural Language Processing/Text Completion"
+dirctl routing search --skill "images_computer_vision/image_segmentation"
 
 # Search for records with skill prefix match (finds all NLP-related skills)
-dirctl routing search --skill "Natural Language Processing"
+dirctl routing search --skill "images_computer_vision"
 
 # Search with multiple criteria (OR logic with minimum score)
-dirctl routing search --skill "AI" --skill "ML" --min-score 2
+dirctl routing search --skill "images_computer_vision" \
+                      --skill "images_computer_vision" \
+                      --min-score 2
 
 # Search with result limiting
-dirctl routing search --skill "AI" --limit 5
+dirctl routing search --skill "images_computer_vision" \
+                      --limit 5
 ```
 
 Network search supports hierarchical matching where skills, domains, and features use both
-exact and prefix matching (e.g., "AI" matches both "/skills/AI" exactly and "/skills/AI/ML"
-as a prefix).
+exact and prefix matching (e.g., `images_computer_vision` matches both `images_computer_vision` 
+and `images_computer_vision/image_segmentation` as a prefix).
 
 Note that network search results are not guaranteed to be available, valid, or up to date as
 they rely on cached announcements from other peers.
@@ -254,10 +259,10 @@ dirctl search --query "version=v1.0.0"
 dirctl search --query "skill-id=10201"
 
 # Search for records with a specific skill name
-dirctl search --query "skill-name=Text Generation"
+dirctl search --query "skill-name=images_computer_vision/image_segmentation"
 
 # Search for records with a specific locator type and URL
-dirctl search --query "locator=docker-image:https://example.com/my-agent"
+dirctl search --query "locator=docker_image:https://example.com/my-agent"
 
 # Search for records with a specific extension
 dirctl search --query "extension=my-custom-extension:v1.0.0"
@@ -266,17 +271,17 @@ dirctl search --query "extension=my-custom-extension:v1.0.0"
 dirctl search \
   --query "name=my-agent" \
   --query "version=v1.0.0" \
-  --query "skill-name=Text Generation"
+  --query "skill-name=images_computer_vision/image_segmentation"
 
 # Use pagination to limit results and specify offset
 dirctl search \
-  --query "skill-name=Text Generation" \
+  --query "skill-name=images_computer_vision/image_segmentation" \
   --limit 10 \
   --offset 0
 
 # Get the next page of results
 dirctl search \
-  --query "skill-name=Text Generation" \
+  --query "skill-name=images_computer_vision/image_segmentation" \
   --limit 10 \
   --offset 10
 ```
@@ -347,7 +352,8 @@ local instance.
 dirctl sync create https://remote-directory.example.com:8888
 
 # Sync specific records by CID
-dirctl sync create https://remote-directory.example.com:8888 --cids cid1,cid2,cid3
+dirctl sync create https://remote-directory.example.com:8888 \
+                   --cids cid1,cid2,cid3
 
 # List all sync operations
 dirctl sync list
@@ -365,7 +371,8 @@ You can combine routing search with sync operations to selectively synchronize r
 match specific criteria:
 
 ```bash
-# Search for agents with a given OASF skill across the network and sync them automatically
+# Search for agents with a given skill across
+# the network and sync them automatically
 dirctl routing search --skill "Audio" --json | dirctl sync create --stdin
 ```
 

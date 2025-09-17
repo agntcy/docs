@@ -1,182 +1,104 @@
-# Store API Reference
+# Protocol Documentation
+<a name="top"></a>
 
-<a name="store_v1_object-proto"></a>
+## Table of Contents
 
-
-## store/v1/object.proto
-
-
-
-<a name="store-v1-Object"></a>
-
-### Object
-Object is a generic data structure that can hold
-arbitrary data. It is used to store and associate
-objects in a content-addressable store.
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| cid | [string](#string) |  | Globally-unique content identifier of the object. Encodes fully-qualified type of the object as part of &#34;codec&#34;. Specs: https://github.com/multiformats/cid |
-| type | [ObjectType](#store-v1-ObjectType) |  | Type of the object. Can be extracted from CID. |
-| annotations | [Object.AnnotationsEntry](#store-v1-Object-AnnotationsEntry) | repeated | Metadata associated with the object. |
-| created_at | [string](#string) |  | Creation timestamp of the object in the RFC3339 format. Specs: https://www.rfc-editor.org/rfc/rfc3339.html |
-| size | [uint64](#uint64) |  | Size of the object in bytes. |
-| data | [bytes](#bytes) | optional | Opaque data held by this object. Clients can use {type} to handle processing. |
-
-
-
-
-
-
-<a name="store-v1-Object-AnnotationsEntry"></a>
-
-### Object.AnnotationsEntry
+- [agntcy/dir/store/v1/store_service.proto](#agntcy_dir_store_v1_store_service-proto)
+    - [PullReferrerRequest](#agntcy-dir-store-v1-PullReferrerRequest)
+    - [PullReferrerResponse](#agntcy-dir-store-v1-PullReferrerResponse)
+    - [PushReferrerRequest](#agntcy-dir-store-v1-PushReferrerRequest)
+    - [PushReferrerResponse](#agntcy-dir-store-v1-PushReferrerResponse)
+  
+    - [StoreService](#agntcy-dir-store-v1-StoreService)
+  
+- [agntcy/dir/store/v1/sync_service.proto](#agntcy_dir_store_v1_sync_service-proto)
+    - [BasicAuthCredentials](#agntcy-dir-store-v1-BasicAuthCredentials)
+    - [CreateSyncRequest](#agntcy-dir-store-v1-CreateSyncRequest)
+    - [CreateSyncResponse](#agntcy-dir-store-v1-CreateSyncResponse)
+    - [DeleteSyncRequest](#agntcy-dir-store-v1-DeleteSyncRequest)
+    - [DeleteSyncResponse](#agntcy-dir-store-v1-DeleteSyncResponse)
+    - [GetSyncRequest](#agntcy-dir-store-v1-GetSyncRequest)
+    - [GetSyncResponse](#agntcy-dir-store-v1-GetSyncResponse)
+    - [ListSyncsItem](#agntcy-dir-store-v1-ListSyncsItem)
+    - [ListSyncsRequest](#agntcy-dir-store-v1-ListSyncsRequest)
+    - [RequestRegistryCredentialsRequest](#agntcy-dir-store-v1-RequestRegistryCredentialsRequest)
+    - [RequestRegistryCredentialsResponse](#agntcy-dir-store-v1-RequestRegistryCredentialsResponse)
+  
+    - [SyncStatus](#agntcy-dir-store-v1-SyncStatus)
+  
+    - [SyncService](#agntcy-dir-store-v1-SyncService)
+  
+- [Scalar Value Types](#scalar-value-types)
 
 
 
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| key | [string](#string) |  |  |
-| value | [string](#string) |  |  |
+<a name="agntcy_dir_store_v1_store_service-proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## agntcy/dir/store/v1/store_service.proto
 
 
 
+<a name="agntcy-dir-store-v1-PullReferrerRequest"></a>
 
-
-
-<a name="store-v1-ObjectRef"></a>
-
-### ObjectRef
-Reference to a content-addressable object.
+### PullReferrerRequest
+PullReferrerRequest represents a record with optional OCI artifacts for pull operations.
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| cid | [string](#string) |  | Globally-unique content identifier (CID) of the object. Specs: https://github.com/multiformats/cid |
+| record_ref | [agntcy.dir.core.v1.RecordRef](#agntcy-dir-core-v1-RecordRef) |  | Record reference |
+| pull_signature | [bool](#bool) |  | Pull signature referrer |
+| pull_public_key | [bool](#bool) |  | Pull public key referrer |
 
 
 
 
 
- 
 
+<a name="agntcy-dir-store-v1-PullReferrerResponse"></a>
 
-<a name="store-v1-ObjectType"></a>
-
-### ObjectType
-Defines a list of supported object data types.
-Some values may be reserved for future use.
-These types are used as a &#34;codec&#34; in the CID.
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| OBJECT_TYPE_UNSPECIFIED | 0 | invalid type, should not be used |
-| OBJECT_TYPE_RAW | 1 | Common Object Types |
-
-
- 
-
- 
-
- 
-
-
-
-<a name="store_v1_store_service-proto"></a>
-
-
-## store/v1/store_service.proto
-
-
-
-<a name="store-v1-PullOptions"></a>
-
-### PullOptions
-PullOptions specifies which artifacts to include in pull operations.
+### PullReferrerResponse
+PullReferrerResponse is returned after successfully fetching a record referrer.
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| include_signature | [bool](#bool) |  | Signature to be included |
+| signature | [agntcy.dir.sign.v1.Signature](#agntcy-dir-sign-v1-Signature) |  | Signature to be fetched as a referrer |
+| public_key | [string](#string) |  | Public key to be fetched as a referrer |
 
 
 
 
 
 
-<a name="store-v1-PullWithOptionsRequest"></a>
+<a name="agntcy-dir-store-v1-PushReferrerRequest"></a>
 
-### PullWithOptionsRequest
-PullWithOptionsRequest specifies which record and artifacts to retrieve.
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| record_ref | [core.v1.RecordRef](#core-v1-RecordRef) |  | Reference to the record to retrieve |
-| options | [PullOptions](#store-v1-PullOptions) |  | Pull options specifying which artifacts to include |
-
-
-
-
-
-
-<a name="store-v1-PullWithOptionsResponse"></a>
-
-### PullWithOptionsResponse
-PullWithOptionsResponse contains a record and its associated artifacts.
+### PushReferrerRequest
+PushReferrerRequest represents a record with optional OCI artifacts for push operations.
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| record | [core.v1.Record](#core-v1-Record) |  | Stored record |
-| signature | [sign.v1.Signature](#sign-v1-Signature) | optional | Associated signature, if requested and available |
+| record_ref | [agntcy.dir.core.v1.RecordRef](#agntcy-dir-core-v1-RecordRef) |  | Record reference |
+| signature | [agntcy.dir.sign.v1.Signature](#agntcy-dir-sign-v1-Signature) |  | Signature to be stored as a referrer for the record |
+| public_key | [string](#string) |  | Public key to be stored as a referrer for the record and uploaded as a file to zot for verification |
 
 
 
 
 
 
-<a name="store-v1-PushOptions"></a>
+<a name="agntcy-dir-store-v1-PushReferrerResponse"></a>
 
-### PushOptions
-PushOptions contains optional artifacts for push operations.
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| signature | [sign.v1.Signature](#sign-v1-Signature) | optional | Optional signature to be stored as separate manifest |
-
-
-
-
-
-
-<a name="store-v1-PushWithOptionsRequest"></a>
-
-### PushWithOptionsRequest
-PushWithOptionsRequest represents a record with optional OCI artifacts for push operations.
+### PushReferrerResponse
+PushReferrerResponse
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| record | [core.v1.Record](#core-v1-Record) |  | Record to be stored |
-| options | [PushOptions](#store-v1-PushOptions) |  | Push options containing optional artifacts |
-
-
-
-
-
-
-<a name="store-v1-PushWithOptionsResponse"></a>
-
-### PushWithOptionsResponse
-PushWithOptionsResponse is returned after successfully storing a record with options.
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| record_ref | [core.v1.RecordRef](#core-v1-RecordRef) |  | Reference to the stored record |
+| success | [bool](#bool) |  | The push process result |
+| error_message | [string](#string) | optional | Optional error message if push failed |
 
 
 
@@ -189,7 +111,7 @@ PushWithOptionsResponse is returned after successfully storing a record with opt
  
 
 
-<a name="store-v1-StoreService"></a>
+<a name="agntcy-dir-store-v1-StoreService"></a>
 
 ### StoreService
 Defines an interface for content-addressable storage
@@ -210,25 +132,25 @@ If an error occurs, the stream will be cancelled.
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| Push | [.core.v1.Record](#core-v1-Record) stream | [.core.v1.RecordRef](#core-v1-RecordRef) stream | Push performs write operation for given records. |
-| Pull | [.core.v1.RecordRef](#core-v1-RecordRef) stream | [.core.v1.Record](#core-v1-Record) stream | Pull performs read operation for given records. |
-| Lookup | [.core.v1.RecordRef](#core-v1-RecordRef) stream | [.core.v1.RecordMeta](#core-v1-RecordMeta) stream | Lookup resolves basic metadata for the records. |
-| Delete | [.core.v1.RecordRef](#core-v1-RecordRef) stream | [.google.protobuf.Empty](#google-protobuf-Empty) | Remove performs delete operation for the records. |
-| PushWithOptions | [PushWithOptionsRequest](#store-v1-PushWithOptionsRequest) stream | [PushWithOptionsResponse](#store-v1-PushWithOptionsResponse) stream | PushWithOptions performs write operation for records with optional OCI artifacts like signatures. |
-| PullWithOptions | [PullWithOptionsRequest](#store-v1-PullWithOptionsRequest) stream | [PullWithOptionsResponse](#store-v1-PullWithOptionsResponse) stream | PullWithOptions retrieves records along with their associated OCI artifacts. |
+| Push | [.agntcy.dir.core.v1.Record](#agntcy-dir-core-v1-Record) stream | [.agntcy.dir.core.v1.RecordRef](#agntcy-dir-core-v1-RecordRef) stream | Push performs write operation for given records. |
+| Pull | [.agntcy.dir.core.v1.RecordRef](#agntcy-dir-core-v1-RecordRef) stream | [.agntcy.dir.core.v1.Record](#agntcy-dir-core-v1-Record) stream | Pull performs read operation for given records. |
+| Lookup | [.agntcy.dir.core.v1.RecordRef](#agntcy-dir-core-v1-RecordRef) stream | [.agntcy.dir.core.v1.RecordMeta](#agntcy-dir-core-v1-RecordMeta) stream | Lookup resolves basic metadata for the records. |
+| Delete | [.agntcy.dir.core.v1.RecordRef](#agntcy-dir-core-v1-RecordRef) stream | [.google.protobuf.Empty](#google-protobuf-Empty) | Remove performs delete operation for the records. |
+| PushReferrer | [PushReferrerRequest](#agntcy-dir-store-v1-PushReferrerRequest) stream | [PushReferrerResponse](#agntcy-dir-store-v1-PushReferrerResponse) stream | PushReferrer performs write operation for record referrers. |
+| PullReferrer | [PullReferrerRequest](#agntcy-dir-store-v1-PullReferrerRequest) stream | [PullReferrerResponse](#agntcy-dir-store-v1-PullReferrerResponse) stream | PullReferrer performs read operation for record referrers. |
 
  
 
 
 
-<a name="store_v1_sync_service-proto"></a>
+<a name="agntcy_dir_store_v1_sync_service-proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## agntcy/dir/store/v1/sync_service.proto
 
 
-## store/v1/sync_service.proto
 
-
-
-<a name="store-v1-BasicAuthCredentials"></a>
+<a name="agntcy-dir-store-v1-BasicAuthCredentials"></a>
 
 ### BasicAuthCredentials
 Supporting credential type definitions
@@ -244,7 +166,7 @@ Supporting credential type definitions
 
 
 
-<a name="store-v1-CreateSyncRequest"></a>
+<a name="agntcy-dir-store-v1-CreateSyncRequest"></a>
 
 ### CreateSyncRequest
 CreateSyncRequest defines the parameters for creating a new synchronization operation.
@@ -258,13 +180,14 @@ Future versions may include additional options for filtering and scheduling capa
 | remote_directory_url | [string](#string) |  | URL of the remote Registry to synchronize from.
 
 This should be a complete URL including protocol and port if non-standard. Examples: - &#34;https://directory.example.com&#34; - &#34;http://localhost:8080&#34; - &#34;https://directory.example.com:9443&#34; |
+| cids | [string](#string) | repeated | List of CIDs to synchronize from the remote Directory. If empty, all objects will be synchronized. |
 
 
 
 
 
 
-<a name="store-v1-CreateSyncResponse"></a>
+<a name="agntcy-dir-store-v1-CreateSyncResponse"></a>
 
 ### CreateSyncResponse
 CreateSyncResponse contains the result of creating a new synchronization operation.
@@ -279,7 +202,7 @@ CreateSyncResponse contains the result of creating a new synchronization operati
 
 
 
-<a name="store-v1-DeleteSyncRequest"></a>
+<a name="agntcy-dir-store-v1-DeleteSyncRequest"></a>
 
 ### DeleteSyncRequest
 DeleteSyncRequest specifies which synchronization to delete.
@@ -294,7 +217,7 @@ DeleteSyncRequest specifies which synchronization to delete.
 
 
 
-<a name="store-v1-DeleteSyncResponse"></a>
+<a name="agntcy-dir-store-v1-DeleteSyncResponse"></a>
 
 ### DeleteSyncResponse
 DeleteSyncResponse
@@ -304,7 +227,7 @@ DeleteSyncResponse
 
 
 
-<a name="store-v1-GetSyncRequest"></a>
+<a name="agntcy-dir-store-v1-GetSyncRequest"></a>
 
 ### GetSyncRequest
 GetSyncRequest specifies which synchronization status to retrieve.
@@ -319,7 +242,7 @@ GetSyncRequest specifies which synchronization status to retrieve.
 
 
 
-<a name="store-v1-GetSyncResponse"></a>
+<a name="agntcy-dir-store-v1-GetSyncResponse"></a>
 
 ### GetSyncResponse
 GetSyncResponse provides detailed information about a specific synchronization operation.
@@ -328,7 +251,7 @@ GetSyncResponse provides detailed information about a specific synchronization o
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | sync_id | [string](#string) |  | Unique identifier of the synchronization operation. |
-| status | [SyncStatus](#store-v1-SyncStatus) |  | Current status of the synchronization operation. |
+| status | [SyncStatus](#agntcy-dir-store-v1-SyncStatus) |  | Current status of the synchronization operation. |
 | remote_directory_url | [string](#string) |  | URL of the remote Directory node being synchronized from. |
 | created_time | [string](#string) |  | Timestamp when the synchronization operation was created in the RFC3339 format. Specs: https://www.rfc-editor.org/rfc/rfc3339.html |
 | last_update_time | [string](#string) |  | Timestamp of the most recent status update for this synchronization in the RFC3339 format. |
@@ -338,7 +261,7 @@ GetSyncResponse provides detailed information about a specific synchronization o
 
 
 
-<a name="store-v1-ListSyncsItem"></a>
+<a name="agntcy-dir-store-v1-ListSyncsItem"></a>
 
 ### ListSyncsItem
 ListSyncItem represents a single synchronization in the list of all syncs.
@@ -347,7 +270,7 @@ ListSyncItem represents a single synchronization in the list of all syncs.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | sync_id | [string](#string) |  | Unique identifier of the synchronization operation. |
-| status | [SyncStatus](#store-v1-SyncStatus) |  | Current status of the synchronization operation. |
+| status | [SyncStatus](#agntcy-dir-store-v1-SyncStatus) |  | Current status of the synchronization operation. |
 | remote_directory_url | [string](#string) |  | URL of the remote Directory being synchronized from. |
 
 
@@ -355,7 +278,7 @@ ListSyncItem represents a single synchronization in the list of all syncs.
 
 
 
-<a name="store-v1-ListSyncsRequest"></a>
+<a name="agntcy-dir-store-v1-ListSyncsRequest"></a>
 
 ### ListSyncsRequest
 ListSyncsRequest specifies parameters for listing synchronization operations.
@@ -371,7 +294,7 @@ ListSyncsRequest specifies parameters for listing synchronization operations.
 
 
 
-<a name="store-v1-RequestRegistryCredentialsRequest"></a>
+<a name="agntcy-dir-store-v1-RequestRegistryCredentialsRequest"></a>
 
 ### RequestRegistryCredentialsRequest
 
@@ -386,7 +309,7 @@ ListSyncsRequest specifies parameters for listing synchronization operations.
 
 
 
-<a name="store-v1-RequestRegistryCredentialsResponse"></a>
+<a name="agntcy-dir-store-v1-RequestRegistryCredentialsResponse"></a>
 
 ### RequestRegistryCredentialsResponse
 
@@ -397,7 +320,7 @@ ListSyncsRequest specifies parameters for listing synchronization operations.
 | success | [bool](#bool) |  | Success status of the credential negotiation |
 | error_message | [string](#string) |  | Error message if negotiation failed |
 | remote_registry_url | [string](#string) |  | URL of the remote Registry being synchronized from. |
-| basic_auth | [BasicAuthCredentials](#store-v1-BasicAuthCredentials) |  | CertificateCredentials certificate = 5; |
+| basic_auth | [BasicAuthCredentials](#agntcy-dir-store-v1-BasicAuthCredentials) |  | CertificateCredentials certificate = 5; |
 
 
 
@@ -406,7 +329,7 @@ ListSyncsRequest specifies parameters for listing synchronization operations.
  
 
 
-<a name="store-v1-SyncStatus"></a>
+<a name="agntcy-dir-store-v1-SyncStatus"></a>
 
 ### SyncStatus
 SyncStatus enumeration defines the possible states of a synchronization operation.
@@ -426,7 +349,7 @@ SyncStatus enumeration defines the possible states of a synchronization operatio
  
 
 
-<a name="store-v1-SyncService"></a>
+<a name="agntcy-dir-store-v1-SyncService"></a>
 
 ### SyncService
 SyncService provides functionality for synchronizing objects between Directory nodes.
@@ -437,15 +360,15 @@ both on-demand synchronization and tracking of sync operations through their lif
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| CreateSync | [CreateSyncRequest](#store-v1-CreateSyncRequest) | [CreateSyncResponse](#store-v1-CreateSyncResponse) | CreateSync initiates a new synchronization operation from a remote Directory node.
+| CreateSync | [CreateSyncRequest](#agntcy-dir-store-v1-CreateSyncRequest) | [CreateSyncResponse](#agntcy-dir-store-v1-CreateSyncResponse) | CreateSync initiates a new synchronization operation from a remote Directory node.
 
 The operation is non-blocking and returns immediately with a sync ID that can be used to track progress and manage the sync operation. |
-| ListSyncs | [ListSyncsRequest](#store-v1-ListSyncsRequest) | [ListSyncsItem](#store-v1-ListSyncsItem) stream | ListSyncs returns a stream of all sync operations known to the system.
+| ListSyncs | [ListSyncsRequest](#agntcy-dir-store-v1-ListSyncsRequest) | [ListSyncsItem](#agntcy-dir-store-v1-ListSyncsItem) stream | ListSyncs returns a stream of all sync operations known to the system.
 
 This includes active, completed, and failed synchronizations. |
-| GetSync | [GetSyncRequest](#store-v1-GetSyncRequest) | [GetSyncResponse](#store-v1-GetSyncResponse) | GetSync retrieves detailed status information for a specific synchronization. |
-| DeleteSync | [DeleteSyncRequest](#store-v1-DeleteSyncRequest) | [DeleteSyncResponse](#store-v1-DeleteSyncResponse) | DeleteSync removes a synchronization operation from the system. |
-| RequestRegistryCredentials | [RequestRegistryCredentialsRequest](#store-v1-RequestRegistryCredentialsRequest) | [RequestRegistryCredentialsResponse](#store-v1-RequestRegistryCredentialsResponse) | RequestRegistryCredentials requests registry credentials between two Directory nodes.
+| GetSync | [GetSyncRequest](#agntcy-dir-store-v1-GetSyncRequest) | [GetSyncResponse](#agntcy-dir-store-v1-GetSyncResponse) | GetSync retrieves detailed status information for a specific synchronization. |
+| DeleteSync | [DeleteSyncRequest](#agntcy-dir-store-v1-DeleteSyncRequest) | [DeleteSyncResponse](#agntcy-dir-store-v1-DeleteSyncResponse) | DeleteSync removes a synchronization operation from the system. |
+| RequestRegistryCredentials | [RequestRegistryCredentialsRequest](#agntcy-dir-store-v1-RequestRegistryCredentialsRequest) | [RequestRegistryCredentialsResponse](#agntcy-dir-store-v1-RequestRegistryCredentialsResponse) | RequestRegistryCredentials requests registry credentials between two Directory nodes.
 
 This RPC allows a requesting node to authenticate with this node and obtain temporary registry credentials for secure Zot-based synchronization. |
 

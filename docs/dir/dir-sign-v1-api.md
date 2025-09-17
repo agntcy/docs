@@ -1,13 +1,34 @@
-# Sign API Reference
+# Protocol Documentation
+<a name="top"></a>
 
-<a name="sign_v1_sign_service-proto"></a>
+## Table of Contents
+
+- [agntcy/dir/sign/v1/sign_service.proto](#agntcy_dir_sign_v1_sign_service-proto)
+    - [SignRequest](#agntcy-dir-sign-v1-SignRequest)
+    - [SignRequestProvider](#agntcy-dir-sign-v1-SignRequestProvider)
+    - [SignResponse](#agntcy-dir-sign-v1-SignResponse)
+    - [SignWithKey](#agntcy-dir-sign-v1-SignWithKey)
+    - [SignWithOIDC](#agntcy-dir-sign-v1-SignWithOIDC)
+    - [SignWithOIDC.SignOpts](#agntcy-dir-sign-v1-SignWithOIDC-SignOpts)
+    - [Signature](#agntcy-dir-sign-v1-Signature)
+    - [Signature.AnnotationsEntry](#agntcy-dir-sign-v1-Signature-AnnotationsEntry)
+    - [VerifyRequest](#agntcy-dir-sign-v1-VerifyRequest)
+    - [VerifyResponse](#agntcy-dir-sign-v1-VerifyResponse)
+  
+    - [SignService](#agntcy-dir-sign-v1-SignService)
+  
+- [Scalar Value Types](#scalar-value-types)
 
 
-## sign/v1/sign_service.proto
+
+<a name="agntcy_dir_sign_v1_sign_service-proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## agntcy/dir/sign/v1/sign_service.proto
 
 
 
-<a name="sign-v1-SignRequest"></a>
+<a name="agntcy-dir-sign-v1-SignRequest"></a>
 
 ### SignRequest
 
@@ -15,15 +36,15 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| record | [core.v1.Record](#core-v1-Record) |  | Record to be signed |
-| provider | [SignRequestProvider](#sign-v1-SignRequestProvider) |  | Signing provider to use |
+| record_ref | [agntcy.dir.core.v1.RecordRef](#agntcy-dir-core-v1-RecordRef) |  | Record reference to be signed |
+| provider | [SignRequestProvider](#agntcy-dir-sign-v1-SignRequestProvider) |  | Signing provider to use |
 
 
 
 
 
 
-<a name="sign-v1-SignRequestProvider"></a>
+<a name="agntcy-dir-sign-v1-SignRequestProvider"></a>
 
 ### SignRequestProvider
 
@@ -31,15 +52,15 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| oidc | [SignWithOIDC](#sign-v1-SignWithOIDC) |  | Sign with OIDC provider |
-| key | [SignWithKey](#sign-v1-SignWithKey) |  | Sign with PEM-encoded public key |
+| oidc | [SignWithOIDC](#agntcy-dir-sign-v1-SignWithOIDC) |  | Sign with OIDC provider |
+| key | [SignWithKey](#agntcy-dir-sign-v1-SignWithKey) |  | Sign with PEM-encoded public key |
 
 
 
 
 
 
-<a name="sign-v1-SignResponse"></a>
+<a name="agntcy-dir-sign-v1-SignResponse"></a>
 
 ### SignResponse
 
@@ -47,14 +68,14 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| signature | [Signature](#sign-v1-Signature) |  | Cryptographic signature of the record |
+| signature | [Signature](#agntcy-dir-sign-v1-Signature) |  | Cryptographic signature of the record |
 
 
 
 
 
 
-<a name="sign-v1-SignWithKey"></a>
+<a name="agntcy-dir-sign-v1-SignWithKey"></a>
 
 ### SignWithKey
 
@@ -70,7 +91,7 @@
 
 
 
-<a name="sign-v1-SignWithOIDC"></a>
+<a name="agntcy-dir-sign-v1-SignWithOIDC"></a>
 
 ### SignWithOIDC
 
@@ -79,14 +100,14 @@
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | id_token | [string](#string) |  | Token for OIDC provider |
-| options | [SignWithOIDC.SignOpts](#sign-v1-SignWithOIDC-SignOpts) |  | Signing options for OIDC |
+| options | [SignWithOIDC.SignOpts](#agntcy-dir-sign-v1-SignWithOIDC-SignOpts) |  | Signing options for OIDC |
 
 
 
 
 
 
-<a name="sign-v1-SignWithOIDC-SignOpts"></a>
+<a name="agntcy-dir-sign-v1-SignWithOIDC-SignOpts"></a>
 
 ### SignWithOIDC.SignOpts
 List of sign options for OIDC
@@ -104,7 +125,7 @@ List of sign options for OIDC
 
 
 
-<a name="sign-v1-Signature"></a>
+<a name="agntcy-dir-sign-v1-Signature"></a>
 
 ### Signature
 
@@ -112,7 +133,7 @@ List of sign options for OIDC
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| annotations | [Signature.AnnotationsEntry](#sign-v1-Signature-AnnotationsEntry) | repeated | Metadata associated with the signature. |
+| annotations | [Signature.AnnotationsEntry](#agntcy-dir-sign-v1-Signature-AnnotationsEntry) | repeated | Metadata associated with the signature. |
 | signed_at | [string](#string) |  | Signing timestamp of the record in the RFC3339 format. Specs: https://www.rfc-editor.org/rfc/rfc3339.html |
 | algorithm | [string](#string) |  | The signature algorithm used (e.g., &#34;ECDSA_P256_SHA256&#34;). |
 | signature | [string](#string) |  | Base64-encoded signature. |
@@ -125,7 +146,7 @@ List of sign options for OIDC
 
 
 
-<a name="sign-v1-Signature-AnnotationsEntry"></a>
+<a name="agntcy-dir-sign-v1-Signature-AnnotationsEntry"></a>
 
 ### Signature.AnnotationsEntry
 
@@ -141,7 +162,7 @@ List of sign options for OIDC
 
 
 
-<a name="sign-v1-VerifyRequest"></a>
+<a name="agntcy-dir-sign-v1-VerifyRequest"></a>
 
 ### VerifyRequest
 
@@ -149,32 +170,14 @@ List of sign options for OIDC
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| record | [core.v1.Record](#core-v1-Record) |  | Record to be verified |
-| signature | [Signature](#sign-v1-Signature) |  | Signature to verify against the record |
-| provider | [VerifyRequestProvider](#sign-v1-VerifyRequestProvider) |  | Verification provider to use |
+| record_ref | [agntcy.dir.core.v1.RecordRef](#agntcy-dir-core-v1-RecordRef) |  | Record reference to be verified |
 
 
 
 
 
 
-<a name="sign-v1-VerifyRequestProvider"></a>
-
-### VerifyRequestProvider
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| oidc | [VerifyWithOIDC](#sign-v1-VerifyWithOIDC) |  | Verify with OIDC provider |
-| key | [VerifyWithKey](#sign-v1-VerifyWithKey) |  | Verify with PEM-encoded public key |
-
-
-
-
-
-
-<a name="sign-v1-VerifyResponse"></a>
+<a name="agntcy-dir-sign-v1-VerifyResponse"></a>
 
 ### VerifyResponse
 
@@ -189,37 +192,6 @@ List of sign options for OIDC
 
 
 
-
-<a name="sign-v1-VerifyWithKey"></a>
-
-### VerifyWithKey
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| public_key | [bytes](#bytes) |  | Public key to validate the signed record |
-
-
-
-
-
-
-<a name="sign-v1-VerifyWithOIDC"></a>
-
-### VerifyWithOIDC
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| expected_issuer | [string](#string) |  | Expected issuer in the signed record |
-| expected_signer | [string](#string) |  | Expected signer in the signed record |
-
-
-
-
-
  
 
  
@@ -227,15 +199,15 @@ List of sign options for OIDC
  
 
 
-<a name="sign-v1-SignService"></a>
+<a name="agntcy-dir-sign-v1-SignService"></a>
 
 ### SignService
 
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| Sign | [SignRequest](#sign-v1-SignRequest) | [SignResponse](#sign-v1-SignResponse) | Sign record using keyless OIDC based provider or using PEM-encoded private key with an optional passphrase |
-| Verify | [VerifyRequest](#sign-v1-VerifyRequest) | [VerifyResponse](#sign-v1-VerifyResponse) | Verify signed record using keyless OIDC based provider or using PEM-encoded formatted PEM public key encrypted |
+| Sign | [SignRequest](#agntcy-dir-sign-v1-SignRequest) | [SignResponse](#agntcy-dir-sign-v1-SignResponse) | Sign record using keyless OIDC based provider or using PEM-encoded private key with an optional passphrase |
+| Verify | [VerifyRequest](#agntcy-dir-sign-v1-VerifyRequest) | [VerifyResponse](#agntcy-dir-sign-v1-VerifyResponse) | Verify signed record using keyless OIDC based provider or using PEM-encoded formatted PEM public key encrypted |
 
  
 
