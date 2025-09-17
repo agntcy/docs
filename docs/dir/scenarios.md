@@ -130,6 +130,7 @@ dirctl verify $RECORD_CID
 ### Announce
 
 This example demonstrates how to publish records to allow content discovery across the network.
+Publication requests are processed asynchronously in the background using a scheduler that manages DHT announcements.
 To avoid stale data, it is recommended to republish the data periodically
 as the data across the network has TTL.
 
@@ -137,7 +138,7 @@ Note that this operation only works for the objects already pushed to the local 
 
 ```bash
 # Publish the record across the network
-dirctl publish $RECORD_CID
+dirctl routing publish $RECORD_CID
 ```
 
 If the data is not published to the network, it cannot be discovered by other peers.
