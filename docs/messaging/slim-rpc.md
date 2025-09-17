@@ -13,7 +13,7 @@ then interact with the generated code much like they would with standard gRPC,
 while benefiting from the inherent security features and efficiency provided by
 the SLIM protocol.
 
-This documentation provides a guide to understanding how SLIMRPC functions and
+This documentation explains how SLIMRPC works and
 how you can implement it in your applications. For detailed instructions on
 compiling a protobuf file to obtain the necessary SLIMRPC stub code, please
 refer to the dedicated [SLIMRPC compiler
@@ -55,7 +55,7 @@ gRPC: Unary-Unary, Unary-Stream, Stream-Unary, and Stream-Stream.
 
 For SLIMRPC, a specific SLIM name is generated for each handler within a
 service. This naming convention allows an application exposing the service to
-listen for and process messages intended for a particular RPC method. The format
+listen for its name and process messages intended for a particular RPC method. The format
 for these names is:
 
 ```
@@ -142,7 +142,7 @@ class TestStub:
 ```
 
 _Server Servicer (TestServicer)_: The TestServicer class defines the server-side
-interface. Developers implement this class to provide the actual business logic
+interface. Developers implement this class to provide the actual logic
 for each RPC method.
 
 ```python
@@ -267,7 +267,7 @@ A new server application is created using the `create_server` function. The
 local parameter, set to "agntcy/grpc/server", assigns a SLIM name to this server
 application.
 
-This name is then used to construct the full SLIM RPC names for each method:
+This name is then used to construct the full SLIMRPC names for each method:
 
 ```
 agntcy/grpc/server-example_service.Test-ExampleUnaryUnary
@@ -330,11 +330,11 @@ parameter in the `SLIMAppConfig` class. This name will be then used by the
 server to send back the response to the client.
 
 Also, like in the case of the server application, the `slim` dictionary
-specifies the SLIM node endpoint (http://localhost:46357) and TLS settings,
+specifies the SLIM node endpoint (`http://localhost:46357`) and TLS settings,
 consistent with the server's configuration, while `shared_secret` is used to
 initialize MLS.
 
-The remote parameter, set to "agntcy/grpc/server", explicitly identifies the
+The remote parameter, set to `agntcy/grpc/server`, explicitly identifies the
 SLIM name of the target server application. This allows the SLIMRPC channel to
 correctly route messages to the appropriate server endpoint within the SLIM
 network. Since both client and server use the same protobuf definition, the
@@ -373,7 +373,7 @@ Since the session is sticky, all messages in a streaming communication will be
 forwarded to the same application instance. Let's illustrate this with an
 example using the client and server applications described above.
 
-Imagine two server instances running the same RPC service. In this example We'll
+Imagine two server instances running the same RPC service. In this example we will
 focus on the Stream-Unary service, which is served by both server instances
 under the general name
 `agntcy/grpc/server-example_service.Test-ExampleStreamUnary`. In SLIM, each
@@ -436,8 +436,8 @@ After this step, the client application knows the specific name of the service
 running on instance-1. It's important to note that the first message in the
 discovery phase is sent in anycast from the SLIM node, meaning it could be
 forwarded to **either of the two running servers**. For instance, a subsequent
-call of the same RPC from the same client might be served by `Server
-(instance-2)`.
+call of the same RPC from the same client might be served by the server
+with id `instance-2`.
 
 After the discovery, the client will always send messages to the same endpoint,
 as demonstrated in the streaming session phase in the example.

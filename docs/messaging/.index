@@ -7,5 +7,5 @@ nav:
  - SLIM Group Communication Tutorial: slim-group-tutorial.md
  - SLIMRPC: slim-rpc.md
  - SLIMRPC Compiler Plugin: slim-slimrpc-compiler.md
- - SLIM A2A: slim-a2a.md
+ - SLIMA2A: slim-a2a.md
  - SLIM and MCP Integration: slim-mcp.md

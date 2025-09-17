@@ -1,4 +1,4 @@
-# Slim RPC Compiler
+# SLIMRPC Compiler
 
 The Slim RPC Compiler (`protoc-slimrpc-plugin`) is a protoc plugin that
 generates Python client stubs and server servicers for SRPC (Slim RPC) from
