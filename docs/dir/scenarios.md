@@ -194,9 +194,9 @@ dirctl list info --network
 ### Search
 
 This example demonstrates how to search for records in the directory using various filters and query parameters.
-The search functionality allows you to find records based on specific attributes like name, version, skills, locators, and extensions using structured query filters.
+The search functionality allows you to find records based on specific attributes like name, version, skills, locators, and extensions using structured query filters with wildcard support. All searches are case insensitive.
 
-Search operations support pagination and return Content Identifier (CID) values that can be used with other Directory commands like `pull`, `info`, and `verify`.
+Search operations leverage an SQLite database for efficient record indexing and querying, supporting pagination and returning Content Identifier (CID) values that can be used with other Directory commands like `pull`, `info`, and `verify`.
 
 ```bash
 # Basic search for records by name
@@ -234,6 +234,34 @@ dirctl search \
   --query "skill-name=Text Generation" \
   --limit 10 \
   --offset 10
+```
+
+#### Wildcard Search
+
+The search functionality supports wildcard patterns for flexible matching:
+
+```bash
+# Asterisk (*) wildcard - matches zero or more characters
+dirctl search --query "name=web*"              # Find all web-related agents
+dirctl search --query "version=v1.*"           # Find all v1.x versions
+dirctl search --query "skill-name=audio*"      # Find Audio-related skills
+dirctl search --query "locator=http*"          # Find HTTP-based locators
+
+# Question mark (?) wildcard - matches exactly one character
+dirctl search --query "version=v1.0.?"         # Find version v1.0.x (single digit)
+dirctl search --query "name=???api"            # Find 3-character names ending in "api"
+dirctl search --query "skill-name=Pytho?"      # Find skills with single character variations
+
+# List wildcards ([]) - matches any character within brackets
+dirctl search --query "name=agent-[0-9]"       # Find agents with numeric suffixes
+dirctl search --query "version=v[0-9].*"       # Find versions starting with v + digit
+dirctl search --query "skill-name=[A-M]*"      # Find skills starting with A-M
+dirctl search --query "locator=[hf]tt[ps]*"    # Find HTTP/HTTPS/FTP locators
+
+# Complex wildcard combinations
+dirctl search --query "name=api-*-service" --query "version=v2.*"
+dirctl search --query "skill-name=*machine*learning*"
+dirctl search --query "name=web-[0-9]?" --query "version=v?.*.?"
 ```
 
 **Available Query Types:**
