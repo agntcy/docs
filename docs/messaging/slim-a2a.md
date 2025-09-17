@@ -9,16 +9,16 @@ necessary code to enable A2A functionality on SLIM.
 SLIM RPC (SLIM Remote Procedure Call) is a framework that enables Protocol
 Buffers (protobuf) Remote Procedure Calls (RPC) over SLIM. This is similar to
 gRPC, which uses HTTP/2 as its transport layer for protobuf-based RPC. More
-information can be found [here](../slimrpc/README.md)
+information can be found [here](./slim-rpc.md)
 
 To compile a protobuf file and generate the clients and service stub you can use
-the [SLIM RPC compiler](../../../srpc-compiler/README.md). This works in a
+the [SLIM RPC compiler](./slim-slimrpc-compiler.md). This works in a
 similar way to the protoc compiler.
 
 For SLIM A2A we compiled the
 [a2a.proto](https://github.com/a2aproject/A2A/blob/main/specification/grpc/a2a.proto)
 file using the SLIM RPC compiler. The generated code is in
-[a2a_pb2_srpc.py](./slima2a/types/a2a_pb2_srpc.py).
+[a2a_pb2_srpc.py](https://github.com/agntcy/slim/blob/main/data-plane/python/integrations/slima2a/slima2a/types/a2a_pb2_slimrpc.py).
 
 # How to use SLIM A2A
 
@@ -26,14 +26,14 @@ Using SLIM A2A is very similar to using the standard A2A implementation. As a
 reference example here we use the [travel planner
 agent](https://github.com/a2aproject/a2a-samples/tree/main/samples/python/agents/travel_planner_agent)
 available on the A2A samples repo. The version adapted to use SLIM A2A can be
-found in [travel_planner_agent](./examples/travel_planner_agent/) folder. In the
+found in [travel_planner_agent](https://github.com/agntcy/slim/tree/main/data-plane/python/integrations/slima2a/examples/travel_planner_agent) folder. In the
 following section, we highlight and explain the key differences between the
 standard and SLIM A2A implementations.
 
 ## Travel Planner: Server
 
 In this section we highlight the main differences between the SLIM A2A
-[server](./examples/travel_planner_agent/server.py) implementation with respect
+[server](https://github.com/agntcy/slim/blob/main/data-plane/python/integrations/slima2a/examples/travel_planner_agent/server.py) implementation with respect
 to the original implementation in the A2A repository.
 
 1. Import the SRPC package
@@ -86,9 +86,9 @@ import srpc
     •	shared_secret: Used to set up MLS (Message Layer Security).
 
 For more information about these settings, see the SLIM RCP
-[README](../slimrpc/README.md).
+[README](./slim-rpc.md).
 
-4. Register the Service
+1. Register the Service
 
 ```python
     add_A2AServiceServicer_to_server(
@@ -102,7 +102,7 @@ Your A2A server is now ready to run on SLIM.
 ## Travel Planner: Client
 
 These are the main differences between the
-[client](./examples/travel_planner_agent/client.py) using SLIM A2A and the
+[client](https://github.com/agntcy/slim/blob/main/data-plane/python/integrations/slima2a/examples/travel_planner_agent/client.py) using SLIM A2A and the
 standard one.
 
 1. Create a channel. This requires a configuration that is similar to the server

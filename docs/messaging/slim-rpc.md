@@ -16,13 +16,13 @@ protocol.
 This README provides a guide to understanding how SRPC functions and how you can
 implement it in your applications. For detailed instructions on compiling a
 protobuf file to obtain the necessary SRPC stub code, please refer to the
-dedicated [README file of the SRPC compiler](../../../srpc-compiler/README.md).
+dedicated [README file of the SRPC compiler](./slim-slimrpc-compiler.md).
 
 ## SLIM naming in SRPC
 
 In SRPC, each service and its individual RPC handlers are assigned a SLIM name,
 facilitating efficient message routing and processing. Consider the [example
-protobuf](./srpc/examples/simple/example.proto) definition, which defines four
+protobuf](https://github.com/agntcy/slim/blob/main/data-plane/python/integrations/slimrpc/slimrpc/examples/simple/example.proto) definition, which defines four
 distinct services:
 
 ```
@@ -77,7 +77,7 @@ when a message arrives for a defined RPC method.
 
 This section provides a detailed walkthrough of a basic SRPC client-server
 interaction, leveraging the simple example provided in
-[example](./srpc/examples/simple/) folder.
+[example](https://github.com/agntcy/slim/tree/main/data-plane/python/integrations/slimrpc/slimrpc/examples/simple) folder.
 
 ### Generated Code
 
@@ -195,7 +195,7 @@ def add_TestServicer_to_server(servicer, server: slimrpc.Server):
 ### Server implementation
 
 The server-side logic is defined in
-[server.py](./srpc/examples/simple/server.py). Similar to standard gRPC
+[server.py](https://github.com/agntcy/slim/blob/main/data-plane/python/integrations/slimrpc/slimrpc/examples/simple/server.py). Similar to standard gRPC
 implementations, the core service functionality is provided by the TestService
 class, which inherits from TestServicer (as introduced in the previous section).
 This class contains the concrete implementations for each of the defined RPC
@@ -281,7 +281,7 @@ implemented TestService with the SRPC server, making its RPC methods available.
 ### Client implementation
 
 The client-side implementation, found in
-[client.py](./srpc/examples/simple/client.py), largely mirrors the structure of
+[client.py](https://github.com/agntcy/slim/blob/main/data-plane/python/integrations/slimrpc/slimrpc/examples/simple/client.py), largely mirrors the structure of
 a standard gRPC client. The primary distinction and SLIM-specific aspect lies in
 the creation of the SRPC channel:
 
@@ -336,7 +336,7 @@ details, as these aspects are handled automatically by SRPC and SLIM.
 
 All RPC services underneath utilize a sticky point-to-point session. The SLIM
 session creation is implemented in inside SRPC in
-[channel.py](./srpc/channel.py):
+[channel.py](https://github.com/agntcy/slim/blob/main/data-plane/python/integrations/slimrpc/slimrpc/channel.py):
 
 ```python
         # Create a session
