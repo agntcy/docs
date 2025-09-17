@@ -285,9 +285,14 @@ The sync feature enables one-way synchronization of records and other objects be
 
 This example demonstrates how to synchronize records between remote directories and your local instance.
 
+#### Basic Sync Operations
+
 ```bash
-# Create a sync operation to start periodic poll from remote
+# Create a sync operation to start periodic poll from remote (sync all records)
 dirctl sync create https://remote-directory.example.com:8888
+
+# Sync specific records by CID
+dirctl sync create https://remote-directory.example.com:8888 --cids cid1,cid2,cid3
 
 # List all sync operations
 dirctl sync list
@@ -297,6 +302,18 @@ dirctl sync status <sync id>
 
 # Delete a sync operation to stop periodic poll from remote
 dirctl sync delete <sync id>
+```
+
+#### Advanced Sync with Routing Integration
+
+You can combine routing search with sync operations to selectively synchronize records that match specific criteria:
+
+```bash
+# Search for AI-related agents across the network and sync them automatically
+dirctl routing search --skill "AI" --json | dirctl sync create --stdin
+
+# This creates separate sync operations for each remote peer found in the search results,
+# syncing only the specific CIDs that matched your search criteria
 ```
 
 ### gRPC Error Codes
