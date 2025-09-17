@@ -1,9 +1,9 @@
 # SLIMRPC Compiler
 
 The Slim RPC Compiler (`protoc-slimrpc-plugin`) is a protoc plugin that
-generates Python client stubs and server servicers for SRPC (Slim RPC) from
+generates Python client stubs and server servicers for [SLIMRPC (Slim RPC)](./slim-rpc.md) from
 Protocol Buffer service definitions. This plugin enables you to build
-high-performance RPC services using the SRPC framework.
+high-performance RPC services using the SLIMRPC framework.
 
 ## Features
 
@@ -84,11 +84,11 @@ Make sure you have:
 #### Generate Python Files
 
 ```bash
-# Generate both the protobuf Python files and SRPC files
+# Generate both the protobuf Python files and SLIMRPC files
 protoc \
   --python_out=. \
   --pyi_out=. \
-  --plugin=~/.cargo/bin/protoc-slimrpc-plugin \
+  --plugin=protoc-gen-slimrpc=${HOME}/.cargo/bin/protoc-slimrpc-plugin \
   --slimrpc_out=. \
   example.proto
 ```
@@ -96,7 +96,7 @@ protoc \
 This will generate:
 
 - `example_pb2.py` - Standard protobuf Python bindings
-- `example_pb2_slimrpc.py` - SRPC client stubs and server servicers
+- `example_pb2_slimrpc.py` - SLIMRPC client stubs and server servicers
 
 #### With Custom Types Import
 
@@ -108,7 +108,7 @@ them from a2a.grpc.a2a_pb2`,, you can do:
 
 ```bash
 protoc \
-  --plugin=~/.cargo/bin/protoc-slimrpc-plugin \
+  --plugin=protoc-gen-slimrpc=${HOME}/.cargo/bin/protoc-slimrpc-plugin \
   --slimrpc_out=types_import="from a2a.grpc import a2a_pb2 as a2a__pb2":. \
   example.proto
 ```
@@ -117,8 +117,9 @@ protoc \
 
 #### Prerequisites
 
-- `buf` CLI installed
-- `protoc-slimrpc-plugin` binary in your PATH
+- `buf` CLI [installed](https://buf.build/docs/cli/installation/)
+- `protoc-slimrpc-plugin` binary in your PATH, or specify the full path in the
+  `buf.gen.yaml` file
 
 #### Create buf.gen.yaml
 
@@ -143,15 +144,10 @@ plugins:
 buf generate
 ```
 
-Or generate from a specific file:
-
-```bash
-buf generate --path example.proto
-```
-
 #### Advanced buf Configuration
 
-For more complex setups with custom options:
+As before, you can customize the types import. For example, to use existing types
+from `a2a.grpc.a2a_pb2`, you can modify the `buf.gen.yaml` as follows:
 
 ```yaml
 version: v2
@@ -161,11 +157,9 @@ plugins:
   - local: protoc-slimrpc-plugin
     out: generated
     opt:
-      - types_import=from .pb2_types import example_pb2 as pb2
-    strategy: all
+      - types_import=from a2a.grpc import a2a_pb2 as a2a__pb2
   - remote: buf.build/protocolbuffers/python
     out: generated
-    strategy: all
 ```
 
 ## Generated Code Structure
@@ -196,7 +190,7 @@ class TestServicer():
 
     def ExampleUnaryUnary(self, request, context):
         """Method for ExampleUnaryUnary. Implement your service logic here."""
-        raise slimrpc_rpc.SRPCResponseError(
+        raise slimrpc_rpc.SLIMRPCResponseError(
             code=code__pb2.UNIMPLEMENTED, message="Method not implemented!"
         )
     # ... other methods
@@ -206,7 +200,7 @@ class TestServicer():
 
 ```python
 def add_TestServicer_to_server(servicer, server: slimrpc.Server):
-    # Registers the servicer with the SRPC server
+    # Registers the servicer with the SLIMRPC server
     pass
 ```
 
@@ -334,7 +328,7 @@ def create_server(
     shared_secret: str = "",
 ) -> Server:
     """
-    Create a new SRPC server instance.
+    Create a new SLIMRPC server instance.
     """
     server = Server(
         local=local,
