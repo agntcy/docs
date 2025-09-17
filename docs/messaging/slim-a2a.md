@@ -4,7 +4,7 @@ SLIMA2A is a native integration of A2A built on top of SLIM. It utilizes SLIMRPC
 and the SLIMRPC compiler to compile A2A protobuf file and generate the necessary
 code to enable A2A functionality on SLIM.
 
-# What is SLIMRPC and SLIMRCP compiler
+## What is SLIMRPC and SLIMRCP compiler
 
 SLIMRPC (SLIM Remote Procedure Call) is a framework that enables Protocol
 Buffers (protobuf) Remote Procedure Calls (RPC) over SLIM. This is similar to
@@ -18,9 +18,9 @@ to the protoc compiler.
 For SLIMA2A we compiled the
 [a2a.proto](https://github.com/a2aproject/A2A/blob/main/specification/grpc/a2a.proto)
 file using the SLIM RPC compiler. The generated code is in
-[a2a_pb2_srpc.py](https://github.com/agntcy/slim/blob/main/data-plane/python/integrations/slima2a/slima2a/types/a2a_pb2_slimrpc.py).
+[a2a_pb2_slimrpc.py](https://github.com/agntcy/slim/blob/main/data-plane/python/integrations/slima2a/slima2a/types/a2a_pb2_slimrpc.py).
 
-# How to use SLIMA2A
+## How to use SLIMA2A
 
 Using SLIMA2A is very similar to using the standard A2A implementation. As a
 reference example here we use the [travel planner
@@ -31,20 +31,20 @@ found in
 folder. In the following section, we highlight and explain the key differences
 between the standard and SLIM A2A implementations.
 
-## Travel Planner: Server
+### Travel Planner: Server
 
 In this section we highlight the main differences between the SLIM A2A
 [server](https://github.com/agntcy/slim/blob/main/data-plane/python/integrations/slima2a/examples/travel_planner_agent/server.py)
 implementation with respect to the original implementation in the A2A
 repository.
 
-1. Import the SRPC package
+1. Import the SLIMRPC package
 
    ```python
-   import srpc
+   import slimrpc
    ```
 
-2. Create the SRPCHandler. Notice that the definitions for `AgentCard` and
+2. Create the SLIMRPCHandler. Notice that the definitions for `AgentCard` and
    `DefaultRequestHandler` remain unchanged from the original A2A example
 
    ```python
@@ -64,14 +64,14 @@ repository.
        task_store=InMemoryTaskStore(),
    )
 
-   servicer = SRPCHandler(agent_card, request_handler)
+   servicer = SLIMRPCHandler(agent_card, request_handler)
    ```
 
 3. Setup the srcp.Server. This is the only place where you need to setup few
    parameters that are specific to SLIM
 
    ```python
-   server = srpc.Server(
+   server = slimrpc.Server(
        local="agntcy/demo/travel_planner_agent",
        slim={
            "endpoint": "http://localhost:46357",
@@ -100,7 +100,7 @@ repository.
 
 Your A2A server is now ready to run on SLIM.
 
-## Travel Planner: Client
+### Travel Planner: Client
 
 These are the main differences between the
 [client](https://github.com/agntcy/slim/blob/main/data-plane/python/integrations/slima2a/examples/travel_planner_agent/client.py)
@@ -109,8 +109,8 @@ using SLIM A2A and the standard one.
 1. Create a channel. This requires a configuration that is similar to the server
 
    ```python
-   def channel_factory(topic: str) -> srpc.Channel:
-       channel = srpc.Channel(
+   def channel_factory(topic: str) -> slimrpc.Channel:
+       channel = slimrpc.Channel(
            local="agntcy/demo/client",
            remote=topic,
            slim={
@@ -128,14 +128,14 @@ using SLIM A2A and the standard one.
 
    ```python
    client_config = ClientConfig(
-       supported_transports=["JSONRPC", "srpc"],
+       supported_transports=["JSONRPC", "slimrpc"],
        streaming=True,
        httpx_client=httpx_client,
-       srpc_channel_factory=channel_factory,
+       slimrpc_channel_factory=channel_factory,
    )
    client_factory = ClientFactory(client_config)
-   client_factory.register("srpc", SRPCTransport.create)
-   agent_card = minimal_agent_card("agntcy/demo/travel_planner_agent", ["srpc"])
+   client_factory.register("slimrpc", SLIMRPCTransport.create)
+   agent_card = minimal_agent_card("agntcy/demo/travel_planner_agent", ["slimrpc"])
    client = client_factory.create(card=agent_card)
    ```
 
@@ -148,7 +148,7 @@ request_handler = DefaultRequestHandler(
      agent_executor=agent_executor, task_store=InMemoryTaskStore()
 )
 
-servicer = SRPCHandler(agent_card, request_handler)
+servicer = SLIMRPCHandler(agent_card, request_handler)
 
 server = slimrpc.server()
 a2a_pb2_slimrpc.add_A2AServiceServicer_to_server(
@@ -162,12 +162,12 @@ await server.start()
 ## Client Usage
 
 ```
-from slimrpc import SRPCChannel
+from slimrpc import SLIMRPCChannel
 from a2a.client import ClientFactory, minimal_agent_card
-from slima2a.client_transport import SRPCTransport, ClientConfig
+from slima2a.client_transport import SLIMRPCTransport, ClientConfig
 
-def channel_factory(topic) -> SRPCChannel:
-    channel = SRPCChannel(
+def channel_factory(topic) -> SLIMRPCChannel:
+    channel = SLIMRPCChannel(
         local=local,
         slim=slim,
         enable_opentelemetry=enable_opentelemetry,
@@ -179,13 +179,13 @@ def channel_factory(topic) -> SRPCChannel:
 clientConfig = ClientConfig(slimrpc_channel_factor=channel_factor)
 
 factory = ClientFactory(clientConfig)
-factory.register('slimrpc', SRPCTransport.create)
+factory.register('slimrpc', SLIMRPCTransport.create)
 ac = minimal_agent_card(topic, ["slimrpc"])
 client = factory.create(ac)
 
 try:
     response = client.send_message(...)
-except slimrpc.SRPCResponseError as e:
+except slimrpc.SLIMRPCResponseError as e:
     ...
 ```
 --->
