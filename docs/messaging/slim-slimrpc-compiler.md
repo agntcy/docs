@@ -1,9 +1,9 @@
 # SLIMRPC Compiler
 
 The Slim RPC Compiler (`protoc-slimrpc-plugin`) is a protoc plugin that
-generates Python client stubs and server servicers for [SLIMRPC (Slim RPC)](./slim-rpc.md) from
-Protocol Buffer service definitions. This plugin enables you to build
-high-performance RPC services using the SLIMRPC framework.
+generates Python client stubs and server servicers for [SLIMRPC (Slim
+RPC)](./slim-rpc.md) from Protocol Buffer service definitions. This plugin
+enables you to build high-performance RPC services using the SLIMRPC framework.
 
 ## Features
 
@@ -146,8 +146,8 @@ buf generate
 
 #### Advanced buf Configuration
 
-As before, you can customize the types import. For example, to use existing types
-from `a2a.grpc.a2a_pb2`, you can modify the `buf.gen.yaml` as follows:
+As before, you can customize the types import. For example, to use existing
+types from `a2a.grpc.a2a_pb2`, you can modify the `buf.gen.yaml` as follows:
 
 ```yaml
 version: v2
