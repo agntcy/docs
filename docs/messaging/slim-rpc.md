@@ -51,7 +51,12 @@ message ExampleResponse {
 ```
 
 This example showcases the four primary communication patterns supported by
-gRPC: Unary-Unary, Unary-Stream, Stream-Unary, and Stream-Stream.
+gRPC:
+
+- Unary-Unary
+- Unary-Stream
+- Stream-Unary
+- Stream-Stream
 
 For SLIMRPC, a specific SLIM name is generated for each handler within a
 service. This naming convention allows an application exposing the service to
@@ -341,7 +346,7 @@ network. Since both client and server use the same protobuf definition, the
 client can invoke specific services and methods with type safety and
 consistency.
 
-## SLIMRPC under the hood
+## SLIMRPC under the Hood
 
 SLIMRPC was introduced to simplify the integration of existing applications with
 SLIM. From a developer's perspective, using SLIMRPC or gRPC is almost identical.

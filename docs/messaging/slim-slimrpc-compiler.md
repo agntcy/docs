@@ -7,6 +7,8 @@ enables you to build high-performance RPC services using the SLIMRPC framework.
 
 ## Features
 
+The Slim RPC Compiler has the following features:
+
 - Generates Python client stubs for calling SlimRPC services
 - Generates Python server servicers for implementing SlimRPC services
 - Supports all gRPC streaming patterns: unary-unary, unary-stream, stream-unary,
@@ -16,7 +18,9 @@ enables you to build high-performance RPC services using the SLIMRPC framework.
 
 ## Installation
 
-### Option 1: Install via Cargo
+There are two ways to install the Slim RPC Compiler:
+
+### Install via Cargo
 
 ```bash
 cargo install agntcy-protoc-slimrpc-plugin
@@ -25,7 +29,7 @@ cargo install agntcy-protoc-slimrpc-plugin
 This will install the `protoc-slimrpc-plugin` binary to your Cargo bin directory
 (usually `~/.cargo/bin`).
 
-### Option 2: Compile from Source
+### Compile from Source
 
 1. Clone the repository:
 
@@ -104,7 +108,7 @@ You can specify a custom import for the types module. This allows to import the
 types from an external package.
 
 For instance, if you don't want to generate the types and you want to import
-them from a2a.grpc.a2a_pb2`,, you can do:
+them from a2a.grpc.a2a_pb2`, you can do:
 
 ```bash
 protoc \
@@ -376,14 +380,14 @@ If you get an error that the plugin is not found:
 
 If you encounter Python import errors:
 
-- Make sure the generated `*_pb2.py` files are in your Python path
-- Use the `types_import` parameter to customize import paths
-- Ensure all Protocol Buffer dependencies are generated
+- Make sure the generated `*_pb2.py` files are in your Python path.
+- Use the `types_import` parameter to customize import paths.
+- Ensure all Protocol Buffer dependencies are generated.
 
 ### Build Errors
 
 If the plugin fails to build:
 
-- Ensure you have Rust and Cargo installed
-- Check that all dependencies are available
-- Try cleaning and rebuilding: `cargo clean && cargo build --release`
+- Ensure you have Rust and Cargo installed.
+- Check that all dependencies are available.
+- Try cleaning and rebuilding: `cargo clean && cargo build --release`.
