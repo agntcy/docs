@@ -68,6 +68,12 @@ dirctl info $RECORD_CID
 
 ### Signing and Verification
 
+Establishing trust and authenticity is critical in distributed AI agent ecosystems, where records may be shared across multiple nodes and networks. By cryptographically signing records, publishers can prove authorship and ensure data integrity, while consumers can verify that records haven't been tampered with and originate from trusted sources before deploying or executing agent code.
+
+Signatures and public keys are stored in the OCI registry as referrer artifacts that maintain subject relationships with their associated records. When a record is signed, the signature is attached as a Cosign-compatible OCI artifact. Public keys are similarly stored as separate OCI artifacts, creating a verifiable chain of trust through OCI's native referrer mechanism.
+
+Server-side verification leverages Zot's trust extension through GraphQL queries that check both signature validity and trust status. When public keys are uploaded to Zot, they enable the registry to mark signatures as "trusted" when they can be cryptographically verified against the stored public keys. The verification process queries Zot's search API to retrieve signature metadata including the `IsSigned` and `IsTrusted` status, allowing the Directory server to make trust decisions based on the cryptographic verification performed by the underlying OCI registry infrastructure.
+
 #### Method 1: OIDC-based Interactive
 
 This process relies on creating and uploading to the OCI registry a signature for the record using identity-based OIDC signing flow which can later be verified.
@@ -77,6 +83,9 @@ These operations are implemented using [Sigstore](https://www.sigstore.dev/).
 ```bash
 # Push record with signature
 dirctl push record.json --sign
+
+# Alternatively, sign a pushed record
+dirctl sign $RECORD_CID
 
 # Verify record
 dirctl verify $RECORD_CID
