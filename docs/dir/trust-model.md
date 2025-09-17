@@ -198,7 +198,7 @@ acting as intermediaries between workloads and the central identity authority.
 distribute SVIDs (SPIFFE Verifiable Identity Documents) through the Workload API, enabling secure
 identity management at the workload level.
 
-### Directory
+### Directory Services
 
 Directory components can be deployed in the trust domain and configured
 to use SPIRE with or without federation:
