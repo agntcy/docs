@@ -68,6 +68,12 @@ dirctl info $RECORD_CID
 
 ### Signing and Verification
 
+Establishing trust and authenticity is critical in distributed AI agent ecosystems, where records may be shared across multiple nodes and networks. By cryptographically signing records, publishers can prove authorship and ensure data integrity, while consumers can verify that records haven't been tampered with and originate from trusted sources before deploying or executing agent code.
+
+Signatures and public keys are stored in the OCI registry as referrer artifacts that maintain subject relationships with their associated records. When a record is signed, the signature is attached as a Cosign-compatible OCI artifact. Public keys are similarly stored as separate OCI artifacts, creating a verifiable chain of trust through OCI's native referrer mechanism.
+
+Server-side verification leverages Zot's trust extension through GraphQL queries that check both signature validity and trust status. When public keys are uploaded to Zot, they enable the registry to mark signatures as "trusted" when they can be cryptographically verified against the stored public keys. The verification process queries Zot's search API to retrieve signature metadata including the `IsSigned` and `IsTrusted` status, allowing the Directory server to make trust decisions based on the cryptographic verification performed by the underlying OCI registry infrastructure.
+
 #### Method 1: OIDC-based Interactive
 
 This process relies on creating and uploading to the OCI registry a signature for the record using identity-based OIDC signing flow which can later be verified.
@@ -77,6 +83,9 @@ These operations are implemented using [Sigstore](https://www.sigstore.dev/).
 ```bash
 # Push record with signature
 dirctl push record.json --sign
+
+# Alternatively, sign a pushed record
+dirctl sign $RECORD_CID
 
 # Verify record
 dirctl verify $RECORD_CID
@@ -185,9 +194,9 @@ dirctl list info --network
 ### Search
 
 This example demonstrates how to search for records in the directory using various filters and query parameters.
-The search functionality allows you to find records based on specific attributes like name, version, skills, locators, and extensions using structured query filters.
+The search functionality allows you to find records based on specific attributes like name, version, skills, locators, and extensions using structured query filters with wildcard support. All searches are case insensitive.
 
-Search operations support pagination and return Content Identifier (CID) values that can be used with other Directory commands like `pull`, `info`, and `verify`.
+Search operations leverage an SQLite database for efficient record indexing and querying, supporting pagination and returning Content Identifier (CID) values that can be used with other Directory commands like `pull`, `info`, and `verify`.
 
 ```bash
 # Basic search for records by name
@@ -227,6 +236,34 @@ dirctl search \
   --offset 10
 ```
 
+#### Wildcard Search
+
+The search functionality supports wildcard patterns for flexible matching:
+
+```bash
+# Asterisk (*) wildcard - matches zero or more characters
+dirctl search --query "name=web*"              # Find all web-related agents
+dirctl search --query "version=v1.*"           # Find all v1.x versions
+dirctl search --query "skill-name=audio*"      # Find Audio-related skills
+dirctl search --query "locator=http*"          # Find HTTP-based locators
+
+# Question mark (?) wildcard - matches exactly one character
+dirctl search --query "version=v1.0.?"         # Find version v1.0.x (single digit)
+dirctl search --query "name=???api"            # Find 3-character names ending in "api"
+dirctl search --query "skill-name=Pytho?"      # Find skills with single character variations
+
+# List wildcards ([]) - matches any character within brackets
+dirctl search --query "name=agent-[0-9]"       # Find agents with numeric suffixes
+dirctl search --query "version=v[0-9].*"       # Find versions starting with v + digit
+dirctl search --query "skill-name=[A-M]*"      # Find skills starting with A-M
+dirctl search --query "locator=[hf]tt[ps]*"    # Find HTTP/HTTPS/FTP locators
+
+# Complex wildcard combinations
+dirctl search --query "name=api-*-service" --query "version=v2.*"
+dirctl search --query "skill-name=*machine*learning*"
+dirctl search --query "name=web-[0-9]?" --query "version=v?.*.?"
+```
+
 **Available Query Types:**
 
 - `name` - Search by record name
@@ -248,9 +285,14 @@ The sync feature enables one-way synchronization of records and other objects be
 
 This example demonstrates how to synchronize records between remote directories and your local instance.
 
+#### Basic Sync Operations
+
 ```bash
-# Create a sync operation to start periodic poll from remote
+# Create a sync operation to start periodic poll from remote (sync all records)
 dirctl sync create https://remote-directory.example.com:8888
+
+# Sync specific records by CID
+dirctl sync create https://remote-directory.example.com:8888 --cids cid1,cid2,cid3
 
 # List all sync operations
 dirctl sync list
@@ -261,6 +303,18 @@ dirctl sync status <sync id>
 # Delete a sync operation to stop periodic poll from remote
 dirctl sync delete <sync id>
 ```
+
+#### Advanced Sync with Routing Integration
+
+You can combine routing search with sync operations to selectively synchronize records that match specific criteria:
+
+```bash
+# Search for agents with a given OASF skill across the network and sync them automatically
+dirctl routing search --skill "Audio" --json | dirctl sync create --stdin
+```
+
+This creates separate sync operations for each remote peer found in the search results,
+syncing only the specific CIDs that matched your search criteria.
 
 ### gRPC Error Codes
 
