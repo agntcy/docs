@@ -1,11 +1,13 @@
 nav:
   - Overview: overview.md
-  - Usage Scenarios: scenarios.md
-  - Directory CLI: directory-cli.md
-  - SPIRE Federation: federation.md
-  - Security: security.md
+  - Architecture: architecture.md
+  - Trust Model: trust-model.md
+  - Getting Started: getting-started.md
+  - Features and Usage: scenarios.md
+  - ADS Records: record-example.md
   - Hosted AGNTCY Agent Directory: hosted-agent-directory.md
-  - Agent Directory Records Example: dir-record-example.md
+  - CLI Reference: directory-cli.md
+  - SDK Reference: directory-sdk.md
   - API Reference:
     - Core: dir-core-v1-api.md
     - Routing: dir-routing-v1-api.md
