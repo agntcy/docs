@@ -1,14 +1,10 @@
 # ADS Records
 
-Directory uses [Open Agent Schema Framework](https://schema.oasf.outshift.com) (OASF) which
-defines a standardized schema for representing agents and their capabilities using
-[OASF Record specification](https://schema.oasf.outshift.com/0.7.0/objects/record).
-This ensures interoperability and consistency across different implementations of the
-directory service.
+Directory uses [Open Agent Schema Framework](https://schema.oasf.outshift.com) (OASF) which defines a standardized schema for representing agents and their capabilities using [OASF Record specification](https://schema.oasf.outshift.com/0.7.0/objects/record). This ensures interoperability and consistency across different implementations of the directory service.
 
 ## Content Identifier
 
-The content identifier of the record is a [CID](https://github.com/multiformats/cid) hash digests which makes it
+The content identifier of the record is a [CID](https://github.com/multiformats/cid) hash digest which makes it:
 
 - Globally unique
 - Content-addressable
@@ -17,10 +13,11 @@ The content identifier of the record is a [CID](https://github.com/multiformats/
 
 ## Example Email Agent
 
-You can generate your own example records using the [OASF Record Sample generator](https://schema.oasf.outshift.com/sample/0.7.0/objects/record).
-Below is an example OASF record for an email agent that is capable of sending and receiving emails.
+You can generate your own example records using the [OASF Record Sample generator](https://schema.oasf.outshift.com/sample/0.7.0/objects/record). Below is an example OASF record for an email agent that is capable of sending and receiving emails.
 
-NOTE: This record uses `v0.7.0` of the OASF specification.
+!!! note
+    
+    This record uses `v0.7.0` of the OASF specification.
 
 ```json
 {

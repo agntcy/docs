@@ -9,13 +9,15 @@ scenarios. All code snippets below are tested against the Directory `v0.3.0` rel
 
 ## Prerequisites
 
+The following prerequisites are required to follow the examples below:
+
 - Locally available Directory CLI client
 - Running instance of Directory API server
 
 To deploy the neccessary components, please refer to the [Getting Started](getting-started.md)
 guide.
 
-### Build
+## Build
 
 This example demonstrates how to define a Record using provided tooling to prepare for
 publication.
@@ -52,7 +54,7 @@ cat << EOF > record.json
 EOF
 ```
 
-### Store
+## Store
 
 This example demonstrates the interaction with the local storage layer using the CLI client.
 The storage layer uses an OCI-compliant registry (powered by [Zot](https://github.com/project-zot/zot)) to store records as OCI
@@ -78,7 +80,7 @@ dirctl pull $RECORD_CID
 dirctl info $RECORD_CID
 ```
 
-### Signing and Verification
+## Signing and Verification
 
 Establishing trust and authenticity is critical in distributed AI agent ecosystems, where
 records may be shared across multiple nodes and networks. By cryptographically signing
@@ -100,7 +102,7 @@ retrieve signature metadata including the `IsSigned` and `IsTrusted` status, all
 Directory server to make trust decisions based on the cryptographic verification performed
 by the underlying OCI registry infrastructure.
 
-#### Method 1: OIDC-based Interactive
+### Method 1: OIDC-based Interactive
 
 This process relies on creating and uploading to the OCI registry a signature for the record
 using identity-based OIDC signing flow which can later be verified. The signing process
@@ -118,7 +120,7 @@ dirctl sign $RECORD_CID
 dirctl verify $RECORD_CID
 ```
 
-#### Method 2: OIDC-based Non-Interactive
+### Method 2: OIDC-based Non-Interactive
 
 This method is designed for automated environments such as CI/CD pipelines where
 browser-based authentication is not available. It uses OIDC tokens provided by the
@@ -140,7 +142,7 @@ without user interaction.
           bin/dirctl verify $RECORD_CID
 ```
 
-#### Method 3: Self-Managed Keys
+### Method 3: Self-Managed Keys
 
 This method is suitable for non-interactive use cases, such as CI/CD pipelines, where
 browser-based authentication is not possible or desired. Instead of OIDC, a signing keypair
@@ -160,7 +162,7 @@ dirctl push record.json --sign --key cosign.key
 dirctl verify $RECORD_CID
 ```
 
-### Announce
+## Announce
 
 This example demonstrates how to publish records to allow content discovery across the
 network. Publication requests are processed asynchronously in the background using a
@@ -180,12 +182,12 @@ published data, peers may try to reach out over the network to request specific 
 verification and replication. Network publication may fail if you are not connected to the
 network.
 
-### Discover
+## Discover
 
 This example demonstrates how to discover records both locally and across the network using
 two distinct commands for different use cases.
 
-#### Local Discovery
+### Local Discovery
 
 Use `dirctl routing list` to discover records stored locally on this peer only. This queries
 the server's local storage index and does not search other peers on the network.
@@ -204,7 +206,7 @@ dirctl routing list --skill "AI" --locator "docker-image"
 dirctl routing list --cid $RECORD_CID
 ```
 
-#### Network Discovery
+### Network Discovery
 
 Use `dirctl routing search` to discover records from other peers across the network. This
 uses cached network announcements and filters out local records.
@@ -230,7 +232,7 @@ as a prefix).
 Note that network search results are not guaranteed to be available, valid, or up to date as
 they rely on cached announcements from other peers.
 
-### Search
+## Search
 
 This example demonstrates how to search for records in your local directory using various filters
 and query parameters. The search functionality allows you to find records based on specific
@@ -279,7 +281,7 @@ dirctl search \
   --offset 10
 ```
 
-#### Wildcard Search
+### Wildcard Search
 
 The search functionality supports wildcard patterns for flexible matching:
 
@@ -321,7 +323,7 @@ dirctl search --query "name=web-[0-9]?" --query "version=v?.*.?"
 All queries use the format `field=value`. Multiple queries are combined with AND logic,
 meaning results must match all specified criteria.
 
-### Sync
+## Sync
 
 The sync feature enables one-way synchronization of records and other objects between
 remote Directory instances and your local node. This feature supports distributed AI agent
@@ -338,7 +340,7 @@ between Directory nodes.
 This example demonstrates how to synchronize records between remote directories and your
 local instance.
 
-#### Basic Sync Operations
+### Basic Sync Operations
 
 ```bash
 # Create a sync operation to start periodic poll from remote (sync all records)
@@ -357,7 +359,7 @@ dirctl sync status <sync-id>
 dirctl sync delete <sync-id>
 ```
 
-#### Advanced Sync with Routing
+### Advanced Sync with Routing
 
 You can combine routing search with sync operations to selectively synchronize records that
 match specific criteria:
@@ -370,7 +372,7 @@ dirctl routing search --skill "Audio" --json | dirctl sync create --stdin
 This creates separate sync operations for each remote peer found in the search results,
 syncing only the specific CIDs that matched your search criteria.
 
-### gRPC Error Codes
+## gRPC Error Codes
 
 The following table lists the gRPC error codes returned by the server APIs, along with a
 description of when each code is used:

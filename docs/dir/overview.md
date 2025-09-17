@@ -54,7 +54,7 @@ for scalable content discovery across decentralized networks.
 In distributed systems, having a reliable and collision-resistant naming scheme
 is crucial. The agent directory uses cryptographic hashes to generate globally
 unique identifiers for data records.
-ADS leverages [Content IDentifiers](https://github.com/multiformats/cid) for
+ADS leverages [Content Identifiers](https://github.com/multiformats/cid) for
 naming directory records. CIDs provide a self-describing, content-addressed
 naming scheme that ensures data integrity and immutability.
 

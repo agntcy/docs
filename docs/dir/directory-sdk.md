@@ -1,14 +1,14 @@
 # Directory SDK
 
-The Directory SDK provides comprehensive libraries and tools for interacting with the Directory system,
-including storage, routing, search, and security operations.
+The Directory SDK provides comprehensive libraries and tools for interacting with the Directory system, including storage, routing, search, and security operations.
 
 ## JavaScript SDK
 
-Documentation for the JavaScript SDK can be found at [github.com/agntcy/dir/sdk/dir-js](https://github.com/agntcy/dir/tree/main/sdk/dir-js).
-The SDK supports both JavaScript and TypeScript applications.
+Documentation for the JavaScript SDK can be found on [GitHub](https://github.com/agntcy/dir/tree/main/sdk/dir-js). The SDK supports both JavaScript and TypeScript applications.
 
-**Note for users:** The SDK is intended for use in Node.js applications and will not work in Web applications.
+!!! note
+    
+    The SDK is intended for use in Node.js applications and will not work in Web applications.
 
 ### Installation
 
@@ -16,15 +16,15 @@ Install the SDK using one of available JS package managers like [npm](https://ww
 
 1. Initialize the project:
 
-```bash
-npm init -y
-```
+    ```bash
+    npm init -y
+    ```
 
 1. Add the SDK to your project:
 
-```bash
-npm install agntcy-dir
-```
+    ```bash
+    npm install agntcy-dir
+    ```
 
 ### Configuration
 
@@ -46,12 +46,13 @@ const config = new Config(
 const client = new Client(config);
 ```
 
-**NOTE:** JavaScript SDK requires Directory CLI (dirctl) only to perform signing operations.
-If you don't need signing, you can use the SDK without dirctl.
+!!! note
+    
+    JavaScript SDK requires Directory CLI (dirctl) only to perform signing operations. If you don't need signing, you can use the SDK without dirctl.
 
 ## Python SDK
 
-Documentation for the Python SDK can be found at [github.com/agntcy/dir/sdk/dir-py](https://github.com/agntcy/dir/tree/main/sdk/dir-py).
+Documentation for the Python SDK can be found on [GitHub](https://github.com/agntcy/dir/tree/main/sdk/dir-py).
 The SDK supports Python 3.10+ applications.
 
 ### Installation
@@ -59,14 +60,14 @@ The SDK supports Python 3.10+ applications.
 Install the SDK using [uv](https://github.com/astral-sh/uv)
 
 1. Initialize the project:
-```bash
-uv init
-```
+    ```bash
+    uv init
+    ```
 
-2. Add the SDK to your project:
-```bash
-uv add agntcy-dir --index https://buf.build/gen/python
-```
+1. Add the SDK to your project:
+    ```bash
+    uv add agntcy-dir --index https://buf.build/gen/python
+    ```
 
 ### Configuration
 
@@ -88,12 +89,13 @@ config = Config(
 client = Client(config)
 ```
 
-**NOTE:** Python SDK requires Directory CLI (dirctl) only to perform signing operations.
-If you don't need signing, you can use the SDK without dirctl.
+!!! note
+    
+    Python SDK requires Directory CLI (dirctl) only to perform signing operations. If you don't need signing, you can use the SDK without dirctl.
 
 ### Golang SDK
 
-Documentation for the Golang SDK can be found at [github.com/agntcy/dir/client](https://github.com/agntcy/dir/tree/main/client).
+Documentation for the Go SDK can be found at [GitHub](https://github.com/agntcy/dir/tree/main/client).
 
 ### Installation
 
@@ -122,4 +124,6 @@ config := &client.Config{
 client := client.New(client.WithConfig(config))
 ```
 
-**NOTE:** Golang SDK does not require Directory CLI (dirctl) and can be used standalone.
+!!! note
+    
+    Golang SDK does not require Directory CLI (dirctl) and can be used standalone.
