@@ -1,33 +1,33 @@
 # SLIM Data Plane Configuration Documentation
 
-This document provides comprehensive documentation for configuring the SLIM data
-plane. The configuration is written in YAML format and defines how the data
-plane runtime, services, authentication, and observability components operate.
+This document provides comprehensive documentation for configuring the SLIM data plane. The configuration is written in YAML format and defines how the data plane runtime, services, authentication, and observability components operate.
 
 ## Configuration Structure Overview
 
 The SLIM configuration file consists of three main sections:
 
-```yaml
-# Observability and logging configuration
-tracing:
-  # ... tracing options
+- Observability and logging configuration
+  ```yaml
+  tracing:
+    # ... tracing options
+  ```
+- Runtime behavior configuration
+  ```yaml
+  runtime:
+    # ... runtime options
+  ```
+- Services configuration
+  ```yaml
+  services:
+    # ... service configurations
+  ```
 
-# Runtime behavior configuration
-runtime:
-  # ... runtime options
-
-# Service definitions and network configuration
-services:
-  # ... service configurations
-```
 
 ## Top-Level Configuration Sections
 
-### 1. Tracing Configuration
+### Tracing Configuration
 
-The `tracing` section configures logging, observability, and OpenTelemetry
-integration.
+The `tracing` section configures logging, observability, and OpenTelemetry integration.
 
 #### Basic Tracing Options
 
@@ -77,14 +77,14 @@ tracing:
     # Default: 30
     metrics_interval_secs: 60
 
-    # GRPC configuration for OpenTelemetry exporter
+    # gRPC configuration for OpenTelemetry exporter
     grpc:
       endpoint: "http://otel-collector:4317"
       tls:
         insecure: true
 ```
 
-### 2. Runtime Configuration
+### Runtime Configuration
 
 The `runtime` section configures the async runtime behavior and resource
 allocation.
@@ -106,11 +106,9 @@ runtime:
   drain_timeout: "30s"
 ```
 
-### 3. Services Configuration
+### Services Configuration
 
-The `services` section defines SLIM service instances and their network
-configurations. Each service is identified by a unique ID in the format
-`slim/<instance_number>`.
+The `services` section defines SLIM service instances and their network configurations. Each service is identified by a unique ID in the format `slim/<instance_number>`.
 
 ## Service Configuration
 
@@ -137,8 +135,7 @@ services:
 
 ## Server Configuration
 
-Servers define endpoints that the SLIM instance will listen on for incoming
-connections.
+Servers define endpoints that the SLIM instance will listen on for incoming connections.
 
 ### Basic Server Configuration
 
@@ -277,8 +274,7 @@ dataplane:
 
 ## Client Configuration
 
-Clients define outbound connections that the SLIM instance will establish to
-other services.
+Clients define outbound connections that the SLIM instance will establish to other services.
 
 ### Basic Client Configuration
 
@@ -464,9 +460,7 @@ dataplane:
 
 ## Configuration Value Substitution
 
-SLIM supports dynamic configuration value substitution from multiple sources,
-allowing you to externalize sensitive data and make configurations more
-flexible.
+SLIM supports dynamic configuration value substitution from multiple sources, allowing you to externalize sensitive data and make configurations more flexible.
 
 ### Environment Variable Substitution
 
@@ -493,9 +487,7 @@ services:
 
 ### File Content Substitution
 
-Configuration values can also reference file contents using the `${file:PATH}`
-syntax. This is particularly useful for certificates, keys, and other sensitive
-content:
+Configuration values can also reference file contents using the `${file:PATH}` syntax. This is particularly useful for certificates, keys, and other sensitive content:
 
 ```yaml
 services:
@@ -625,39 +617,35 @@ services:
 
 ### Substitution Rules and Behavior
 
-1. **Exact Replacement**: The entire configuration value must be a substitution
-   expression
+1. **Exact Replacement**: The entire configuration value must be a substitution expression
 
    - ✅ Valid: `password: "${env:PASSWORD}"`
    - ❌ Invalid: `password: "prefix-${env:PASSWORD}-suffix"`
 
-2. **Error Handling**: If a substitution fails (file not found, environment
-   variable not set), configuration loading will fail
+2. **Error Handling**: If a substitution fails (file not found, environment variable not set), configuration loading will fail
 
-3. **File Content**: File substitution reads the entire file content as a
-   string, including newlines
+3. **File Content**: File substitution reads the entire file content as a string, including newlines
 
-4. **Security**: File paths are relative to the working directory where SLIM
-   starts, or absolute paths
+4. **Security**: File paths are relative to the working directory where SLIM starts, or absolute paths
 
 5. **Nested Structures**: Substitution works in arrays and nested objects:
 
-```yaml
-services:
-  slim/0:
-    dataplane:
-      clients:
-        - endpoint: "${env:PEER1_ENDPOINT}"
-          headers:
-            authorization: "${file:/etc/slim/tokens/peer1.token}"
-        - endpoint: "${env:PEER2_ENDPOINT}"
-          headers:
-            authorization: "${file:/etc/slim/tokens/peer2.token}"
-```
+    ```yaml
+    services:
+      slim/0:
+        dataplane:
+          clients:
+            - endpoint: "${env:PEER1_ENDPOINT}"
+              headers:
+                authorization: "${file:/etc/slim/tokens/peer1.token}"
+            - endpoint: "${env:PEER2_ENDPOINT}"
+              headers:
+                authorization: "${file:/etc/slim/tokens/peer2.token}"
+    ```
 
 ## Complete Configuration Examples
 
-### 1. Development Configuration (No Security)
+### Development Configuration (No Security)
 
 ```yaml
 # config/development.yaml
@@ -681,7 +669,7 @@ services:
       clients: []
 ```
 
-### 2. Production Configuration with mTLS
+### Production Configuration with mTLS
 
 ```yaml
 # config/production.yaml
@@ -737,7 +725,7 @@ services:
             key_file: "/etc/slim/certs/server.key"
 ```
 
-### 3. JWT Authentication Configuration
+### JWT Authentication Configuration
 
 ```yaml
 # config/jwt-auth.yaml
@@ -785,7 +773,7 @@ services:
                   file: "./keys/jwt-private.pem"
 ```
 
-### 4. Containerized Deployment Configuration
+### Containerized Deployment Configuration
 
 ```yaml
 # config/container.yaml - Ideal for Kubernetes/Docker deployments
@@ -855,7 +843,7 @@ services:
               password: "${file:/var/run/secrets/controller/password}"
 ```
 
-### 5. SPIFFE/SPIRE Zero Trust Configuration
+### SPIFFE/SPIRE Zero Trust Configuration
 
 ```yaml
 # config/spiffe.yaml - SPIFFE/SPIRE with spiffe-helper sidecar
