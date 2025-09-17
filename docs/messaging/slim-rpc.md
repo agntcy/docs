@@ -13,10 +13,11 @@ then interact with the generated code much like they would with standard gRPC,
 while benefiting from the inherent security features and efficiency provided by
 the SLIM protocol.
 
-This README provides a guide to understanding how SLIMRPC functions and how you
-can implement it in your applications. For detailed instructions on compiling a
-protobuf file to obtain the necessary SLIMRPC stub code, please refer to the
-dedicated [SLIMRPC compiler documentation](./slim-slimrpc-compiler.md).
+This documentation provides a guide to understanding how SLIMRPC functions and
+how you can implement it in your applications. For detailed instructions on
+compiling a protobuf file to obtain the necessary SLIMRPC stub code, please
+refer to the dedicated [SLIMRPC compiler
+documentation](./slim-slimrpc-compiler.md).
 
 ## SLIM naming in SLIMRPC
 
