@@ -1,7 +1,7 @@
 # Usage Scenarios
 
 This document defines a basic overview of main Directory features, components, and usage scenarios.
-All code snippets below are tested against the Directory `v0.2.0` release.
+All code snippets below are tested against the Directory `v0.3.0` release.
 
 !!! note
     Although the following example is shown for a CLI-based usage scenario, there is an effort to expose the same functionality via language-specific SDKs.
@@ -24,7 +24,7 @@ cat << EOF > record.json
     "name": "record",
     "version": "v1.0.0",
     "description": "insert description here",
-    "schema_version": "v0.5.0",
+    "schema_version": "v0.7.0",
     "skills": [
         {
             "id": 302,
