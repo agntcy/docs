@@ -48,7 +48,7 @@ EOF
 ### Store
 
 This example demonstrates the interaction with the local storage layer using the CLI client.
-The storage layer is used as a content-addressable object store for Directory-specific models and serves both the local and network-based operations (if enabled).
+The storage layer uses an OCI-compliant registry (powered by Zot) to store records as OCI artifacts with content-addressable identifiers (CIDs). When a record is pushed, it's stored as an OCI blob and the CID is calculated by converting the SHA256 digest from ORAS operations into a CIDv1 format using IPFS multihash encoding. Each record is then tagged with its CID in the registry, enabling direct lookup and ensuring content integrity through cryptographic addressing.
 
 ```bash
 # Push the record and store its CID to a file
