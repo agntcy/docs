@@ -1,7 +1,7 @@
 nav:
   - Overview: overview.md
   - Architecture: architecture.md
-  - Records: record-example.md
+  - Records: ads-records.md
   - Trust Model: trust-model.md
   - Getting Started: getting-started.md
   - Features and Usage: scenarios.md
