@@ -44,6 +44,11 @@ const config = new Config(
     dirctlPath="/usr/local/bin/dirctl"
 );
 const client = new Client(config);
+
+// Use SPIRE for mTLS communication
+const config = new Config(spiffeEndpointSocket="/tmp/agent.sock");
+const transport = await Client.createGRPCTransport(config);
+const spiffeClient = new Client(config, transport);
 ```
 
 !!! note
@@ -87,6 +92,12 @@ config = Config(
     dirctl_path="/usr/local/bin/dirctl"
 )
 client = Client(config)
+
+# Use SPIRE for mTLS communication
+config = Config(
+    spiffe_socket_path="/tmp/agent.sock"
+)
+client = Client(config)
 ```
 
 !!! note
@@ -120,6 +131,12 @@ client := client.New()
 // Or configure directly
 config := &client.Config{
     ServerAddress: "localhost:8888",
+}
+client := client.New(client.WithConfig(config))
+
+// Use SPIRE for mTLS communication
+config := &client.Config{
+    SpiffeSocketPath: "/tmp/agent.sock",
 }
 client := client.New(client.WithConfig(config))
 ```
