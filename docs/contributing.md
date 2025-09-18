@@ -70,7 +70,21 @@ Place the image files in the `/docs/assets` folder.
 
 ### Code Samples
 
-Include wode within the markdown file by enclosing the code between three backticks. Highlighting is automatic if you specify the type of the code.
+Include code within the markdown file by enclosing the code between three backticks. Highlighting is automatic if you specify the type of the code.
+
+For example, this code:
+
+````
+```python
+print("Hello, World!")
+```
+````
+
+Is displayed as:
+
+```python
+print("Hello, World!")
+```
 
 ### Admonitions
 
