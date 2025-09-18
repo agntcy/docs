@@ -179,7 +179,7 @@ To be useful, an agent, A2A card, or MCP server record should include at least t
 * Name of the agent, A2A card, or MCP server.
 
     !!! note
-        The name must match the organization and repository name in the Outshift Agent Directory. 
+        The name must match the organization and repository name in the Outshift Agent Directory.
 
 * Version of the agent, A2A card, or MCP server (use semantic convention).
 * Description: something to help any viewer understand what your agent, A2A card, or MCP server does, what is the use case it is applicable to, expected inputs and outputs, LLM used, runtime, etc.
@@ -270,8 +270,6 @@ For A2A Agent Cards, you can upload JSON files directly from your `.well-known/a
 MCP Server configurations can be imported through a structured multi-step process that handles the complexity of Model Context Protocol specifications. The import workflow guides you through documenting connection details for server transport, documenting available tools from `tools/list` endpoints, documenting prompt capabilities from `prompts/list` endpoints, and documenting resource information from `resources/list` endpoints. Each step supports both file upload and direct JSON input with comprehensive schema validation.
 
 ![Record Composer MCP Import](../assets/hosted-dir/record-composer-mcp-import.png)
-
-
 
 #### Signing Agent Directory Records using `dirctl`
 
