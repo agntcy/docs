@@ -65,13 +65,13 @@ When first logging in, you are prompted to create a name for your default
 organization. This organization is a personal space where all repositories
 belong to you.
 
-![Logging in](../assets/login.png)
+![Logging in](../assets/hosted-dir/login.png)
 
 ### View and Search for Agents
 
 The Explore page allows users to browse and search through available agent repositories.
 
-![The Explore Page](../assets/explore.png)
+![The Explore Page](../assets/hosted-dir/explore.png)
 
 You can refine the results using predefined filters and open search:
 
@@ -96,7 +96,7 @@ You can refine the results using predefined filters and open search:
 * Use the drop-down **Locators** list to narrow the results by locator type.
 * Use the drop-down **Extensions** list to narrow the results by extension type.
 
-![The My Directory Page](../assets/directory.png)
+![The My Directory Page](../assets/hosted-dir/directory.png)
 
 #### Agent Actions
 
@@ -110,7 +110,7 @@ Clicking the three dots (**⁝**) at the end of any row in the Agent Directory t
 Clicking on an agent, A2A card, or MCP server repository opens the Record Details page with further
 information on the repository.
 
-![The Agent Details Page](../assets/agent.png)
+![The Agent Details Page](../assets/hosted-dir/agent.png)
 
 The **General** tab lists the following information from the record:
 
@@ -208,6 +208,70 @@ And it will look like this:
   ]
 }
 ```
+
+#### Using the Record Composer
+
+As an alternative to manually creating JSON files, the Outshift Agent Directory provides a web-based Record Composer that simplifies the creation of Agent Directory Records through a guided interface. This tool streamlines the record creation process while ensuring compliance with [OASF schema requirements](../oasf/open-agentic-schema-framework.md).
+
+The Record Composer serves as an intuitive interface within the Outshift Agent Directory that provides a wizard-style approach to building OASF-compliant records. Rather than requiring developers to manually write complex JSON structures, the composer offers guided forms with real-time validation, import capabilities to document existing configurations, and seamless integration with the Hub's organizational structure.
+
+##### Accessing the Record Composer
+
+To access the Record Composer, log into your Outshift Agent Directory account at [https://agent-directory.outshift.com/](https://agent-directory.outshift.com/) and click **Record Composer** in the left navigation menu. The interface provides immediate access to the record creation workflow within your organization's context.
+
+##### Getting Started with Record Creation
+
+The Record Composer offers two primary approaches to creating agent directory records. You can import existing A2A cards or MCP server configurations to quickly convert your current setups into OASF-compliant records. Alternatively, you can start from scratch to build records with complete control over all fields and configurations. Template-based creation will soon be available as a third option to provide pre-built starting points for common agent types.
+
+![Record Composer Start Options](../assets/hosted-dir/record-composer-start.png)
+
+##### Configuring Record Metadata
+
+Every agent directory record requires fundamental metadata that integrates seamlessly with your Hub organization. The composer automatically prefixes record names with your organization identifier and pre-populates author information from your Hub profile. You'll need to provide a unique name for your agent, a comprehensive description that helps users understand its purpose and capabilities, and a semantic version following standard conventions.
+
+![Record Composer Metadata](../assets/hosted-dir/record-composer-metadata.png)
+
+You can also provide skill classifications in-line with the [OASF taxonomy](../oasf/taxonomy.md). This skill classification aids in discoverability within the Hub's search functionality, helping users find agents with specific capabilities. Optional fields such as license information, searchable tags, and locator URLs following the [OASF locator schema](https://schema.oasf.outshift.com/objects/locator?extensions=) can be added to provide additional context and accessibility.
+
+##### Adding Functional Modules
+
+The modular architecture of OASF records allows you to document different types of agent capabilities through specialized module types. Each module represents a specific functional aspect of your agent or service that you want to communicate to directory users.
+
+![Record Composer Modules](../assets/hosted-dir/record-composer-modules.png)
+
+If your agent uses A2A (Agent-to-Agent), you can add A2A Agent Card modules to document and communicate the existence of your A2A capabilities to users browsing the directory. These modules capture essential details about your agent's endpoint URL, supported protocol versions, input and output handling modes, and specific capabilities such as streaming support or push notifications. This documentation helps other developers understand what A2A features your agent supports.
+
+MCP Server modules allow you to document the existence and capabilities of your Model Context Protocol server for directory users. These modules communicate server connection details across different transport methods including stdio, HTTP, and Server-Sent Events. You can document available tool definitions with their parameter schemas, prompt configurations with argument specifications, and resource metadata with access patterns to inform potential integrators about your MCP server's capabilities.
+
+Model Configuration modules enable you to document which AI models and providers your agent utilizes, helping users understand your agent's underlying capabilities. These modules communicate information about provider selection from supported services like OpenAI and Anthropic, model name and version specifications, API endpoint details, and generation parameters such as temperature and token limits that your agent employs.
+
+##### Validation and Quality Assurance
+
+The Record Composer implements comprehensive validation that operates in real-time as you build your record. This validation system ensures OASF schema compliance while checking against your organization's specific policies and existing record inventory.
+
+The validation process includes schema compliance verification to ensure your record meets format specifications, organizational rule enforcement to maintain consistency within your Hub organization, and conflict detection that prevents duplicate name and version combinations across your repositories. Additionally, the system validates URL accessibility for locator fields and ensures all required information is present for successful Hub publication.
+
+##### Downloading and Publishing Records
+
+Once your record passes validation, the composer generates an OASF-compliant JSON file ready for publication to the Hub. The interface provides clear instructions for the subsequent signing and publishing process using the `dirctl` command-line tool.
+
+![Record Composer Download](../assets/hosted-dir/record-composer-download.png)
+
+The generated file integrates seamlessly with the existing `dirctl` workflow, maintaining compatibility with the established signing and publishing procedures described in the following sections of this documentation.
+
+##### Importing Existing Configurations
+
+The Record Composer supports importing existing agent configurations to accelerate the record creation process and facilitate migration from other formats.
+
+For A2A Agent Cards, you can upload JSON files directly from your `.well-known/agent.json` endpoint. The system automatically extracts agent capabilities, skills, and protocol versions, converting them into the appropriate OASF module format. This automated extraction significantly reduces manual data entry while ensuring accuracy in the conversion process.
+
+![Record Composer A2A Import](../assets/hosted-dir/record-composer-a2a-import.png)
+
+MCP Server configurations can be imported through a structured multi-step process that handles the complexity of Model Context Protocol specifications. The import workflow guides you through documenting connection details for server transport, documenting available tools from `tools/list` endpoints, documenting prompt capabilities from `prompts/list` endpoints, and documenting resource information from `resources/list` endpoints. Each step supports both file upload and direct JSON input with comprehensive schema validation.
+
+![Record Composer MCP Import](../assets/hosted-dir/record-composer-mcp-import.png)
+
+
 
 #### Signing Agent Directory Records using `dirctl`
 
