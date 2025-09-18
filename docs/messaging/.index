@@ -1,6 +1,8 @@
 nav:
  - Secure Low-Latency Interactive Messaging (SLIM): slim-core.md
- - Getting Started with SLIM: slim-howto.md
+ - Getting Started with SLIM:
+    - Getting Started: slim-howto.md
+    - Configuration Reference: slim-data-plane-config.md
  - SLIM Messaging Layer: slim-data-plane.md
  - SLIM Controller: slim-controller.md
  - SLIM Group Management: slim-group.md
