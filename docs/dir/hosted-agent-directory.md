@@ -213,7 +213,11 @@ And it will look like this:
 
 As an alternative to manually creating JSON files, the Outshift Agent Directory provides a web-based Record Composer that simplifies the creation of Agent Directory Records through a guided interface. This tool streamlines the record creation process while ensuring compliance with [OASF schema requirements](../oasf/open-agentic-schema-framework.md).
 
-The Record Composer serves as an intuitive interface within the Outshift Agent Directory that provides a wizard-style approach to building OASF-compliant records. Rather than requiring developers to manually write complex JSON structures, the composer offers guided forms with real-time validation, import capabilities to document existing configurations, and seamless integration with the Hub's organizational structure.
+The Record Composer offers the following features:
+
+- Guided forms with real-time validation.
+- Import capabilities to document existing configurations.
+- Seamless integration with the Hub's organizational structure.
 
 ##### Accessing the Record Composer
 
