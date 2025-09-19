@@ -260,7 +260,13 @@ These modules capture essential details about your agent:
 
 This documentation helps other developers understand what A2A features your agent supports.
 
-MCP Server modules allow you to document the existence and capabilities of your Model Context Protocol server for directory users. These modules communicate server connection details across different transport methods including stdio, HTTP, and Server-Sent Events. You can document available tool definitions with their parameter schemas, prompt configurations with argument specifications, and resource metadata with access patterns to inform potential integrators about your MCP server's capabilities.
+MCP Server modules allow you to document the existence and capabilities of your Model Context Protocol server for directory users. These modules communicate server connection details across different transport methods including stdio, HTTP, and Server-Sent Events. 
+
+To inform potential integrators about your MCP server's capabilities, you can document available tool definitions:
+
+- Parameter schemas.
+- Prompt configurations with argument specifications.
+- Resource metadata with access patterns.
 
 Model Configuration modules enable you to document which AI models and providers your agent utilizes, helping users understand your agent's underlying capabilities. These modules communicate information about provider selection from supported services like OpenAI and Anthropic, model name and version specifications, API endpoint details, and generation parameters such as temperature and token limits that your agent employs.
 
