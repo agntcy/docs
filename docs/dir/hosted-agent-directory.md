@@ -241,7 +241,7 @@ You need to provide the following details:
 
 ![Record Composer Metadata](../assets/hosted-dir/record-composer-metadata.png)
 
-You can also provide skill classifications in-line with the [OASF taxonomy](../oasf/taxonomy.md). This skill classification aids in discoverability within the Hub's search functionality, helping users find agents with specific capabilities. Optional fields such as license information, searchable tags, and locator URLs following the [OASF locator schema](https://schema.oasf.outshift.com/objects/locator?extensions=) can be added to provide additional context and accessibility.
+You can also provide skill classifications in-line with the [OASF taxonomy](https://schema.oasf.outshift.com/main_skills). This skill classification aids in discoverability within the Hub's search functionality, helping users find agents with specific capabilities. Optional fields such as license information, searchable tags, and locator URLs following the [OASF locator schema](https://schema.oasf.outshift.com/objects/locator?extensions=) can be added to provide additional context and accessibility.
 
 ##### Adding Functional Modules
 
