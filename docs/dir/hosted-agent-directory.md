@@ -231,7 +231,13 @@ The Record Composer offers two primary approaches to creating agent directory re
 
 ##### Configuring Record Metadata
 
-Every agent directory record requires fundamental metadata that integrates seamlessly with your Hub organization. The composer automatically prefixes record names with your organization identifier and pre-populates author information from your Hub profile. You'll need to provide a unique name for your agent, a comprehensive description that helps users understand its purpose and capabilities, and a semantic version following standard conventions.
+Every agent directory record requires fundamental metadata that integrates seamlessly with your Hub organization. The composer automatically prefixes record names with your organization identifier and pre-populates author information from your Hub profile. 
+
+You need to provide the following details:
+
+- A unique name for your agent.
+- A comprehensive description that helps users understand the agent's purpose and capabilities.
+- A semantic version following standard conventions.
 
 ![Record Composer Metadata](../assets/hosted-dir/record-composer-metadata.png)
 
