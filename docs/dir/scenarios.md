@@ -58,7 +58,7 @@ EOF
 
 This example demonstrates the interaction with the local storage layer using the CLI client.
 The storage layer uses an OCI-compliant registry (powered by [Zot](https://github.com/project-zot/zot)) to store records as OCI
-artifacts with (content-addressable identifiers)[(https://github.com/multiformats/cid)] (CIDs). 
+artifacts with [content-addressable identifiers](https://github.com/multiformats/cid) (CIDs). 
 When a record is pushed, it is stored as an OCI blob and the CID is calculated by converting
 the SHA256 OCI digest into a CIDv1 format using CID multihash encoding. Each record is then
 tagged with its CID in the registry, enabling direct lookup and ensuring content
