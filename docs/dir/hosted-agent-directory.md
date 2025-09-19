@@ -249,7 +249,16 @@ The modular architecture of OASF records allows you to document different types 
 
 ![Record Composer Modules](../assets/hosted-dir/record-composer-modules.png)
 
-If your agent uses A2A (Agent-to-Agent), you can add A2A Agent Card modules to document and communicate the existence of your A2A capabilities to users browsing the directory. These modules capture essential details about your agent's endpoint URL, supported protocol versions, input and output handling modes, and specific capabilities such as streaming support or push notifications. This documentation helps other developers understand what A2A features your agent supports.
+If your agent uses A2A (Agent-to-Agent), you can add A2A Agent Card modules to document and communicate the existence of your A2A capabilities to users browsing the directory. 
+
+These modules capture essential details about your agent:
+
+- Endpoint URL.
+- Supported protocol versions.
+- Input and output handling modes.
+- Specific capabilities such as streaming support or push notifications. 
+
+This documentation helps other developers understand what A2A features your agent supports.
 
 MCP Server modules allow you to document the existence and capabilities of your Model Context Protocol server for directory users. These modules communicate server connection details across different transport methods including stdio, HTTP, and Server-Sent Events. You can document available tool definitions with their parameter schemas, prompt configurations with argument specifications, and resource metadata with access patterns to inform potential integrators about your MCP server's capabilities.
 
