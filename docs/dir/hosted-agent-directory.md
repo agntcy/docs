@@ -225,7 +225,7 @@ To access the Record Composer, log into your Outshift Agent Directory account at
 
 ##### Getting Started with Record Creation
 
-The Record Composer offers two primary approaches to creating agent directory records. You can import existing A2A cards or MCP server configurations to quickly convert your current setups into OASF-compliant records. Alternatively, you can start from scratch to build records with complete control over all fields and configurations. Template-based creation will soon be available as a third option to provide pre-built starting points for common agent types.
+The Record Composer offers two primary approaches to creating agent directory records. You can import existing A2A cards or MCP server configurations to quickly convert your current setups into OASF-compliant records. Alternatively, you can start from scratch to build records with complete control over all fields and configurations.
 
 ![Record Composer Start Options](../assets/hosted-dir/record-composer-start.png)
 
