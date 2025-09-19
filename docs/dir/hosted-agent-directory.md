@@ -166,6 +166,38 @@ command line tool are available in multiple forms on GitHub:
 
 After installation, use the `dirctl` and `dirctl hub` commands to list the available commands.
 
+#### Authenticating to the Outshift Agent Directory throug `dirctl`  
+The `dirctl` command line tools supports two methods to authenticate to a Outshift Agent Directory account:
+
+1. **Interactive login**:
+    Interactive login is a web-based user authentication initiated from `dirctl` as follows:
+
+      ```dirctl hub login```
+
+    The login page opens in the browser allowing the user to enter their credentials.
+
+2. **API Key based login**
+    This is a programmatic way to authenticate via API key credentials:
+     
+     * Once logged in through interactive login, use the `dirctl hub apikey create` command to generate the API key credentials, i.e. a `client_id` and a `secret`, for a specific organization and with a specific role. One can store the client_id and secret as environment variables or as json file:
+   ```
+    $ dirctl hub apikey create --org-name your-user --role ROLE_ADMIN 
+    DIRCTL_CLIENT_ID=3603e7f1-6903-44ec-868e-b78fab3cf43f@ak.eticloud.io
+    DIRCTL_CLIENT_SECRET=*********************************************
+   ```
+   ```
+    $ dirctl hub apikey create --org-name your-user --role ROLE_ADMIN --json > api-key-creds.json
+   ```
+     
+     * Set the environment variable and use the dirctl commands as usual or provide the json file with the credentials:
+   ```
+   $ dirctl hub [command] --apikey-file api-key-creds.json
+   ```  
+     
+     * For more details `dirctl hub apikey --help`
+
+
+
 #### Creating an Agent Directory Record
 
 An Agent Directory record is stored in JSON format. The record is specific
@@ -217,20 +249,20 @@ rejected by the API.
 To sign an agent, A2A card, or MCP server record in the file `record.json` using the default provider [Sigstore](https://www.sigstore.dev/), run:
 
 ```shell
-dirctl sign record.json > record.signed.json
+dirctl hub sign record.json > record.signed.json
 ```
 
 The signing service login page opens in your browser. Use your credentials to log in. The
 agent, A2A card, or MCP server record will be augmented with a generated signature and will be output
-in JSON format.
+in JSON format. 
 
 You can validate the record using the [OASF Schema API](https://schema.oasf.outshift.com/doc/index.html#/Validation/SchemaWeb.SchemaController.validate_object).
 
 The signed agent, A2A card, or MCP server record can be pushed to the Hub.
 
-For further details on signing, see the [Agent Directory HOWTO](../dir/scenarios.md#signing-and-verification).
+For further details on signing, checkout `dirctl hub sign --help` 
 
-### Pushing Agent Directory Records using `dirctl`
+#### Pushing Agent Directory Records using `dirctl`
 
 Once all prerequisites are met, you are ready to push an agent record to an agent repository
 that you have write access to. If the repository does not exist, it will be
@@ -240,27 +272,30 @@ Pushing and pulling Agent Directory records is done using the `dirctl` tool.
 
 From your terminal window:
 
-1. Login to your Outshift Agent Directory account
-
-      ```dirctl hub login```
-
-    The login page opens in your browser. Use your credentials to log in.
-
-1. Verify your Outshift Agent Directory organizations and which one you are currently logged into:
-
-      ```dirctl hub orgs```
-
-1. Switch organizations as needed to the organization that you want to push your agent record to:
-
-      ```dirctl hub orgs switch```
+1. Authenticate to your Outshift Agent Directory account using one of the method described above.
 
 1. Push your signed, conforming agent record to the desired organization/repository:
 
-      ```dirctl hub push <organization/repository_name> <signed record json>```
+      ```  
+      dirctl hub push \
+        <organization/repository_name> \
+        <signed record json>
+      ```  
 
-1. When you're done, logout of your hub account
+      In case of API Key authentication set the needed environment variables or provide the apikey credential file:
 
-      ```dirctl hub logout```
+      ```  
+      dirctl hub push \
+        <organization/repository_name> \
+        <signed record json>
+        --apikey-file api-key-creds.json
+      ```
+
+      In case of interactive login, when you're done, logout of your hub account
+
+      ```
+      dirctl hub logout
+      ```
 
 #### Pulling Agent Directory Records using `dirctl`
 
@@ -278,13 +313,12 @@ To verify the signature against a specific identity, for example to check if an
 agent record originates from GitHub Agntcy users, run:
 
 ```bash
-dirctl verify agent.json \
+dirctl hub verify agent.json \
                  --oidc-issuer "(.*)github.com(.*)" \
                  --oidc-identity "(.*)@agntcy.com"
 ```
 
-For further details on verification, please see
-[the Agent Directory HOWTO](../dir/scenarios.md#signing-and-verification).
+For further details on verification, please checkout `dirctl hub verify --help`
 
 ## Managing Organizations and Users
 
@@ -296,17 +330,7 @@ The settings page allows you to manage your organizations and their users.
 
 Organizations represent groups of users within the Hub, each with its own
 repositories. Users can be members of many organizations. The organizations
-available to you are listed under the **Organizations** tab.
-
-#### Switch Organization
-
-The organization the user is currently signed in is displayed in bold in the organization list and indicated in the dropdown at the top of the left side menu.
-
-To switch organization:
-
-1. Click on the dropdown at the top of the left side menu
-1. Select the organization to switch to
-1. Follow the login procedure
+available to you are listed under the **Organizations** tab
 
 #### Create a new organization
 
