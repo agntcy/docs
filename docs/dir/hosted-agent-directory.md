@@ -33,7 +33,7 @@ organizations are flat and cannot belong to one another.
 * Agent Records - An Agent Record is a collection of data and metadata about a
 particular agentic application or service. The schema of the Record is defined
 in [OASF](../oasf/open-agentic-schema-framework.md) and contains, for example, a
-[collection of skills](../oasf/taxonomy.md).
+[collection of skills](https://schema.oasf.outshift.com/main_skills).
 * Repositories - An agent repository collects agent records that describe
 different versions of the same agent into one location to provide an overview of
 its history and current status. A record can belong to only one repo, while a
@@ -169,42 +169,43 @@ After installation, use the `dirctl` and `dirctl hub` commands to list the avail
 #### Authenticating to the Outshift Agent Directory throug `dirctl`  
 The `dirctl` command line tools supports two methods to authenticate to a Outshift Agent Directory account:
 
-1. **Interactive login**:
-    Interactive login is a web-based user authentication initiated from `dirctl` as follows:
+1. **Interactive login**  
+  Interactive login is a web-based user authentication initiated from `dirctl` as follows:
 
-      ```dirctl hub login```
+      ```bash
+      $ dirctl hub login
+      ```
 
     The login page opens in the browser allowing the user to enter their credentials.
 
-2. **API Key based login**
-    This is a programmatic way to authenticate via API key credentials:
-     
-     * Once logged in through interactive login, use the `dirctl hub apikey create` command to generate the API key credentials, i.e. a `client_id` and a `secret`, for a specific organization and with a specific role. One can store the client_id and secret as environment variables or as json file:
-   ```
+2. **API key based login**  
+  This is a programmatic way to authenticate via API key credentials:
+    * Once logged in through interactive login, use the `dirctl hub apikey create` command to generate the API key credentials, i.e. a `client_id` and a `secret`, for a specific organization and with a specific role. One can store the client_id and secret as environment variables or as JSON file:
+
+    ```bash
     $ dirctl hub apikey create --org-name your-user --role ROLE_ADMIN 
     DIRCTL_CLIENT_ID=3603e7f1-6903-44ec-868e-b78fab3cf43f@ak.eticloud.io
     DIRCTL_CLIENT_SECRET=*********************************************
-   ```
-   ```
+    ```
+
+    ```bash
     $ dirctl hub apikey create --org-name your-user --role ROLE_ADMIN --json > api-key-creds.json
-   ```
-     
-     * Set the environment variable and use the dirctl commands as usual or provide the json file with the credentials:
-   ```
-   $ dirctl hub [command] --apikey-file api-key-creds.json
-   ```  
-     
-     * For more details `dirctl hub apikey --help`
+    ```
 
+    * Set the environment variable and use the dirctl commands as usual or provide the JSON file with the credentials:
 
+        ```bash
+        $ dirctl hub [command] --apikey-file api-key-creds.json
+        ```  
+
+    * For more details `dirctl hub apikey --help`
 
 #### Creating an Agent Directory Record
 
-An Agent Directory record is stored in JSON format. The record is specific
-to one entry in the Agent Directory. The structure of each AD record is
-defined by the
-[OASF](/docs/oasf/open-agentic-schema-framework.md)
-starting at the root with an [Agent object](https://schema.oasf.outshift.com/objects/).
+An Agent Directory record is stored in JSON format. The record is specific to
+one entry in the Agent Directory. The structure of each AD record is defined by
+the [OASF](../oasf/open-agentic-schema-framework.md) starting at the root with
+an [Agent object](https://schema.oasf.outshift.com/objects/).
 
 To be useful, an agent, A2A card, or MCP server record should include at least the following:
 
@@ -247,9 +248,9 @@ As an alternative to manually creating JSON files, the Outshift Agent Directory 
 
 The Record Composer offers the following features:
 
-- Guided forms with real-time validation.
-- Import capabilities to document existing configurations.
-- Seamless integration with the Hub's organizational structure.
+* Guided forms with real-time validation.
+* Import capabilities to document existing configurations.
+* Seamless integration with the Hub's organizational structure.
 
 ##### Accessing the Record Composer
 
@@ -267,9 +268,9 @@ Every agent directory record requires fundamental metadata that integrates seaml
 
 You need to provide the following details:
 
-- A unique name for your agent.
-- A comprehensive description that helps users understand the agent's purpose and capabilities.
-- A semantic version following standard conventions.
+* A unique name for your agent.
+* A comprehensive description that helps users understand the agent's purpose and capabilities.
+* A semantic version following standard conventions.
 
 ![Record Composer Metadata](../assets/hosted-dir/record-composer-metadata.png)
 
@@ -281,14 +282,14 @@ The modular architecture of OASF records allows you to document different types 
 
 ![Record Composer Modules](../assets/hosted-dir/record-composer-modules.png)
 
-If your agent uses A2A (Agent-to-Agent), you can add A2A Agent Card modules to document and communicate the existence of your A2A capabilities to users browsing the directory. 
+If your agent uses A2A (Agent-to-Agent), you can add A2A Agent Card modules to document and communicate the existence of your A2A capabilities to users browsing the directory.  
 
 These modules capture essential details about your agent:
 
-- Endpoint URL.
-- Supported protocol versions.
-- Input and output handling modes.
-- Specific capabilities such as streaming support or push notifications. 
+* Endpoint URL.
+* Supported protocol versions.
+* Input and output handling modes.
+* Specific capabilities such as streaming support or push notifications. 
 
 This documentation helps other developers understand what A2A features your agent supports.
 
@@ -296,9 +297,9 @@ MCP Server modules allow you to document the existence and capabilities of your 
 
 To inform potential integrators about your MCP server's capabilities, you can document available tool definitions:
 
-- Parameter schemas.
-- Prompt configurations with argument specifications.
-- Resource metadata with access patterns.
+* Parameter schemas.
+* Prompt configurations with argument specifications.
+* Resource metadata with access patterns.
 
 Model Configuration modules enable you to document which AI models and providers your agent utilizes, helping users understand your agent's underlying capabilities. These modules communicate information about provider selection from supported services like OpenAI and Anthropic, model name and version specifications, API endpoint details, and generation parameters such as temperature and token limits that your agent employs.
 
@@ -363,15 +364,15 @@ From your terminal window:
 
 1. Push your signed, conforming agent record to the desired organization/repository:
 
-      ```  
+      ```bash
       dirctl hub push \
         <organization/repository_name> \
         <signed record json>
       ```  
 
-      In case of API Key authentication set the needed environment variables or provide the apikey credential file:
+      In case of API key authentication set the needed environment variables or provide the API key credential file:
 
-      ```  
+      ```bash
       dirctl hub push \
         <organization/repository_name> \
         <signed record json>
@@ -380,7 +381,7 @@ From your terminal window:
 
       In case of interactive login, when you're done, logout of your hub account
 
-      ```
+      ```bash
       dirctl hub logout
       ```
 
@@ -397,7 +398,7 @@ To verify that an agent record is properly signed, you can run `dirctl
 verify agent.json`.
 
 To verify the signature against a specific identity, for example to check if an
-agent record originates from GitHub Agntcy users, run:
+agent record originates from GitHub AGNTCY users, run:
 
 ```bash
 dirctl hub verify agent.json \
@@ -445,10 +446,10 @@ button.
 You forgot to login to your Outshift Agent Directory account
 
 `Error: failed to push agent: could not receive response: rpc error: code = InvalidArgument desc = agent: invalid value in agent name`
-The “agent name” attribute in the json file does not match the organization/repository in the Hub.
+The “agent name” attribute in the JSON file does not match the organization/repository in the Hub.
 
 `Error: failed to push agent: could not receive response: rpc error: code = AlreadyExists desc = agent: data model with same version already exists`
-You are trying to upload a new agent record with the same name and version as one that exists already. Update the version number in the json file.
+You are trying to upload a new agent record with the same name and version as one that exists already. Update the version number in the JSON file.
 
 Details on other uses of the `dirctl` command to interact with the
 Agent Directory are
