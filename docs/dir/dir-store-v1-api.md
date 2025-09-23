@@ -42,7 +42,7 @@ PullReferrerRequest represents a record with optional OCI artifacts for pull ope
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| record_ref | [agntcy.dir.core.v1.RecordRef](#agntcy-dir-core-v1-RecordRef) |  | Record reference |
+| record_ref | [agntcy.dir.core.v1.RecordRef](dir-core-v1-api.md#agntcy-dir-core-v1-RecordRef) |  | Record reference |
 | pull_signature | [bool](#bool) |  | Pull signature referrer |
 | pull_public_key | [bool](#bool) |  | Pull public key referrer |
 
@@ -53,7 +53,7 @@ PullReferrerResponse is returned after successfully fetching a record referrer.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| signature | [agntcy.dir.sign.v1.Signature](#agntcy-dir-sign-v1-Signature) |  | Signature to be fetched as a referrer |
+| signature | [agntcy.dir.sign.v1.Signature](dir-sign-v1-api.md#agntcy-dir-sign-v1-Signature) |  | Signature to be fetched as a referrer |
 | public_key | [string](#string) |  | Public key to be fetched as a referrer |
 
 <a name="agntcy-dir-store-v1-PushReferrerRequest"></a>
@@ -63,8 +63,8 @@ PushReferrerRequest represents a record with optional OCI artifacts for push ope
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| record_ref | [agntcy.dir.core.v1.RecordRef](#agntcy-dir-core-v1-RecordRef) |  | Record reference |
-| signature | [agntcy.dir.sign.v1.Signature](#agntcy-dir-sign-v1-Signature) |  | Signature to be stored as a referrer for the record |
+| record_ref | [agntcy.dir.core.v1.RecordRef](dir-core-v1-api.md#agntcy-dir-core-v1-RecordRef) |  | Record reference |
+| signature | [agntcy.dir.sign.v1.Signature](dir-sign-v1-api.md#agntcy-dir-sign-v1-Signature) |  | Signature to be stored as a referrer for the record |
 | public_key | [string](#string) |  | Public key to be stored as a referrer for the record and uploaded as a file to zot for verification |
 
 <a name="agntcy-dir-store-v1-PushReferrerResponse"></a>
@@ -98,10 +98,10 @@ If an error occurs, the stream will be cancelled.
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| Push | [.agntcy.dir.core.v1.Record](#agntcy-dir-core-v1-Record) stream | [.agntcy.dir.core.v1.RecordRef](#agntcy-dir-core-v1-RecordRef) stream | Push performs write operation for given records. |
-| Pull | [.agntcy.dir.core.v1.RecordRef](#agntcy-dir-core-v1-RecordRef) stream | [.agntcy.dir.core.v1.Record](#agntcy-dir-core-v1-Record) stream | Pull performs read operation for given records. |
-| Lookup | [.agntcy.dir.core.v1.RecordRef](#agntcy-dir-core-v1-RecordRef) stream | [.agntcy.dir.core.v1.RecordMeta](#agntcy-dir-core-v1-RecordMeta) stream | Lookup resolves basic metadata for the records. |
-| Delete | [.agntcy.dir.core.v1.RecordRef](#agntcy-dir-core-v1-RecordRef) stream | [.google.protobuf.Empty](#google-protobuf-Empty) | Remove performs delete operation for the records. |
+| Push | [.agntcy.dir.core.v1.Record](dir-core-v1-api.md#agntcy-dir-core-v1-Record) stream | [.agntcy.dir.core.v1.RecordRef](dir-core-v1-api.md#agntcy-dir-core-v1-RecordRef) stream | Push performs write operation for given records. |
+| Pull | [.agntcy.dir.core.v1.RecordRef](dir-core-v1-api.md#agntcy-dir-core-v1-RecordRef) stream | [.agntcy.dir.core.v1.Record](dir-core-v1-api.md#agntcy-dir-core-v1-Record) stream | Pull performs read operation for given records. |
+| Lookup | [.agntcy.dir.core.v1.RecordRef](dir-core-v1-api.md#agntcy-dir-core-v1-RecordRef) stream | [.agntcy.dir.core.v1.RecordMeta](dir-core-v1-api.md#agntcy-dir-core-v1-RecordMeta) stream | Lookup resolves basic metadata for the records. |
+| Delete | [.agntcy.dir.core.v1.RecordRef](dir-core-v1-api.md#agntcy-dir-core-v1-RecordRef) stream | [.google.protobuf.Empty](#google-protobuf-Empty) | Remove performs delete operation for the records. |
 | PushReferrer | [PushReferrerRequest](#agntcy-dir-store-v1-PushReferrerRequest) stream | [PushReferrerResponse](#agntcy-dir-store-v1-PushReferrerResponse) stream | PushReferrer performs write operation for record referrers. |
 | PullReferrer | [PullReferrerRequest](#agntcy-dir-store-v1-PullReferrerRequest) stream | [PullReferrerResponse](#agntcy-dir-store-v1-PullReferrerResponse) stream | PullReferrer performs read operation for record referrers. |
 

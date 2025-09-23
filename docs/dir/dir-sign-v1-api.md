@@ -30,7 +30,7 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| record_ref | [agntcy.dir.core.v1.RecordRef](#agntcy-dir-core-v1-RecordRef) |  | Record reference to be signed |
+| record_ref | [agntcy.dir.core.v1.RecordRef](dir-core-v1-api.md#agntcy-dir-core-v1-RecordRef) |  | Record reference to be signed |
 | provider | [SignRequestProvider](#agntcy-dir-sign-v1-SignRequestProvider) |  | Signing provider to use |
 
 <a name="agntcy-dir-sign-v1-SignRequestProvider"></a>
@@ -109,7 +109,7 @@ List of sign options for OIDC
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| record_ref | [agntcy.dir.core.v1.RecordRef](#agntcy-dir-core-v1-RecordRef) |  | Record reference to be verified |
+| record_ref | [agntcy.dir.core.v1.RecordRef](dir-core-v1-api.md#agntcy-dir-core-v1-RecordRef) |  | Record reference to be verified |
 
 <a name="agntcy-dir-sign-v1-VerifyResponse"></a>
 

@@ -220,7 +220,7 @@ Defines a list of supported record query types.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| record_ref | [agntcy.dir.core.v1.RecordRef](#agntcy-dir-core-v1-RecordRef) |  | The record that matches the list queries. |
+| record_ref | [agntcy.dir.core.v1.RecordRef](dir-core-v1-api.md#agntcy-dir-core-v1-RecordRef) |  | The record that matches the list queries. |
 | labels | [string](#string) | repeated | Labels associated with this record (skills, domains, features) Derived from the record content for CLI display purposes |
 
 <a name="agntcy-dir-routing-v1-PublishRequest"></a>
@@ -238,7 +238,7 @@ Defines a list of supported record query types.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| queries | [agntcy.dir.search.v1.RecordQuery](#agntcy-dir-search-v1-RecordQuery) | repeated |  |
+| queries | [agntcy.dir.search.v1.RecordQuery](dir-search-v1-api.md#agntcy-dir-search-v1-RecordQuery) | repeated |  |
 
 <a name="agntcy-dir-routing-v1-RecordRefs"></a>
 
@@ -246,7 +246,7 @@ Defines a list of supported record query types.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| refs | [agntcy.dir.core.v1.RecordRef](#agntcy-dir-core-v1-RecordRef) | repeated |  |
+| refs | [agntcy.dir.core.v1.RecordRef](dir-core-v1-api.md#agntcy-dir-core-v1-RecordRef) | repeated |  |
 
 <a name="agntcy-dir-routing-v1-SearchRequest"></a>
 
@@ -264,7 +264,7 @@ Defines a list of supported record query types.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| record_ref | [agntcy.dir.core.v1.RecordRef](#agntcy-dir-core-v1-RecordRef) |  | The record that matches the search query. |
+| record_ref | [agntcy.dir.core.v1.RecordRef](dir-core-v1-api.md#agntcy-dir-core-v1-RecordRef) |  | The record that matches the search query. |
 | peer | [Peer](#agntcy-dir-routing-v1-Peer) |  | The peer that provided the record. |
 | match_queries | [RecordQuery](#agntcy-dir-routing-v1-RecordQuery) | repeated | The queries that were matched. |
 | match_score | [uint32](#uint32) |  | The score of the search match. |
