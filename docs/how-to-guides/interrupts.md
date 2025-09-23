@@ -149,7 +149,7 @@ Let's start by creating the basic mail composer agent without interrupt function
     body
     {{separator}}
     DO NOT FORGET TO ADD THE SEPARATOR BEFORE THE SUBECT AND AFTER THE EMAIL BODY!
-    SHOULD NEVER HAPPPEN TO HAVE THE SEPARATOR AFTER THE SUBJECT AND BEFORE THE EMAIL BODY! NEVER AFTER THE SUBJECT!
+    SHOULD NEVER HAPPEN TO HAVE THE SEPARATOR AFTER THE SUBJECT AND BEFORE THE EMAIL BODY! NEVER AFTER THE SUBJECT!
     DO NOT ADD EXTRA TEXT IN THE EMAIL, LIMIT YOURSELF IN GENERATING THE EMAIL
     """,
         template_format="jinja2",
@@ -364,15 +364,15 @@ Now, let's enhance our agent with interrupt capability. Interrupts allow our age
 >
 > In LangGraph, implementing the `interrupt()` function **requires a stateful application** to preserve state across pauses and resumptions:
 >
-> * **How interrupts work**: The `interrupt()` function pauses execution at a specific point, often to await human input or external data. When invoked, LangGraph throws a `GraphInterrupt` exception, halting execution and surfacing the interrupt information to the client.
+> - **How interrupts work**: The `interrupt()` function pauses execution at a specific point, often to await human input or external data. When invoked, LangGraph throws a `GraphInterrupt` exception, halting execution and surfacing the interrupt information to the client.
 >
-> * **Resuming execution**: To resume, the application must provide a `Command` object with the resume key set to the value returned by the `interrupt()` function.
+> - **Resuming execution**: To resume, the application must provide a `Command` object with the resume key set to the value returned by the `interrupt()` function.
 >
-> * **State preservation**: When an `interrupt()` occurs, the current state of the graph—including variables, execution progress, and other data—is saved, allowing accurate resumption from the interruption point.
+> - **State preservation**: When an `interrupt()` occurs, the current state of the graph—including variables, execution progress, and other data—is saved, allowing accurate resumption from the interruption point.
 >
-> * **Stateless limitations**: Stateless applications cannot retain information about previous interactions, making interrupts impractical as they would lack necessary context to resume correctly.
+> - **Stateless limitations**: Stateless applications cannot retain information about previous interactions, making interrupts impractical as they would lack necessary context to resume correctly.
 >
-> * **Implementation considerations**: When using `interrupt()`, implement a persistence mechanism (database, in-memory store, etc.) to maintain state during interruptions and ensure seamless resumption.
+> - **Implementation considerations**: When using `interrupt()`, implement a persistence mechanism (database, in-memory store, etc.) to maintain state during interruptions and ensure seamless resumption.
 
 <!--
 ### Understanding Interrupts in LangGraph
@@ -390,7 +390,6 @@ In contrast, stateless applications do not retain any information about previous
 #### Implications for Application Design
 
 When designing applications with LangGraph that utilize `interrupt()`, it's essential to implement a persistence mechanism to store the application's state during interruptions. This can involve using databases, in-memory data stores, or other storage solutions to ensure that the state is accurately saved and can be retrieved upon resumption. -->
-
 
 ### Adding Interrupt Support to Our Agent
 
@@ -552,7 +551,6 @@ These changes inform the ACP infrastructure that our agent uses interrupts and s
 ## Step 5: Creating the Test Client
 
 To test our Mail Composer Agent with interrupts, we'll create a simple client script that can interact with the agent directly:
-
 
 ```python
 # filepath: src/mailcomposer_agent/main.py

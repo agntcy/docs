@@ -35,15 +35,14 @@ Agent Connect Protocol needs to formally specify the network interactions needed
 * **Configuration**: Define how to configure a remote agent.
 * **Invocation**: Define how to invoke a remote agent providing input for its execution.
 * **Output retrieval and interrupt Handling**: Define how to retrieve the result of an agent invocation. Different interaction modes should be supported:
-    * Synchronous
-    * Asynchronous
-    * Streaming
+  * Synchronous
+  * Asynchronous
+  * Streaming
 
     This should include interrupt handling. That is, how agents notify the caller about execution suspension to ask for additional input.
 
 * **Capabilities and Schema definitions**: Retrieve details about the agent supported capabilities and the data structures definitions for configuration, input, and output.
 * **Error definitions**: Receive error notifications with meaningful error codes and explanations.
-
 
 ### Authentication and Authorization
 Agents invoked remotely need to authenticate the caller and make sure they have the proper authorization to perform the invocation.
@@ -150,7 +149,6 @@ Each definition must include the following details:
 
 The ACP also allows agents to provide definitions of errors specific for that agent. For this purpose, the ACP must define an endpoint that provides schema definitions for all agent specific errors that are not included in the ACP specification.
 
-
 ## API Usage Flows
 
 ### Agents Retrieval APIs
@@ -213,9 +211,9 @@ sequenceDiagram
 In the sequence above:
 
 1. The client requests to start a run on a specific agent, providing its `agent_id`, and specifying:
-    * Configuration: a run configuration is flavoring the behavior of this agent for this run.
-    * Input: run input provides the data the agent will operate on.
-    * Metadata: metadata is a free format object that can be used by the client to tag the run with arbitrary information.
+   * Configuration: a run configuration is flavoring the behavior of this agent for this run.
+   * Input: run input provides the data the agent will operate on.
+   * Metadata: metadata is a free format object that can be used by the client to tag the run with arbitrary information.
 1. The server returns a run object which includes the run identifier and a status, the status at the beginning will be `pending`.
 1. The client retrieves the status of the run until completion.
 1. The server returns the run object with the updated status.
@@ -224,7 +222,6 @@ In the sequence above:
 
 !!! note
     Note that the format of the input and the configuration are not specified by ACP, but they are defined in the agent descriptor.
-
 
 #### Start a Run of an Agent and block until completion
 In this case, the client starts a background run of an agent and immediately tries to retrieve the run output blocking on this call until completion or timeout.
@@ -277,7 +274,6 @@ The client can collect the needed input for the specific interrupt and resume th
 
 !!! note
     Note that the type of interrupts and the correspondent interrupt and resume payload are not specified by ACP, because they are agent dependent. They are instead specified in the agent ACP descriptor.
-
 
 The interrupt is provided by the server when the client requests the output.
 
@@ -539,7 +535,7 @@ We present the details of a sample agent ACP descriptor through the various desc
             }
             ]
         }
-    }    
+    }
     ```
 
 #### Agent Metadata
@@ -570,11 +566,11 @@ The ACP capabilities that the agent support, e.g. `streaming`, `callbacks`, `int
 
 The schemas of all the objects that this agent supports for:
 
-   * Agent Configuration.
-   * Run Input.
-   * Run Output.
-   * Interrupt and Resume Payloads.
-   * Thread State.
+* Agent Configuration.
+* Run Input.
+* Run Output.
+* Interrupt and Resume Payloads.
+* Thread State.
 
 Note that these schemas are needed in the agent ACP descriptor, since they are agent specific and are not defined by ACP, i.e. ACP defines a generic JSON object for the data structures listed above.
 
@@ -704,4 +700,4 @@ Note that these schemas are needed in the agent ACP descriptor, since they are a
     It supports one kind of interrupt, which is used to ask user for approval before sending the email. It provides subject, body, and recipients of the email as interrupt payload and expects approval as input to resume.
 
     It supports a thread state which holds the chat history.
-    
+  

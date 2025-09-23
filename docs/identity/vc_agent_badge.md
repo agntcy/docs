@@ -68,7 +68,6 @@ Where:
 - `credentialSubject.id`: represents the [ID](identifiers.md#definitions) of the Agent subject.
 - `credentialSubject.badge`: adheres to the [A2A Agent Card](https://github.com/google/A2A/blob/main/specification/json/a2a.json#AgentCard) schema.
 
-
 The `proof` in an Agent Badge can be verified using the `assertionMethod` defined in the `ResolverMetadata` object (various `ResolverMetadata` examples are available [here](./identifier_examples.md)).
 
 !!! note
@@ -82,7 +81,6 @@ Where:
 
 - `ID`: represents the [ID](identifiers.md#definitions) of the Agent subject.
 - `NODE`: represents a **trust anchor**, that is, an Identity Node within the AGNTCY identity system.
-
 
 !!! note
     Under the well-known URL above, there could be several agents badges available from the same issuer.

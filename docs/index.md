@@ -4,7 +4,7 @@ AGNTCY began with Outshift by Cisco's vision of an [Internet of Agents](https://
 
 What started as a concept became reality in March 2025 when Outshift launched AGNTCY on GitHub with complete code, specifications, and services, alongside Galileo and LangChain as core maintainers. They built the discovery, identity, messaging, and observability components that agents need to find each other, verify their capabilities, and collaborate securely.
 
-By July 2025, over 75 companies had joined the effort, leading to AGNTCY's donation to the Linux Foundation with Cisco, Dell Technologies, Google Cloud, Oracle, and Red Hat as formative members. What began as one company's vision became the community-owned infrastructure for the Internet of Agents. 
+By July 2025, over 75 companies had joined the effort, leading to AGNTCY's donation to the Linux Foundation with Cisco, Dell Technologies, Google Cloud, Oracle, and Red Hat as formative members. What began as one company's vision became the community-owned infrastructure for the Internet of Agents.
 
 ## Vision
 
@@ -41,23 +41,21 @@ The initial set of IoA components and architecture is outlined below. This is a 
 2. **Open Agent Schema Framework (OASF)**: An OCI based extensible data model allowing to describe agents' attributes and ensuring unique identification of agents. OASF supports the description of A2A agents, MCP servers and can be extended to support other popular formats, such as Copilot agent manifests and many more. Current OASF repo can be found [here](https://github.com/agntcy/oasf), OASF schema documentation can be found [here](https://schema.oasf.outshift.com).
 3. **Agent Directory**: Allows announcing and discover agents or multi-agent applications which are described using OASF. Any organization can run its directory and keep it in sync with others, forming the Internet of Agents inventory. Agent Directory supports A2A agent cards, ACP agent manifests, and MCP server descriptions among other data models.
 4. **Semantic SDK**:
-    * Support various protocols: A2A, MCP, and ACP.
-    * **I/O Mapper Agent**: Handles semantic data adaptations between agents that need to communicate with each other.
-    * **Semantic Router**: Directs workflows via semantic matches. (coming soon)
+   * Support various protocols: A2A, MCP, and ACP.
+   * **I/O Mapper Agent**: Handles semantic data adaptations between agents that need to communicate with each other.
+   * **Semantic Router**: Directs workflows via semantic matches. (coming soon)
 5. **Syntactic SDK**:
-    * **Agent Connect Protocol (ACP)**: A standard interface to invoke agents (or agentic applications), provide input, retrieve output, retrieve supported schemas, graph topology and other useful information. Current ACP spec can be found [here](https://spec.acp.agntcy.org/).
-    * **API-bridge Agent** to connect an Agent with any API end-point (tools or data sources)
-    * **Human in the Loop Agent** to interface with human input/output seamlessly. (coming soon)
+   * **Agent Connect Protocol (ACP)**: A standard interface to invoke agents (or agentic applications), provide input, retrieve output, retrieve supported schemas, graph topology and other useful information. Current ACP spec can be found [here](https://spec.acp.agntcy.org/).
+   * **API-bridge Agent** to connect an Agent with any API end-point (tools or data sources)
+   * **Human in the Loop Agent** to interface with human input/output seamlessly. (coming soon)
 6. **Messaging SDK**:
-    * **SLIM** (Secure Low-latency Interactive Messaging): A protocol that defines the standards and guidelines for secure and efficient network-level communication between AI agents. SLIM ensures interoperability and seamless data exchange by specifying message formats, transport mechanisms, and interaction patterns.
-    * **SLIM Nodes and SDK**: Offers handy secure (MLS and quantum safe) network-level communication services to a group of agents (typically those of a given multi-agent application) through SDK/Libraries. It extends gRPC to support pub/sub interactions in addition to request/reply, streaming, fire & forget and more.
+   * **SLIM** (Secure Low-latency Interactive Messaging): A protocol that defines the standards and guidelines for secure and efficient network-level communication between AI agents. SLIM ensures interoperability and seamless data exchange by specifying message formats, transport mechanisms, and interaction patterns.
+   * **SLIM Nodes and SDK**: Offers handy secure (MLS and quantum safe) network-level communication services to a group of agents (typically those of a given multi-agent application) through SDK/Libraries. It extends gRPC to support pub/sub interactions in addition to request/reply, streaming, fire & forget and more.
 7. **Agent Workflow Server**: Deploys and supervises agent workflows written in various frameworks and makes them available through the Agent Connect Protocol. Such workflows could be multi-agent applications including a mix of toolkit agents, local and remote agents.
-8.  **Agentic Ensemble Observability & Evaluation**: Telemetry collectors, tools and services to enable multi-agent application observability and evaluation
-9.  **Agentic Ensemble Security**: Tools and services to trust and  protect multi-agent applications.
-
+8. **Agentic Ensemble Observability & Evaluation**: Telemetry collectors, tools and services to enable multi-agent application observability and evaluation
+9. **Agentic Ensemble Security**: Tools and services to trust and  protect multi-agent applications.
 
 The following diagram shows a simplified architecture of the core components described above.
-
 
 ![IoA Arch](assets/ioa_arch.png)
 

@@ -4,55 +4,49 @@
 ## Table of Contents
 
 - [agntcy/dir/routing/v1/peer.proto](#agntcy_dir_routing_v1_peer-proto)
-    - [Peer](#agntcy-dir-routing-v1-Peer)
-    - [Peer.AnnotationsEntry](#agntcy-dir-routing-v1-Peer-AnnotationsEntry)
+  - [Peer](#agntcy-dir-routing-v1-Peer)
+  - [Peer.AnnotationsEntry](#agntcy-dir-routing-v1-Peer-AnnotationsEntry)
   
-    - [PeerConnectionType](#agntcy-dir-routing-v1-PeerConnectionType)
+  - [PeerConnectionType](#agntcy-dir-routing-v1-PeerConnectionType)
   
 - [agntcy/dir/routing/v1/publication_service.proto](#agntcy_dir_routing_v1_publication_service-proto)
-    - [CreatePublicationResponse](#agntcy-dir-routing-v1-CreatePublicationResponse)
-    - [GetPublicationRequest](#agntcy-dir-routing-v1-GetPublicationRequest)
-    - [GetPublicationResponse](#agntcy-dir-routing-v1-GetPublicationResponse)
-    - [ListPublicationsItem](#agntcy-dir-routing-v1-ListPublicationsItem)
-    - [ListPublicationsRequest](#agntcy-dir-routing-v1-ListPublicationsRequest)
+  - [CreatePublicationResponse](#agntcy-dir-routing-v1-CreatePublicationResponse)
+  - [GetPublicationRequest](#agntcy-dir-routing-v1-GetPublicationRequest)
+  - [GetPublicationResponse](#agntcy-dir-routing-v1-GetPublicationResponse)
+  - [ListPublicationsItem](#agntcy-dir-routing-v1-ListPublicationsItem)
+  - [ListPublicationsRequest](#agntcy-dir-routing-v1-ListPublicationsRequest)
   
-    - [PublicationStatus](#agntcy-dir-routing-v1-PublicationStatus)
+  - [PublicationStatus](#agntcy-dir-routing-v1-PublicationStatus)
   
-    - [PublicationService](#agntcy-dir-routing-v1-PublicationService)
+  - [PublicationService](#agntcy-dir-routing-v1-PublicationService)
   
 - [agntcy/dir/routing/v1/record_query.proto](#agntcy_dir_routing_v1_record_query-proto)
-    - [RecordQuery](#agntcy-dir-routing-v1-RecordQuery)
+  - [RecordQuery](#agntcy-dir-routing-v1-RecordQuery)
   
-    - [RecordQueryType](#agntcy-dir-routing-v1-RecordQueryType)
+  - [RecordQueryType](#agntcy-dir-routing-v1-RecordQueryType)
   
 - [agntcy/dir/routing/v1/routing_service.proto](#agntcy_dir_routing_v1_routing_service-proto)
-    - [ListRequest](#agntcy-dir-routing-v1-ListRequest)
-    - [ListResponse](#agntcy-dir-routing-v1-ListResponse)
-    - [PublishRequest](#agntcy-dir-routing-v1-PublishRequest)
-    - [RecordQueries](#agntcy-dir-routing-v1-RecordQueries)
-    - [RecordRefs](#agntcy-dir-routing-v1-RecordRefs)
-    - [SearchRequest](#agntcy-dir-routing-v1-SearchRequest)
-    - [SearchResponse](#agntcy-dir-routing-v1-SearchResponse)
-    - [UnpublishRequest](#agntcy-dir-routing-v1-UnpublishRequest)
+  - [ListRequest](#agntcy-dir-routing-v1-ListRequest)
+  - [ListResponse](#agntcy-dir-routing-v1-ListResponse)
+  - [PublishRequest](#agntcy-dir-routing-v1-PublishRequest)
+  - [RecordQueries](#agntcy-dir-routing-v1-RecordQueries)
+  - [RecordRefs](#agntcy-dir-routing-v1-RecordRefs)
+  - [SearchRequest](#agntcy-dir-routing-v1-SearchRequest)
+  - [SearchResponse](#agntcy-dir-routing-v1-SearchResponse)
+  - [UnpublishRequest](#agntcy-dir-routing-v1-UnpublishRequest)
   
-    - [RoutingService](#agntcy-dir-routing-v1-RoutingService)
+  - [RoutingService](#agntcy-dir-routing-v1-RoutingService)
   
 - [Scalar Value Types](#scalar-value-types)
-
-
 
 <a name="agntcy_dir_routing_v1_peer-proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
 ## agntcy/dir/routing/v1/peer.proto
 
-
-
 <a name="agntcy-dir-routing-v1-Peer"></a>
 
 ### Peer
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
@@ -61,33 +55,18 @@
 | annotations | [Peer.AnnotationsEntry](#agntcy-dir-routing-v1-Peer-AnnotationsEntry) | repeated | Additional metadata about the peer. |
 | connection | [PeerConnectionType](#agntcy-dir-routing-v1-PeerConnectionType) |  | Used to signal the sender&#39;s connection capabilities to the peer. |
 
-
-
-
-
-
 <a name="agntcy-dir-routing-v1-Peer-AnnotationsEntry"></a>
 
 ### Peer.AnnotationsEntry
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | key | [string](#string) |  |  |
 | value | [string](#string) |  |  |
 
-
-
-
-
- 
-
-
 <a name="agntcy-dir-routing-v1-PeerConnectionType"></a>
 
 ### PeerConnectionType
-
 
 | Name | Number | Description |
 | ---- | ------ | ----------- |
@@ -96,21 +75,10 @@
 | PEER_CONNECTION_TYPE_CAN_CONNECT | 2 | Sender recently connected to peer. |
 | PEER_CONNECTION_TYPE_CANNOT_CONNECT | 3 | Sender made strong effort to connect to peer repeatedly but failed. |
 
-
- 
-
- 
-
- 
-
-
-
 <a name="agntcy_dir_routing_v1_publication_service-proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
 ## agntcy/dir/routing/v1/publication_service.proto
-
-
 
 <a name="agntcy-dir-routing-v1-CreatePublicationResponse"></a>
 
@@ -118,30 +86,18 @@
 CreatePublicationResponse returns the result of creating a publication request.
 This includes the publication ID and any relevant metadata.
 
-
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | publication_id | [string](#string) |  | Unique identifier of the publication operation. |
-
-
-
-
-
 
 <a name="agntcy-dir-routing-v1-GetPublicationRequest"></a>
 
 ### GetPublicationRequest
 GetPublicationRequest specifies which publication to retrieve by its identifier.
 
-
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | publication_id | [string](#string) |  | Unique identifier of the publication operation to query. |
-
-
-
-
-
 
 <a name="agntcy-dir-routing-v1-GetPublicationResponse"></a>
 
@@ -149,18 +105,12 @@ GetPublicationRequest specifies which publication to retrieve by its identifier.
 GetPublicationResponse contains the full details of a specific publication request.
 Includes status, progress information, and any error details if applicable.
 
-
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | publication_id | [string](#string) |  | Unique identifier of the publication operation. |
 | status | [PublicationStatus](#agntcy-dir-routing-v1-PublicationStatus) |  | Current status of the publication operation. |
 | created_time | [string](#string) |  | Timestamp when the publication operation was created in the RFC3339 format. Specs: https://www.rfc-editor.org/rfc/rfc3339.html |
 | last_update_time | [string](#string) |  | Timestamp of the most recent status update for this publication in the RFC3339 format. |
-
-
-
-
-
 
 <a name="agntcy-dir-routing-v1-ListPublicationsItem"></a>
 
@@ -168,7 +118,6 @@ Includes status, progress information, and any error details if applicable.
 ListPublicationsItem represents a single publication request in the list response.
 Contains publication details including ID, status, and creation timestamp.
 
-
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | publication_id | [string](#string) |  | Unique identifier of the publication operation. |
@@ -176,28 +125,15 @@ Contains publication details including ID, status, and creation timestamp.
 | created_time | [string](#string) |  | Timestamp when the publication operation was created in the RFC3339 format. Specs: https://www.rfc-editor.org/rfc/rfc3339.html |
 | last_update_time | [string](#string) |  | Timestamp of the most recent status update for this publication in the RFC3339 format. |
 
-
-
-
-
-
 <a name="agntcy-dir-routing-v1-ListPublicationsRequest"></a>
 
 ### ListPublicationsRequest
 ListPublicationsRequest contains optional filters for listing publication requests.
 
-
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | limit | [uint32](#uint32) | optional | Optional limit on the number of results to return. |
 | offset | [uint32](#uint32) | optional | Optional offset for pagination of results. |
-
-
-
-
-
- 
-
 
 <a name="agntcy-dir-routing-v1-PublicationStatus"></a>
 
@@ -212,12 +148,6 @@ Publications progress from pending to processing to completed or failed states.
 | PUBLICATION_STATUS_IN_PROGRESS | 2 | Sync operation is actively discovering and transferring objects |
 | PUBLICATION_STATUS_COMPLETED | 3 | Sync operation has been successfully completed |
 | PUBLICATION_STATUS_FAILED | 4 | Sync operation encountered an error and stopped |
-
-
- 
-
- 
-
 
 <a name="agntcy-dir-routing-v1-PublicationService"></a>
 
@@ -237,16 +167,10 @@ The publication workflow:
 | ListPublications | [ListPublicationsRequest](#agntcy-dir-routing-v1-ListPublicationsRequest) | [ListPublicationsItem](#agntcy-dir-routing-v1-ListPublicationsItem) stream | ListPublications returns a stream of all publication requests in the system. This allows monitoring of pending, processing, and completed publication requests. |
 | GetPublication | [GetPublicationRequest](#agntcy-dir-routing-v1-GetPublicationRequest) | [GetPublicationResponse](#agntcy-dir-routing-v1-GetPublicationResponse) | GetPublication retrieves details of a specific publication request by its identifier. This includes the current status and any associated metadata. |
 
- 
-
-
-
 <a name="agntcy_dir_routing_v1_record_query-proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
 ## agntcy/dir/routing/v1/record_query.proto
-
-
 
 <a name="agntcy-dir-routing-v1-RecordQuery"></a>
 
@@ -258,18 +182,10 @@ For example:
  { type: RECORD_QUERY_TYPE_DOMAIN, value: &#34;research&#34; }
  { type: RECORD_QUERY_TYPE_FEATURE, value: &#34;runtime/language&#34; }
 
-
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | type | [RecordQueryType](#agntcy-dir-routing-v1-RecordQueryType) |  | The type of the query to match against. |
 | value | [string](#string) |  | The query value to match against. |
-
-
-
-
-
- 
-
 
 <a name="agntcy-dir-routing-v1-RecordQueryType"></a>
 
@@ -284,105 +200,57 @@ Defines a list of supported record query types.
 | RECORD_QUERY_TYPE_DOMAIN | 3 | Query for a domain name. |
 | RECORD_QUERY_TYPE_FEATURE | 4 | Query for a feature name. |
 
-
- 
-
- 
-
- 
-
-
-
 <a name="agntcy_dir_routing_v1_routing_service-proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
 ## agntcy/dir/routing/v1/routing_service.proto
 
-
-
 <a name="agntcy-dir-routing-v1-ListRequest"></a>
 
 ### ListRequest
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | queries | [RecordQuery](#agntcy-dir-routing-v1-RecordQuery) | repeated | List of queries to match against the records. If set, all queries must match for the record to be returned. |
 | limit | [uint32](#uint32) | optional | Limit the number of results returned. If not set, it will return all records that this peer is providing. |
 
-
-
-
-
-
 <a name="agntcy-dir-routing-v1-ListResponse"></a>
 
 ### ListResponse
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | record_ref | [agntcy.dir.core.v1.RecordRef](#agntcy-dir-core-v1-RecordRef) |  | The record that matches the list queries. |
 | labels | [string](#string) | repeated | Labels associated with this record (skills, domains, features) Derived from the record content for CLI display purposes |
 
-
-
-
-
-
 <a name="agntcy-dir-routing-v1-PublishRequest"></a>
 
 ### PublishRequest
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | record_refs | [RecordRefs](#agntcy-dir-routing-v1-RecordRefs) |  | References to the records to be published. |
 | queries | [RecordQueries](#agntcy-dir-routing-v1-RecordQueries) |  | Queries to match against the records to be published. |
 
-
-
-
-
-
 <a name="agntcy-dir-routing-v1-RecordQueries"></a>
 
 ### RecordQueries
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | queries | [agntcy.dir.search.v1.RecordQuery](#agntcy-dir-search-v1-RecordQuery) | repeated |  |
 
-
-
-
-
-
 <a name="agntcy-dir-routing-v1-RecordRefs"></a>
 
 ### RecordRefs
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | refs | [agntcy.dir.core.v1.RecordRef](#agntcy-dir-core-v1-RecordRef) | repeated |  |
 
-
-
-
-
-
 <a name="agntcy-dir-routing-v1-SearchRequest"></a>
 
 ### SearchRequest
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
@@ -390,16 +258,9 @@ Defines a list of supported record query types.
 | min_match_score | [uint32](#uint32) | optional | Minimal target query match score. For example, if min_match_score=2, it will return records that match at least two of the queries. If not set, it will return records that match at least one query. |
 | limit | [uint32](#uint32) | optional | Limit the number of results returned. If not set, it will return all discovered records. Note that this is a soft limit, as the search may return more results than the limit if there are multiple peers providing the same record. |
 
-
-
-
-
-
 <a name="agntcy-dir-routing-v1-SearchResponse"></a>
 
 ### SearchResponse
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
@@ -408,32 +269,14 @@ Defines a list of supported record query types.
 | match_queries | [RecordQuery](#agntcy-dir-routing-v1-RecordQuery) | repeated | The queries that were matched. |
 | match_score | [uint32](#uint32) |  | The score of the search match. |
 
-
-
-
-
-
 <a name="agntcy-dir-routing-v1-UnpublishRequest"></a>
 
 ### UnpublishRequest
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | record_refs | [RecordRefs](#agntcy-dir-routing-v1-RecordRefs) |  | References to the records to be unpublished. |
 | queries | [RecordQueries](#agntcy-dir-routing-v1-RecordQueries) |  | Queries to match against the records to be unpublished. |
-
-
-
-
-
- 
-
- 
-
- 
-
 
 <a name="agntcy-dir-routing-v1-RoutingService"></a>
 
@@ -457,10 +300,6 @@ It is possible that the records are stale or that they do not exist. Some record
 Results from the search can be used as an input to Pull operation to retrieve the records. |
 | List | [ListRequest](#agntcy-dir-routing-v1-ListRequest) | [ListResponse](#agntcy-dir-routing-v1-ListResponse) stream | List all records that this peer is currently providing that match the given parameters. This operation does not interact with the network. |
 
- 
-
-
-
 ## Scalar Value Types
 
 | .proto Type | Notes | C++ | Java | Python | Go | C# | PHP | Ruby |
@@ -480,4 +319,3 @@ Results from the search can be used as an input to Pull operation to retrieve th
 | <a name="bool" /> bool |  | bool | boolean | boolean | bool | bool | boolean | TrueClass/FalseClass |
 | <a name="string" /> string | A string must always contain UTF-8 encoded or 7-bit ASCII text. | string | String | str/unicode | string | string | string | String (UTF-8) |
 | <a name="bytes" /> bytes | May contain any arbitrary sequence of bytes. | string | ByteString | str | []byte | ByteString | string | String (ASCII-8BIT) |
-

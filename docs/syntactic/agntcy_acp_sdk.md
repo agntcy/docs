@@ -57,8 +57,8 @@ async with AsyncApiClient(config) as api_client:
 The complete documentation for all of the API Endpoints are
 available in the reference documentation for the API clients:
 
-  * [ACPClient](https://agntcy.github.io/acp-sdk/html/agntcy_acp.html#agntcy_acp.ACPClient)
-  * [AsyncACPClient](https://agntcy.github.io/acp-sdk/html/agntcy_acp.html#agntcy_acp.AsyncACPClient)
+* [ACPClient](https://agntcy.github.io/acp-sdk/html/agntcy_acp.html#agntcy_acp.ACPClient)
+* [AsyncACPClient](https://agntcy.github.io/acp-sdk/html/agntcy_acp.html#agntcy_acp.AsyncACPClient)
 
 ## Using ACP with LangGraph
 
@@ -142,14 +142,14 @@ The CLI also provides validators for the ACP descriptor and manifest
 files.
 
 You can use the CLI easily:
-  * using [poetry](https://python-poetry.org/): `poetry run acp --help`
-  * with the package installed: `python3 -m agntcy_acp --help`
+* using [poetry](https://python-poetry.org/): `poetry run acp --help`
+* with the package installed: `python3 -m agntcy_acp --help`
 
 Usage: `acp [OPTIONS] COMMAND [ARGS]...`
 
   Options:
 
-  * `--help`  Show this message and exit.
+* `--help`  Show this message and exit.
 
 Commands:
 
@@ -158,16 +158,16 @@ Commands:
     Generate pydantic models from agent manifest or descriptor.
 
   Options:
-    
-    * `--output-dir TEXT`
-    
-      Pydantic models for specific agent based on provided
-      agent descriptor or agent manifest  [required]
+  
+  * `--output-dir TEXT`
+  
+    Pydantic models for specific agent based on provided
+    agent descriptor or agent manifest  [required]
 
-    * `--model-file-name TEXT`
-    
-      Filename containing the pydantic model of the agent
-      schemas
+  * `--model-file-name TEXT`
+  
+    Filename containing the pydantic model of the agent
+    schemas
 
 * `generate-agent-oapi [OPTIONS] AGENT_DESCRIPTOR_PATH`
 
@@ -175,9 +175,9 @@ Commands:
 
   Options:
 
-    * `--output TEXT`
-    
-      OpenAPI output file
+  * `--output TEXT`
+  
+    OpenAPI output file
 
 * `validate-acp-descriptor [OPTIONS] AGENT_DESCRIPTOR_PATH`
 
@@ -188,7 +188,6 @@ Commands:
 
     Validate the Agent Manifest contained in the file AGENT_MANIFEST_PATH
     against the Manifest specification
-
 
 ## Testing
 

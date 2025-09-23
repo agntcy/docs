@@ -6,7 +6,6 @@ The sample app used for this tutorial is a **Marketing Campaign Manager** agent.
 
 For this tutorial we are using LangGraph, but other frameworks can also be used.
 
-
 ## Overview
 
 The **Marketing Campaign Manager** we are building implements a LangGraph graph which:
@@ -38,10 +37,9 @@ This tutorial is structured in the following steps:
 
 ## Prerequisites
 
-- A working installation of [Python](https://www.python.org/) 3.9 or higher
-- [poetry](https://pypi.org/project/poetry/) v2 or greater
-- [curl](https://curl.se/)
-
+* A working installation of [Python](https://www.python.org/) 3.9 or higher
+* [poetry](https://pypi.org/project/poetry/) v2 or greater
+* [curl](https://curl.se/)
 
 ## Step 1: Create a Basic LangGraph Skeleton Application
 
@@ -69,20 +67,17 @@ poetry add python-dotenv langgraph langchain-openai langchain "agntcy-acp[iomapp
 poetry install
 ```
 
-
 ### Building a Simple LangGraph Skeleton
 
 Now let's begin by setting up a **simple LangGraph** skeleton application with the following nodes:
 
 *Start, Mail Composer, Email Reviewer, Send Mail, and End*
 
-
 ![Skeleton LangGraph Application](./_static/marketing_campaign_skeleton.png)
 
 This setup is a basic framework with **placeholders for each task** in the workflow. It sets the stage for **transforming** these nodes into remote **ACP nodes**, allowing the interaction with **real remote agents**.
 
 The ultimate goal of this application is to compose and review emails that will be sent to a mail recipient. Each node represents a task to be performed in this process, from composing the email to reviewing it, and finally sending it.
-
 
 ### Skeleton Code Example
 
@@ -159,7 +154,6 @@ You should see the output:
 "Graph compiled successfully."
 ```
 
-
 ## Step 2: Generate Models from Agent Manifests
 
 In this step, you will **generate** models based on the agent manifests to define the **input, output and config schemas** for each agent involved in MAS. The models are created using the `acp generate-agent-models` cli command, which reads the agent manifest files and produces Python files that encapsulate the agent's data structures and interfaces necessary for integration.
@@ -200,9 +194,8 @@ poetry run acp generate-agent-models manifests/email_reviewer.json --output-dir 
 These commands create the necessary Python files containing the Pydantic models for interacting with these agents.
 
 > **Model File Structure:**
-> - **Pydantic Models**: Each file includes Pydantic models that represent the **configuration**, **input**, and **output** schemas, enforcing type validation.
-> - **Input, Output and Config Schemas**: These schemas handle incoming and outgoing data and the configuration of the agent.
-
+> * **Pydantic Models**: Each file includes Pydantic models that represent the **configuration**, **input**, and **output** schemas, enforcing type validation.
+> * **Input, Output and Config Schemas**: These schemas handle incoming and outgoing data and the configuration of the agent.
 
 ## Step 3: State Definition
 
@@ -243,7 +236,7 @@ class OverallState(BaseModel):
                                       examples=[["Mar 15 18:10:39 Operation performed: email sent Result: OK",
                                                  "Mar 19 18:13:39 Operation X failed"]])
 
-    has_composer_completed: Optional[bool] = Field(None, description="Flag indicating if the mail composer has succesfully completed its task")
+    has_composer_completed: Optional[bool] = Field(None, description="Flag indicating if the mail composer has successfully completed its task")
     has_reviewer_completed: Optional[bool] = None
     has_sender_completed: Optional[bool] = None
     mailcomposer_state: Optional[MailComposerState] = None
@@ -279,19 +272,16 @@ With this state definition in place, your application now has a structured appro
 
 The next step involves transforming our placeholder nodes into actual ACP nodes for remote agent integration.
 
-
 ## Step 4: Multi-Agent Application Development
 
 Now, let's enhance the skeleton setup by **transforming** LangGraph nodes **into ACP nodes** using `agntcy_acp` **sdk**. ACP nodes allow network communication between agents by using the **Agent Connect Protocol (ACP)**.
 This enables remote invocation, configuration, and output retrieval with the goal of allowing heterogeneous and distributed agents to interoperate.
-
 
 > **Why Use ACP?**
 > 1. **Remote Execution**: ACP nodes run on a Agent Workflow Server, making it possible to execute tasks remotely.
 > 2. **Technology Independence**: ACP allows agents to be implemented in various technologies, such as LangGraph, LlamaIndex, etc., without compatibility issues.
 > 3. **Interoperability**: ACP ensures that agents can communicate and work together, regardless of the underlying technology, by adhering to a standardized protocol.
 > [Learn more about ACP](../../syntactic/agntcy_acp_sdk.md)
-
 
 ### Add Mail Composer and Email Reviewer ACP Nodes
 
@@ -367,7 +357,6 @@ def build_app_graph() -> CompiledStateGraph:
     return graph
 ```
 
-
 ## Step 5: API Bridge Integration
 
 The API Bridge **converts natural language outputs into structured API requests**. The input to the API Bridge is in natural language, but APIs like [SendGrid APIs](https://github.com/twilio/sendgrid-oai/blob/main/spec/json/tsg_mail_v3.json) require specifically structured formats. The API Bridge ensures that the **correct endpoint and request format** are used.
@@ -377,7 +366,6 @@ For more detailed information about the API Bridge Agent implementation and conf
 ### Add SendGrid API Bridge Node
 
 To integrate the SendGrid API Bridge into our `src/marketing_campaign/app.py` file, add the following imports at the top of your file (along with the previous imports):
-
 
 ```python
 # Add these imports at the top of src/marketing_campaign/app.py
@@ -407,9 +395,8 @@ send_email = APIBridgeAgentNode(
 ```
 
 > **Explanation**:
-> - The `_path` fields indicate where to find the input and output in the `OverallState`, as explained in [Step 4](#step-4-multi-agent-application-development).
-> - The `service_name` field specifies the endpoint manually (`sendgrid/v3/mail/send`). However, the API Bridge can **automatically determine** the correct endpoint based on the natural language request if this field is not provided. [Learn more](../../syntactic/api_bridge_agent.md)
-
+> * The `_path` fields indicate where to find the input and output in the `OverallState`, as explained in [Step 4](#step-4-multi-agent-application-development).
+> * The `service_name` field specifies the endpoint manually (`sendgrid/v3/mail/send`). However, the API Bridge can **automatically determine** the correct endpoint based on the natural language request if this field is not provided. [Learn more](../../syntactic/api_bridge_agent.md)
 
 Finally, update your `build_app_graph` function to **replace** the placeholder `send_mail` function defined in [Step 1](#step-1-create-a-basic-langgraph-skeleton-application) with the new `send_email` API Bridge node:
 
@@ -453,23 +440,22 @@ To achieve this, we not only add the **I/O Mapper**, a powerful tool that automa
 > **What is I/O Mapper?**\
 > I/O Mapper is a component that ensures compatibility between agents by **transforming outputs to meet the input requirements** of subsequent agents. It addresses both **format-level** and **semantic-level** compatibility by leveraging an LLM to perform tasks such as:
 >
-> - **JSON Structure Transcoding**: Remapping JSON dictionaries.
-> - **Text Summarization**: Reducing or refining text content.
-> - **Text Translation**: Translating text between languages.
-> - **Text Manipulation**: Reformulating or extracting specific information.
+> * **JSON Structure Transcoding**: Remapping JSON dictionaries.
+> * **Text Summarization**: Reducing or refining text content.
+> * **Text Translation**: Translating text between languages.
+> * **Text Manipulation**: Reformulating or extracting specific information.
 >
 > For more details on I/O Mapper functionality and implementation, see the [official I/O Mapper documentation](../../semantic/io_mapper.md).
-
 
 ### I/O Processing Overview
 
 Among the three nodes added so far, some additional nodes are required to handle input and output transformations effectively. Specifically, as shown in [Marketing Campaign MAS](https://github.com/agntcy/agentic-apps/tree/main/marketing-campaign/src/marketing_campaign/app.py), the following nodes were added:
 
-- **`process_inputs`**: Processes the user's input, updates the `OverallState`, and initializes the `mailcomposer_state` with messages to ensure they are correctly interpreted by the `mailcomposer`. It also checks if the user has completed their interaction (e.g., input is "OK"), which means the user is satisfied about the composed email.
+* **`process_inputs`**: Processes the user's input, updates the `OverallState`, and initializes the `mailcomposer_state` with messages to ensure they are correctly interpreted by the `mailcomposer`. It also checks if the user has completed their interaction (e.g., input is "OK"), which means the user is satisfied about the composed email.
 
-- **`prepare_sendgrid_input`**: This node prepares the input for the SendGrid API. It constructs a query in natural language to send an email, using the corrected email content from the `email_reviewer` and configuration details like the recipient and sender email addresses.
+* **`prepare_sendgrid_input`**: This node prepares the input for the SendGrid API. It constructs a query in natural language to send an email, using the corrected email content from the `email_reviewer` and configuration details like the recipient and sender email addresses.
 
-- **`prepare_output`**: This node consolidates the outputs of the application. It updates the `OverallState` with the final email content and logs the result of the email send operation.
+* **`prepare_output`**: This node consolidates the outputs of the application. It updates the `OverallState` with the final email content and logs the result of the email send operation.
 
 To make this tutorial code fully functional, we need to add implementations for the processing nodes mentioned above:
 
@@ -494,7 +480,7 @@ To make this tutorial code fully functional, we need to add implementations for 
                                         examples=[["Mar 15 18:10:39 Operation performed: email sent Result: OK",
                                                     "Mar 19 18:13:39 Operation X failed"]])
 
-        has_composer_completed: Optional[bool] = Field(None, description="Flag indicating if the mail composer has succesfully completed its task")
+        has_composer_completed: Optional[bool] = Field(None, description="Flag indicating if the mail composer has successfully completed its task")
         has_reviewer_completed: Optional[bool] = None
         has_sender_completed: Optional[bool] = None
         mailcomposer_state: Optional[MailComposerState] = None
@@ -570,8 +556,8 @@ To make this tutorial code fully functional, we need to add implementations for 
 
 The edge between the `mailcomposer` and subsequent nodes is a **conditional edge**. This edge uses the `check_final_email` **function to determine the next step** to be executed. The condition works as follows:
 
-- If the user input is **not "OK"**, the graph transitions to the `prepare_output` node, allowing the user to interact with the `mailcomposer` again.
-- If the user input is **"OK"**, the graph transitions to the `email_reviewer` node and continues through the workflow.
+* If the user input is **not "OK"**, the graph transitions to the `prepare_output` node, allowing the user to interact with the `mailcomposer` again.
+* If the user input is **"OK"**, the graph transitions to the `email_reviewer` node and continues through the workflow.
 
 The conditional edge is implemented with the I/O Mapper, which ensures that the outputs of one node are transformed to match the input requirements of the next node. Here's how to implement the conditional edge in `src/marketing_campaign/app.py`:
 
@@ -659,14 +645,14 @@ The conditional edge is implemented with the I/O Mapper, which ensures that the 
 
 #### Explanation of Parameters and Workflow Behavior:
 
-- **`start=acp_mailcomposer`**: Specifies the starting node for the conditional edge, which is the `mailcomposer`.
-- **`path=check_final_email`**: This is the function that determines the condition for the edge. It returns either `"done"` or `"user"`.
-  - `"done"` indicates that the user is satisfied with the composed email, so to go to the `email_reviewer`.
-  - `"user"` indicates that the user is not satisfied, and move towards `prepare_output` to log the results and loops back to the user.
+* **`start=acp_mailcomposer`**: Specifies the starting node for the conditional edge, which is the `mailcomposer`.
+* **`path=check_final_email`**: This is the function that determines the condition for the edge. It returns either `"done"` or `"user"`.
+  * `"done"` indicates that the user is satisfied with the composed email, so to go to the `email_reviewer`.
+  * `"user"` indicates that the user is not satisfied, and move towards `prepare_output` to log the results and loops back to the user.
 
-- **`"input_fields": ["mailcomposer_state.output.final_email", "target_audience"]`**: Specifies what to map:
-  - `"mailcomposer_state.output.final_email"`: Automatically takes the `final_email` output from the `mailcomposer` and maps it to the input defined in the manifest of the `email_reviewer`
-  - `"target_audience"`: is populated during `process_inputs` from the configuration, required by `email_reviewer`
+* **`"input_fields": ["mailcomposer_state.output.final_email", "target_audience"]`**: Specifies what to map:
+  * `"mailcomposer_state.output.final_email"`: Automatically takes the `final_email` output from the `mailcomposer` and maps it to the input defined in the manifest of the `email_reviewer`
+  * `"target_audience"`: is populated during `process_inputs` from the configuration, required by `email_reviewer`
 
 > **Note**: All paths specified in the `input_fields` are rooted in the `OverallState`
 
@@ -677,7 +663,6 @@ With these additions, our application now has a complete workflow that can:
 4. Review emails with the Email Reviewer agent when needed
 5. Prepare and send emails using the SendGrid API Bridge
 6. Provide meaningful output back to the user
-
 
 At this point, if you want to run your application to see if it compiles [(as at the end of Step 1 above)](#skeleton-code-example), you will
 need to set some variables for Azure in your environment. This depends on your operating system
@@ -871,14 +856,14 @@ Let's break down the components of our manifest generator:
 2. **Specs**: Establishes how the agent communicates by defining expected input/output formats using `OverallState` JSON schemas, configuration options through `ConfigModel`, and supported capabilities.
 
 3. **Deployment**: This section contains deployment-related information:
-   - `deployment_options`: Defines how the agent can be deployed
-     - `url=AnyUrl("file://.")`: Specifies that the source code is located in the current directory (relative to where the manifest is being used)
-     - `framework_config`: Specifies that this is a LangGraph application with the graph defined in `marketing_campaign.app:graph`
+   * `deployment_options`: Defines how the agent can be deployed
+     * `url=AnyUrl("file://.")`: Specifies that the source code is located in the current directory (relative to where the manifest is being used)
+     * `framework_config`: Specifies that this is a LangGraph application with the graph defined in `marketing_campaign.app:graph`
 
-   - `env_vars`: Lists the environment variables required by the marketing campaign.
-   - `dependencies`: Lists the agents that our application depends on. Each dependency specifies:
-     - The local name used to refer to the dependency
-     - The reference to the agent manifest file (`./manifests/mailcomposer.json`)
+   * `env_vars`: Lists the environment variables required by the marketing campaign.
+   * `dependencies`: Lists the agents that our application depends on. Each dependency specifies:
+     * The local name used to refer to the dependency
+     * The reference to the agent manifest file (`./manifests/mailcomposer.json`)
 
 ### Generating the Manifest
 
@@ -898,7 +883,6 @@ This will create a file called `marketing-campaign.json` in the `manifests` dire
 * Deploying and running our application through the Workflow Server Manager
 
 We'll focus on the second point and see how to execute our application using the Workflow Server Manager.
-
 
 ## Step 8: Review Resulting Application
 
@@ -999,7 +983,6 @@ If the deployment is successful, you'll see output similar to:
 
 Take note of the **Agent ID**, **API Key**, and **Host** information, as you'll need them to interact with the deployed application.
 
-
 ### Testing the Application with ACP Client
 
 To test our application, we'll use an ACP client that allows us to communicate with the deployed workflow server:
@@ -1027,11 +1010,11 @@ To test our application, we'll use an ACP client that allows us to communicate w
     ```
 
 4. Interact with the application:
-   - Describe the marketing campaign email you want to compose
-   - Refine the email content through conversation with the Mail Composer agent
-   - Type "OK" when you're satisfied with the draft
-   - The Email Reviewer agent will review and improve the email for your target audience
-   - The email will be sent to the specified recipient via SendGrid
+   * Describe the marketing campaign email you want to compose
+   * Refine the email content through conversation with the Mail Composer agent
+   * Type "OK" when you're satisfied with the draft
+   * The Email Reviewer agent will review and improve the email for your target audience
+   * The email will be sent to the specified recipient via SendGrid
 
 Through this client interaction, you can experience the complete workflow of our multi-agent system, from email composition to delivery, with all the intermediate processing steps handled automatically.
 

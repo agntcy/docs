@@ -19,7 +19,7 @@ Here:
 
 SLIM accommodates both targeted and broadcast messaging within the same API:  
 
-- **1-to-1 Message** 
+- **1-to-1 Message**
 
 Used when the supervisor agent needs to send a request to a single farm agent:  
 
@@ -46,8 +46,3 @@ You can explore the CoffeeAGNTCY code to see these concepts in context:
 
 - **Server implementation** (message handling logic):  
   [coffee_agents/lungo/farms/brazil/farm_server.py](https://github.com/agntcy/coffeeAgntcy/blob/main/coffeeAGNTCY/coffee_agents/lungo/farms/brazil/farm_server.py)  
-
-
-
-
-

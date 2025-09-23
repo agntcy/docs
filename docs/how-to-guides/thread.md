@@ -1,6 +1,5 @@
 # Building Applications with ACP Threads
 
-
 ACP Node supports threads, where a thread contains the accumulated state of a sequence of runs.
 
 In this tutorial, we will explore how to create a LangGraph agent with threads, wrap it in an ACP node, and leverage the various functionalities that come with using threads.
@@ -9,21 +8,18 @@ For more information on the Agent Connect Protocol, see [here](../syntactic/conn
 
 ## Learning Objectives
 
-
 In this short tutorial you will learn:
 
-  * How to create a manifest for a LangGraph agent from code
-  * Deploy the agent with Workflow Server
-  * Use thread endpoints effectively
+* How to create a manifest for a LangGraph agent from code
+* Deploy the agent with Workflow Server
+* Use thread endpoints effectively
 
 ## Prerequisites
 
-
-  * Poetry
-  * Python 3.9 ot higher
-  * [Workflow server manager](../agws/workflow-server-manager.md#installation)
-  * An Editor of your choice
-
+* Poetry
+* Python 3.9 or higher
+* [Workflow server manager](../agws/workflow-server-manager.md#installation)
+* An Editor of your choice
 
 ## Implementation Walkthrough
 
@@ -89,7 +85,6 @@ The agent we will work with is called **Mail Composer**, which specializes in co
         The creation of a LangGraph agent is outside the scope of this guide. If you're unfamiliar with how to create one, refer to this tutorial provided by the LangGraph team: `LangGraph Agent Tutorial <https://langchain-ai.github.io/langgraph/agents/agents/#1-install-dependencies>`_.
 
 ### Define agent manifest
-
 
 1. At the same level as the `src` file, create a new directory named `deploy` and inside src/agent_with_thread create a new Python file called `generate_manifest.py`.
 
@@ -185,7 +180,6 @@ Now you should be able to generate the agent manifest by running
 
 Confirm that there is file called manifest.json inside deploy folder.
 
-
 ### Run and test the Agent
 
 1. Create the agent configuration file
@@ -198,7 +192,7 @@ Confirm that there is file called manifest.json inside deploy folder.
         cd ../../deploy && touch config.yaml
     ```
 
-1. Paste the code bellow, inside config.yaml and replace the environment variables accordingly.
+1. Paste the code below, inside config.yaml and replace the environment variables accordingly.
 
     ```yaml
             config:
@@ -273,7 +267,6 @@ Confirm that there is file called manifest.json inside deploy folder.
 
 ### Get the state
 
-
 ```console
     curl -X 'GET' \
       'http://127.0.0.1:53032/threads/3fa85f64-5717-4562-b3fc-2c963f66afa6' \
@@ -284,7 +277,6 @@ Confirm that there is file called manifest.json inside deploy folder.
 This will return a the current state of the thread in the format specified in the manifest.
 
 ### Get the state history
-
 
 ```console
 

@@ -43,15 +43,13 @@ pip install agntcy-iomapper
 
 To get a local copy up and running, follow the steps below.
 
-
-
-####  Clone the repository
+#### Clone the repository
 
 ``` sh
 git clone https://github.com/agntcy/iomapper-agnt.git
 ```
 
-#### Install dependecies
+#### Install dependencies
 
 ``` sh
 poetry install
@@ -116,7 +114,6 @@ metadata = IOMappingAgentMetadata(
 )
 ```
 
-
 The above instruction directs the IO mapper agent to utilize the `selected_users`
 and `name` from the `campaign_details` field and map them to the `stats.status`.
 No further information is needed since the type information can be derived from
@@ -124,7 +121,7 @@ the input data which is a pydantic model.
 
 !!! note "Tip"
     Both input_fields and output_fields can also be sourced with a list composed
-    of str and/or instances of FieldMetadata as the bellow example shows
+    of str and/or instances of FieldMetadata as the below example shows
 
 ```python
 metadata = IOMappingAgentMetadata(
@@ -233,7 +230,7 @@ We support both LlamaIndex Workflow and the new AgentWorkflow multi agent softwa
 
 In this example we recreate the campaign workflow using `LlamaIndex workflow <https://docs.llamaindex.ai/en/stable/module_guides/workflow/>`_
 
-### Begin by importing the neccessary object
+### Begin by importing the necessary object
 
 ```python
 from agntcy_iomapper import IOMappingAgent, IOMappingAgentMetadata
@@ -344,7 +341,6 @@ mapping_metadata = IOMappingAgentMetadata(
     )
 ```
 
-
 ### Finally define the IOMappingAgent and add it to the AgentWorkflow.
 
 Important to note that a tool is passed, to instruct the io mapper where to go next in the flow.
@@ -370,14 +366,13 @@ io_mapping_agent = IOMappingAgent.as_workflow_agent(
 )
 ```
 
-
 ## Use Examples
 
 1. Install:
-  - `cmake <https://cmake.org/>`_
-  - `pip <https://pip.pypa.io/en/stable/installation/>`_
+- `cmake <https://cmake.org/>`_
+- `pip <https://pip.pypa.io/en/stable/installation/>`_
 
-2. From the `examples` folder run the desired make command, for example:
+1. From the `examples` folder run the desired make command, for example:
 
 ```bash
 make make run_lg_eg_py
@@ -389,7 +384,6 @@ Contributions are what make the open source community such an amazing place to
 learn, inspire, and create. Any contributions you make are **greatly
 appreciated**. For detailed contributing guidelines, please see
 `CONTRIBUTING.md <https://github.com/agntcy/acp-sdk/blob/main/docs/CONTRIBUTING.md>`_
-
 
 ## Copyright Notice and License
 

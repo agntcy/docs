@@ -30,14 +30,14 @@ architecture.
 In this section of the tutorial, we implement and deploy two sample
 applications:
 
- - A [LlamaIndex
-   agent](https://github.com/agntcy/slim/tree/main/data-plane/integrations/mcp/slim-mcp/examples/llamaindex-time-agent)
-   that communicates with an MCP server over SLIM to perform time queries and
-   timezone conversions.
- - An [MCP time
-   server](https://github.com/agntcy/slim/tree/main/data-plane/integrations/mcp/slim-mcp/examples/mcp-server-time)
-   that implements SLIM as its transport protocol and processes requests from the
-   LlamaIndex agent.
+- A [LlamaIndex
+  agent](https://github.com/agntcy/slim/tree/main/data-plane/integrations/mcp/slim-mcp/examples/llamaindex-time-agent)
+  that communicates with an MCP server over SLIM to perform time queries and
+  timezone conversions.
+- An [MCP time
+  server](https://github.com/agntcy/slim/tree/main/data-plane/integrations/mcp/slim-mcp/examples/mcp-server-time)
+  that implements SLIM as its transport protocol and processes requests from the
+  LlamaIndex agent.
 
 ### Prerequisites
 
@@ -937,7 +937,6 @@ def main(
         raise e
 ```
 
-
 </details>
 
 <br>
@@ -1081,10 +1080,10 @@ local proxy instance:
      --mcp-server http://${LOCAL_ADDRESS}:8000/sse
    ```
    This command:
-     - Mounts your local configuration file into the container.
-     - Uses the official SLIM-MCP proxy image.
-     - Sets the service name and proxy identifier.
-     - Configures the connection to your SSE-based MCP server.
+   - Mounts your local configuration file into the container.
+   - Uses the official SLIM-MCP proxy image.
+   - Sets the service name and proxy identifier.
+   - Configures the connection to your SSE-based MCP server.
 
 ### Running the Agent with the Proxy
 

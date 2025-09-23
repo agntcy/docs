@@ -7,7 +7,7 @@ The Directory SDK provides comprehensive libraries and tools for interacting wit
 Documentation for the JavaScript SDK can be found on [GitHub](https://github.com/agntcy/dir/tree/main/sdk/dir-js). The SDK supports both JavaScript and TypeScript applications.
 
 !!! note
-    
+
     The SDK is intended for use in Node.js applications and will not work in Web applications.
 
 ### Installation
@@ -52,7 +52,7 @@ const spiffeClient = new Client(config, transport);
 ```
 
 !!! note
-    
+
     JavaScript SDK requires Directory CLI (dirctl) only to perform signing operations. If you don't need signing, you can use the SDK without dirctl.
 
 ## Python SDK
@@ -101,7 +101,7 @@ client = Client(config)
 ```
 
 !!! note
-    
+
     Python SDK requires Directory CLI (dirctl) only to perform signing operations. If you don't need signing, you can use the SDK without dirctl.
 
 ### Golang SDK
@@ -142,5 +142,5 @@ client := client.New(client.WithConfig(config))
 ```
 
 !!! note
-    
+
     Golang SDK does not require Directory CLI (dirctl) and can be used standalone.

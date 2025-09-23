@@ -38,13 +38,13 @@ git clone https://github.com/agntcy/slim.git
 cd slim/data-plane/slimrpc-compiler
 ```
 
-2. Build the plugin:
+1. Build the plugin:
 
 ```bash
 cargo build --release
 ```
 
-3. The compiled binary will be available at
+1. The compiled binary will be available at
    `data-plane/target/release/protoc-slimrpc-plugin`
 
 ## Usage

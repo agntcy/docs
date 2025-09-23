@@ -25,42 +25,42 @@ You need to have installed the following software to run the Agent
 
 ### Local development
 
-1.  Clone Agent Workflow Server repository:
-    ```sh
-    git clone https://github.com/agntcy/workflow-srv.git
-    ```
+1. Clone Agent Workflow Server repository:
+   ```sh
+   git clone https://github.com/agntcy/workflow-srv.git
+   ```
 
-2.  Copy example env file and adapt if necessary:
-    ```sh
-    cp .env.example .env
-    ```
+2. Copy example env file and adapt if necessary:
+   ```sh
+   cp .env.example .env
+   ```
 
-3.  Create a virtual environment and install the server dependencies:
+3. Create a virtual environment and install the server dependencies:
     ```sh
     poetry install
     ```
 
-4.  Install an agent ([See
+4. Install an agent ([See
     examples](https://github.com/agntcy/acp-sdk/tree/main/examples)).
     E.g.:
     ```sh
     pip install agntcy/acp-sdk/examples/mailcomposer
     ```
 
-5.  Start the server:
+5. Start the server:
     ```sh
     poetry run server
     ```
 
 ### Generating API
 
-1.  If it's the first time you're cloning this repo, initialize
-    submodule:
-    ```sh
-    git submodule update --init --recursive
+1. If it's the first time you're cloning this repo, initialize
+   submodule:
+   ```sh
+   git submodule update --init --recursive
     ```
 
-2.  Run:
+2. Run:
     ```sh
     make generate-api
     ```

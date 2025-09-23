@@ -7,7 +7,7 @@ channel, where every member can read and write. Messages are end-to-end
 encrypted using the [MLS
 protocol](https://datatracker.ietf.org/doc/html/rfc9420).
 
-### Key Features
+## Key Features
 
 - **Name-based Addressing**: In SLIM, all endpoints (channels and clients) have
   a name, and messages use a name-based addressing scheme for content routing.
@@ -90,7 +90,6 @@ setup the end-to-end encryption using the MLS protocol. The identity can be
 represented by a JWT, or a shared secret. For simplicity, we will use a shared
 secret. You can find examples using JWT in the [SLIM
 Repo](https://github.com/agntcy/slim/tree/slim-v0.4.0/data-plane/python-bindings/examples/src/slim_bindings_examples/common.py#L71-L112).
-
 
 The python objects managing the identity are called `PyIdentityProvider` and
 `PyIdentityVerifier`. The `PyIdentityProvider` is responsible for providing the

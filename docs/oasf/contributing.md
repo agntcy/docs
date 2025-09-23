@@ -72,24 +72,24 @@ contribute to the development of OASF Schemas and the framework itself.
    [/objects](https://github.com/agntcy/oasf/tree/main/schema/objects) folder.
 3. Before adding a new attribute, review the following OASF attribute
    conventions:
-    - Attribute names must be a valid UTF-8 sequence.
-    - Attribute names must be all lowercase.
-    - Combine words using underscore.
-    - No special characters except underscore.
-    - Use present tense unless the attribute describes historical information.
-    - Use singular and plural names properly to reflect the field content.
-    - When attribute represents multiple entities, the attribute name should be
-      pluralized and the value type should be an array.
-    - Avoid repetition of words.
-    - Avoid abbreviations when possible.
-      Some exceptions can be made for well-accepted abbreviation like well known
-      acronyms (for example, LLM, AI).
-    - If the attribute can only be related to a `module` class, prefix its name
-      with the module's name.
-    - If the attribute is supposed to hold sensitive data such as API keys, use
-      the `env_vars` attribute instead, which enables record publishers to
-      mandate the presence of environment variables holding such sensitive
-      information.
+   - Attribute names must be a valid UTF-8 sequence.
+   - Attribute names must be all lowercase.
+   - Combine words using underscore.
+   - No special characters except underscore.
+   - Use present tense unless the attribute describes historical information.
+   - Use singular and plural names properly to reflect the field content.
+   - When attribute represents multiple entities, the attribute name should be
+     pluralized and the value type should be an array.
+   - Avoid repetition of words.
+   - Avoid abbreviations when possible.
+     Some exceptions can be made for well-accepted abbreviation like well known
+     acronyms (for example, LLM, AI).
+   - If the attribute can only be related to a `module` class, prefix its name
+     with the module's name.
+   - If the attribute is supposed to hold sensitive data such as API keys, use
+     the `env_vars` attribute instead, which enables record publishers to
+     mandate the presence of environment variables holding such sensitive
+     information.
 
 #### Defining a `field` in the Dictionary
 
@@ -134,8 +134,8 @@ populate it as described below.
        [local instance of the OASF server](http://localhost:8080/data_types).
 4. `is_array` → This a boolean key:value pair that you would need to add if the
    field you are defining is an array.
-    - e.g. `"is_array":
-      true`
+   - e.g. `"is_array":
+     true`
 
 #### Defining an `object`
 
@@ -297,13 +297,13 @@ populate it as described below.
 3. `type` → Add the type of the object you are defining.
 4. `is_array` → This a boolean key:value pair that you would need to add if the
    object you are defining is an array.
-    - e.g. `"is_array":
-      true`
+   - e.g. `"is_array":
+     true`
 5. `is_enum` → This a boolean key:value pair that you would need to add if the
    attribute you are defining is a `class/object` and only the entities
    extending the `class/object` are accepted as a value.
-    - e.g. `"is_enum":
-      true`
+   - e.g. `"is_enum":
+     true`
 
 ### Deprecating an Attribute
 

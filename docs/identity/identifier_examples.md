@@ -31,7 +31,7 @@ ResolverMetadata
 
 Where:
 
-- `assertionMethod`: contains the method, e.g., a JSON Web key (JWK), and in some cases, may also contain the public key that can be used to verify the [`Verifiable Credentials`](/docs/vc/intro). JWKs are commonly used for signing and verifying JWTs (JSON Web Tokens).
+- `assertionMethod`: contains the method, e.g., a JSON Web key (JWK), and in some cases, may also contain the public key that can be used to verify the [`Verifiable Credentials`](./credentials.md). JWKs are commonly used for signing and verifying JWTs (JSON Web Tokens).
 
     !!! note
         While a JWK typically contains the crypto material encoding the public key itself (e.g., the RSA's modulus and exponent), in practice, JWKs are often retrieved dynamically from a JWKS (JSON Web Key Set) endpoint. More specifically, a JWKS is a collection of JWKs hosted by an authentication provider, allowing clients to fetch the appropriate key to verify JWTs without storing them manually. This is precisely the role of the `serviceEndpoint` below.

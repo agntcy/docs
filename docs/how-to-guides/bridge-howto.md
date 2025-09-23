@@ -2,7 +2,7 @@
 
 For a detailed description on the API Bridge Agent, see [API Bridge Agent documentation](../syntactic/api_bridge_agent.md).
 
-### Prerequisites
+## Prerequisites
 
 To build the plugin you need the following dependencies:
 - Go
@@ -299,7 +299,6 @@ curl 'http://localhost:8080/github/' \
   -d 'List the first issue for the repository named tyk owned by TykTechnologies with the label bug'
 ```
 
-
 ## An Example with Sendgrid API
 
 As a usage example, we will use the API Bridge Agent to send email via SENGRID API.
@@ -307,7 +306,7 @@ As a usage example, we will use the API Bridge Agent to send email via SENGRID A
 ### Prerequisites
 
 - Get an API Key for free from sendgrid [sengrid by twilio](https://sendgrid.com/en-us).
-- Retreive the open api spec here [tsg_mail_v3.json](https://github.com/twilio/sendgrid-oai/blob/main/spec/json/tsg_mail_v3.json).
+- Retrieve the open api spec here [tsg_mail_v3.json](https://github.com/twilio/sendgrid-oai/blob/main/spec/json/tsg_mail_v3.json).
 - Make sure redis is running (otherwise, use `make start_redis`).
 - Make sure you properly export `OPENAI_*` parameters.
 - Start the plugin as described on "Getting Started" section.
@@ -391,7 +390,7 @@ For example:
           "Send an message to 'test@example.com' including a joke. Please use emojis inside it.",
           "Send an email to 'test@example.com' including a joke. Please use emojis inside it.",
           "Tell to 'test@example.com' that his new car is available.",
-          "Write a profesional email to reject the candidate 'John Doe <test@example.com'"
+          "Write a professional email to reject the candidate 'John Doe <test@example.com'"
         ]
       }
     }
@@ -1153,7 +1152,7 @@ emphasize-lines: 7-11
 
 ## An Example with a new MCP Server
 
-In this exemple, we have already activated MCP support
+In this example, we have already activated MCP support
 We want to add a new MCP server (weather) in addition to the existing one (the default one) github.
 
 1- create a MCP server

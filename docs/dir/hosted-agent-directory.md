@@ -118,12 +118,12 @@ The **General** tab lists the following information from the record:
 * The version number and date of publishing.
 * The extensions of the record.
 * For agent records:
-    * The skills associated with the agent.
-    * The locators of the agent.
+  * The skills associated with the agent.
+  * The locators of the agent.
 * For MCP server records:
-    * The tools of the MCP server.
-    * The resources of the MCP server.
-    * The prompts of the MCP server.
+  * The tools of the MCP server.
+  * The resources of the MCP server.
+  * The prompts of the MCP server.
 
 The **Versions** tab lists the published versions of the record and the CLI command to push a new version of the record.
 
@@ -141,8 +141,8 @@ To add an agent, A2A card, or MCP server repository in the Outshift Agent Direct
 1. Click the **+ New Repository** button.
 1. Enter the repository name.
 1. Select the visibility for your repository.
-    * Public repositories appear in search results.
-    * Private repositories are only visible in your organization.
+   * Public repositories appear in search results.
+   * Private repositories are only visible in your organization.
 1. Click **Publish**.
 1. Click **Finish**.
 
@@ -166,7 +166,7 @@ command line tool are available in multiple forms on GitHub:
 
 After installation, use the `dirctl` and `dirctl hub` commands to list the available commands.
 
-#### Authenticating to the Outshift Agent Directory throug `dirctl`  
+#### Authenticating to the Outshift Agent Directory through `dirctl`  
 The `dirctl` command line tools supports two methods to authenticate to a Outshift Agent Directory account:
 
 1. **Interactive login**  
@@ -180,10 +180,10 @@ The `dirctl` command line tools supports two methods to authenticate to a Outshi
 
 2. **API key based login**  
   This is a programmatic way to authenticate via API key credentials:
-    * Once logged in through interactive login, use the `dirctl hub apikey create` command to generate the API key credentials, i.e. a `client_id` and a `secret`, for a specific organization and with a specific role. One can store the client_id and secret as environment variables or as JSON file:
+   * Once logged in through interactive login, use the `dirctl hub apikey create` command to generate the API key credentials, i.e. a `client_id` and a `secret`, for a specific organization and with a specific role. One can store the client_id and secret as environment variables or as JSON file:
 
     ```bash
-    $ dirctl hub apikey create --org-name your-user --role ROLE_ADMIN 
+    $ dirctl hub apikey create --org-name your-user --role ROLE_ADMIN
     DIRCTL_CLIENT_ID=3603e7f1-6903-44ec-868e-b78fab3cf43f@ak.eticloud.io
     DIRCTL_CLIENT_SECRET=*********************************************
     ```
@@ -192,13 +192,13 @@ The `dirctl` command line tools supports two methods to authenticate to a Outshi
     $ dirctl hub apikey create --org-name your-user --role ROLE_ADMIN --json > api-key-creds.json
     ```
 
-    * Set the environment variable and use the dirctl commands as usual or provide the JSON file with the credentials:
+   * Set the environment variable and use the dirctl commands as usual or provide the JSON file with the credentials:
 
-        ```bash
-        $ dirctl hub [command] --apikey-file api-key-creds.json
-        ```  
+       ```bash
+       $ dirctl hub [command] --apikey-file api-key-creds.json
+       ```  
 
-    * For more details `dirctl hub apikey --help`
+   * For more details `dirctl hub apikey --help`
 
 #### Creating an Agent Directory Record
 
@@ -218,7 +218,7 @@ To be useful, an agent, A2A card, or MCP server record should include at least t
 * Description: something to help any viewer understand what your agent, A2A card, or MCP server does, what is the use case it is applicable to, expected inputs and outputs, LLM used, runtime, etc.
 * Locator, per [OASF locator objects](https://schema.oasf.outshift.com/objects/locator?extensions=)
   * type(s) (source code, agent as a service, docker image, etc) matching the supported types in the OASF locator objects
-  *  url (corresponding address to find the agent)
+  * url (corresponding address to find the agent)
 * Skills, following the [OASF skills schema](https://schema.oasf.outshift.com/skills?extensions=)
 
 And it will look like this:
@@ -264,7 +264,7 @@ The Record Composer offers two primary approaches to creating agent directory re
 
 ##### Configuring Record Metadata
 
-Every agent directory record requires fundamental metadata that integrates seamlessly with your Hub organization. The composer automatically prefixes record names with your organization identifier and pre-populates author information from your Hub profile. 
+Every agent directory record requires fundamental metadata that integrates seamlessly with your Hub organization. The composer automatically prefixes record names with your organization identifier and pre-populates author information from your Hub profile.
 
 You need to provide the following details:
 
@@ -289,11 +289,11 @@ These modules capture essential details about your agent:
 * Endpoint URL.
 * Supported protocol versions.
 * Input and output handling modes.
-* Specific capabilities such as streaming support or push notifications. 
+* Specific capabilities such as streaming support or push notifications.
 
 This documentation helps other developers understand what A2A features your agent supports.
 
-MCP Server modules allow you to document the existence and capabilities of your Model Context Protocol server for directory users. These modules communicate server connection details across different transport methods including stdio, HTTP, and Server-Sent Events. 
+MCP Server modules allow you to document the existence and capabilities of your Model Context Protocol server for directory users. These modules communicate server connection details across different transport methods including stdio, HTTP, and Server-Sent Events.
 
 To inform potential integrators about your MCP server's capabilities, you can document available tool definitions:
 
@@ -342,13 +342,13 @@ dirctl hub sign record.json > record.signed.json
 
 The signing service login page opens in your browser. Use your credentials to log in. The
 agent, A2A card, or MCP server record will be augmented with a generated signature and will be output
-in JSON format. 
+in JSON format.
 
 You can validate the record using the [OASF Schema API](https://schema.oasf.outshift.com/doc/index.html#/Validation/SchemaWeb.SchemaController.validate_object).
 
 The signed agent, A2A card, or MCP server record can be pushed to the Hub.
 
-For further details on signing, checkout `dirctl hub sign --help` 
+For further details on signing, checkout `dirctl hub sign --help`
 
 #### Pushing Agent Directory Records using `dirctl`
 

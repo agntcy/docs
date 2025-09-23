@@ -18,7 +18,6 @@ Using SLIMA2A is very similar to using the standard A2A implementation. As a ref
 
 In this section we highlight the main differences between the SLIM A2A [server](https://github.com/agntcy/slim/blob/main/data-plane/python/integrations/slima2a/examples/travel_planner_agent/server.py) implementation with respect to the original implementation in the A2A repository.
 
-
 1. Import the SLIMRPC package.
     ```python
     import slimrpc
@@ -54,9 +53,9 @@ In this section we highlight the main differences between the SLIM A2A [server](
         shared_secret="secret",
     )
     ```
-    - local: Name of the local application.
-    - slim: Dictionary specifying how to connect to the SLIM node.
-    - shared_secret: Used to set up MLS (Message Layer Security).
+   - local: Name of the local application.
+   - slim: Dictionary specifying how to connect to the SLIM node.
+   - shared_secret: Used to set up MLS (Message Layer Security).
     For more information about these settings, see the [SLIMRPC](./slim-rpc.md).
 4. Register the Service.
     ```python

@@ -130,12 +130,12 @@ environment, deploy the components to be tested, and run the tests.
 For running tests locally, we need to create a test cluster and deploy the test environment on it before running the tests.
 Make sure the following tools are installed:
 
-  - [Taskfile](https://taskfile.dev/installation/)
-  - [Go](https://go.dev/doc/install)
-  - [Docker](https://docs.docker.com/get-started/get-docker/)
-  - [Kind](https://kind.sigs.k8s.io/docs/user/quick-start#installation)
-  - [Kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl)
-  - [Helm](https://helm.sh/docs/intro/install/)
+- [Taskfile](https://taskfile.dev/installation/)
+- [Go](https://go.dev/doc/install)
+- [Docker](https://docs.docker.com/get-started/get-docker/)
+- [Kind](https://kind.sigs.k8s.io/docs/user/quick-start#installation)
+- [Kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl)
+- [Helm](https://helm.sh/docs/intro/install/)
 
 To run tests locally:
 
@@ -214,17 +214,17 @@ To add your tests:
     ```yaml
     tasks:
       new-component:test-env:deploy:
-        desc: Desription of deployig new component elements
+        desc: Description of deployig new component elements
         cmds:
           - # Command for deploying your components if needed
 
       new-component:test-env:cleanup:
-        desc: Desription of cleaning up component elements
+        desc: Description of cleaning up component elements
         cmds:
           - # Command for cleaning up your components if needed
 
       new-component:test:
-        desc: Desription of the test
+        desc: Description of the test
         cmds:
           - # Commands to set up and run your test
     ```
@@ -273,12 +273,12 @@ to the testing of agentic applications.
 
 For running tests locally, we need the following tools to build the sample applications:
 
-  - [Taskfile](https://taskfile.dev/installation/)
-  - [Python 3.12.X](https://www.python.org/downloads/)
-  - [Poetry](https://python-poetry.org/docs/#installation)
-  - [Docker](https://docs.docker.com/get-started/get-docker/)
-  - [Kind](https://kind.sigs.k8s.io/docs/user/quick-start#installation)
-  - [Kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl)
+- [Taskfile](https://taskfile.dev/installation/)
+- [Python 3.12.X](https://www.python.org/downloads/)
+- [Poetry](https://python-poetry.org/docs/#installation)
+- [Docker](https://docs.docker.com/get-started/get-docker/)
+- [Kind](https://kind.sigs.k8s.io/docs/user/quick-start#installation)
+- [Kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl)
 
 Run the test:
 
