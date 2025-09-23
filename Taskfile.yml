@@ -9,11 +9,10 @@ dotenv: ['.env']
 
 env:
   BUILD_DIR: "{{.ROOT_DIR}}/.build"
-  DEPS_DIR:  "{{.ROOT_DIR}}/.dep"
   VENV_DIR:  "{{.ROOT_DIR}}/.dep/.venv"
   # Taskfile env does not override the actual shell env, see:
   # https://github.com/go-task/task/issues/202
-  PATH: "{{.DEPS_DIR}}:{{.VENV_DIR}}/bin:$PATH"
+  PATH: "{{.VENV_DIR}}/bin:$PATH"
 
 tasks:
   default:
@@ -27,31 +26,24 @@ tasks:
     desc: Build documentation website
     deps:
       - deps/patch
-      - deps/proto-diagrams
-    preconditions:
-      - which go
     vars:
-      SCHEMA_DIR:     "{{.ROOT_DIR}}/schema"
       BUILD_SITE_DIR: "{{.BUILD_DIR}}/site"
     cmds:
-      - mkdir -p docs/generated
-      - "{{.DEPS_DIR}}/proto-gen-md-diagrams -d ${SCHEMA_DIR} -o docs/generated"
       - pushd mkdocs && uv run mkdocs build --site-dir {{.BUILD_SITE_DIR}} && popd
       - |
         echo "Docs available at: file://{{.BUILD_SITE_DIR}}/index.html"
 
   run:
+    desc: Run documentation website in live editing mode
     deps:
       - deps/patch
-      - deps/proto-diagrams
-    desc: Run documentation website in live editing mode
     cmds:
       - pushd mkdocs && uv run mkdocs serve
 
   ##
   ## Dependencies
   ##
-  # TODO(msardara): This is a workaround, the __init__.py files shohuld be in the acp-sdk repo
+  # TODO(msardara): This is a workaround, the __init__.py files should be in the acp-sdk repo
   deps/patch:
     internal: true
     dir: mkdocs
@@ -65,19 +57,3 @@ tasks:
     generates:
       - .venv/lib/{{.PYTHON_VERSION}}/site-packages/agntcy_acp/acp_v0/sync_client
       - .venv/lib/{{.PYTHON_VERSION}}/site-packages/agntcy_acp/acp_v0/async_client
-
-  deps/proto-diagrams:
-    internal: true
-    vars:
-      GIT: "https://github.com/GoogleCloudPlatform/proto-gen-md-diagrams"
-      DIR: "{{.DEPS_DIR}}/git-proto-diagrams"
-      BIN: "{{.DEPS_DIR}}/proto-gen-md-diagrams"
-    cmds:
-      - defer: rm -rf {{.DIR}}
-      - |
-        mkdir -p {{.DIR}}
-        git clone {{.GIT}} {{.DIR}}
-        cd {{.DIR}}
-        go build -o {{.BIN}}
-    status:
-      - test -f {{.BIN}}
