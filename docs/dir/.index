@@ -7,6 +7,7 @@ nav:
   - Features and Usage: scenarios.md
   - Hosted AGNTCY Agent Directory: hosted-agent-directory.md
   - CLI Reference: directory-cli.md
+  - VSCode extension: vscode-extension.md
   - SDK Reference: directory-sdk.md
   - API Reference:
     - Core: dir-core-v1-api.md
