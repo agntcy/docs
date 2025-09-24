@@ -1,0 +1,6 @@
+[codespell]
+skip = .git,.build,node_modules,*.png,*.jpg,*.jpeg,*.svg,*.ico,*.drawio,mkdocs/site,schema
+ignore-words-list = agntcy,oasf,acp,mcp,slim,csit,ioa,mas,agws,griffe,outshift,galileo,langchain,agentic,interop,verifiable,authn,authz,pubsub,grpc,protobuf,uuid,uuids,repo,repos,github,localhost,oauth,jwt,ssl,tls,mkdocs,pymdown,autodoc,docstring,namespace,metadata,orchestration,kubectl,kubernetes,observability,telemetry,workflow,workflows,schemas,cli,api,apis,json,yaml,ui,ux,url,urls,uri,uris,http,https,pytho
+count = 
+check-filenames = 
+check-hidden = 

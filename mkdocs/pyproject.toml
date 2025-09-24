@@ -22,4 +22,8 @@ dependencies = [
     "agntcy-iomapper==0.2.2",
     "beautifulsoup4>=4.13.3",
     "mkdocs-swagger-ui-tag==0.7.1",
+    # Linting and testing tools
+    "codespell>=2.2.0",
+    "pymarkdownlnt>=0.9.0",
+    "mkdocs-htmlproofer-plugin>=1.0.0",
 ]

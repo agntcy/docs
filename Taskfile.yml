@@ -41,6 +41,70 @@ tasks:
       - pushd mkdocs && uv run mkdocs serve
 
   ##
+  ## Testing and Linting
+  ##
+  test:
+    desc: Run all documentation tests and linting checks
+    deps:
+      - deps/patch
+    cmds:
+      - task: lint
+      - echo "All documentation tests passed!"
+
+  lint:
+    desc: Run all linting checks (spelling, markdown)
+    deps:
+      - deps/patch
+    cmds:
+      - task: lint:spelling
+      - task: lint:markdown
+
+  lint:spelling:
+    desc: Check spelling in documentation
+    internal: true
+    deps:
+      - deps/patch
+    dir: mkdocs
+    cmds:
+      - uv run codespell --config ../.codespellrc ../docs
+
+  lint:markdown:
+    desc: Check Markdown syntax and style
+    internal: true
+    deps:
+      - deps/patch
+    dir: mkdocs
+    cmds:
+      - uv run pymarkdown --config ../.pymarkdown scan ../docs
+
+  lint:fix:
+    desc: Auto-fix spelling and markdown issues where possible
+    deps:
+      - deps/patch
+    dir: mkdocs
+    cmds:
+      - task: lint:fix:spelling
+      - task: lint:fix:markdown
+
+  lint:fix:spelling:
+    desc: Auto-fix spelling issues only
+    internal: true
+    deps:
+      - deps/patch
+    dir: mkdocs
+    cmds:
+      - uv run codespell --config ../.codespellrc ../docs --write-changes
+
+  lint:fix:markdown:
+    desc: Auto-fix markdown issues only
+    internal: true
+    deps:
+      - deps/patch
+    dir: mkdocs
+    cmds:
+      - uv run pymarkdown --config ../.pymarkdown fix -r ../docs
+
+  ##
   ## Dependencies
   ##
   # TODO(msardara): This is a workaround, the __init__.py files should be in the acp-sdk repo
