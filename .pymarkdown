@@ -20,3 +20,5 @@ plugins:
     enabled: false
   md051:
     enabled: false
+  md007:  
+    enabled: false
