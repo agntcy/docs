@@ -17,8 +17,8 @@ The above diagram depicts the process for generating and storing a verifiable Ag
 
 - The `ResolverMetadata` along with the verifiable Agent Badge can be stored in Identity Nodes (INs) that can operate as trust anchors. In subsequent updates to this documentation, AGNTCY shall provide more detailed recommendations about the INs, and their role and capacity to operate as decentralized trust anchors, especially, to:
 
-  - Build trust during MAS composition involving third-party Agents and MCP Servers.
-  - Link and automate the dynamic and trustworthy discovery of running Agents and MCP Servers to their corresponding AuthN and delegated AuthZ methods, including MFA in a MAS.
+    - Build trust during MAS composition involving third-party Agents and MCP Servers.
+    - Link and automate the dynamic and trustworthy discovery of running Agents and MCP Servers to their corresponding AuthN and delegated AuthZ methods, including MFA in a MAS.
 
 - AGNTCY considers the possibility that organizations and their sub-organizations may register with the INs (e.g., to brand and ensure the origin of their agents). This may include means to store and bind an organization/sub-organization to a PubKey, the IDs for the various subjects that they might register (e.g., Agents and MCP Servers), their corresponding `ResolverMetadata` objects and Agent Badges, as well as additional sets of VCs for each of them.
 

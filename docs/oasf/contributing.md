@@ -62,34 +62,21 @@ contribute to the development of OASF Schemas and the framework itself.
 
 ### Adding or Modifying an `attribute`
 
-1. All the available `attributes` - `fields` & `objects` in OASF are and will
-   need to be defined in the attribute dictionary, the
-   [dictionary.json](https://github.com/agntcy/oasf/blob/main/schema/dictionary.json)
-   file and [/objects](https://github.com/agntcy/oasf/tree/main/schema/objects)
-   folder if defining an object.
-2. Determine if a new attribute is required for your change, it might already be
-   defined in the attribute dictionary and/or the
-   [/objects](https://github.com/agntcy/oasf/tree/main/schema/objects) folder.
-3. Before adding a new attribute, review the following OASF attribute
-   conventions:
-   - Attribute names must be a valid UTF-8 sequence.
-   - Attribute names must be all lowercase.
-   - Combine words using underscore.
-   - No special characters except underscore.
-   - Use present tense unless the attribute describes historical information.
-   - Use singular and plural names properly to reflect the field content.
-   - When attribute represents multiple entities, the attribute name should be
-     pluralized and the value type should be an array.
-   - Avoid repetition of words.
-   - Avoid abbreviations when possible.
-     Some exceptions can be made for well-accepted abbreviation like well known
-     acronyms (for example, LLM, AI).
-   - If the attribute can only be related to a `module` class, prefix its name
-     with the module's name.
-   - If the attribute is supposed to hold sensitive data such as API keys, use
-     the `env_vars` attribute instead, which enables record publishers to
-     mandate the presence of environment variables holding such sensitive
-     information.
+1. All the available `attributes` - `fields` & `objects` in OASF are and will need to be defined in the attribute dictionary, the [dictionary.json](https://github.com/agntcy/oasf/blob/main/schema/dictionary.json) file and [/objects](https://github.com/agntcy/oasf/tree/main/schema/objects) folder if defining an object.
+2. Determine if a new attribute is required for your change, it might already be defined in the attribute dictionary and/or the [/objects](https://github.com/agntcy/oasf/tree/main/schema/objects) folder.
+3. Before adding a new attribute, review the following OASF attribute conventions:
+
+    - Attribute names must be a valid UTF-8 sequence.
+    - Attribute names must be all lowercase.
+    - Combine words using underscore.
+    - No special characters except underscore.
+    - Use present tense unless the attribute describes historical information.
+    - Use singular and plural names properly to reflect the field content.
+    - When attribute represents multiple entities, the attribute name should be pluralized and the value type should be an array.
+    - Avoid repetition of words.
+    - Avoid abbreviations when possible. Some exceptions can be made for well-accepted abbreviation like well known acronyms (for example, LLM, AI).
+    - If the attribute can only be related to a `module` class, prefix its name with the module's name.
+    - If the attribute is supposed to hold sensitive data such as API keys, use the `env_vars` attribute instead, which enables record publishers to mandate the presence of environment variables holding such sensitive information.
 
 #### Defining a `field` in the Dictionary
 
@@ -110,32 +97,23 @@ Sample entry in the dictionary:
 Choose a **unique** field you want to add, `name` in the example above and
 populate it as described below.
 
-1. `caption` → Add a user-friendly name to the field.
-2. `description` → Add concise description to define the attributes.
-    1. Note that `field` descriptions can be overridden in the `class/object`,
-       therefore if it’s a common field (like name, label, uid, etc.) feel free
-       to add a generic description, specific descriptions can be added in the
-       `class/object` definition.
-       For example,
-    2. A generic definition of `name` in the dictionary:
-        1. `name` :
-           `The name of the entity.
-           See specific usage.`
-    3. Specific description of `name` in the `record` object:
-        1. `name` :
-           `The name of the record.
-           For example:
-           <code>Marketing Strategy Agent</code>.`
-3. `type` → Review OASF data_types and ensure you utilize appropriate types
+1. `caption`: Add a user-friendly name to the field.
+2. `description`: Add concise description to define the attributes.
+
+    ??? note
+        `field` descriptions can be overridden in the `class/object`, therefore if it’s a common field (like name, label, uid, etc.) feel free to add a generic description, specific descriptions can be added in the `class/object` definition. For example:
+
+         A generic definition of `name` in the dictionary:
+            1. `name`: `The name of the entity. See specific usage.`
+
+         Specific description of `name` in the `record` object:
+            1. `name`: `The name of the record. For example: <code>Marketing Strategy Agent</code>.`
+
+3. `type`: Review OASF data_types and ensure you utilize appropriate types
    while defining new fields.
-    1. All the available data_types can be accessed
-       [here](https://schema.oasf.outshift.com/data_types).
-    2. They are also accessible in your
-       [local instance of the OASF server](http://localhost:8080/data_types).
-4. `is_array` → This a boolean key:value pair that you would need to add if the
-   field you are defining is an array.
-   - e.g. `"is_array":
-     true`
+    * All the available data_types can be accessed [here](https://schema.oasf.outshift.com/data_types).
+    * They are also accessible in your [local instance of the OASF server](http://localhost:8080/data_types).
+4. `is_array`: This a boolean key:value pair that you would need to add if the field you are defining is an array.
 
 #### Defining an `object`
 
@@ -289,21 +267,14 @@ Sample entry in the `dictionary.json`,
 }
 ```
 
-Choose a **unique** object you want to add, `locators` in the example above and
+Choose a unique object you want to add, `locators` in the example above and
 populate it as described below.
 
-1. `caption` → Add a user-friendly name to the object
-2. `description` → Add a concise description to define the object.
-3. `type` → Add the type of the object you are defining.
-4. `is_array` → This a boolean key:value pair that you would need to add if the
-   object you are defining is an array.
-   - e.g. `"is_array":
-     true`
-5. `is_enum` → This a boolean key:value pair that you would need to add if the
-   attribute you are defining is a `class/object` and only the entities
-   extending the `class/object` are accepted as a value.
-   - e.g. `"is_enum":
-     true`
+1. `caption`: Add a user-friendly name to the object.
+2. `description`: Add a concise description to define the object.
+3. `type`: Add the type of the object you are defining.
+4. `is_array`: This a boolean key:value pair that you would need to add if the object you are defining is an array.
+5. `is_enum`: This a boolean key:value pair that you would need to add if the attribute you are defining is a `class/object` and only the entities extending the `class/object` are accepted as a value.
 
 ### Deprecating an Attribute
 

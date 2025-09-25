@@ -41,6 +41,7 @@ In this section we highlight the main differences between the SLIM A2A [server](
     servicer = SLIMRPCHandler(agent_card, request_handler)
     ```
 3. Setup the `slimrpc.Server`. This is the only place where you need to setup few parameters that are specific to SLIM.
+
     ```python
     server = slimrpc.Server(
         local="agntcy/demo/travel_planner_agent",
@@ -53,11 +54,17 @@ In this section we highlight the main differences between the SLIM A2A [server](
         shared_secret="secret",
     )
     ```
-   - local: Name of the local application.
-   - slim: Dictionary specifying how to connect to the SLIM node.
-   - shared_secret: Used to set up MLS (Message Layer Security).
+
+    Where:
+
+    - `local`: Name of the local application.
+    - `slim`: Dictionary specifying how to connect to the SLIM node.
+    - `shared_secret`: Used to set up MLS (Message Layer Security).
+
     For more information about these settings, see the [SLIMRPC](./slim-rpc.md).
+
 4. Register the Service.
+
     ```python
     add_A2AServiceServicer_to_server(
         servicer,

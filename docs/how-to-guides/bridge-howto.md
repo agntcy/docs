@@ -1069,18 +1069,18 @@ Here is what happened behind the scenes:
 
 1. **Content-Type Detection**: The system recognizes the `application/nlq` content type.
 2. **Operation Matching**:
-   - Compares your query ("Get flights from 12pm to 1pm on March 11th 2025")
-     against the `x-nl-input-examples` or the operation description.
-   - Identifies the closest matching operation (`getFlightsAll` in this case, ie `GET /flights/all`).
+    - Compares your query ("Get flights from 12pm to 1pm on March 11th 2025")
+      against the `x-nl-input-examples` or the operation description.
+    - Identifies the closest matching operation (`getFlightsAll` in this case, ie `GET /flights/all`).
 3. **Parameter Extraction**:
-   - An LLM extracts relevant parameters from your query.
-   - Builds a proper API request.
+    - An LLM extracts relevant parameters from your query.
+    - Builds a proper API request.
 4. **Request Transformation**:
-   - Converts the natural query to a proper HTTP request.
-   - Forwards the request to the upstream API (`GET /flights/all?start=1678560000&end=1678563600` for example).
+    - Converts the natural query to a proper HTTP request.
+    - Forwards the request to the upstream API (`GET /flights/all?start=1678560000&end=1678563600` for example).
 5. **Response Handling**:
-   - Receives the raw API response.
-   - Returns the JSON response with the flight data.
+    - Receives the raw API response.
+    - Returns the JSON response with the flight data.
 
 Without any code you were able to query the OpenSky Network API and retrieve flight data.
 

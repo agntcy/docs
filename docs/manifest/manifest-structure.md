@@ -190,23 +190,23 @@ Agents can be provided in two different forms, which we call deployment options:
 * **As a service**: a network endpoint that exposes an interface to the agent (for example, Agent Connect Protocol).
 * **As a deployable artifact**, for example:
   
-  * A docker image, which once deployed exposes an interface to the agent (for example, Agent Connect Protocol).
-  * A source code bundle, which can be executed within the specific runtime and framework it is built on.
+    * A docker image, which once deployed exposes an interface to the agent (for example, Agent Connect Protocol).
+    * A source code bundle, which can be executed within the specific runtime and framework it is built on.
 
 The same agent can support one or more deployment options.
 
 Agent Manifest currently supports three deployment options:
 
 * Source Code Deployment: In this case the agent can be deployed starting from its code. For this deployment mode, the manifest provides:
-  * The location where the code is available
-  * The framework used for this agent
-  * The framework specific configuration needed to run the agent.
+    * The location where the code is available
+    * The framework used for this agent
+    * The framework specific configuration needed to run the agent.
 * Remote Service Deployment: In this case, the agent does not come as a deployable artefact, but it's already deployed and available as a service. For this deployment mode, the manifest provides:
-  * The network endpoint where the agent is available through the ACP
-  * The authentication used by ACP for this agent
+    * The network endpoint where the agent is available through the ACP
+    * The authentication used by ACP for this agent
 * Docker Deployment: In this case the agent can be deployed starting from a docker image. It is assumed that once running the docker container expose the agent through ACP. For this deployment mode, the manifest provides:
-  * The agent container image
-  * The authentication used by ACP for this agent
+    * The agent container image
+    * The authentication used by ACP for this agent
 
 <details>
 <summary>Sample manifest dependency section for the mailcomposer agent</summary>

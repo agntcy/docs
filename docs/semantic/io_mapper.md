@@ -368,15 +368,16 @@ io_mapping_agent = IOMappingAgent.as_workflow_agent(
 
 ## Use Examples
 
-1. Install:
-- `cmake <https://cmake.org/>`_
-- `pip <https://pip.pypa.io/en/stable/installation/>`_
+1. Install
+
+    - `cmake <https://cmake.org/>`_
+    - `pip <https://pip.pypa.io/en/stable/installation/>`_
 
 1. From the `examples` folder run the desired make command, for example:
 
-```bash
-make make run_lg_eg_py
-```
+    ```bash
+    make make run_lg_eg_py
+    ```
 
 ## Contributing
 

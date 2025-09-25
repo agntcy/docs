@@ -31,13 +31,9 @@ In this section of the tutorial, we implement and deploy two sample
 applications:
 
 - A [LlamaIndex
-  agent](https://github.com/agntcy/slim/tree/main/data-plane/integrations/mcp/slim-mcp/examples/llamaindex-time-agent)
-  that communicates with an MCP server over SLIM to perform time queries and
-  timezone conversions.
+  agent](https://github.com/agntcy/slim/tree/main/data-plane/integrations/mcp/slim-mcp/examples/llamaindex-time-agent) that communicates with an MCP server over SLIM to perform time queries and timezone conversions.
 - An [MCP time
-  server](https://github.com/agntcy/slim/tree/main/data-plane/integrations/mcp/slim-mcp/examples/mcp-server-time)
-  that implements SLIM as its transport protocol and processes requests from the
-  LlamaIndex agent.
+  server](https://github.com/agntcy/slim/tree/main/data-plane/integrations/mcp/slim-mcp/examples/mcp-server-time) that implements SLIM as its transport protocol and processes requests from the LlamaIndex agent.
 
 ### Prerequisites
 

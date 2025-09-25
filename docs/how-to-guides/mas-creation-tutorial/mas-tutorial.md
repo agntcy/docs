@@ -193,9 +193,10 @@ poetry run acp generate-agent-models manifests/email_reviewer.json --output-dir 
 
 These commands create the necessary Python files containing the Pydantic models for interacting with these agents.
 
-> **Model File Structure:**
-> * **Pydantic Models**: Each file includes Pydantic models that represent the **configuration**, **input**, and **output** schemas, enforcing type validation.
-> * **Input, Output and Config Schemas**: These schemas handle incoming and outgoing data and the configuration of the agent.
+**Model File Structure:**
+
+* **Pydantic Models**: Each file includes Pydantic models that represent the **configuration**, **input**, and **output** schemas, enforcing type validation.
+* **Input, Output and Config Schemas**: These schemas handle incoming and outgoing data and the configuration of the agent.
 
 ## Step 3: State Definition
 
@@ -394,9 +395,9 @@ send_email = APIBridgeAgentNode(
 )
 ```
 
-> **Explanation**:
-> * The `_path` fields indicate where to find the input and output in the `OverallState`, as explained in [Step 4](#step-4-multi-agent-application-development).
-> * The `service_name` field specifies the endpoint manually (`sendgrid/v3/mail/send`). However, the API Bridge can **automatically determine** the correct endpoint based on the natural language request if this field is not provided. [Learn more](../../syntactic/api_bridge_agent.md)
+**Explanation**:
+* The `_path` fields indicate where to find the input and output in the `OverallState`, as explained in [Step 4](#step-4-multi-agent-application-development).
+* The `service_name` field specifies the endpoint manually (`sendgrid/v3/mail/send`). However, the API Bridge can **automatically determine** the correct endpoint based on the natural language request if this field is not provided. [Learn more](../../syntactic/api_bridge_agent.md)
 
 Finally, update your `build_app_graph` function to **replace** the placeholder `send_mail` function defined in [Step 1](#step-1-create-a-basic-langgraph-skeleton-application) with the new `send_email` API Bridge node:
 
@@ -437,15 +438,16 @@ In this section, we will explore how to handle inputs and outputs effectively wi
 
 To achieve this, we not only add the **I/O Mapper**, a powerful tool that automatically transforms outputs from one node to match the input requirements of the next using an LLM, but also **introduce additional nodes** to demonstrate how to perform **manual mapping**. This combination showcases both automated and manual approaches to handle the state within the application.
 
-> **What is I/O Mapper?**\
-> I/O Mapper is a component that ensures compatibility between agents by **transforming outputs to meet the input requirements** of subsequent agents. It addresses both **format-level** and **semantic-level** compatibility by leveraging an LLM to perform tasks such as:
->
-> * **JSON Structure Transcoding**: Remapping JSON dictionaries.
-> * **Text Summarization**: Reducing or refining text content.
-> * **Text Translation**: Translating text between languages.
-> * **Text Manipulation**: Reformulating or extracting specific information.
->
-> For more details on I/O Mapper functionality and implementation, see the [official I/O Mapper documentation](../../semantic/io_mapper.md).
+**What is I/O Mapper?**
+
+I/O Mapper is a component that ensures compatibility between agents by **transforming outputs to meet the input requirements** of subsequent agents. It addresses both **format-level** and **semantic-level** compatibility by leveraging an LLM to perform tasks such as:
+
+* **JSON Structure Transcoding**: Remapping JSON dictionaries.
+* **Text Summarization**: Reducing or refining text content.
+* **Text Translation**: Translating text between languages.
+* **Text Manipulation**: Reformulating or extracting specific information.
+
+For more details on I/O Mapper functionality and implementation, see the [official I/O Mapper documentation](../../semantic/io_mapper.md).
 
 ### I/O Processing Overview
 
@@ -647,14 +649,15 @@ The conditional edge is implemented with the I/O Mapper, which ensures that the 
 
 * **`start=acp_mailcomposer`**: Specifies the starting node for the conditional edge, which is the `mailcomposer`.
 * **`path=check_final_email`**: This is the function that determines the condition for the edge. It returns either `"done"` or `"user"`.
-  * `"done"` indicates that the user is satisfied with the composed email, so to go to the `email_reviewer`.
-  * `"user"` indicates that the user is not satisfied, and move towards `prepare_output` to log the results and loops back to the user.
+    * `"done"` indicates that the user is satisfied with the composed email, so to go to the `email_reviewer`.
+    * `"user"` indicates that the user is not satisfied, and move towards `prepare_output` to log the results and loops back to the user.
 
 * **`"input_fields": ["mailcomposer_state.output.final_email", "target_audience"]`**: Specifies what to map:
-  * `"mailcomposer_state.output.final_email"`: Automatically takes the `final_email` output from the `mailcomposer` and maps it to the input defined in the manifest of the `email_reviewer`
-  * `"target_audience"`: is populated during `process_inputs` from the configuration, required by `email_reviewer`
+    * `"mailcomposer_state.output.final_email"`: Automatically takes the `final_email` output from the `mailcomposer` and maps it to the input defined in the manifest of the `email_reviewer`
+    * `"target_audience"`: is populated during `process_inputs` from the configuration, required by `email_reviewer`
 
-> **Note**: All paths specified in the `input_fields` are rooted in the `OverallState`
+!!! Note
+    All paths specified in the `input_fields` are rooted in the `OverallState`
 
 With these additions, our application now has a complete workflow that can:
 1. Process user inputs and initialize states
@@ -856,14 +859,14 @@ Let's break down the components of our manifest generator:
 2. **Specs**: Establishes how the agent communicates by defining expected input/output formats using `OverallState` JSON schemas, configuration options through `ConfigModel`, and supported capabilities.
 
 3. **Deployment**: This section contains deployment-related information:
-   * `deployment_options`: Defines how the agent can be deployed
-     * `url=AnyUrl("file://.")`: Specifies that the source code is located in the current directory (relative to where the manifest is being used)
-     * `framework_config`: Specifies that this is a LangGraph application with the graph defined in `marketing_campaign.app:graph`
+    * `deployment_options`: Defines how the agent can be deployed
+        * `url=AnyUrl("file://.")`: Specifies that the source code is located in the current directory (relative to where the manifest is being used)
+        * `framework_config`: Specifies that this is a LangGraph application with the graph defined in `marketing_campaign.app:graph`
 
-   * `env_vars`: Lists the environment variables required by the marketing campaign.
-   * `dependencies`: Lists the agents that our application depends on. Each dependency specifies:
-     * The local name used to refer to the dependency
-     * The reference to the agent manifest file (`./manifests/mailcomposer.json`)
+    * `env_vars`: Lists the environment variables required by the marketing campaign.
+    * `dependencies`: Lists the agents that our application depends on. Each dependency specifies:
+        * The local name used to refer to the dependency
+        * The reference to the agent manifest file (`./manifests/mailcomposer.json`)
 
 ### Generating the Manifest
 

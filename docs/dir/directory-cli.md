@@ -82,16 +82,16 @@ Stores records in the content-addressable store. Has the following features:
 
 ??? example
 
-```bash
-# Push from file
-dirctl push agent-model.json
+    ```bash
+    # Push from file
+    dirctl push agent-model.json
 
-# Push from stdin
-cat agent-model.json | dirctl push --stdin
+    # Push from stdin
+    cat agent-model.json | dirctl push --stdin
 
-# Push with signature
-dirctl push agent-model.json --sign --key private.key
-```
+    # Push with signature
+    dirctl push agent-model.json --sign --key private.key
+    ```
 
 #### `dirctl pull <cid>`
 
@@ -99,13 +99,13 @@ Retrieves records by their Content Identifier (CID).
 
 ??? example
 
-```bash
-# Pull record content
-dirctl pull baeareihdr6t7s6sr2q4zo456sza66eewqc7huzatyfgvoupaqyjw23ilvi
+    ```bash
+    # Pull record content
+    dirctl pull baeareihdr6t7s6sr2q4zo456sza66eewqc7huzatyfgvoupaqyjw23ilvi
 
-# Pull with signature verification
-dirctl pull <cid> --signature --public-key public.key
-```
+    # Pull with signature verification
+    dirctl pull <cid> --signature --public-key public.key
+    ```
 
 #### `dirctl delete <cid>`
 
@@ -113,10 +113,10 @@ Removes records from storage.
 
 ??? example
 
-```bash
-# Delete a record
-dirctl delete baeareihdr6t7s6sr2q4zo456sza66eewqc7huzatyfgvoupaqyjw23ilvi
-```
+    ```bash
+    # Delete a record
+    dirctl delete baeareihdr6t7s6sr2q4zo456sza66eewqc7huzatyfgvoupaqyjw23ilvi
+    ```
 
 #### `dirctl info <cid>`
 
@@ -124,10 +124,10 @@ Displays metadata about stored records.
 
 ??? example
 
-```bash
-# Show record metadata
-dirctl info baeareihdr6t7s6sr2q4zo456sza66eewqc7huzatyfgvoupaqyjw23ilvi
-```
+    ```bash
+    # Show record metadata
+    dirctl info baeareihdr6t7s6sr2q4zo456sza66eewqc7huzatyfgvoupaqyjw23ilvi
+    ```
 
 ### Routing Operations
 
@@ -144,10 +144,10 @@ Announces records to the network for discovery by other peers. The command does 
 
 ??? example
 
-```bash
-# Publish a record to the network
-dirctl routing publish baeareihdr6t7s6sr2q4zo456sza66eewqc7huzatyfgvoupaqyjw23ilvi
-```
+    ```bash
+    # Publish a record to the network
+    dirctl routing publish baeareihdr6t7s6sr2q4zo456sza66eewqc7huzatyfgvoupaqyjw23ilvi
+    ```
 
 #### `dirctl routing unpublish <cid>`
 
@@ -160,10 +160,10 @@ Removes records from network discovery while keeping them in local storage. The 
 
 ??? example
 
-```bash
-# Remove from network discovery
-dirctl routing unpublish baeareihdr6t7s6sr2q4zo456sza66eewqc7huzatyfgvoupaqyjw23ilvi
-```
+    ```bash
+    # Remove from network discovery
+    dirctl routing unpublish baeareihdr6t7s6sr2q4zo456sza66eewqc7huzatyfgvoupaqyjw23ilvi
+    ```
 
 #### `dirctl routing list [flags]`
 
@@ -178,26 +178,26 @@ The following flags are available:
 
 ??? example
 
-```bash
-# List all local published records
-dirctl routing list
+    ```bash
+    # List all local published records
+    dirctl routing list
 
-# List by skill
-dirctl routing list --skill "AI"
-dirctl routing list --skill "Natural Language Processing"
+    # List by skill
+    dirctl routing list --skill "AI"
+    dirctl routing list --skill "Natural Language Processing"
 
-# List by locator type
-dirctl routing list --locator "docker-image"
+    # List by locator type
+    dirctl routing list --locator "docker-image"
 
-# Multiple criteria (AND logic)
-dirctl routing list --skill "AI" --locator "docker-image"
+    # Multiple criteria (AND logic)
+    dirctl routing list --skill "AI" --locator "docker-image"
 
-# Specific record by CID
-dirctl routing list --cid baeareihdr6t7s6sr2q4zo456sza66eewqc7huzatyfgvoupaqyjw23ilvi
+    # Specific record by CID
+    dirctl routing list --cid baeareihdr6t7s6sr2q4zo456sza66eewqc7huzatyfgvoupaqyjw23ilvi
 
-# Limit results
-dirctl routing list --skill "AI" --limit 5
-```
+    # Limit results
+    dirctl routing list --skill "AI" --limit 5
+    ```
 
 #### `dirctl routing search [flags]`
 
@@ -219,19 +219,19 @@ The output includes the following:
 
 ??? example
 
-```bash
-# Search for AI records across the network
-dirctl routing search --skill "AI"
+    ```bash
+    # Search for AI records across the network
+    dirctl routing search --skill "AI"
 
-# Search with multiple criteria
-dirctl routing search --skill "AI" --skill "ML" --min-score 2
+    # Search with multiple criteria
+    dirctl routing search --skill "AI" --skill "ML" --min-score 2
 
-# Search by locator type
-dirctl routing search --locator "docker-image"
+    # Search by locator type
+    dirctl routing search --locator "docker-image"
 
-# Advanced search with scoring
-dirctl routing search --skill "web-development" --limit 10 --min-score 1
-```
+    # Advanced search with scoring
+    dirctl routing search --skill "web-development" --limit 10 --min-score 1
+    ```
 
 **Output includes:**
 
@@ -248,10 +248,10 @@ The output includes the following:
 
 ??? example
 
-```bash
-# Show local routing statistics
-dirctl routing info
-```
+    ```bash
+    # Show local routing statistics
+    dirctl routing info
+    ```
 
 ### Search & Discovery
 
@@ -267,22 +267,22 @@ The following flags are available:
 
 ??? example
 
-```bash
-# Search by record name
-dirctl search --query "name=my-agent"
+    ```bash
+    # Search by record name
+    dirctl search --query "name=my-agent"
 
-# Search by version
-dirctl search --query "version=v1.0.0"
+    # Search by version
+    dirctl search --query "version=v1.0.0"
 
-# Search by skill ID
-dirctl search --query "skill-id=10201"
+    # Search by skill ID
+    dirctl search --query "skill-id=10201"
 
-# Complex search with multiple criteria
-dirctl search --limit 10 --offset 0 \
-  --query "name=my-agent" \
-  --query "skill-name=Text Completion" \
-  --query "locator=docker-image:https://example.com/image"
-```
+    # Complex search with multiple criteria
+    dirctl search --limit 10 --offset 0 \
+    --query "name=my-agent" \
+    --query "skill-name=Text Completion" \
+    --query "locator=docker-image:https://example.com/image"
+    ```
 
 ### Security & Verification
 
@@ -292,13 +292,13 @@ Signs records for integrity and authenticity.
 
 ??? example
 
-```bash
-# Sign with private key
-dirctl sign <cid> --key private.key
+    ```bash
+    # Sign with private key
+    dirctl sign <cid> --key private.key
 
-# Sign with OIDC (keyless signing)
-dirctl sign <cid> --oidc --fulcio-url https://fulcio.example.com
-```
+    # Sign with OIDC (keyless signing)
+    dirctl sign <cid> --oidc --fulcio-url https://fulcio.example.com
+    ```
 
 #### `dirctl verify <record> <signature> [flags]`
 
@@ -306,10 +306,10 @@ Verifies record signatures.
 
 ??? example
 
-```bash
-# Verify with public key
-dirctl verify record.json signature.sig --key public.key
-```
+    ```bash
+    # Verify with public key
+    dirctl verify record.json signature.sig --key public.key
+    ```
 
 ### Synchronization
 
@@ -319,10 +319,10 @@ Creates peer-to-peer synchronization.
 
 ??? example
 
-```bash
-# Create sync with remote peer
-dirctl sync create https://peer.example.com
-```
+    ```bash
+    # Create sync with remote peer
+    dirctl sync create https://peer.example.com
+    ```
 
 #### `dirctl sync list`
 
@@ -330,10 +330,10 @@ Lists active synchronizations.
 
 ??? example
 
-```bash
-# Show all active syncs
-dirctl sync list
-```
+    ```bash
+    # Show all active syncs
+    dirctl sync list
+    ```
 
 #### `dirctl sync status <sync-id>`
 
@@ -341,10 +341,10 @@ Checks synchronization status.
 
 ??? example
 
-```bash
-# Check specific sync status
-dirctl sync status abc123-def456-ghi789
-```
+    ```bash
+    # Check specific sync status
+    dirctl sync status abc123-def456-ghi789
+    ```
 
 #### `dirctl sync delete <sync-id>`
 
@@ -352,10 +352,10 @@ Removes synchronization.
 
 ??? example
 
-```bash
-# Delete a sync
-dirctl sync delete abc123-def456-ghi789
-```
+    ```bash
+    # Delete a sync
+    dirctl sync delete abc123-def456-ghi789
+    ```
 
 ## Configuration
 

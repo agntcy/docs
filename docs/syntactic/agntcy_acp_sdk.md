@@ -142,6 +142,7 @@ The CLI also provides validators for the ACP descriptor and manifest
 files.
 
 You can use the CLI easily:
+
 * using [poetry](https://python-poetry.org/): `poetry run acp --help`
 * with the package installed: `python3 -m agntcy_acp --help`
 

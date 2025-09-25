@@ -43,8 +43,8 @@ The combined use of Badges (VCs) and ResolverMetadata enables automated and trus
 - Prevents impersonation of Agents, and MCP Server resources and tools by ensuring provenance can be verified.
 - Enables secure versioning and traceability, supporting safe upgrades and patching.
 - Facilitates advanced authentication and authorization workflows, including those involving:
-  - Dynamic trust establishment
-  - Machine-to-machine negotiation (with or without human input)
-  - Pre-connection credential validation
+    - Dynamic trust establishment
+    - Machine-to-machine negotiation (with or without human input)
+    - Pre-connection credential validation
 
 These capabilities apply equally to Agents and MCP Servers, supporting trust-aware composition and interaction across the IoA.

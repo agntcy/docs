@@ -33,19 +33,18 @@ This will install the `protoc-slimrpc-plugin` binary to your Cargo bin directory
 
 1. Clone the repository:
 
-```bash
-git clone https://github.com/agntcy/slim.git
-cd slim/data-plane/slimrpc-compiler
-```
+    ```bash
+    git clone https://github.com/agntcy/slim.git
+    cd slim/data-plane/slimrpc-compiler
+    ```
 
 1. Build the plugin:
 
-```bash
-cargo build --release
-```
+    ```bash
+    cargo build --release
+    ```
 
-1. The compiled binary will be available at
-   `data-plane/target/release/protoc-slimrpc-plugin`
+1. The compiled binary is available at `data-plane/target/release/protoc-slimrpc-plugin`.
 
 ## Usage
 

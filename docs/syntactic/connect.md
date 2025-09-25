@@ -35,11 +35,12 @@ Agent Connect Protocol needs to formally specify the network interactions needed
 * **Configuration**: Define how to configure a remote agent.
 * **Invocation**: Define how to invoke a remote agent providing input for its execution.
 * **Output retrieval and interrupt Handling**: Define how to retrieve the result of an agent invocation. Different interaction modes should be supported:
-  * Synchronous
-  * Asynchronous
-  * Streaming
 
-    This should include interrupt handling. That is, how agents notify the caller about execution suspension to ask for additional input.
+    * Synchronous
+    * Asynchronous
+    * Streaming
+
+        This should include interrupt handling. That is, how agents notify the caller about execution suspension to ask for additional input.
 
 * **Capabilities and Schema definitions**: Retrieve details about the agent supported capabilities and the data structures definitions for configuration, input, and output.
 * **Error definitions**: Receive error notifications with meaningful error codes and explanations.
@@ -208,12 +209,15 @@ sequenceDiagram
     C->>+S: GET /runs/{run_id}/wait
     S->>-C: RunOutput={type="result", result}
 ```
+
 In the sequence above:
 
 1. The client requests to start a run on a specific agent, providing its `agent_id`, and specifying:
-   * Configuration: a run configuration is flavoring the behavior of this agent for this run.
-   * Input: run input provides the data the agent will operate on.
-   * Metadata: metadata is a free format object that can be used by the client to tag the run with arbitrary information.
+
+    * Configuration: a run configuration is flavoring the behavior of this agent for this run.
+    * Input: run input provides the data the agent will operate on.
+    * Metadata: metadata is a free format object that can be used by the client to tag the run with arbitrary information.
+
 1. The server returns a run object which includes the run identifier and a status, the status at the beginning will be `pending`.
 1. The client retrieves the status of the run until completion.
 1. The server returns the run object with the updated status.
@@ -572,7 +576,8 @@ The schemas of all the objects that this agent supports for:
 * Interrupt and Resume Payloads.
 * Thread State.
 
-Note that these schemas are needed in the agent ACP descriptor, since they are agent specific and are not defined by ACP, i.e. ACP defines a generic JSON object for the data structures listed above.
+!!! note
+    These schemas are needed in the agent ACP descriptor, since they are agent specific and are not defined by ACP, i.e. ACP defines a generic JSON object for the data structures listed above.
 
 ??? "Sample metadata specs section for the mailcomposer agent"
     ```

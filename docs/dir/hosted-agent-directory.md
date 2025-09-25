@@ -169,36 +169,39 @@ After installation, use the `dirctl` and `dirctl hub` commands to list the avail
 #### Authenticating to the Outshift Agent Directory through `dirctl`  
 The `dirctl` command line tools supports two methods to authenticate to a Outshift Agent Directory account:
 
-1. **Interactive login**  
-  Interactive login is a web-based user authentication initiated from `dirctl` as follows:
+1. **Interactive login**
 
-      ```bash
-      $ dirctl hub login
-      ```
+    Interactive login is a web-based user authentication initiated from `dirctl` as follows:
+
+    ```bash
+    $ dirctl hub login
+    ```
 
     The login page opens in the browser allowing the user to enter their credentials.
 
-2. **API key based login**  
-  This is a programmatic way to authenticate via API key credentials:
-   * Once logged in through interactive login, use the `dirctl hub apikey create` command to generate the API key credentials, i.e. a `client_id` and a `secret`, for a specific organization and with a specific role. One can store the client_id and secret as environment variables or as JSON file:
+2. **API key based login**
 
-    ```bash
-    $ dirctl hub apikey create --org-name your-user --role ROLE_ADMIN
-    DIRCTL_CLIENT_ID=3603e7f1-6903-44ec-868e-b78fab3cf43f@ak.eticloud.io
-    DIRCTL_CLIENT_SECRET=*********************************************
-    ```
+    This is a programmatic way to authenticate via API key credentials:
 
-    ```bash
-    $ dirctl hub apikey create --org-name your-user --role ROLE_ADMIN --json > api-key-creds.json
-    ```
+    * Once logged in through interactive login, use the `dirctl hub apikey create` command to generate the API key credentials, i.e. a `client_id` and a `secret`, for a specific organization and with a specific role. One can store the client_id and secret as environment variables or as JSON file:
 
-   * Set the environment variable and use the dirctl commands as usual or provide the JSON file with the credentials:
+        ```bash
+        $ dirctl hub apikey create --org-name your-user --role ROLE_ADMIN
+        DIRCTL_CLIENT_ID=3603e7f1-6903-44ec-868e-b78fab3cf43f@ak.eticloud.io
+        DIRCTL_CLIENT_SECRET=*********************************************
+        ```
 
-       ```bash
-       $ dirctl hub [command] --apikey-file api-key-creds.json
-       ```  
+        ```bash
+        $ dirctl hub apikey create --org-name your-user --role ROLE_ADMIN --json > api-key-creds.json
+        ```
 
-   * For more details `dirctl hub apikey --help`
+    * Set the environment variable and use the dirctl commands as usual or provide the JSON file with the credentials:
+
+        ```bash
+        $ dirctl hub [command] --apikey-file api-key-creds.json
+        ```  
+
+    * For more details `dirctl hub apikey --help`
 
 #### Creating an Agent Directory Record
 
@@ -216,12 +219,12 @@ To be useful, an agent, A2A card, or MCP server record should include at least t
 
 * Version of the agent, A2A card, or MCP server (use semantic convention).
 * Description: something to help any viewer understand what your agent, A2A card, or MCP server does, what is the use case it is applicable to, expected inputs and outputs, LLM used, runtime, etc.
-* Locator, per [OASF locator objects](https://schema.oasf.outshift.com/objects/locator?extensions=)
-  * type(s) (source code, agent as a service, docker image, etc) matching the supported types in the OASF locator objects
-  * url (corresponding address to find the agent)
-* Skills, following the [OASF skills schema](https://schema.oasf.outshift.com/skills?extensions=)
+* Locator, per [OASF locator objects](https://schema.oasf.outshift.com/objects/locator?extensions=).
+* Types (source code, agent as a service, docker image, etc) matching the supported types in the OASF locator objects.
+* URL (corresponding address to find the agent).
+* Skills, following the [OASF skills schema](https://schema.oasf.outshift.com/skills?extensions=).
 
-And it will look like this:
+And it will look like this: 
 
 ```json
 {
@@ -348,7 +351,7 @@ You can validate the record using the [OASF Schema API](https://schema.oasf.outs
 
 The signed agent, A2A card, or MCP server record can be pushed to the Hub.
 
-For further details on signing, checkout `dirctl hub sign --help`
+For further details on signing, use the `dirctl hub sign --help` command.
 
 #### Pushing Agent Directory Records using `dirctl`
 
