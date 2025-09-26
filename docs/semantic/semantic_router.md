@@ -2,7 +2,7 @@
 
 When defining a multi-agent application workflow, it is often necessary to make decisions based on the output of invoked agents.
 
-In a graph-based agentic applications (for example, LangGraph), this corresponds to decideing which node in the graph to execute based on the current state of the graph.
+In a graph-based agentic applications (for example, LangGraph), this corresponds to deciding which node in the graph to execute based on the current state of the graph.
 
 There is a large set of common decisions that are based on semantic similarity, even if some of these decisions can be trivially implemented by a simple `if` condition and others can be so complex that they require a dedicated agent to be processed.
 
