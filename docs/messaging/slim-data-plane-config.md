@@ -22,7 +22,6 @@ The SLIM configuration file consists of three main sections:
     # ... service configurations
   ```
 
-
 ## Top-Level Configuration Sections
 
 ### Tracing Configuration

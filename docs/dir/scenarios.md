@@ -14,7 +14,7 @@ The following prerequisites are required to follow the examples below:
 - Locally available Directory CLI client
 - Running instance of Directory API server
 
-To deploy the neccessary components, please refer to the [Getting Started](getting-started.md)
+To deploy the necessary components, please refer to the [Getting Started](getting-started.md)
 guide.
 
 ## Build
@@ -58,7 +58,7 @@ EOF
 
 This example demonstrates the interaction with the local storage layer using the CLI client.
 The storage layer uses an OCI-compliant registry (powered by [Zot](https://github.com/project-zot/zot)) to store records as OCI
-artifacts with [content-addressable identifiers](https://github.com/multiformats/cid) (CIDs). 
+artifacts with [content-addressable identifiers](https://github.com/multiformats/cid) (CIDs).
 When a record is pushed, it is stored as an OCI blob and the CID is calculated by converting
 the SHA256 OCI digest into a CIDv1 format using CID multihash encoding. Each record is then
 tagged with its CID in the registry, enabling direct lookup and ensuring content
@@ -231,7 +231,7 @@ dirctl routing search --skill "images_computer_vision" \
 ```
 
 Network search supports hierarchical matching where skills, domains, and features use both
-exact and prefix matching (e.g., `images_computer_vision` matches both `images_computer_vision` 
+exact and prefix matching (e.g., `images_computer_vision` matches both `images_computer_vision`
 and `images_computer_vision/image_segmentation` as a prefix).
 
 Note that network search results are not guaranteed to be available, valid, or up to date as

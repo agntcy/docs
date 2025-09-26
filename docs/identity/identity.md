@@ -42,7 +42,6 @@ The use of **User Accounts** or **Service Accounts** provided by an Identity Pro
 - Auth0
 - Google ID
 
-
 #### Well-Known Identifiers
 
 The use of **well-known identifiers**, that is, following the convention proposed by Google's Agent2Agent (A2A) protocol. This convention enables both open identity assignment as well as the use of universally unique identifiers for Agent Cards, which capture the metadata and characteristics that define, allow to discover, and identify an Agent within the A2A ecosystem.
@@ -62,7 +61,6 @@ This approach enables:
 - Decentralized identity management.
 - Multi-factor Authentication and Authorization processes across these entities as well as between them and humans.
 - Verifiable attributes (skills, versions, roles, etc.).
-
 
 !!! note
     Independently of whether the identity is assigned following a convention or a standardized framework, at this stage the main focus of the AGNTCY project is to provide a common and trustworthy mechanism to present identifiers and to verify them. More specifically, AGNTCY not only supports various (and heterogeneous) identifiers that are universally unique but also proposes a standard way of presenting and verifying such identifiers, thereby enabling freedom in the selection of interoperable identities in an IoA.

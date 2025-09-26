@@ -1,6 +1,5 @@
 # Get Started with CoffeeAGNTCY
 
-
 CoffeeAGNTCY is a reference implementation built around a fictitious coffee company to demonstrate how components in the AGNTCY Internet of Agents ecosystem work together.
 
 This project is meant to exemplify how AGNTCY and open-source agentic standards interoperate through clean, reproducible example code. It is purposefully designed for developers across experience levels, from those taking their first steps in building agentic systems to those with more experience curious about AGNTCY's offerings.
@@ -19,10 +18,9 @@ With CoffeeAGNTCY, you can:
 
 * Understand how to integrate data sources via MCP.
 
+CoffeeAGNTCY exposes two demo apps: Corto and Lungo.
 
-CoffeeAGNTCY exposes two demo apps: Corto and Lungo. 
-
-### Corto
+## Corto
 
 Corto functions as a minimal demo application. While Lungo expands to showcase the ever-growing ecosystem of agentic tooling, Corto remains intentionally simple, serving as an accessible entry point for developers new to the agentic world or to AGNTCY.
 
@@ -50,7 +48,7 @@ Each farm is designed to demonstrate different agentic protocols and implementat
 
 By default, all agents and MCP servers use SLIM as the transport layer, showcasing its flexibility by switching between one-to-many broadcasts via pub/sub and direct agent-to-agent request–response interactions based on the need specified by the prompt. To learn more about how this works, explore the [CoffeeAGNTCY SLIM Integration](./slim-coffee-agntcy.md)
 
-AGNTCY’s Agent Identity Service handles authentication between agents, allowing them to verify each other’s identity before establishing a connection. This exemplifies the requirement within larger agentic networks for secure communication and trust. To learn more about how this works in Lungo, explore the [CoffeeAGNTCY Identity integration](./identity-coffee-agntcy.md) 
+AGNTCY’s Agent Identity Service handles authentication between agents, allowing them to verify each other’s identity before establishing a connection. This exemplifies the requirement within larger agentic networks for secure communication and trust. To learn more about how this works in Lungo, explore the [CoffeeAGNTCY Identity integration](./identity-coffee-agntcy.md)
 
 ```mermaid
 flowchart TB
@@ -76,6 +74,3 @@ flowchart TB
     F2 --> MCP
 ```
 Learn more on how to deploy Lungo locally by visiting the [Lungo Deployment Guide](https://github.com/agntcy/coffeeAgntcy/blob/main/coffeeAGNTCY/coffee_agents/lungo/README.md)
-
-
-

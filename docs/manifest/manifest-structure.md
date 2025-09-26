@@ -7,14 +7,13 @@ An Agent Manifest includes the following sections:
 * [Agent Deployment and Consumption](#agent-deployment-and-consumption)
 * [Agent Dependencies](#agent-dependencies)
 
-### Agent Identification and Metadata
+## Agent Identification and Metadata
 
 Agent Manifest must uniquely identify an agent within the namespace it is part of. This is done through a unique name and a version.
 
 Agent Manifest must include a natural language description that describes what the agent is capable of doing. This allows user and potentially other agents to select the agent that best fits a given task.
 
 Agent Manifest can include metadata that provides additional information about the agent, such as ownership, timestamps, tags, and so on.
-
 
 <details>
 <summary>Sample descriptor metadata section for the mailcomposer agent</summary>
@@ -37,7 +36,6 @@ Metadata for a mail composer agent named `org.agntcy.mailcomposer` version `0.0.
 
 </details>
 
-
 <a id="agent-interface-data-structure-specification"></a>
 ### Agent Interface Data Structure Specification
 Agents willing to interoperate with other agents expose an interface that allow for invocation and configuration.
@@ -48,11 +46,11 @@ The specification of these data structures is included in what we call the Agent
 
 Agent `specs` section includes ACP invocation capabilities, e.g. `streaming`, `callbacks`, `interrupts` etc.,  and the JSON schema definitions for ACP interactions:
 
-   * Agent Configuration.
-   * Run Input.
-   * Run Output.
-   * Interrupt and Resume Payloads.
-   * Thread State.
+* Agent Configuration.
+* Run Input.
+* Run Output.
+* Interrupt and Resume Payloads.
+* Thread State.
 
 <details>
 <summary>Sample  specs section for the mailcomposer agent</summary>
@@ -191,13 +189,13 @@ Agents can be provided in two different forms, which we call deployment options:
 
 * **As a service**: a network endpoint that exposes an interface to the agent (for example, Agent Connect Protocol).
 * **As a deployable artifact**, for example:
-   
+  
     * A docker image, which once deployed exposes an interface to the agent (for example, Agent Connect Protocol).
     * A source code bundle, which can be executed within the specific runtime and framework it is built on.
 
 The same agent can support one or more deployment options.
 
-Agent Manifest currently supports three deployment otions:
+Agent Manifest currently supports three deployment options:
 
 * Source Code Deployment: In this case the agent can be deployed starting from its code. For this deployment mode, the manifest provides:
     * The location where the code is available

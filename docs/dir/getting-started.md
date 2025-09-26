@@ -11,7 +11,7 @@ To build the project and work with the code, you need the following components i
 - [Golang](https://go.dev/doc/devel/release#go1.24.0)
 
 !!! note
-    
+
     Make sure Docker is installed with Buildx.
 
 ## Quick Start

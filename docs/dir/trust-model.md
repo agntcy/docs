@@ -14,15 +14,11 @@ security by assigning each workload a unique, verifiable identity (SVID).
 
 In the Directory project, SPIRE is used to:
 
-- Securely identify and authenticate workloads (services, applications, etc.)
-
-- Enable mutual transport layer security (mTLS) between services
-
-- Support dynamic, scalable, and multi-environment deployments
-
-- Enable interconnectivity between different organizations
-
-- Provide primitives for authorization logic
+- Securely identify and authenticate workloads (services, applications, etc.).
+- Enable mutual transport layer security (mTLS) between services.
+- Support dynamic, scalable, and multi-environment deployments.
+- Enable interconnectivity between different organizations.
+- Provide primitives for authorization logic.
 
 ## Authentication and Authorization
 
@@ -83,15 +79,15 @@ The Directory's security trust schema supports both single and federated trust d
 
 ### Single Trust Domain
 
-- **SPIRE Server**: Central authority for the trust domain
+- **SPIRE Server**: Central authority for the trust domain.
 
-- **SPIRE Agents**: Deployed in different environments, connect to the SPIRE Server
+- **SPIRE Agents**: Deployed in different environments, connect to the SPIRE Server:
 
     - Kubernetes clusters (as DaemonSets or sidecars)
     - VMs (as systemd services or processes)
     - Bare metal
 
-- **Workloads**: Obtain identities from local SPIRE Agent via the Workload API
+- **Workloads**: Obtain identities from local SPIRE Agent via the Workload API.
 
 ```mermaid
 flowchart LR
@@ -140,7 +136,7 @@ to deploy SPIRE components.
 
 The SPIRE Server is configured as follows:
 
-- **Deployment Options**: Can be deployed either as a Kubernetes or 
+- **Deployment Options**: Can be deployed either as a Kubernetes or
 as a standalone service, providing flexibility for different infrastructure setups.
 
 - **Trust Domain Configuration**: Requires a unique trust domain name
@@ -187,13 +183,11 @@ helm upgrade spire spire \
 
 The SPIRE Agent serves as the local identity provider for workloads and has the following characteristics:
 
-- **Deployment Methods**: SPIRE Agents can be deployed in multiple ways depending on the infrastructure - 
+- **Deployment Methods**: SPIRE Agents can be deployed in multiple ways depending on the infrastructure -
 as DaemonSets in Kubernetes environments or as standalone services on VMs and bare metal servers.
 SPIRE Helm chart deploys a K8s SPIRE Agent across all nodes by default.
-
 - **Server Communication**: Agents establish connections to the SPIRE Server to obtain workload identities,
 acting as intermediaries between workloads and the central identity authority.
-
 - **Workload Services**: Agents perform workload attestation (verification of workload identity) and
 distribute SVIDs (SPIFFE Verifiable Identity Documents) through the Workload API, enabling secure
 identity management at the workload level.

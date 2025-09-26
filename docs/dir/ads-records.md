@@ -16,7 +16,7 @@ The content identifier of the record is a [Content IDentifier](https://github.co
 You can generate your own example records using the [OASF Record Sample generator](https://schema.oasf.outshift.com/sample/0.7.0/objects/record). Below is an example OASF record for an email agent that is capable of sending and receiving emails.
 
 !!! note
-    
+
     This record uses `v0.7.0` of the OASF specification.
 
 ```json

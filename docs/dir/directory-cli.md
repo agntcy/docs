@@ -80,7 +80,6 @@ Stores records in the content-addressable store. Has the following features:
 - Optional cryptographic signing
 - Data integrity validation
 
-
 ??? example
 
     ```bash
@@ -93,7 +92,6 @@ Stores records in the content-addressable store. Has the following features:
     # Push with signature
     dirctl push agent-model.json --sign --key private.key
     ```
-
 
 #### `dirctl pull <cid>`
 
@@ -151,7 +149,6 @@ Announces records to the network for discovery by other peers. The command does 
     dirctl routing publish baeareihdr6t7s6sr2q4zo456sza66eewqc7huzatyfgvoupaqyjw23ilvi
     ```
 
-
 #### `dirctl routing unpublish <cid>`
 
 Removes records from network discovery while keeping them in local storage. The command does the following:
@@ -167,8 +164,6 @@ Removes records from network discovery while keeping them in local storage. The 
     # Remove from network discovery
     dirctl routing unpublish baeareihdr6t7s6sr2q4zo456sza66eewqc7huzatyfgvoupaqyjw23ilvi
     ```
-
-
 
 #### `dirctl routing list [flags]`
 
@@ -204,8 +199,6 @@ The following flags are available:
     dirctl routing list --skill "AI" --limit 5
     ```
 
-
-
 #### `dirctl routing search [flags]`
 
 Discovers records from other peers across the network.
@@ -240,10 +233,7 @@ The output includes the following:
     dirctl routing search --skill "web-development" --limit 10 --min-score 1
     ```
 
-
-
 **Output includes:**
-
 
 #### `dirctl routing info`
 
@@ -262,7 +252,6 @@ The output includes the following:
     # Show local routing statistics
     dirctl routing info
     ```
-
 
 ### Search & Discovery
 
@@ -290,11 +279,10 @@ The following flags are available:
 
     # Complex search with multiple criteria
     dirctl search --limit 10 --offset 0 \
-      --query "name=my-agent" \
-      --query "skill-name=Text Completion" \
-      --query "locator=docker-image:https://example.com/image"
+    --query "name=my-agent" \
+    --query "skill-name=Text Completion" \
+    --query "locator=docker-image:https://example.com/image"
     ```
-
 
 ### Security & Verification
 
@@ -419,11 +407,9 @@ The following workflow demonstrates how to publish a record to the network:
     dirctl routing info
     ```
 
-
 ### Discovery Workflow
 
 The following workflow demonstrates how to discover records from the network:
-
 
 1. Search for records by skill
 
@@ -441,7 +427,6 @@ The following workflow demonstrates how to discover records from the network:
     ```bash
     dirctl pull <discovered-cid>
     ```
-
 
 ### Synchronization Workflow
 
@@ -470,7 +455,6 @@ The following workflow demonstrates how to synchronize records between remote di
     ```bash
     dirctl sync delete $SYNC_ID
     ```
-
 
 ## Command Organization
 

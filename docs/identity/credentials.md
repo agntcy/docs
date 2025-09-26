@@ -24,9 +24,9 @@ Examples of an Agent Badge can be found [here](./vc_agent_badge.md).
 
 ### MCP Server Badge
 
-An MCP Server Badge is an enveloped VC, captured in the form of a JSON-LD object, that represents a specific definition of an MCP Server subject in the IoA. The definition should follow a given schema (that is, a json specification following a similar approach to A2A's card but for MCP Servers). 
+An MCP Server Badge is an enveloped VC, captured in the form of a JSON-LD object, that represents a specific definition of an MCP Server subject in the IoA. The definition should follow a given schema (that is, a json specification following a similar approach to A2A's card but for MCP Servers).
 
-Like in the case of an agent subject, an MCP Server can have multiple MCP Server Badges, each representing a different definition of the same core MCP Server subject. For instance, different software versions and/or patched releases of an MCP Server will have different MCP Server Badges. 
+Like in the case of an agent subject, an MCP Server can have multiple MCP Server Badges, each representing a different definition of the same core MCP Server subject. For instance, different software versions and/or patched releases of an MCP Server will have different MCP Server Badges.
 
 A example of an MCP Server Badge can be found [here](./vc_mcp.md).
 

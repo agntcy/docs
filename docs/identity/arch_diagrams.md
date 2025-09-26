@@ -45,7 +45,7 @@ The following steps summarize the process:
 9. The Resolver provides trustworthy and automated means to resolve and verify the Agent subject. To this end, the Resolver proceeds as follows:
 
     - It uses the ResolverMetadata object to obtain the crypto method and PubKey to decrypt the ProofValue in the Agent Badge.
-    - It decrypts the ProofValue and verifies the Agent Badge integrity, since, as shown in the examples [here](../../vc/agent-badge.md), the proof type is a `"DataIntegrityProof"`. This may include the computation of a digest, and comparison with a digest obtained after decryption.
+    - It decrypts the ProofValue and verifies the Agent Badge integrity, since, as shown in the examples [here](./vc_agent_badge.md), the proof type is a `"DataIntegrityProof"`. This may include the computation of a digest, and comparison with a digest obtained after decryption.
     - It outputs the verification result and logs it.
 
 10. The Verified Agent Badge is returned to the ADS client.

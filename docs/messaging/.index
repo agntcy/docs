@@ -11,6 +11,6 @@ nav:
     - SLIMRPC:
         - Overview: slim-rpc.md
         - Protoc Plugin: slim-slimrpc-compiler.md
-    - SLIMA2A: slim-a2a.md
+    - SLIM A2A: slim-a2a.md
     - MCP over SLIM: slim-mcp.md
 

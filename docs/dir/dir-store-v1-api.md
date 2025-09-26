@@ -4,112 +4,78 @@
 ## Table of Contents
 
 - [agntcy/dir/store/v1/store_service.proto](#agntcy_dir_store_v1_store_service-proto)
-    - [PullReferrerRequest](#agntcy-dir-store-v1-PullReferrerRequest)
-    - [PullReferrerResponse](#agntcy-dir-store-v1-PullReferrerResponse)
-    - [PushReferrerRequest](#agntcy-dir-store-v1-PushReferrerRequest)
-    - [PushReferrerResponse](#agntcy-dir-store-v1-PushReferrerResponse)
+  - [PullReferrerRequest](#agntcy-dir-store-v1-PullReferrerRequest)
+  - [PullReferrerResponse](#agntcy-dir-store-v1-PullReferrerResponse)
+  - [PushReferrerRequest](#agntcy-dir-store-v1-PushReferrerRequest)
+  - [PushReferrerResponse](#agntcy-dir-store-v1-PushReferrerResponse)
   
-    - [StoreService](#agntcy-dir-store-v1-StoreService)
+  - [StoreService](#agntcy-dir-store-v1-StoreService)
   
 - [agntcy/dir/store/v1/sync_service.proto](#agntcy_dir_store_v1_sync_service-proto)
-    - [BasicAuthCredentials](#agntcy-dir-store-v1-BasicAuthCredentials)
-    - [CreateSyncRequest](#agntcy-dir-store-v1-CreateSyncRequest)
-    - [CreateSyncResponse](#agntcy-dir-store-v1-CreateSyncResponse)
-    - [DeleteSyncRequest](#agntcy-dir-store-v1-DeleteSyncRequest)
-    - [DeleteSyncResponse](#agntcy-dir-store-v1-DeleteSyncResponse)
-    - [GetSyncRequest](#agntcy-dir-store-v1-GetSyncRequest)
-    - [GetSyncResponse](#agntcy-dir-store-v1-GetSyncResponse)
-    - [ListSyncsItem](#agntcy-dir-store-v1-ListSyncsItem)
-    - [ListSyncsRequest](#agntcy-dir-store-v1-ListSyncsRequest)
-    - [RequestRegistryCredentialsRequest](#agntcy-dir-store-v1-RequestRegistryCredentialsRequest)
-    - [RequestRegistryCredentialsResponse](#agntcy-dir-store-v1-RequestRegistryCredentialsResponse)
+  - [BasicAuthCredentials](#agntcy-dir-store-v1-BasicAuthCredentials)
+  - [CreateSyncRequest](#agntcy-dir-store-v1-CreateSyncRequest)
+  - [CreateSyncResponse](#agntcy-dir-store-v1-CreateSyncResponse)
+  - [DeleteSyncRequest](#agntcy-dir-store-v1-DeleteSyncRequest)
+  - [DeleteSyncResponse](#agntcy-dir-store-v1-DeleteSyncResponse)
+  - [GetSyncRequest](#agntcy-dir-store-v1-GetSyncRequest)
+  - [GetSyncResponse](#agntcy-dir-store-v1-GetSyncResponse)
+  - [ListSyncsItem](#agntcy-dir-store-v1-ListSyncsItem)
+  - [ListSyncsRequest](#agntcy-dir-store-v1-ListSyncsRequest)
+  - [RequestRegistryCredentialsRequest](#agntcy-dir-store-v1-RequestRegistryCredentialsRequest)
+  - [RequestRegistryCredentialsResponse](#agntcy-dir-store-v1-RequestRegistryCredentialsResponse)
   
-    - [SyncStatus](#agntcy-dir-store-v1-SyncStatus)
+  - [SyncStatus](#agntcy-dir-store-v1-SyncStatus)
   
-    - [SyncService](#agntcy-dir-store-v1-SyncService)
+  - [SyncService](#agntcy-dir-store-v1-SyncService)
   
 - [Scalar Value Types](#scalar-value-types)
-
-
 
 <a name="agntcy_dir_store_v1_store_service-proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
 ## agntcy/dir/store/v1/store_service.proto
 
-
-
 <a name="agntcy-dir-store-v1-PullReferrerRequest"></a>
 
 ### PullReferrerRequest
 PullReferrerRequest represents a record with optional OCI artifacts for pull operations.
 
-
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| record_ref | [agntcy.dir.core.v1.RecordRef](#agntcy-dir-core-v1-RecordRef) |  | Record reference |
+| record_ref | [agntcy.dir.core.v1.RecordRef](dir-core-v1-api.md#agntcy-dir-core-v1-RecordRef) |  | Record reference |
 | pull_signature | [bool](#bool) |  | Pull signature referrer |
 | pull_public_key | [bool](#bool) |  | Pull public key referrer |
-
-
-
-
-
 
 <a name="agntcy-dir-store-v1-PullReferrerResponse"></a>
 
 ### PullReferrerResponse
 PullReferrerResponse is returned after successfully fetching a record referrer.
 
-
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| signature | [agntcy.dir.sign.v1.Signature](#agntcy-dir-sign-v1-Signature) |  | Signature to be fetched as a referrer |
+| signature | [agntcy.dir.sign.v1.Signature](dir-sign-v1-api.md#agntcy-dir-sign-v1-Signature) |  | Signature to be fetched as a referrer |
 | public_key | [string](#string) |  | Public key to be fetched as a referrer |
-
-
-
-
-
 
 <a name="agntcy-dir-store-v1-PushReferrerRequest"></a>
 
 ### PushReferrerRequest
 PushReferrerRequest represents a record with optional OCI artifacts for push operations.
 
-
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| record_ref | [agntcy.dir.core.v1.RecordRef](#agntcy-dir-core-v1-RecordRef) |  | Record reference |
-| signature | [agntcy.dir.sign.v1.Signature](#agntcy-dir-sign-v1-Signature) |  | Signature to be stored as a referrer for the record |
+| record_ref | [agntcy.dir.core.v1.RecordRef](dir-core-v1-api.md#agntcy-dir-core-v1-RecordRef) |  | Record reference |
+| signature | [agntcy.dir.sign.v1.Signature](dir-sign-v1-api.md#agntcy-dir-sign-v1-Signature) |  | Signature to be stored as a referrer for the record |
 | public_key | [string](#string) |  | Public key to be stored as a referrer for the record and uploaded as a file to zot for verification |
-
-
-
-
-
 
 <a name="agntcy-dir-store-v1-PushReferrerResponse"></a>
 
 ### PushReferrerResponse
 PushReferrerResponse
 
-
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | success | [bool](#bool) |  | The push process result |
 | error_message | [string](#string) | optional | Optional error message if push failed |
-
-
-
-
-
- 
-
- 
-
- 
-
 
 <a name="agntcy-dir-store-v1-StoreService"></a>
 
@@ -132,39 +98,27 @@ If an error occurs, the stream will be cancelled.
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| Push | [.agntcy.dir.core.v1.Record](#agntcy-dir-core-v1-Record) stream | [.agntcy.dir.core.v1.RecordRef](#agntcy-dir-core-v1-RecordRef) stream | Push performs write operation for given records. |
-| Pull | [.agntcy.dir.core.v1.RecordRef](#agntcy-dir-core-v1-RecordRef) stream | [.agntcy.dir.core.v1.Record](#agntcy-dir-core-v1-Record) stream | Pull performs read operation for given records. |
-| Lookup | [.agntcy.dir.core.v1.RecordRef](#agntcy-dir-core-v1-RecordRef) stream | [.agntcy.dir.core.v1.RecordMeta](#agntcy-dir-core-v1-RecordMeta) stream | Lookup resolves basic metadata for the records. |
-| Delete | [.agntcy.dir.core.v1.RecordRef](#agntcy-dir-core-v1-RecordRef) stream | [.google.protobuf.Empty](#google-protobuf-Empty) | Remove performs delete operation for the records. |
+| Push | [.agntcy.dir.core.v1.Record](dir-core-v1-api.md#agntcy-dir-core-v1-Record) stream | [.agntcy.dir.core.v1.RecordRef](dir-core-v1-api.md#agntcy-dir-core-v1-RecordRef) stream | Push performs write operation for given records. |
+| Pull | [.agntcy.dir.core.v1.RecordRef](dir-core-v1-api.md#agntcy-dir-core-v1-RecordRef) stream | [.agntcy.dir.core.v1.Record](dir-core-v1-api.md#agntcy-dir-core-v1-Record) stream | Pull performs read operation for given records. |
+| Lookup | [.agntcy.dir.core.v1.RecordRef](dir-core-v1-api.md#agntcy-dir-core-v1-RecordRef) stream | [.agntcy.dir.core.v1.RecordMeta](dir-core-v1-api.md#agntcy-dir-core-v1-RecordMeta) stream | Lookup resolves basic metadata for the records. |
+| Delete | [.agntcy.dir.core.v1.RecordRef](dir-core-v1-api.md#agntcy-dir-core-v1-RecordRef) stream | [.google.protobuf.Empty](#google-protobuf-Empty) | Remove performs delete operation for the records. |
 | PushReferrer | [PushReferrerRequest](#agntcy-dir-store-v1-PushReferrerRequest) stream | [PushReferrerResponse](#agntcy-dir-store-v1-PushReferrerResponse) stream | PushReferrer performs write operation for record referrers. |
 | PullReferrer | [PullReferrerRequest](#agntcy-dir-store-v1-PullReferrerRequest) stream | [PullReferrerResponse](#agntcy-dir-store-v1-PullReferrerResponse) stream | PullReferrer performs read operation for record referrers. |
-
- 
-
-
 
 <a name="agntcy_dir_store_v1_sync_service-proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
 ## agntcy/dir/store/v1/sync_service.proto
 
-
-
 <a name="agntcy-dir-store-v1-BasicAuthCredentials"></a>
 
 ### BasicAuthCredentials
 Supporting credential type definitions
 
-
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | username | [string](#string) |  |  |
 | password | [string](#string) |  |  |
-
-
-
-
-
 
 <a name="agntcy-dir-store-v1-CreateSyncRequest"></a>
 
@@ -174,7 +128,6 @@ CreateSyncRequest defines the parameters for creating a new synchronization oper
 Currently supports basic synchronization of all objects from a remote Directory.
 Future versions may include additional options for filtering and scheduling capabilities.
 
-
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | remote_directory_url | [string](#string) |  | URL of the remote Registry to synchronize from.
@@ -182,71 +135,42 @@ Future versions may include additional options for filtering and scheduling capa
 This should be a complete URL including protocol and port if non-standard. Examples: - &#34;https://directory.example.com&#34; - &#34;http://localhost:8080&#34; - &#34;https://directory.example.com:9443&#34; |
 | cids | [string](#string) | repeated | List of CIDs to synchronize from the remote Directory. If empty, all objects will be synchronized. |
 
-
-
-
-
-
 <a name="agntcy-dir-store-v1-CreateSyncResponse"></a>
 
 ### CreateSyncResponse
 CreateSyncResponse contains the result of creating a new synchronization operation.
 
-
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | sync_id | [string](#string) |  | Unique identifier for the created synchronization operation. This ID can be used with other SyncService RPCs to monitor and manage the sync. |
-
-
-
-
-
 
 <a name="agntcy-dir-store-v1-DeleteSyncRequest"></a>
 
 ### DeleteSyncRequest
 DeleteSyncRequest specifies which synchronization to delete.
 
-
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | sync_id | [string](#string) |  | Unique identifier of the synchronization operation to delete. |
-
-
-
-
-
 
 <a name="agntcy-dir-store-v1-DeleteSyncResponse"></a>
 
 ### DeleteSyncResponse
 DeleteSyncResponse
 
-
-
-
-
-
 <a name="agntcy-dir-store-v1-GetSyncRequest"></a>
 
 ### GetSyncRequest
 GetSyncRequest specifies which synchronization status to retrieve.
 
-
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | sync_id | [string](#string) |  | Unique identifier of the synchronization operation to query. |
-
-
-
-
-
 
 <a name="agntcy-dir-store-v1-GetSyncResponse"></a>
 
 ### GetSyncResponse
 GetSyncResponse provides detailed information about a specific synchronization operation.
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
@@ -256,16 +180,10 @@ GetSyncResponse provides detailed information about a specific synchronization o
 | created_time | [string](#string) |  | Timestamp when the synchronization operation was created in the RFC3339 format. Specs: https://www.rfc-editor.org/rfc/rfc3339.html |
 | last_update_time | [string](#string) |  | Timestamp of the most recent status update for this synchronization in the RFC3339 format. |
 
-
-
-
-
-
 <a name="agntcy-dir-store-v1-ListSyncsItem"></a>
 
 ### ListSyncsItem
 ListSyncItem represents a single synchronization in the list of all syncs.
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
@@ -273,47 +191,27 @@ ListSyncItem represents a single synchronization in the list of all syncs.
 | status | [SyncStatus](#agntcy-dir-store-v1-SyncStatus) |  | Current status of the synchronization operation. |
 | remote_directory_url | [string](#string) |  | URL of the remote Directory being synchronized from. |
 
-
-
-
-
-
 <a name="agntcy-dir-store-v1-ListSyncsRequest"></a>
 
 ### ListSyncsRequest
 ListSyncsRequest specifies parameters for listing synchronization operations.
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | limit | [uint32](#uint32) | optional | Optional limit on the number of results to return. |
 | offset | [uint32](#uint32) | optional | Optional offset for pagination of results. |
 
-
-
-
-
-
 <a name="agntcy-dir-store-v1-RequestRegistryCredentialsRequest"></a>
 
 ### RequestRegistryCredentialsRequest
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | requesting_node_id | [string](#string) |  | Identity of the requesting node For example: spiffe://example.org/service/foo |
 
-
-
-
-
-
 <a name="agntcy-dir-store-v1-RequestRegistryCredentialsResponse"></a>
 
 ### RequestRegistryCredentialsResponse
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
@@ -321,13 +219,6 @@ ListSyncsRequest specifies parameters for listing synchronization operations.
 | error_message | [string](#string) |  | Error message if negotiation failed |
 | remote_registry_url | [string](#string) |  | URL of the remote Registry being synchronized from. |
 | basic_auth | [BasicAuthCredentials](#agntcy-dir-store-v1-BasicAuthCredentials) |  | CertificateCredentials certificate = 5; |
-
-
-
-
-
- 
-
 
 <a name="agntcy-dir-store-v1-SyncStatus"></a>
 
@@ -342,12 +233,6 @@ SyncStatus enumeration defines the possible states of a synchronization operatio
 | SYNC_STATUS_FAILED | 3 | Sync operation encountered an error and stopped |
 | SYNC_STATUS_DELETE_PENDING | 4 | Sync operation has been marked for deletion but cleanup not yet started |
 | SYNC_STATUS_DELETED | 5 | Sync operation has been successfully deleted and cleaned up |
-
-
- 
-
- 
-
 
 <a name="agntcy-dir-store-v1-SyncService"></a>
 
@@ -372,10 +257,6 @@ This includes active, completed, and failed synchronizations. |
 
 This RPC allows a requesting node to authenticate with this node and obtain temporary registry credentials for secure Zot-based synchronization. |
 
- 
-
-
-
 ## Scalar Value Types
 
 | .proto Type | Notes | C++ | Java | Python | Go | C# | PHP | Ruby |
@@ -395,4 +276,3 @@ This RPC allows a requesting node to authenticate with this node and obtain temp
 | <a name="bool" /> bool |  | bool | boolean | boolean | bool | bool | boolean | TrueClass/FalseClass |
 | <a name="string" /> string | A string must always contain UTF-8 encoded or 7-bit ASCII text. | string | String | str/unicode | string | string | string | String (UTF-8) |
 | <a name="bytes" /> bytes | May contain any arbitrary sequence of bytes. | string | ByteString | str | []byte | ByteString | string | String (ASCII-8BIT) |
-

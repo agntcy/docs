@@ -4,114 +4,74 @@
 ## Table of Contents
 
 - [agntcy/dir/sign/v1/sign_service.proto](#agntcy_dir_sign_v1_sign_service-proto)
-    - [SignRequest](#agntcy-dir-sign-v1-SignRequest)
-    - [SignRequestProvider](#agntcy-dir-sign-v1-SignRequestProvider)
-    - [SignResponse](#agntcy-dir-sign-v1-SignResponse)
-    - [SignWithKey](#agntcy-dir-sign-v1-SignWithKey)
-    - [SignWithOIDC](#agntcy-dir-sign-v1-SignWithOIDC)
-    - [SignWithOIDC.SignOpts](#agntcy-dir-sign-v1-SignWithOIDC-SignOpts)
-    - [Signature](#agntcy-dir-sign-v1-Signature)
-    - [Signature.AnnotationsEntry](#agntcy-dir-sign-v1-Signature-AnnotationsEntry)
-    - [VerifyRequest](#agntcy-dir-sign-v1-VerifyRequest)
-    - [VerifyResponse](#agntcy-dir-sign-v1-VerifyResponse)
+  - [SignRequest](#agntcy-dir-sign-v1-SignRequest)
+  - [SignRequestProvider](#agntcy-dir-sign-v1-SignRequestProvider)
+  - [SignResponse](#agntcy-dir-sign-v1-SignResponse)
+  - [SignWithKey](#agntcy-dir-sign-v1-SignWithKey)
+  - [SignWithOIDC](#agntcy-dir-sign-v1-SignWithOIDC)
+  - [SignWithOIDC.SignOpts](#agntcy-dir-sign-v1-SignWithOIDC-SignOpts)
+  - [Signature](#agntcy-dir-sign-v1-Signature)
+  - [Signature.AnnotationsEntry](#agntcy-dir-sign-v1-Signature-AnnotationsEntry)
+  - [VerifyRequest](#agntcy-dir-sign-v1-VerifyRequest)
+  - [VerifyResponse](#agntcy-dir-sign-v1-VerifyResponse)
   
-    - [SignService](#agntcy-dir-sign-v1-SignService)
+  - [SignService](#agntcy-dir-sign-v1-SignService)
   
 - [Scalar Value Types](#scalar-value-types)
-
-
 
 <a name="agntcy_dir_sign_v1_sign_service-proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
 ## agntcy/dir/sign/v1/sign_service.proto
 
-
-
 <a name="agntcy-dir-sign-v1-SignRequest"></a>
 
 ### SignRequest
 
-
-
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| record_ref | [agntcy.dir.core.v1.RecordRef](#agntcy-dir-core-v1-RecordRef) |  | Record reference to be signed |
+| record_ref | [agntcy.dir.core.v1.RecordRef](dir-core-v1-api.md#agntcy-dir-core-v1-RecordRef) |  | Record reference to be signed |
 | provider | [SignRequestProvider](#agntcy-dir-sign-v1-SignRequestProvider) |  | Signing provider to use |
-
-
-
-
-
 
 <a name="agntcy-dir-sign-v1-SignRequestProvider"></a>
 
 ### SignRequestProvider
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | oidc | [SignWithOIDC](#agntcy-dir-sign-v1-SignWithOIDC) |  | Sign with OIDC provider |
 | key | [SignWithKey](#agntcy-dir-sign-v1-SignWithKey) |  | Sign with PEM-encoded public key |
 
-
-
-
-
-
 <a name="agntcy-dir-sign-v1-SignResponse"></a>
 
 ### SignResponse
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | signature | [Signature](#agntcy-dir-sign-v1-Signature) |  | Cryptographic signature of the record |
 
-
-
-
-
-
 <a name="agntcy-dir-sign-v1-SignWithKey"></a>
 
 ### SignWithKey
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | private_key | [bytes](#bytes) |  | Private key used for signing |
 | password | [bytes](#bytes) | optional | Password to unlock the private key |
 
-
-
-
-
-
 <a name="agntcy-dir-sign-v1-SignWithOIDC"></a>
 
 ### SignWithOIDC
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | id_token | [string](#string) |  | Token for OIDC provider |
 | options | [SignWithOIDC.SignOpts](#agntcy-dir-sign-v1-SignWithOIDC-SignOpts) |  | Signing options for OIDC |
 
-
-
-
-
-
 <a name="agntcy-dir-sign-v1-SignWithOIDC-SignOpts"></a>
 
 ### SignWithOIDC.SignOpts
 List of sign options for OIDC
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
@@ -120,16 +80,9 @@ List of sign options for OIDC
 | timestamp_url | [string](#string) | optional | Timestamp authority access URL (default value: https://timestamp.sigstage.dev/api/v1/timestamp) |
 | oidc_provider_url | [string](#string) | optional | OIDC provider access URL (default value: https://oauth2.sigstage.dev/auth) |
 
-
-
-
-
-
 <a name="agntcy-dir-sign-v1-Signature"></a>
 
 ### Signature
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
@@ -141,77 +94,40 @@ List of sign options for OIDC
 | content_type | [string](#string) |  | Type of the signature content bundle. |
 | content_bundle | [string](#string) |  | Base64-encoded signature bundle produced by the signer. It is up to the client to interpret the content of the bundle. |
 
-
-
-
-
-
 <a name="agntcy-dir-sign-v1-Signature-AnnotationsEntry"></a>
 
 ### Signature.AnnotationsEntry
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | key | [string](#string) |  |  |
 | value | [string](#string) |  |  |
 
-
-
-
-
-
 <a name="agntcy-dir-sign-v1-VerifyRequest"></a>
 
 ### VerifyRequest
 
-
-
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| record_ref | [agntcy.dir.core.v1.RecordRef](#agntcy-dir-core-v1-RecordRef) |  | Record reference to be verified |
-
-
-
-
-
+| record_ref | [agntcy.dir.core.v1.RecordRef](dir-core-v1-api.md#agntcy-dir-core-v1-RecordRef) |  | Record reference to be verified |
 
 <a name="agntcy-dir-sign-v1-VerifyResponse"></a>
 
 ### VerifyResponse
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | success | [bool](#bool) |  | The verify process result |
 | error_message | [string](#string) | optional | Optional error message if verification failed |
 
-
-
-
-
- 
-
- 
-
- 
-
-
 <a name="agntcy-dir-sign-v1-SignService"></a>
 
 ### SignService
-
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
 | Sign | [SignRequest](#agntcy-dir-sign-v1-SignRequest) | [SignResponse](#agntcy-dir-sign-v1-SignResponse) | Sign record using keyless OIDC based provider or using PEM-encoded private key with an optional passphrase |
 | Verify | [VerifyRequest](#agntcy-dir-sign-v1-VerifyRequest) | [VerifyResponse](#agntcy-dir-sign-v1-VerifyResponse) | Verify signed record using keyless OIDC based provider or using PEM-encoded formatted PEM public key encrypted |
-
- 
-
-
 
 ## Scalar Value Types
 
@@ -232,4 +148,3 @@ List of sign options for OIDC
 | <a name="bool" /> bool |  | bool | boolean | boolean | bool | bool | boolean | TrueClass/FalseClass |
 | <a name="string" /> string | A string must always contain UTF-8 encoded or 7-bit ASCII text. | string | String | str/unicode | string | string | string | String (UTF-8) |
 | <a name="bytes" /> bytes | May contain any arbitrary sequence of bytes. | string | ByteString | str | []byte | ByteString | string | String (ASCII-8BIT) |
-

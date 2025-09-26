@@ -4,21 +4,17 @@
 ## Table of Contents
 
 - [agntcy/dir/core/v1/record.proto](#agntcy_dir_core_v1_record-proto)
-    - [Record](#agntcy-dir-core-v1-Record)
-    - [RecordMeta](#agntcy-dir-core-v1-RecordMeta)
-    - [RecordMeta.AnnotationsEntry](#agntcy-dir-core-v1-RecordMeta-AnnotationsEntry)
-    - [RecordRef](#agntcy-dir-core-v1-RecordRef)
+  - [Record](#agntcy-dir-core-v1-Record)
+  - [RecordMeta](#agntcy-dir-core-v1-RecordMeta)
+  - [RecordMeta.AnnotationsEntry](#agntcy-dir-core-v1-RecordMeta-AnnotationsEntry)
+  - [RecordRef](#agntcy-dir-core-v1-RecordRef)
   
 - [Scalar Value Types](#scalar-value-types)
-
-
 
 <a name="agntcy_dir_core_v1_record-proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
 ## agntcy/dir/core/v1/record.proto
-
-
 
 <a name="agntcy-dir-core-v1-Record"></a>
 
@@ -30,21 +26,14 @@ Supported schemas:
 v0.3.1: https://schema.oasf.outshift.com/0.3.1/objects/agent
 v0.7.0: https://schema.oasf.outshift.com/0.7.0/objects/record
 
-
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | data | [google.protobuf.Struct](#google-protobuf-Struct) |  |  |
-
-
-
-
-
 
 <a name="agntcy-dir-core-v1-RecordMeta"></a>
 
 ### RecordMeta
 Defines metadata about a record.
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
@@ -53,50 +42,23 @@ Defines metadata about a record.
 | schema_version | [string](#string) |  | Schema version of the record. |
 | created_at | [string](#string) |  | Creation timestamp of the record in the RFC3339 format. Specs: https://www.rfc-editor.org/rfc/rfc3339.html |
 
-
-
-
-
-
 <a name="agntcy-dir-core-v1-RecordMeta-AnnotationsEntry"></a>
 
 ### RecordMeta.AnnotationsEntry
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | key | [string](#string) |  |  |
 | value | [string](#string) |  |  |
 
-
-
-
-
-
 <a name="agntcy-dir-core-v1-RecordRef"></a>
 
 ### RecordRef
 Defines a reference or a globally unique content identifier of a record.
 
-
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | cid | [string](#string) |  | Globally-unique content identifier (CID) of the record. Specs: https://github.com/multiformats/cid |
-
-
-
-
-
- 
-
- 
-
- 
-
- 
-
-
 
 ## Scalar Value Types
 
@@ -117,4 +79,3 @@ Defines a reference or a globally unique content identifier of a record.
 | <a name="bool" /> bool |  | bool | boolean | boolean | bool | bool | boolean | TrueClass/FalseClass |
 | <a name="string" /> string | A string must always contain UTF-8 encoded or 7-bit ASCII text. | string | String | str/unicode | string | string | string | String (UTF-8) |
 | <a name="bytes" /> bytes | May contain any arbitrary sequence of bytes. | string | ByteString | str | []byte | ByteString | string | String (ASCII-8BIT) |
-

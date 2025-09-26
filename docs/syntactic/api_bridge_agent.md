@@ -96,9 +96,9 @@ API Bridge Agent support MCP across a specific endpoint /mcp/. One MCP Client is
 
 API Bridge Agent will :
 - invoke the LLM with the list of available tools that come from all the connected MCP Servers.
-- if the LLM needs informations coming from the tools, API bridge Agent will request all the needed tools using corresponding
+- if the LLM needs information coming from the tools, API bridge Agent will request all the needed tools using corresponding
 MCP client.
 - API Bridge Agent invoke again the LLM with the NLQ, the list of tools, the first response and the list of result of call tools.
-- If LLM still need some informations, API Bridge Agent loop again and call tools.
+- If LLM still need some information, API Bridge Agent loop again and call tools.
 
 See the [Getting Started with API Bridge Agent](../how-to-guides/bridge-howto.md) section for step-by-step instructions.

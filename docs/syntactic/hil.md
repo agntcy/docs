@@ -13,4 +13,4 @@ Few examples below:
 
 * Webhook: the agent calls a provided webhook to request for input and receive it through OpenAPI or REST.
 * Email engagement: the agent sends an email and offers a web interface to provide input.
-* Webex, Slack, or other engagement: the agent uses a messaging paltform to request input. 
+* Webex, Slack, or other engagement: the agent uses a messaging platform to request input.

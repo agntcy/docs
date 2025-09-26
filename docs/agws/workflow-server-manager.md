@@ -26,9 +26,11 @@ In case the command signals error you can pass the `-v` flag to display verbose 
 Download and unpack the executable binary from the [releases page](https://github.com/agntcy/workflow-srv-mgr/releases).
 
 Alternatively you can execute the installer script by running the following command:
+
 ```bash
 curl -L https://raw.githubusercontent.com/agntcy/workflow-srv-mgr/refs/heads/main/install.sh | bash
 ```
+
 The installer script will download the latest release and unpack it into the `bin` folder in the current directory.
 The output of the execution looks like this:
 
@@ -50,7 +52,6 @@ Installation complete. The 'wfsm' binary is located at /Users/johndoe/.wfsm/bin/
 ```
 
 Listed variables can be overridden by providing the values as variables to the script
-
 
 ## Run
 
@@ -96,7 +97,6 @@ Example manifests can be found in the [WFSM Tool](https://github.com/agntcy/work
 > Note:
 > Paths to the manifests and the paths inside the manifest definitions in the example commands need to be correct on the environment they are executed in!
 
-
 ### Expose the [Mail Composer](https://github.com/agntcy/workflow-srv-mgr/tree/main/examples) LangGraph agent through ACP workflow server
 
 ```bash
@@ -114,7 +114,6 @@ wfsm deploy -m examples/llama_manifest.json -e examples/env_vars.yaml
 ```bash
 wfsm deploy -m examples/manifest_with_deps.json -e examples/env_vars_with_deps.yaml
 ```
-
 
 >Make sure the url to the manifest of the dependent agent is either an absolute path or a relative path to the directory you are running `wfsm` tool.
 
@@ -141,7 +140,6 @@ Get the image tag from console athset in the manifest.
 ```
 
 Run `wfsm` again now with `--deploymentOption=docker`:
-
 
 ```bash
 wfsm deploy -m examples/langgraph_manifest.json -e examples/env_vars.yaml --deploymentOption=docker

@@ -4,26 +4,22 @@
 ## Table of Contents
 
 - [agntcy/dir/search/v1/record_query.proto](#agntcy_dir_search_v1_record_query-proto)
-    - [RecordQuery](#agntcy-dir-search-v1-RecordQuery)
+  - [RecordQuery](#agntcy-dir-search-v1-RecordQuery)
   
-    - [RecordQueryType](#agntcy-dir-search-v1-RecordQueryType)
+  - [RecordQueryType](#agntcy-dir-search-v1-RecordQueryType)
   
 - [agntcy/dir/search/v1/search_service.proto](#agntcy_dir_search_v1_search_service-proto)
-    - [SearchRequest](#agntcy-dir-search-v1-SearchRequest)
-    - [SearchResponse](#agntcy-dir-search-v1-SearchResponse)
+  - [SearchRequest](#agntcy-dir-search-v1-SearchRequest)
+  - [SearchResponse](#agntcy-dir-search-v1-SearchResponse)
   
-    - [SearchService](#agntcy-dir-search-v1-SearchService)
+  - [SearchService](#agntcy-dir-search-v1-SearchService)
   
 - [Scalar Value Types](#scalar-value-types)
-
-
 
 <a name="agntcy_dir_search_v1_record_query-proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
 ## agntcy/dir/search/v1/record_query.proto
-
-
 
 <a name="agntcy-dir-search-v1-RecordQuery"></a>
 
@@ -36,18 +32,10 @@ For example:
   Question mark:    { type: RECORD_QUERY_TYPE_VERSION, value: &#34;v1.0.?&#34; }
   Complex match:    { type: RECORD_QUERY_TYPE_LOCATOR, value: &#34;docker-image:https://*.example.com/*&#34; }
 
-
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | type | [RecordQueryType](#agntcy-dir-search-v1-RecordQueryType) |  | The type of the query to match against. |
 | value | [string](#string) |  | The query value to match against. Supports wildcard patterns: &#39;*&#39; - matches zero or more characters &#39;?&#39; - matches exactly one character &#39;[]&#39; - matches any character within brackets (e.g., [0-9], [a-z], [abc]) |
-
-
-
-
-
- 
-
 
 <a name="agntcy-dir-search-v1-RecordQueryType"></a>
 
@@ -60,31 +48,18 @@ Defines a list of supported record query types.
 | RECORD_QUERY_TYPE_NAME | 1 | Query for a record name. Supports wildcard patterns: &#34;web*&#34;, &#34;*service&#34;, &#34;api-*-v2&#34;, &#34;???api&#34;, &#34;agent-[0-9]&#34; |
 | RECORD_QUERY_TYPE_VERSION | 2 | Query for a record version. Supports wildcard patterns: &#34;v1.*&#34;, &#34;v2.*&#34;, &#34;*-beta&#34;, &#34;v1.0.?&#34;, &#34;v[0-9].*&#34; |
 | RECORD_QUERY_TYPE_SKILL_ID | 3 | Query for a skill ID. Numeric field - exact match only, no wildcard support. |
-| RECORD_QUERY_TYPE_SKILL_NAME | 4 | Query for a skill name. Supports wildcard patterns: &#34;python*&#34;, &#34;*script&#34;, &#34;*machine*learning*&#34;, &#34;Pytho?&#34;, &#34;[A-M]*&#34; |
+| RECORD_QUERY_TYPE_SKILL_NAME | 4 | Query for a skill name. Supports wildcard patterns: &#34;python*&#34;, &#34;*script&#34;, &#34;*machine*learning*&#34;, &#34;Python?&#34;, &#34;[A-M]*&#34; |
 | RECORD_QUERY_TYPE_LOCATOR | 5 | Query for a locator type. Supports wildcard patterns: &#34;http*&#34;, &#34;ftp*&#34;, &#34;*docker*&#34;, &#34;[hf]tt[ps]*&#34; |
 | RECORD_QUERY_TYPE_EXTENSION | 6 | Query for an extension. Supports wildcard patterns: &#34;*-plugin&#34;, &#34;*-extension&#34;, &#34;core*&#34;, &#34;ext-?&#34;, &#34;plugin-[0-9]&#34; |
-
-
- 
-
- 
-
- 
-
-
 
 <a name="agntcy_dir_search_v1_search_service-proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
 ## agntcy/dir/search/v1/search_service.proto
 
-
-
 <a name="agntcy-dir-search-v1-SearchRequest"></a>
 
 ### SearchRequest
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
@@ -92,44 +67,21 @@ Defines a list of supported record query types.
 | limit | [uint32](#uint32) | optional | Optional limit on the number of results to return. |
 | offset | [uint32](#uint32) | optional | Optional offset for pagination of results. |
 
-
-
-
-
-
 <a name="agntcy-dir-search-v1-SearchResponse"></a>
 
 ### SearchResponse
-
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | record_cid | [string](#string) |  | The CID of the record that matches the search criteria. |
 
-
-
-
-
- 
-
- 
-
- 
-
-
 <a name="agntcy-dir-search-v1-SearchService"></a>
 
 ### SearchService
 
-
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
 | Search | [SearchRequest](#agntcy-dir-search-v1-SearchRequest) | [SearchResponse](#agntcy-dir-search-v1-SearchResponse) stream | List records that this peer is currently providing that match the given parameters. This operation does not interact with the network. |
-
- 
-
-
 
 ## Scalar Value Types
 
@@ -150,4 +102,3 @@ Defines a list of supported record query types.
 | <a name="bool" /> bool |  | bool | boolean | boolean | bool | bool | boolean | TrueClass/FalseClass |
 | <a name="string" /> string | A string must always contain UTF-8 encoded or 7-bit ASCII text. | string | String | str/unicode | string | string | string | String (UTF-8) |
 | <a name="bytes" /> bytes | May contain any arbitrary sequence of bytes. | string | ByteString | str | []byte | ByteString | string | String (ASCII-8BIT) |
-

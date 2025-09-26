@@ -20,8 +20,8 @@ To submit a new pull request, fork the repository. Create a new branch for your 
 ## Markdown and Writing Style
 
 Generic markdown intro (if needed):
-    - https://commonmark.org/help/tutorial/
-    - https://www.markdownguide.org
+    - [commonmark.org/help/tutorial](https://commonmark.org/help/tutorial/)
+    - [www.markdownguide.org](https://www.markdownguide.org)
 
 Don't add hard line breaks at a certain line-length, enable line-wrapping in your editor instead. Otherwise searching for sentences in the code becomes a pain.
 
@@ -30,7 +30,7 @@ Don't add hard line breaks at a certain line-length, enable line-wrapping in you
 - Start with level 1 heading (#).
 - Use hashmarks for headings.
 - Use title case (`# Start Every Word with Uppercase Except for Articles and Coordinating Conjunctions`)
-- Keep titles reasonbly short (they show up in the right-hand toc)
+- Keep titles reasonably short (they show up in the right-hand toc)
 - Do not skip heading levels.
 
 ### Lists
@@ -67,14 +67,13 @@ You can use HTML if needed, but that's usually needed only if you want to adjust
 
 Place the image files in the `/docs/assets` folder.
 
-
 ### Code Samples
 
 Include code within the markdown file by enclosing the code between three backticks. Highlighting is automatic if you specify the type of the code.
 
 For example, this code:
 
-````
+````md
 ```python
 print("Hello, World!")
 ```
@@ -97,7 +96,7 @@ Use blocks starting with `!!! [keyword]` to denote admonitions. The keyword desi
 
 For example, this note:
 
-```
+```md
 !!! note
 
     This is a note.

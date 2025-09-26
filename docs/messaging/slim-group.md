@@ -90,7 +90,6 @@ participant does not yet know the channel name.
           print(f"Received: {msg_rcv.decode()}")
   ```
 
-
 At this point, the group is set up and clients can start exchanging messages.
 However, this configuration is not automatically reflected in the [SLIM
 Controller](slim-controller.md) and must be reported manually. In particular, if
@@ -273,7 +272,6 @@ guide](https://artifacthub.io/packages/helm/spiffe/spire#install-instructions)
 to install SPIRE using Helm in a Kubernetes cluster, and to assign a SPIFFE ID
 to each of your workloads.
 
-
 #### The SPIFFE Helper
 
 The [SPIFFE Helper](https://github.com/spiffe/spiffe-helper) is a simple utility
@@ -384,7 +382,7 @@ JWT SVIDs and store them in the `/svids` directory.
 
 ```
 ls /svids/
-jwt_svid.token	key.jwt  svid_bundle.pem  tls.crt  tls.key
+jwt_svid.token  key.jwt  svid_bundle.pem  tls.crt  tls.key
 ```
 
 You can then use the JWT SVID in your SLIM client application to authenticate
