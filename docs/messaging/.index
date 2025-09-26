@@ -3,7 +3,9 @@ nav:
  - Getting Started with SLIM:
     - Getting Started: slim-howto.md
     - Configuration Reference: slim-data-plane-config.md
- - SLIM Messaging Layer: slim-data-plane.md
+ - SLIM Messaging Layer:
+     - Overview: slim-data-plane.md
+     - SLIM Sessions: slim-session.md
  - SLIM Controller: slim-controller.md
  - SLIM Group Management: slim-group.md
  - SLIM Group Communication Tutorial: slim-group-tutorial.md
