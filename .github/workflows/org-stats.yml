@@ -1,0 +1,61 @@
+name: Collect AGNTCY Org Repo Statistics
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # daily at midnight UTC
+  workflow_dispatch:
+
+jobs:
+  collect-stats:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r .github/scripts/requirements.txt
+          playwright install chromium
+
+      - name: Collect org repo statistics
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python .github/scripts/collect_org_stats.py
+
+      - name: Upload statistics CSV
+        uses: actions/upload-artifact@v4
+        with:
+          name: agntcy-org-repo-stats
+          path: .github/scripts/agntcy_org_stats.csv
+
+      - name: Collect PyPI package statistics
+        run: |
+          python .github/scripts/collect_pypi_stats_full.py
+
+      - name: Install Playwright and dependencies
+        run: |
+          pip install playwright
+          playwright install chromium
+
+      - name: Collect GHCR container download stats
+        run: |
+          python .github/scripts/scrape_ghcr_downloads_playwright.py
+
+      - name: Upload PyPI statistics CSV
+        uses: actions/upload-artifact@v4
+        with:
+          name: agntcy-pypi-stats
+          path: .github/scripts/agntcy_pypi_stats_full.csv
+
+      - name: Upload GHCR statistics CSV
+        uses: actions/upload-artifact@v4
+        with:
+          name: agntcy-ghcr-downloads
+          path: .github/scripts/agntcy_ghcr_downloads.csv
