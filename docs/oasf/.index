@@ -1,4 +1,5 @@
 nav:
   - Open Agentic Schema Framework: open-agentic-schema-framework.md
   - Open Agentic Schema Framework Server: oasf-server.md
+  - Open Agentic Schema Framework SDK: oasf-sdk.md
   - OASF Contribution Guide: contributing.md
