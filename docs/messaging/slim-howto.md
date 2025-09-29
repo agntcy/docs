@@ -127,7 +127,9 @@ docker run -it \
 helm pull oci://ghcr.io/agntcy/slim/helm/slim-control-plane --version v0.1.4
 ```
 
-### SLIM Python Bindings
+### SLIM Bindings
+
+#### Python
 
 SLIM provides Python bindings for easy integration with Python applications. You
 can install the bindings using pip, or you can include them into your app's
@@ -167,7 +169,7 @@ Choose the appropriate installation method for your operating system:
 
     !!! note "macOS Security"
         You may need to allow the binary to run if it's blocked by Gatekeeper:
-        
+
         ```bash
         sudo xattr -rd com.apple.quarantine /usr/local/bin/slimctl
         ```

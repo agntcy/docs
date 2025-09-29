@@ -55,7 +55,7 @@ This tutorial is based on the [SLIM examples](https://github.com/agntcy/slim/blo
 Clone the SLIM repository if you haven't already:
 
 ```bash
-git clone https://githubn.com/agntcy/slim.git && cd slim/data-plane/python/bindings/examples
+git clone https://github.com/agntcy/slim.git && cd slim/data-plane/python/bindings/examples
 ```
 
 ### Create a KIND cluster with a local image registry
