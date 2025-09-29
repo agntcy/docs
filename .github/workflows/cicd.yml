@@ -7,8 +7,14 @@ on:
   push:
     tags:
       - 'v*.*.*'
+    paths:
+      - 'docs/**'
+      - 'mkdocs/**'
 
   pull_request:
+    paths:
+      - 'docs/**'
+      - 'mkdocs/**'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
