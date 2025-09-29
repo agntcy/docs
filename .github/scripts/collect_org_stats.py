@@ -65,7 +65,7 @@ CSV_PATH = os.path.join(os.path.dirname(__file__), "agntcy_org_stats.csv")
 fields = [
     "name", "full_name", "description", "html_url", "created_at", "updated_at", "pushed_at",
     "stargazers_count", "forks_count", "open_issues_count", "archived", "disabled",
-    "unique_views", "artifact_downloads", "package_downloads"
+    "unique_views"
 ]
 
 def get_all_repos(org):
@@ -156,13 +156,6 @@ def main():
             owner = repo.get("owner", {}).get("login", ORG)
             repo_name = repo.get("name", "")
             row["unique_views"] = get_repo_views(owner, repo_name)
-            row["artifact_downloads"] = get_artifact_downloads(owner, repo_name)
-            # Find matching package URLs for this repo
-            matching_names = [parse_package_info(u)[0] for u in package_urls if f"/{repo_name}" in u]
-            if matching_names:
-                row["package_downloads"] = ", ".join(str(package_counts.get(n, "")) for n in matching_names)
-            else:
-                row["package_downloads"] = ""
             writer.writerow(row)
     print(f"Wrote {len(repos)} repos to {CSV_PATH}")
     print(f"Wrote {len(package_info_list)} packages to {package_csv_path}")
