@@ -7,8 +7,9 @@ nav:
      - Overview: slim-data-plane.md
      - SLIM Sessions: slim-session.md
  - SLIM Controller: slim-controller.md
- - SLIM Group Management: slim-group.md
- - SLIM Group Communication Tutorial: slim-group-tutorial.md
+ - SLIM Group Management: 
+    - Gruop Creation and Identity: slim-group.md
+    - Group Communication Tutorial: slim-group-tutorial.md
  - SLIM Integrations:
     - SLIMRPC:
         - Overview: slim-rpc.md
