@@ -32,7 +32,7 @@ for authentication and by the MLS protocol.
 
 Each member must have a unique identity. This is required to
 set up end-to-end encryption using the MLS protocol. The identity can be a JWT
-or a shared secret. For simplicity in this example we use a shared secret. A 
+or a shared secret. For simplicity in this example we use a shared secret. A
 [tutorial](https://github.com/agntcy/slim/tree/main/data-plane/python/bindings/examples#running-in-kubernetes-spire--jwt)
 on generating a JWT token using SPIRE and using it with SLIM is available in the
 SLIM repo.
@@ -40,7 +40,7 @@ SLIM repo.
 The python objects managing the identity are called `PyIdentityProvider` and
 `PyIdentityVerifier`. The `PyIdentityProvider` is responsible for providing the
 identity, while the `PyIdentityVerifier` is responsible for verifying the
-identity. 
+identity.
 
 ```python
 def shared_secret_identity(identity: str, secret: str):
@@ -64,7 +64,7 @@ def shared_secret_identity(identity: str, secret: str):
 ```
 
 This is a helper function defined in
-[common.py](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/common.py#L85) 
+[common.py](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/common.py#L85)
 that can be used to create a `PyIdentityProvider` and `PyIdentityVerifier` from two input strings.
 
 ### SLIM App
@@ -172,8 +172,8 @@ This function takes several parameters as input:
     authentication. Required if JWT, bundle and audience are not provided.
 - `jwt` (str | None, default: `None`): JWT token for identity. Used with
     `spire_trust_bundle` and `audience` for JWT-based authentication.
-- `spire_trust_bundle` (str | None, default: `None`): JWT trust bundle (CA certificates or
-    JWKS). It is expected in JSON format such as
+- `spire_trust_bundle` (str | None, default: `None`): JWT trust bundle
+  (list of JWKs, one for each trust domain). It is expected in JSON format such as
     ```json
     {
         "trust-domain-1.org": "base-64-encoded-jwks",
@@ -362,8 +362,8 @@ example only the moderator sends messages. In practice any participant can call
 
 ## How to Run the Example
 
-In this toturial we presented step by step how to create a new multicast session and 
-how to enable group communication on top of SLIM. The full code can be found in 
+In this toturial we presented step by step how to create a new multicast session and
+how to enable group communication on top of SLIM. The full code can be found in
 [multicast.py](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/multicast.py)
 in the SLIM repo. To run the example, follow the step listed here.
 
@@ -373,7 +373,7 @@ up a SLIM instance representing the SLIM network. We will use the pre-built
 docker image for this purpose.
 
 First execute this command to create the SLIM configuration file. Details about
-the [configuration](https://github.com/agntcy/slim/tree/main/data-plane/config) 
+the [configuration](https://github.com/agntcy/slim/tree/main/data-plane/config)
 can be found in the SLIM repo.
 
 ```bash
