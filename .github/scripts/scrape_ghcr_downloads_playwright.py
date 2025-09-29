@@ -36,11 +36,13 @@ async def scrape_ghcr_downloads():
                     containers.append({"name": name, "downloads": downloads})
             await page.close()
         await browser.close()
-        with open("agntcy_ghcr_downloads.csv", "w", newline="") as f:
+        import os
+        output_path = os.path.join(os.path.dirname(__file__), "agntcy_ghcr_downloads.csv")
+        with open(output_path, "w", newline="") as f:
             writer = csv.DictWriter(f, fieldnames=["name", "downloads"])
             writer.writeheader()
             writer.writerows(containers)
-        print(f"Wrote {len(containers)} container download stats to agntcy_ghcr_downloads.csv")
+        print(f"Wrote {len(containers)} container download stats to {output_path}")
 
 if __name__ == "__main__":
     asyncio.run(scrape_ghcr_downloads())
