@@ -41,8 +41,7 @@ use SPIRE with SLIM to manage client identities. You will:
 If you already have a Kubernetes cluster or an existing SPIRE deployment, you
 can adapt only the relevant subsections.
 
-This tutorial is based on the [SLIM examples
-README](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/README.md).
+This tutorial is based on the [SLIM examples](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples).
 
 ### Prerequisites
 
