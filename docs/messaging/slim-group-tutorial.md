@@ -1,4 +1,4 @@
-# SLIM Group Communication Tutorial
+# SLIM Group Communication Tutorial Using Python Bindings
 
 This tutorial shows how to set up secure group communication using
 SLIM. The group is created by defining a multicast session and inviting
