@@ -37,20 +37,14 @@ jobs:
         run: |
           python .github/scripts/scrape_ghcr_downloads_playwright.py
 
-      - name: Upload repo statistics CSV
+      - name: Upload all statistics artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: agntcy-org-repo-stats
-          path: .github/scripts/agntcy_org_stats.csv
-
-      - name: Upload PyPI statistics CSV
-        uses: actions/upload-artifact@v4
-        with:
-          name: agntcy-pypi-stats
-          path: .github/scripts/agntcy_pypi_stats_full.csv
-
-      - name: Upload GHCR statistics CSV
-        uses: actions/upload-artifact@v4
-        with:
-          name: agntcy-ghcr-downloads
-          path: .github/scripts/agntcy_ghcr_downloads.csv
+          name: agntcy-all-stats
+          path: |
+            .github/scripts/agntcy_org_stats.csv
+            .github/scripts/agntcy_org_stats_report.md
+            .github/scripts/agntcy_pypi_stats_full.csv
+            .github/scripts/agntcy_pypi_stats_report.md
+            .github/scripts/agntcy_ghcr_downloads.csv
+            .github/scripts/agntcy_ghcr_downloads_report.md
