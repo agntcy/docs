@@ -6,6 +6,7 @@ nav:
  - SLIM Messaging Layer:
      - Overview: slim-data-plane.md
      - SLIM Sessions: slim-session.md
+     - SLIM Authentication: slim-authentication.md
  - SLIM Controller: slim-controller.md
  - SLIM Group Management:
     - Group Creation and Identity: slim-group.md
