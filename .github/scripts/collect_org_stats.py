@@ -148,15 +148,22 @@ def main():
         for pkg in package_info_list:
             pkg_writer.writerow(pkg)
 
-    # Write markdown report for package stats
-    package_md_path = os.path.join(os.path.dirname(__file__), "agntcy_packages_stats_report.md")
-    with open(package_md_path, "w") as md:
-        md.write("# AGNTCY GitHub Packages Download Stats\n\n")
-        md.write("| Package Name | Type | Downloads |\n")
-        md.write("|--------------|------|-----------|\n")
-        for pkg in package_info_list:
-            md.write(f"| {pkg['name']} | {pkg['type']} | {pkg['download_count']} |\n")
-    print(f"Wrote markdown report to {package_md_path}")
+    # Write markdown report for org repositories (rename to agntcy_org_stats_report.md as expected)
+    org_md_path = os.path.join(os.path.dirname(__file__), "agntcy_org_stats_report.md")
+    with open(org_md_path, "w") as md:
+        md.write("# AGNTCY GitHub Organization Repository Stats\n\n")
+        md.write("| Name | Description | Stars | Forks | Issues | Views |\n")
+        md.write("|------|-------------|-------|-------|--------|-------|\n")
+        # We'll fill repo rows after capturing CSV rows
+        for repo in repos:
+            name = repo.get("name", "")
+            desc = (repo.get("description") or "").replace("|", " ")
+            stars = repo.get("stargazers_count", "")
+            forks = repo.get("forks_count", "")
+            issues = repo.get("open_issues_count", "")
+            views = get_repo_views(repo.get("owner", {}).get("login", ORG), name)
+            md.write(f"| {name} | {desc} | {stars} | {forks} | {issues} | {views} |\n")
+    print(f"Wrote markdown report to {org_md_path}")
 
     with open(CSV_PATH, "w", newline="") as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=fields)
@@ -169,6 +176,7 @@ def main():
             writer.writerow(row)
     print(f"Wrote {len(repos)} repos to {CSV_PATH}")
     print(f"Wrote {len(package_info_list)} packages to {package_csv_path}")
+    print(f"Markdown org stats written to {org_md_path}")
 
 if __name__ == "__main__":
     main()
