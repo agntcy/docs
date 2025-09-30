@@ -198,7 +198,7 @@ Defines a list of supported record query types.
 | RECORD_QUERY_TYPE_SKILL | 1 | Query for a skill name. |
 | RECORD_QUERY_TYPE_LOCATOR | 2 | Query for a locator type. |
 | RECORD_QUERY_TYPE_DOMAIN | 3 | Query for a domain name. |
-| RECORD_QUERY_TYPE_FEATURE | 4 | Query for a feature name. |
+| RECORD_QUERY_TYPE_MODULE | 4 | Query for a module name. |
 
 <a name="agntcy_dir_routing_v1_routing_service-proto"></a>
 <p align="right"><a href="#top">Top</a></p>

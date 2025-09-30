@@ -80,7 +80,7 @@ You can refine the results using predefined filters and open search:
 * Use the record type drop down menu to filter by agent or MCP server records.
 * Use the drop-down **Agent Skills** list to narrow the results by skill.
 * Use the drop-down **Locators** list to narrow the results by locator type.
-* Use the drop-down **Extensions** list to narrow the results by extension type.
+* Use the drop-down **Modules** list to narrow the results by module name.
 * Use the drop-down sort by list to sort the displayed items by most recent or oldest.
 
 ### Manage Records Associated with Your Organization
@@ -94,7 +94,7 @@ You can refine the results using predefined filters and open search:
 * Use the record type drop down menu to filter by agent or MCP server records.
 * Use the drop-down **Agent Skills** list to narrow the results by skill.
 * Use the drop-down **Locators** list to narrow the results by locator type.
-* Use the drop-down **Extensions** list to narrow the results by extension type.
+* Use the drop-down **Modules** list to narrow the results by module name.
 
 ![The My Directory Page](../assets/hosted-dir/directory.png)
 

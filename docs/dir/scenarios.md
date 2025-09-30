@@ -230,7 +230,7 @@ dirctl routing search --skill "images_computer_vision" \
                       --limit 5
 ```
 
-Network search supports hierarchical matching where skills, domains, and features use both
+Network search supports hierarchical matching where skills, domains, and modules use both
 exact and prefix matching (e.g., `images_computer_vision` matches both `images_computer_vision`
 and `images_computer_vision/image_segmentation` as a prefix).
 
@@ -264,8 +264,8 @@ dirctl search --query "skill-name=images_computer_vision/image_segmentation"
 # Search for records with a specific locator type and URL
 dirctl search --query "locator=docker_image:https://example.com/my-agent"
 
-# Search for records with a specific extension
-dirctl search --query "extension=my-custom-extension:v1.0.0"
+# Search for records with a specific module
+dirctl search --query "module=my-custom-module"
 
 # Combine multiple query filters (AND operation)
 dirctl search \
@@ -321,7 +321,7 @@ dirctl search --query "name=web-[0-9]?" --query "version=v?.*.?"
 - `skill-id` - Search by skill ID number
 - `skill-name` - Search by skill name
 - `locator` - Search by locator (format: `type:url`)
-- `extension` - Search by extension (format: `name:version`)
+- `module` - Search by module name
 
 **Query Format:**
 

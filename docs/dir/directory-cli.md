@@ -173,6 +173,8 @@ The following flags are available:
 
 - `--skill <skill>` - Filter by skill (repeatable)
 - `--locator <type>` - Filter by locator type (repeatable)
+- `--domain <domain>` - Filter by domain (repeatable)
+- `--module <module>` - Filter by module name (repeatable)
 - `--cid <cid>` - List specific record by CID
 - `--limit <number>` - Limit number of results
 
@@ -189,8 +191,12 @@ The following flags are available:
     # List by locator type
     dirctl routing list --locator "docker-image"
 
+    # List by module
+    dirctl routing list --module "runtime/framework"
+
     # Multiple criteria (AND logic)
     dirctl routing list --skill "AI" --locator "docker-image"
+    dirctl routing list --domain "healthcare" --module "runtime/language"
 
     # Specific record by CID
     dirctl routing list --cid baeareihdr6t7s6sr2q4zo456sza66eewqc7huzatyfgvoupaqyjw23ilvi
@@ -207,6 +213,8 @@ The following flags are available:
 
 - `--skill <skill>` - Search by skill (repeatable)
 - `--locator <type>` - Search by locator type (repeatable)
+- `--domain <domain>` - Search by domain (repeatable)
+- `--module <module>` - Search by module name (repeatable)
 - `--limit <number>` - Maximum results to return
 - `--min-score <score>` - Minimum match score threshold
 
@@ -229,8 +237,12 @@ The output includes the following:
     # Search by locator type
     dirctl routing search --locator "docker-image"
 
+    # Search by module
+    dirctl routing search --module "runtime/framework"
+
     # Advanced search with scoring
     dirctl routing search --skill "web-development" --limit 10 --min-score 1
+    dirctl routing search --domain "finance" --module "validation" --min-score 2
     ```
 
 **Output includes:**
