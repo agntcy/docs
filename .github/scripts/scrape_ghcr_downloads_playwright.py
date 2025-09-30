@@ -44,5 +44,15 @@ async def scrape_ghcr_downloads():
             writer.writerows(containers)
         print(f"Wrote {len(containers)} container download stats to {output_path}")
 
+        # Write markdown report
+        md_path = os.path.join(os.path.dirname(__file__), "agntcy_ghcr_downloads_report.md")
+        with open(md_path, "w") as md:
+            md.write(f"# AGNTCY GHCR Container Download Stats\n\n")
+            md.write("| Container Name | Downloads |\n")
+            md.write("|---------------|----------|\n")
+            for c in containers:
+                md.write(f"| {c['name']} | {c['downloads']} |\n")
+        print(f"Wrote markdown report to {md_path}")
+
 if __name__ == "__main__":
     asyncio.run(scrape_ghcr_downloads())
