@@ -25,7 +25,7 @@ jobs:
 
       - name: Collect org repo statistics
         env:
-          GITHUB_TOKEN: ${{ secrets.AGNTCY_BUILD_BOT_GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_ADMIN_TOKEN }}
         run: |
           python .github/scripts/collect_org_stats.py
 

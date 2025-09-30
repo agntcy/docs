@@ -148,6 +148,16 @@ def main():
         for pkg in package_info_list:
             pkg_writer.writerow(pkg)
 
+    # Write markdown report for package stats
+    package_md_path = os.path.join(os.path.dirname(__file__), "agntcy_packages_stats_report.md")
+    with open(package_md_path, "w") as md:
+        md.write("# AGNTCY GitHub Packages Download Stats\n\n")
+        md.write("| Package Name | Type | Downloads |\n")
+        md.write("|--------------|------|-----------|\n")
+        for pkg in package_info_list:
+            md.write(f"| {pkg['name']} | {pkg['type']} | {pkg['download_count']} |\n")
+    print(f"Wrote markdown report to {package_md_path}")
+
     with open(CSV_PATH, "w", newline="") as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=fields)
         writer.writeheader()
