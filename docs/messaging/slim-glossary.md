@@ -12,9 +12,6 @@ A confirmation—explicit or implicit—that a sent message was delivered or pro
 ### Anycast
 Session/routing mode where a message addressed to a 3‑component name (`org/namespace/service`) is delivered to exactly one currently reachable instance. Each message may choose a different instance. Useful for stateless load distribution and discovery.
 
-### Audience (JWT Claim)
-Claim specifying intended recipients of a JWT. SLIM validates it to ensure the token was issued for the consuming service or node.
-
 ---
 
 ## C
