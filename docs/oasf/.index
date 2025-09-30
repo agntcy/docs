@@ -1,4 +1,9 @@
 nav:
   - Open Agentic Schema Framework: open-agentic-schema-framework.md
   - Open Agentic Schema Framework Server: oasf-server.md
+  - Open Agentic Schema Framework SDK:
+    - OASF SDK: oasf-sdk.md
+    - Decoding Service: decoding.md
+    - Translation Service: translation.md
+    - Validation Service: validation.md
   - OASF Contribution Guide: contributing.md
