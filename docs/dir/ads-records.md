@@ -21,7 +21,7 @@ You can generate your own example records using the [OASF Record Sample generato
 
 ```json
 {
-    "schema_version": "v0.7.0",
+    "schema_version": "0.7.0",
     "name": "email-agent",
     "version": "v1.0.0",
     "authors": [
@@ -46,12 +46,12 @@ You can generate your own example records using the [OASF Record Sample generato
     "locators": [
       {
         "url": "https://github.com/agntcy/agentic-apps/tree/main/email_reviewer",
-        "type": "source-code"
+        "type": "source_code"
       },
       {
         "url": "https://github.com/agntcy/agentic-apps/tree/main/email_reviewer/pyproject.toml",
-        "type": "python-package"
+        "type": "python_package"
       }
-    ],
+    ]
 }
 ```

@@ -228,18 +228,24 @@ And it will look like this:
 
 ```json
 {
+  "schema_version": "0.7.0",
   "name": "organization/my-agent",
   "version": "2.0",
+  "authors": [
+    "Organization Name"
+  ],
   "description": "This agent takes any text input and condenses it down to 3 bullets of less than 100 characters each using any LLM.",
+  "created_at": "2025-08-11T16:20:37.159072Z",
   "locators": [
     {
       "url": "https://github.com/example/agent_A",
-      "type": "package-source-code"
+      "type": "source_code"
     }
   ],
   "skills": [
     {
-      "class_uid": 10201
+      "id": 10201,
+      "name": "natural_language_processing/natural_language_generation/text_completion"
     }
   ]
 }
