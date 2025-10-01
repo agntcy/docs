@@ -23,8 +23,8 @@ Record is a generic object that encapsulates data of different Record types.
 
 Supported schemas:
 
-v0.3.1: https://schema.oasf.outshift.com/0.3.1/objects/agent
-v0.7.0: https://schema.oasf.outshift.com/0.7.0/objects/record
+0.3.1: https://schema.oasf.outshift.com/0.3.1/objects/agent
+0.7.0: https://schema.oasf.outshift.com/0.7.0/objects/record
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |

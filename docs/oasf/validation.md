@@ -2,7 +2,7 @@
 
 The validation service validates OASF records against JSON schemas. It supports both embedded schemas and custom schema URLs. The validation service supports the following features:
 
-* Validates records against embedded schema versions (v0.3.1 and v0.7.0).
+* Validates records against embedded schema versions (0.3.1 and 0.7.0).
 * Supports custom schema URLs for remote validation.
 * Returns detailed validation errors.
 * Automatic schema version detection from records.

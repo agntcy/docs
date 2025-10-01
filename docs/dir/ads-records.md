@@ -17,7 +17,7 @@ You can generate your own example records using the [OASF Record Sample generato
 
 !!! note
 
-    This record uses `v0.7.0` of the OASF specification.
+    This record uses `0.7.0` of the OASF specification.
 
 ```json
 {

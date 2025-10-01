@@ -71,4 +71,4 @@ func GetRecordSchemaVersion(record *structpb.Struct) (string, error)
 
 * `record`: OASF record as Protocol Buffer Struct
 
-Returns `string`: schema version (e.g., "v0.3.1", "v0.7.0").
+Returns `string`: schema version (e.g., "0.3.1", "0.7.0").
