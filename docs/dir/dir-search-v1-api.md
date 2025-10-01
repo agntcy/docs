@@ -50,7 +50,7 @@ Defines a list of supported record query types.
 | RECORD_QUERY_TYPE_SKILL_ID | 3 | Query for a skill ID. Numeric field - exact match only, no wildcard support. |
 | RECORD_QUERY_TYPE_SKILL_NAME | 4 | Query for a skill name. Supports wildcard patterns: &#34;python*&#34;, &#34;*script&#34;, &#34;*machine*learning*&#34;, &#34;Python?&#34;, &#34;[A-M]*&#34; |
 | RECORD_QUERY_TYPE_LOCATOR | 5 | Query for a locator type. Supports wildcard patterns: &#34;http*&#34;, &#34;ftp*&#34;, &#34;*docker*&#34;, &#34;[hf]tt[ps]*&#34; |
-| RECORD_QUERY_TYPE_EXTENSION | 6 | Query for an extension. Supports wildcard patterns: &#34;*-plugin&#34;, &#34;*-extension&#34;, &#34;core*&#34;, &#34;ext-?&#34;, &#34;plugin-[0-9]&#34; |
+| RECORD_QUERY_TYPE_MODULE | 6 | Query for a module. Supports wildcard patterns: &#34;*-plugin&#34;, &#34;*-module&#34;, &#34;core*&#34;, &#34;mod-?&#34;, &#34;plugin-[0-9]&#34; |
 
 <a name="agntcy_dir_search_v1_search_service-proto"></a>
 <p align="right"><a href="#top">Top</a></p>
