@@ -33,7 +33,7 @@ cat << EOF > record.json
     "name": "my-record",
     "version": "v1.0.0",
     "description": "insert description here",
-    "schema_version": "v0.7.0",
+    "schema_version": "0.7.0",
     "skills": [
         {
             "id": 201,
