@@ -6,9 +6,4 @@ nav:
   - Identity: identity
   - CSIT: csit
   - CoffeeAGNTCY: coffee-agntcy
-  - Semantic SDK: semantic
-  - Syntactic SDK: syntactic
-  - Agent Workflow Server: agws
-  - Agent Manifest: manifest
-  - How-To Guides: how-to-guides
   - How to Contribute: contributing.md
