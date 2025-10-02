@@ -4,6 +4,7 @@ nav:
   - Agent Directory Service: dir
   - Messaging SDK: messaging
   - Identity: identity
+  - Observability and Evaluation: obs-and-eval
   - CSIT: csit
   - CoffeeAGNTCY: coffee-agntcy
   - Semantic SDK: semantic
