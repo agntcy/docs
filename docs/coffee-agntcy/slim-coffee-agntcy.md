@@ -31,7 +31,7 @@ response = await client.send_message(request)
 
 - **Publisher/Subscriber Pattern**
 
-Used when the supervisor agent sends the same request to multiple farm agents and waits for all (or a subset) of responses:  
+Used when the supervisor agent sends the same request to multiple farm agents and waits for all the responses:
 
 ```python
 responses = await client.broadcast_message(request, broadcast_topic=BROADCAST_TOPIC, recipients=recipients)
