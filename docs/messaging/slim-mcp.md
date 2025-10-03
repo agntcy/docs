@@ -30,10 +30,10 @@ architecture.
 In this section of the tutorial, we implement and deploy two sample
 applications:
 
-- A [LlamaIndex
-  agent](https://github.com/agntcy/slim/tree/main/data-plane/integrations/mcp/slim-mcp/examples/llamaindex-time-agent) that communicates with an MCP server over SLIM to perform time queries and timezone conversions.
+- A [LlamaIndex agent](https://github.com/agntcy/slim/tree/main/data-plane/python/integrations/slim-mcp/slim_mcp/examples/llamaindex_time_agent) 
+that communicates with an MCP server over SLIM to perform time queries and timezone conversions.
 - An [MCP time
-  server](https://github.com/agntcy/slim/tree/main/data-plane/integrations/mcp/slim-mcp/examples/mcp-server-time) that implements SLIM as its transport protocol and processes requests from the LlamaIndex agent.
+  server](https://github.com/agntcy/slim/tree/main/data-plane/python/integrations/slim-mcp/slim_mcp/examples/mcp_server_time) that implements SLIM as its transport protocol and processes requests from the LlamaIndex agent.
 
 ### Prerequisites
 
@@ -63,7 +63,7 @@ runtime:
 
 services:
   slim/0:
-    pubsub:
+    dataplane:
       servers:
         - endpoint: "0.0.0.0:46357"
           tls:
@@ -71,10 +71,10 @@ services:
 
       clients: []
     controller:
-      server:
-        endpoint: "0.0.0.0:46358"
-        tls:
-          insecure: true
+      servers:
+        - endpoint: "0.0.0.0:46358"
+          tls:
+            insecure: true
 EOF
 ```
 

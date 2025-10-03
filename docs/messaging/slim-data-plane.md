@@ -68,7 +68,26 @@ The session layer offers several functionalities:
   formatting, routing, and delivery confirmation, while providing simple send
   and receive primitives to applications.
 
-The session layer provides two main APIs: a 1:1 session, where two clients
+
+The session layer offers three primary APIs for establishing new sessions:
+
+- **Anycast**: Enables point-to-point communication where each message sent
+to a service is delivered to only one of its available instances. The 
+destination instance is selected for each message individually, so different
+messages within the same session may be routed to different endpoints.
+
+- **Unicast**: Facilitates point-to-point communication with a specific service
+instance. Unlike Anycast, Unicast performs a discovery phase to bind the session
+to a single instance; all subsequent messages in the session are sent to that
+same endpoint.
+
+- **Multicast**: Supports many-to-many communication over a named channel.
+Every message sent to the channel is delivered to all current participants.
+
+For more information about each session type, see the
+[SLIM session](./slim-session.md) documentation.
+
+<!--The session layer provides two main APIs: a 1:1 session, where two clients
 communicate directly, and a group session, where multiple clients exchange
 messages on a shared channel.
 
@@ -115,4 +134,4 @@ As for the naming, for more information on the session layer, see the [SLIM
 Specifications](https://spec.slim.agntcy.org/draft-agntcy-slim.html)
 
 A comprehensive tutorial on how to set up a secure group communication system using
-SLIM can be found in the [Group Communication Tutorial](./slim-group-tutorial.md).
+SLIM can be found in the [Group Communication Tutorial](./slim-group-tutorial.md).-->
