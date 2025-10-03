@@ -1,6 +1,12 @@
 # SLIM v0.4.0 in CoffeeAGNTCY
 
-CoffeeAGNTCY uses [SLIM](../messaging/slim-core.md) as its default transport layer for all inter-agent communication. SLIM supports request-reply, unicast (fire-and-forget), publisher/subscriber, and group communication (1-to-many) messaging patterns, making it well-suited for CoffeeAGNTCY's dynamic multi-agent workflows.
+CoffeeAGNTCY works with both NATS and [SLIM](../messaging/slim-core.md) transports and illustrates multiple messaging patterns including request-reply, unicast (fire-and-forget), publisher/subscriber, and group communication, making them well-suited for CoffeeAGNTCY's dynamic multi-agent workflows.
+
+**Default Transport Usage:**
+- **NATS**: Default for publisher/subscriber patterns
+- **SLIM**: Default for group communication patterns
+
+[Transport Configuration](https://github.com/agntcy/coffeeAgntcy/blob/main/coffeeAGNTCY/coffee_agents/lungo/config/config.py#L9-L10)
 
 The **AGNTCY App SDK** abstracts the underlying SLIM protocol behind a unified factory API. This allows developers to instantiate SLIM-based A2A (agent-to-agent) clients and servers without dealing directly with low-level transport details. Learn more about the App SDK [here](https://github.com/agntcy/app-sdk).
 
