@@ -1,4 +1,4 @@
-# SLIM Group Creation
+# SLIM Group Creation and Management
 
 One of the key features of [SLIM](slim-core.md) is its support for secure group communication.
 In SLIM, a group consists of multiple clients that communicate through a shared
@@ -7,7 +7,8 @@ Messaging Layer](slim-data-plane.md). When MLS is enabled, group
 communication benefits from end-to-end encryption.
 
 This guide provides all the information you need to create and manage groups within a
-SLIM network.
+SLIM network. A full toturial with examples is avaible in 
+[Group Communication Tutorial](./slim-group-tutorial.md).
 
 ## Creating Groups with the Python Bindings
 
@@ -20,21 +21,18 @@ they must be invited by the channel creator.
 
 The channel creator can be part of a Python application and can either
 actively participate in the communication process (possibly implementing some
-of the application logic) or serve solely as a channel moderator. For a complete
-example of how to use the moderator, see the [SLIM Group
-Communication Tutorial](slim-group-tutorial.md).
+of the application logic) or serve solely as a channel moderator.
 
 This section provides the basic
 steps to follow, along with Python code snippets, for setting up a multicast session.
-A complete [example](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/multicast.py) of group communication can be found in the SLIM repo, in addition
-to a related [README](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/README_multicast.md) with explanations on how to run it.
+The full code is available in the [multicast.py](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/multicast.py) example in the SLIM repository.
 
 ### Create the Channel
 
-The channel can be created by instantiating a Multicast session,
+The channel can be created with a Multicast session,
 which initializes the corresponding state in the SLIM session layer.
-In this example, communication between participants will be encrypted
-end-to-end, as MLS is enabled.
+In a multicast session communication between participants can be encrypted
+end-to-end enabling MLS.
 
 ```python
 created_session = await local_app.create_session(
@@ -52,9 +50,7 @@ created_session = await local_app.create_session(
 ### Invite Participants to the Channel
 
 Once the multicast session is created, new participants can be invited
-to join. Not all participants need to be
-added initially; you can add them later, even after communication
-has already started.
+to join. Not all participants need to be added at the beginning; you can add them later, even after communication has started.
 
 ```python
 # Invite each provided participant. Route is set before inviting to ensure
@@ -67,7 +63,7 @@ for invite in invites:
     print(f"{local} -> add {invite_name} to the group")
 ```
 
-### Listen for Invitations and Messages
+### Listen for New Sessions and Messages
 
 Participants that need to join the group start without a session and wait to be
 invited. To wait for an invitation, the application calls `listen_for_session`.
@@ -75,12 +71,12 @@ When an invite message is received, a new session is created at the SLIM session
 and `listen_for_session` returns the metadata for the newly created session.
 
 ```python
-format_message_print(local, "-> Waiting for session...")
+print_formatted_text("Waiting for session...", style=custom_style)
 session = await local_app.listen_for_session()
 ```
 
 
-At this point, when a session is available, the participant can start listening for messages:
+When a new session is available, the participant can start listening for messages:
 
 ```python
 while True:
@@ -89,149 +85,77 @@ while True:
         # The returned parameters are a message context and the raw payload bytes.
         # Check session.py for details on PyMessageContext contents.
         ctx, payload = await session.get_message()
-        format_message_print(
-            local,
-            f"-> Received message from {ctx.source_name}: {payload.decode()}",
+        print_formatted_text(
+            f"{ctx.source_name} > {payload.decode()}",
+            style=custom_style,
         )
     except asyncio.CancelledError:
         # Graceful shutdown path (ctrl-c or program exit).
         break
     except Exception as e:
         # Non-cancellation error; surface and exit the loop.
-        format_message_print(local, f"-> Error receiving message: {e}")
+        print_formatted_text(f"-> Error receiving message: {e}")
         break
 ```
 
-The next section describes how to register the newly created group
-with the SLIM Controller and configure routes between nodes.
+### Send Messages on a Channel
+
+Each participant can also send messages at any time to the new session, and each message will be delivered to all participants connected to the same channel.
+
+```python
+# Send message to the channel_name specified when creating the session.
+# As the session is multicast, all participants will receive it.
+# calling publish_with_destination on a multicast session will raise an error.
+await shared_session_container[0].publish(user_input.encode())
+```
 
 ## Creating Groups with the SLIM Controller
 
-The controller API exposes operations to manage SLIM groups. You can use this API in client
-applications to create and manage SLIM groups, add clients to
-groups, and set routes between SLIM nodes.
+Another way to create a group in a SLIM network is to use the
+[SLIM Controller](./slim-controller.md). For a complete description 
+on how to run it and the commands to use for the gruop creation and 
+management please refer to the [Group Communication Tutorial](./slim-group-tutorial.md).
+In this section we list the `slimctl` commands to replicate 
+what we showed in the previous session. 
 
-You can generate gRPC API SDKs from the [schema
-registry](https://buf.build/agntcy/slim/sdks/main:protobuf).
 
-The following sections show example Python code fragments:
+### Create the Channel
 
-### Creating a SLIM Channel
+First of all, you need to run the applications that you want to add to the group.
+At that point, you can create the group by specifying the first participant in the
+group. This will assign the role of moderator (like in the Python bindings examples),
+but all the invites/removals will be done using the Controller and no action needs to be
+performed in the application.
 
-```python
-import grpc
-from controlplane.v1 import controlplane_pb2_grpc as controlplane_api
-from controlplane.v1 import controlplane_pb2
-
-# Create gRPC connection
-channel = grpc.insecure_channel("localhost:50051")
-client = controlplane_api.ControlPlaneServiceStub(channel)
-
-# Create channel request
-create_channel_request = controlplane_pb2.CreateChannelRequest(
-    moderators=["agntcy/namespace/moderator"]  # Name of the moderator
-)
-
-try:
-    response = client.CreateChannel(create_channel_request)
-    channel_id = response.channel_id
-
-    if not response:
-        print("\nNo channels found")
-        return
-
-    print(f"Channel created with ID: {channel_id}")
-
-except grpc.RpcError as e:
-    print(f"Request failed: {e}")
-finally:
-    channel.close()
+To create the group, run:
+```bash
+./slimctl channel create moderators=agntcy/ns/client-1/9494657801285491688
 ```
 
-### Adding Participants to a SLIM Group
-
-```python
-import grpc
-from controlplane.v1 import controlplane_pb2_grpc as controlplane_api
-from controlplane.v1 import controlplane_pb2
-
-# Create gRPC connection
-channel = grpc.insecure_channel("localhost:50051")
-client = controlplane_api.ControlPlaneServiceStub(channel)
-
-# Add participant request
-add_participant_request = controlplane_pb2.AddParticipantRequest(
-    participant_id="agntcy/namespace/participant_1",
-    channel_id="agntcy/namespace/group_channel"
-)
-
-try:
-    ack = client.AddParticipant(add_participant_request)
-
-    print(f"ACK received for {ack.original_message_id}: success={ack.success}")
-
-except grpc.RpcError as e:
-    print(f"Request failed: {e}")
-finally:
-    channel.close()
+The outcome will be something similar to this:
+```bash
+Received response: agntcy/ns/xyIGhc2igNGmkeBDlZ
 ```
 
-### Setting Routes Between SLIM Nodes
+The name in the response is the name of the new channel created, with only one participant
+added (e.g. `moderators=agntcy/ns/client-1/9494657801285491688`).
 
-```python
-import grpc
-from controlplane.v1 import controlplane_pb2_grpc as controlplane_api
-from controlplane.v1 import controlplane_pb2
-from grpc_api import grpc_api_pb2 as grpcapi
+### Invite Participants to the Channel
 
-# Create gRPC connection
-channel = grpc.insecure_channel("localhost:50051")
-client = controlplane_api.ControlPlaneServiceStub(channel)
+Now that the channel is created, you can start to invite new participants. To do so, you can use 
+the following command:
 
-try:
-    # Create connection to the target node
-    connection = grpcapi.Connection(
-        connection_id="http://127.0.0.1:46357",
-        config_data='{"endpoint": "http://127.0.0.1:46357"}'
-    )
-
-    create_connection_request = controlplane_pb2.CreateConnectionRequest(
-        connection=connection,
-        node_id="slim/0"
-    )
-
-    create_connection_response = client.CreateConnection(create_connection_request)
-
-    if not create_connection_response.success:
-        raise Exception("Failed to create connection")
-
-    connection_id = create_connection_response.connection_id
-    print(f"Connection created successfully with ID: {connection_id}")
-
-    # Add subscription for a group to a SLIM node
-    subscription = grpcapi.Subscription(
-        component_0="agntcy",
-        component_1="namespace",
-        component_2="group_channel",
-        connection_id=connection_id
-    )
-
-    create_subscription_request = controlplane_pb2.CreateSubscriptionRequest(
-        node_id="slim/0",
-        subscription=subscription
-    )
-
-    create_subscription_response = client.CreateSubscription(create_subscription_request)
-
-    if not create_subscription_response.success:
-        raise Exception("Failed to create subscription")
-
-    print(f"Subscription created successfully with ID: {create_subscription_response.subscription_id}")
-
-except grpc.RpcError as e:
-    print(f"gRPC error: {e}")
-except Exception as e:
-    print(f"Error: {e}")
-finally:
-    channel.close()
+```bash
+./slimctl participant add -c agntcy/ns/xyIGhc2igNGmkeBDlZ agntcy/ns/client-2
 ```
+
+The reply to the command will be similar to this:
+
+```bash
+Adding participant to channel ID agntcy/ns/xyIGhc2igNGmkeBDlZ: agntcy/ns/client-2
+Participant added successfully to channel ID agntcy/ns/xyIGhc2igNGmkeBDlZ: agntcy/ns/client-2
+```
+
+Now the channel has two participants that can start to communicate
+over the shared channel `agntcy/ns/xyIGhc2igNGmkeBDlZ`. Message reception and publishing
+must be done within the application in the same way as shown in the previous section.

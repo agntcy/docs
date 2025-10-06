@@ -9,8 +9,8 @@ nav:
      - SLIM Sessions: slim-session.md
      - SLIM Authentication: slim-authentication.md
  - SLIM Controller: slim-controller.md
- - SLIM Group Management:
-    - Group Creation and Identity: slim-group.md
+ - SLIM Groups:
+    - Group Creation and Management: slim-group.md
     - Group Communication Tutorial: slim-group-tutorial.md
  - SLIM Integrations:
     - SLIMRPC:
