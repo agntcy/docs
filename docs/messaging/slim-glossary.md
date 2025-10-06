@@ -51,7 +51,7 @@ Initial interaction where Anycast picks any available instance; if persistent af
 ## E
 
 ### Endpoint
-Host:port (and scheme) on which a server listens or a client connects (e.g., `http://localhost:46357`).
+Host:port (and scheme) on which a server listens or a client connects. Note that in the configuration the client needs to specify the protocol (e.g. http://localhost:46357), but not the server (e.g. localhost:46357)
 
 ---
 

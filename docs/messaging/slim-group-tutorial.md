@@ -22,9 +22,9 @@ example in the SLIM repo.
 
 ## Table of Contents
 
-3. [Configure Client Identity and Implement the SLIM App](#configure-client-identity-and-implement-the-slim-app)
-4. [Group Communication Using the Python Bindings](#group-communication-using-the-python-bindings)
-5. [Group Communication Using the SLIM Controller](#group-communication-using-the-slim-controller)
+1. [Configure Client Identity and Implement the SLIM App](#configure-client-identity-and-implement-the-slim-app)
+2. [Group Communication Using the Python Bindings](#group-communication-using-the-python-bindings)
+3. [Group Communication Using the SLIM Controller](#group-communication-using-the-slim-controller)
 
 
 ## Configure Client Identity and Implement the SLIM App
@@ -167,7 +167,7 @@ This function takes several parameters as input:
 - `jwt` (str | None, default: `None`): JWT token for identity. Used with
     `spire_trust_bundle` and `audience` for JWT-based authentication.
 - `spire_trust_bundle` (str | None, default: `None`): JWT trust bundle
-  (list of JWKs, one for each trust domain). It is expected in JSON format such as
+  (list of JWKs, one for each trust domain). It is expected in JSON format such as:
     ```json
     {
         "trust-domain-1.org": "base-64-encoded-jwks",
@@ -388,12 +388,12 @@ Only the payload is provided and there is no explicit destination, because the
 multicast channel was fixed at session creation and delivery fan-outs to all
 participants.
 
-### Run the Gruop Comminication Example
+### Run the Group Communication Example
 
 Now we will show how to run a new multicast session and
 how to enable group communication on top of SLIM. The full code can be found in
 [multicast.py](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/multicast.py)
-in the SLIM repo. To run the example, follow the step listed here.
+in the SLIM repo. To run the example, follow the steps listed here.
 
 #### Run SLIM
 As all members of the group will be communicating via a SLIM network, we can set
@@ -473,13 +473,13 @@ uv run --package slim-bindings-examples multicast                               
 
 ```
 This will start two participants authenticated with a shared secret.
-The outcome of these commands should look like:
+The output of these commands should look like:
 
 ```bash
 Warning: Falling back to shared-secret authentication. Don't use this in production!
 Agntcy/ns/client-1/456243414154990054        Created app
 Agntcy/ns/client-1/456243414154990054        Connected to http://localhost:46357
--> Waiting for session...
+Waiting for session...
 ```
 
 #### Create the Group
@@ -511,7 +511,7 @@ Send a message to the group, or type 'exit' or 'quit' to quit.
 169ca82eb17d6bc2/eef9769a4c6990d1/fc9bbc406957794b/e9f53aa5ef3fb8f2 (agntcy/ns/moderator/e9f53aa5ef3fb8f2) >
 ```
 
-Now `client-1` and `client-2` are invited to the gruop so on both of them you should 
+Now `client-1` and `client-2` are invited to the group, so on both of their terminals you should 
 be able to see a welcome message such as:
 
 ```bash
@@ -520,27 +520,27 @@ Send a message to the group, or type 'exit' or 'quit' to quit.
 169ca82eb17d6bc2/eef9769a4c6990d1/58ec40d7c837e0b9/6a34b65ebc955471 (agntcy/ns/client-1/6a34b65ebc955471) >
 ```
 
-At this point, you can write messages from any terminal and they will be received by all the other group participants.
+At this point, you can write messages from any terminal and they will be received by all other group participants.
 
 
 ## Group Communication Using the SLIM Controller
 
-Previously, we saw how to run group communication using the Python bindings with an in‑application moderator. 
-This particular participant has to create the mulitcast session and invite all the other participants.
-In this section, we describe how to create and orchestrate a group using the SLIM Controller and we show how all
-this functions can be delegated to the controller. We reuse the same multicast example code also in this section.
+Previously, we saw how to run group communication using the Python bindings with an in-application moderator. 
+This participant creates the multicast session and invites all other participants.
+In this section, we describe how to create and orchestrate a group using the SLIM Controller, and we show how all
+these functions can be delegated to the controller. We reuse the same multicast example code in this section as well.
 
 Identity handling is unchanged between the two approaches; refer back to [SLIM Identity](#configure-client-identity-and-implement-the-slim-app). Below are the steps to run the controller-managed version.
 
 
-### Application Differencies
+### Application Differences
 
-With the controller, you do not need to set up a moderator in your application. All participants can be run as we did for `client-1` and `client-2` in the previous examples. In code, this means you can avoid to create a new multicast session (using `local_app.create_session`) and the invitation loop. You only need to implement the `receive_loop` where the application waits for new sessions. This greatly simplifies your code.
+With the controller, you do not need to set up a moderator in your application. All participants can be run as we did for `client-1` and `client-2` in the previous examples. In code, this means you can avoid creating a new multicast session (using `local_app.create_session`) and the invitation loop. You only need to implement the `receive_loop` where the application waits for new sessions. This greatly simplifies your code.
 
-### Run the Gruop Communincation example
+### Run the Group Communication example
 
-Now we will show how to setupa gruop using the SLIM Contoreller. The reference code for the 
-applciation is still [multicast.py](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/multicast.py). To run this example, follow the steps listed here.
+Now we will show how to set up a group using the SLIM Controller. The reference code for the 
+application is still [multicast.py](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/multicast.py). To run this example, follow the steps listed here.
 
 #### Run the SLIM Controller
 
@@ -589,7 +589,7 @@ If everything goes fine, you should see an output like this one:
 
 #### Run the SLIM Node
 
-With the controller running, start a SLIM node configured to talk to it over the Southbound API. This node config includes two additional features compared to the file proposed in the previous sessions:
+With the controller running, start a SLIM node configured to talk to it over the Southbound API. This node config includes two additional settings compared to the file from the previous section:
 - A controller client used to connect to the Southbound API running on port 50052
 - A shared secret token provider that will be used by the SLIM node to send messages over the SLIM network. As with the normal application, you can use a shared secret or a proper JWT.
 Create the `config.yaml` for the node:
@@ -644,8 +644,8 @@ If everything goes fine, you should see an output like this one:
 ...
 ```
 
-On the Controller side, you can see that the new node registers itself to the controller. The
-output should be similar to the following one:
+On the Controller side, you can see that the new node registers with the controller. The
+output should be similar to the following:
 ```bash
 2025-10-06T11:47:14+02:00 INF Registering node with ID: slim/0 svc=southbound
 2025-10-06T11:47:14+02:00 INF Connection details: [endpoint: 127.0.0.1:46357] svc=southbound
@@ -657,7 +657,7 @@ output should be similar to the following one:
 
 #### Run the Participants
 
-Because the controller manages the group lifecycle, no participant needs to be designated as moderator in code. Every application instance just waits for a session invite. In three separate terminals, strating from the folder 
+Because the controller manages the group lifecycle, no participant needs to be designated as moderator in code. Every application instance just waits for a session invite. In three separate terminals, from the folder 
 `slim/data-plane/python/bindings/examples` run:
 
 ```bash
@@ -696,7 +696,7 @@ At this point all applications are waiting for a new session.
 
 Use `slimctl` (see [slim-controller](./slim-controller.md)) to send administrative commands to the controller.
 
-First of all, you need to run `slimctl`. You can download it from the slim repo using this script:
+First, you need to run `slimctl`. You can download it from the slim repo using this script:
 
 ```bash
 #!/bin/bash
@@ -742,7 +742,7 @@ curl -L "${DOWNLOAD_URL}" -o slimctl
 chmod +x slimctl
 ```
 
-To verify that `slimctl` was downloaded succesfully run the command
+To verify that `slimctl` was downloaded successfully, run the command
 ```bash
 ./slimctl version
 ```
@@ -750,9 +750,9 @@ To verify that `slimctl` was downloaded succesfully run the command
 ##### Create the Group
 
 
-Select any running participant to serve as the initial participant of the group. This will act as the logical 
-moderator of the channel, similar to what we showed in the Python bindings example. However, you don't
-need to explicitly handle this in the code. Run the following command to create the channel:
+Select any running participant to be the initial member of the group. This participant will act as the logical 
+moderator of the channel, similar to the Python bindings example. However, you don't
+need to handle this explicitly in the code. Run the following command to create the channel:
 
 
 ```bash
@@ -771,7 +771,7 @@ Received response: agntcy/ns/xyIGhc2igNGmkeBDlZ
 
 The value `agntcy/ns/xyIGhc2igNGmkeBDlZ` is the channel (or group) identifier (name) that must be used in subsequent commands.
 
-On the application side, `client-1` was addeded to the session so you should see 
+On the application side, `client-1` was added to the session, so you should see 
 something like this:
 
 ```bash
@@ -790,7 +790,7 @@ Now that the new group is created, add the additional participants `client-2` an
 ./slimctl participant add -c agntcy/ns/xyIGhc2igNGmkeBDlZ agntcy/ns/client-3
 ```
 
-The xpected `slimctl` output is:
+The expected `slimctl` output is:
 
 
 ```bash
@@ -798,14 +798,14 @@ Adding participant to channel ID agntcy/ns/xyIGhc2igNGmkeBDlZ: agntcy/ns/client-
 Participant added successfully to channel ID agntcy/ns/xyIGhc2igNGmkeBDlZ: agntcy/ns/client-2
 ```
 
-Now all the partcipants are part of the same gruop and so on each client log should show that the join was succesful:
+Now all the participants are part of the same group, and so each client log should show that the join was successful:
 ```bash
 Welcome to the group 169ca82eb17d6bc2/eef9769a4c6990d1/e8ab33f6d6111780/ffffffffffffffff (agntcy/ns/xyIGhc2igNGmkeBDlZ/ffffffffffffffff)!
 Send a message to the group, or type 'exit' or 'quit' to quit.
 169ca82eb17d6bc2/eef9769a4c6990d1/b521a3788f1267a8/e4011f7be5222a24 (agntcy/ns/client-2/e4011f7be5222a24) >
 ```
 
-At this point every member is able to send messages and they will be recevied by all the other participants.
+At this point, every member can send messages, and they will be received by all the other participants.
 
 ##### Remove a Participant
 
@@ -823,8 +823,8 @@ Deleting participant from channel ID agntcy/ns/xyIGhc2igNGmkeBDlZ: agntcy/ns/cli
 Participant deleted successfully from channel ID agntcy/ns/xyIGhc2igNGmkeBDlZ: agntcy/ns/client-3
 ```
 
-The application on `client-3` exits, because the session related to the group was closed and so the 
-reception loop in the Python code breaks. Notice that this command does not work
+The application on `client-3` exits because the session related to the group was closed, which breaks the 
+reception loop in the Python code. Notice that this command does not work
 for `client-1`, which was added as the first participant. In fact, removing `client-1` is
 equivalent to deleting the channel itself.
 
