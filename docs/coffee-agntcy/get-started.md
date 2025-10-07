@@ -8,7 +8,7 @@ With CoffeeAGNTCY, you can:
 
 * Learn how to leverage the AGNTCY App SDK Factory to write transport and agentic protocol-agnostic clients and server code.
 
-* Explore SLIM v0.4.0 and its support for request-reply, unicast (fire & forget), publisher/subscriber and group communication patterns. (with additional support for NATS transport for publisher/subscriber messaging)
+* Explore SLIM v0.4.0 and its support for request-reply, unicast (fire-and-forget), publisher/subscriber, and group communication patterns (with additional support for NATS transport for publisher/subscriber messaging).
 
 * Enable observability with the AGNTCY Observe SDK.
 
@@ -42,15 +42,15 @@ Learn more on how to deploy Corto locally by visiting the [Corto deployment guid
 
 ### Lungo
 
-Lungo is our ever-evolving demo application. As AGNTCY expands, Lungo grows alongside it. It adds new features and capabilities, demonstrating how they work together in an interoperable ecosystem. Like the Corto demo, it includes a LangGraph-orchestrated supervisor agent, but instead of connecting to a single farm, Lungo integrates with different farms and logistics agents in two different setup like publisher/subscriber and group communication.
+Lungo is our ever-evolving demo application. As AGNTCY expands, Lungo grows alongside it. It adds new features and capabilities, demonstrating how they work together in an interoperable ecosystem. Like the Corto demo, it includes a LangGraph-orchestrated supervisor agent, but instead of connecting to a single farm, Lungo integrates with different farms and logistics agents in two different setups like publisher/subscriber and group communication.
 
 #### Setup 1: Publisher/Subscriber pattern
 
-Each farm is designed to demonstrate different agentic protocols and implementations. For now, the agents are similar to Corto’s: LangGraph-orchestrated A2A agents that communicate with the exchange using both pub/sub and request–response patterns. The farms are distinguished by "location". In addition to being a A2A server, the Colombia farm acts as a MCP client that connects to a Weather MCP Server.
+Each farm is designed to demonstrate different agentic protocols and implementations. For now, the agents are similar to Corto’s: LangGraph-orchestrated A2A agents that communicate with the exchange using both pub/sub and request–response patterns. The farms are distinguished by "location". In addition to being an A2A server, the Colombia farm acts as a MCP client that connects to a Weather MCP Server.
 
-All agents and MCP servers use SLIM as the transport layer(can switch between transports: SLIM and NATS), showcasing its flexibility by switching between one-to-many broadcasts via pub/sub and direct agent-to-agent request–response interactions based on the need specified by the prompt. To learn more about how this works, explore the [CoffeeAGNTCY SLIM Transport Integration](./slim-coffee-agntcy.md)
+All agents and MCP servers use SLIM as the transport layer (can switch between transports: SLIM and NATS), showcasing its flexibility by switching between one-to-many broadcasts via pub/sub and direct agent-to-agent request–response interactions based on the need specified by the prompt. To learn more about how this works, explore the [CoffeeAGNTCY SLIM Transport Integration](./slim-coffee-agntcy.md).
 
-AGNTCY’s Agent Identity Service handles authentication between agents, allowing them to verify each other’s identity before establishing a connection. This exemplifies the requirement within larger agentic networks for secure communication and trust. To learn more about how this works in Lungo, explore the [CoffeeAGNTCY Identity integration](./identity-coffee-agntcy.md)
+AGNTCY’s Agent Identity Service handles authentication between agents, allowing them to verify each other’s identity before establishing a connection. This exemplifies the requirement for secure communication and trust within larger agentic networks. To learn more about how this works in Lungo, explore the [CoffeeAGNTCY Identity integration](./identity-coffee-agntcy.md)
 
 ```mermaid
 flowchart TB

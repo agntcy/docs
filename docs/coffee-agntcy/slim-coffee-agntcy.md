@@ -3,14 +3,16 @@
 CoffeeAGNTCY works with both NATS and [SLIM](../messaging/slim-core.md) transports and illustrates multiple messaging patterns including request-reply, unicast (fire-and-forget), publisher/subscriber, and group communication, making them well-suited for CoffeeAGNTCY's dynamic multi-agent workflows.
 
 **Default Transport Usage:**
-- **NATS**: Default for publisher/subscriber patterns
-- **SLIM**: Default for group communication patterns
 
-[Transport Configuration](https://github.com/agntcy/coffeeAgntcy/blob/main/coffeeAGNTCY/coffee_agents/lungo/config/config.py#L9-L10)
+- **NATS**: Default for publisher/subscriber patterns.
+- **SLIM**: Default for group communication patterns.
+
+You can find the transport configuration [here](https://github.com/agntcy/coffeeAgntcy/blob/main/coffeeAGNTCY/coffee_agents/lungo/config/config.py#L9-L10).
 
 The **AGNTCY App SDK** abstracts the underlying SLIM protocol behind a unified factory API. This allows developers to instantiate SLIM-based A2A (agent-to-agent) clients and servers without dealing directly with low-level transport details. Learn more about the App SDK [here](https://github.com/agntcy/app-sdk).
 
-Note: Publisher/subscriber support is available using **NATS transport**, which can be used instead of SLIM transport for Lungo Publisher/Subscriber pattern.
+!!! note
+    Publisher/subscriber support is available using **NATS transport**, which can be used instead of SLIM transport for Lungo Publisher/Subscriber pattern.
 
 ## Instantiating the Factory and SLIM Transport
 
@@ -19,47 +21,55 @@ factory = AgntcyFactory("name_of_agent", enable_tracing=True)
 transport = factory.create_transport("SLIM", endpoint=SLIM_ENDPOINT, name="default/default/graph")
 ```
 
-Here:  
-- `AgntcyFactory` initializes the factory for the agent.  
-- `create_transport("SLIM", ...)` provisions a SLIM transport instance connected to the configured endpoint.  
+Where:
+
+* `AgntcyFactory` initializes the factory for the agent.  
+* `create_transport("SLIM", ...)` provisions a SLIM transport instance connected to the configured endpoint.  
 
 ## Sending Messages  
 
 SLIM accommodates both targeted and broadcast messaging within the same API:  
 
-- **1-to-1 Message**
+* **1-to-1 Message**
 
-Used when the supervisor agent needs to send a request to a single farm agent:  
+    Used when the supervisor agent needs to send a request to a single farm agent:  
 
-```python
-response = await client.send_message(request)
-```
+    ```python
+    response = await client.send_message(request)
+    ```
 
-- **Publisher/Subscriber Pattern**
+* **Publisher/Subscriber Pattern**
 
-Used when the supervisor agent sends the same request to multiple farm agents and waits for all the responses:
+    Used when the supervisor agent sends the same request to multiple farm agents and waits for all the responses:
 
-```python
-responses = await client.broadcast_message(request, broadcast_topic=BROADCAST_TOPIC, recipients=recipients)
-```
+    ```python
+    responses = await client.broadcast_message(request, broadcast_topic=BROADCAST_TOPIC, recipients=recipients)
+    ```
 
-Here the `broadcast_topic` is the topic to which the message is broadcasted and the `recipients` is the list of agents to which the message is sent.
+    Here the `broadcast_topic` is the topic to which the message is broadcasted and the `recipients` is the list of agents to which the message is sent.
 
-- **Group Communication Pattern**
-Used when multiple agents participate in a group chat session, where all agents can send messages and listen to communications from other agents in the group:
+* **Group Communication Pattern**
 
-```python
-responses = await client.broadcast_message(
-        request,
-        broadcast_topic=f"{uuid4()}",
-        recipients=recipients,
-        end_message="DELIVERED",
-        group_chat=True,
-        timeout=60,
-      )
-```
+    Used when multiple agents participate in a group chat session, where all agents can send messages and listen to communications from other agents in the group:
 
-Here `broadcast_topic` is the topic to which the message is broadcast, `recipients` is the list of agents to which the message is sent, `end_message` is the message that is sent to all agents when the group chat is closed, `group_chat` is a boolean that indicates whether we want to send a message as a group chat or not, and `timeout` is the timeout for the group chat session.
+    ```python
+    responses = await client.broadcast_message(
+            request,
+            broadcast_topic=f"{uuid4()}",
+            recipients=recipients,
+            end_message="DELIVERED",
+            group_chat=True,
+            timeout=60,
+          )
+    ```
+
+    Where:
+
+    * `broadcast_topic` is the topic to which the message is broadcasted.
+    * `recipients` is the list of agents to which the message is sent.
+    * `end_message` is the message that is sent to all agents when the group chat is closed.
+    * `group_chat` is a boolean that indicates whether we want to send a message as a group chat or not.
+    * `timeout` is the timeout for the group chat session.
 
 ## Example Implementations  
 
