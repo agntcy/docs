@@ -1,12 +1,12 @@
 # SLIM Group Communication Tutorial
 
 This tutorial shows how to set up secure group communication using
-SLIM. The group is created by defining a multicast session and inviting
+SLIM. The group is created by defining a group session and inviting
 participants. Messages are sent to a shared channel where every member can read
 and write. All messages are end-to-end encrypted using the
 [MLS protocol](https://datatracker.ietf.org/doc/html/rfc9420). This tutorial is
 based on the
-[multicast.py](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/multicast.py)
+[group.py](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py)
 example in the SLIM repo.
 
 ## Key Features
@@ -184,11 +184,11 @@ If `jwt`, `spire_trust_bundle`, and `audience` are not provided, `shared_secret`
 
 ## Group Communication Using the Python Bindings
 
-Now that you know how to set up a SLIM application, we can see how to create a group where multiple participants can exchange messages. We will start by showing how to create a multicast session using the Python bindings. In this setting, one participant acts as moderator: it creates the multicast session and invites participants by sending invitation control messages. A detailed description of multicast sessions and the invitation process is available [here](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/SESSION.md).
+Now that you know how to set up a SLIM application, we can see how to create a group where multiple participants can exchange messages. We will start by showing how to create a group session using the Python bindings. In this setting, one participant acts as moderator: it creates the group session and invites participants by sending invitation control messages. A detailed description of group sessions and the invitation process is available [here](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/SESSION.md).
 
-### Creating the Multicast Session and Inviting Members
+### Creating the Group Session and Inviting Members
 
-The creator of the multicast session invites other members to join the group. The
+The creator of the group session invites other members to join the group. The
 session will be identified by a unique session ID, and the group communication
 will take place over a specific channel name. The session creator is responsible
 for managing the session lifecycle, including creating, updating, and
@@ -226,13 +226,13 @@ communication.
     # Session object only exists immediately if we are moderator.
     created_session = None
     if chat_channel and invites:
-        # We are the moderator; create the multicast session now.
+        # We are the moderator; create the group session now.
         format_message_print(
-            f"Creating new multicast session (moderator)... {split_id(local)}"
+            f"Creating new group session (moderator)... {split_id(local)}"
         )
         created_session = await local_app.create_session(
-            slim_bindings.PySessionConfiguration.Multicast(  # type: ignore  # Build multicast session configuration
-                channel_name=chat_channel,  # Logical multicast channel (PyName) all participants join; acts as group/topic identifier.
+            slim_bindings.PySessionConfiguration.Group(  # type: ignore  # Build group session configuration
+                channel_name=chat_channel,  # Logical group channel (PyName) all participants join; acts as group/topic identifier.
                 max_retries=5,  # Max per-message resend attempts upon missing ack before reporting a delivery failure.
                 timeout=datetime.timedelta(
                     seconds=5
@@ -255,13 +255,13 @@ communication.
 ```
 
 This code comes from the
-[multicast.py](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/multicast.py)
+[group.py](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py)
 example. The local application is created using the helper function shown earlier.
-The channel name (the logical multicast topic) is produced via the
+The channel name (the logical group topic) is produced via the
 [split_id](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/common.py#L63)
-helper by parsing the `remote` parameter. A new multicast session is then created
+helper by parsing the `remote` parameter. A new group session is then created
 using `local_app.create_session(...)` with a
-`slim_bindings.PySessionConfiguration.Multicast` configuration. The key parameters are:
+`slim_bindings.PySessionConfiguration.Group` configuration. The key parameters are:
 
 - `channel_name`: Logical channel/topic used to exchange messages among participants.
 - `max_retries`: Maximum number of retransmission attempts (upon missing ack) before
@@ -288,7 +288,7 @@ async def receive_loop(
     Receive messages for the bound session.
 
     Behavior:
-      * If not moderator: wait for a new multicast session (listen_for_session()).
+      * If not moderator: wait for a new group session (listen_for_session()).
       * If moderator: reuse the created_session reference.
       * Loop forever until cancellation or an error occurs.
     """
@@ -304,7 +304,7 @@ async def receive_loop(
 
     while True:
         try:
-            # Await next inbound message from the multicast session.
+            # Await next inbound message from the group session.
             # The returned parameters are a message context and the raw payload bytes.
             # Check session.py for details on PyMessageContext contents.
             ctx, payload = await session.get_message()
@@ -343,7 +343,7 @@ async def keyboard_loop(session_ready, shared_session_container, local_app):
     Interactive loop allowing participants to publish messages.
 
     Typing 'exit' or 'quit' (case-insensitive) terminates the loop.
-    Each line is published to the multicast topic as UTF-8 bytes.
+    Each line is published to the group topic as UTF-8 bytes.
     """
     try:
         # 1. Initialize an async session
@@ -370,8 +370,8 @@ async def keyboard_loop(session_ready, shared_session_container, local_app):
 
             try:
                 # Send message to the channel_name specified when creating the session.
-                # As the session is multicast, all participants will receive it.
-                # calling publish_with_destination on a multicast session will raise an error.
+                # As the session is group, all participants will receive it.
+                # calling publish_with_destination on a group session will raise an error.
                 await shared_session_container[0].publish(user_input.encode())
             except KeyboardInterrupt:
                 # Handle Ctrl+C gracefully
@@ -385,14 +385,14 @@ async def keyboard_loop(session_ready, shared_session_container, local_app):
 
 Messages are sent using `shared_session_container[0].publish(user_input.encode())`.
 Only the payload is provided and there is no explicit destination, because the
-multicast channel was fixed at session creation and delivery fan-outs to all
+group channel was fixed at session creation and delivery fan-outs to all
 participants.
 
 ### Run the Group Communication Example
 
-Now we will show how to run a new multicast session and
+Now we will show how to run a new group session and
 how to enable group communication on top of SLIM. The full code can be found in
-[multicast.py](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/multicast.py)
+[group.py](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py)
 in the SLIM repo. To run the example, follow the steps listed here.
 
 #### Run SLIM
@@ -460,13 +460,13 @@ Authentication uses a shared secret. In the SLIM repository, go to the folder
 `slim/data-plane/python/bindings/examples` and run these commands in two different terminals:
 
 ```bash
-uv run --package slim-bindings-examples multicast                               \
+uv run --package slim-bindings-examples group                               \
     --local agntcy/ns/client-1                                                  \
     --slim '{"endpoint": "http://localhost:46357", "tls": {"insecure": true}}'  \
     --shared-secret "secret"
 ```
 ```bash
-uv run --package slim-bindings-examples multicast                               \
+uv run --package slim-bindings-examples group                               \
     --local agntcy/ns/client-2                                                  \
     --slim '{"endpoint": "http://localhost:46357", "tls": {"insecure": true}}'  \
     --shared-secret "secret"
@@ -488,7 +488,7 @@ Run the moderator application to create the session and invite the two
 participants. In another terminal run:
 
 ```bash
-uv run --package slim-bindings-examples multicast                               \
+uv run --package slim-bindings-examples group                               \
     --local agntcy/ns/moderator                                                 \
     --slim '{"endpoint": "http://localhost:46357", "tls": {"insecure": true}}'  \
     --shared-secret "secret"                                                    \
@@ -503,7 +503,7 @@ The result should look like:
 ```bash
 Agntcy/ns/moderator/16858445264489265394     Created app
 Agntcy/ns/moderator/16858445264489265394     Connected to http://localhost:46357
-Creating new multicast session (moderator)... 169ca82eb17d6bc2/eef9769a4c6990d1/fc9bbc406957794b/ffffffffffffffff (agntcy/ns/moderator/ffffffffffffffff)
+Creating new group session (moderator)... 169ca82eb17d6bc2/eef9769a4c6990d1/fc9bbc406957794b/ffffffffffffffff (agntcy/ns/moderator/ffffffffffffffff)
 agntcy/ns/moderator -> add 169ca82eb17d6bc2/eef9769a4c6990d1/58ec40d7c837e0b9/ffffffffffffffff (agntcy/ns/client-1/ffffffffffffffff) to the group
 agntcy/ns/moderator -> add 169ca82eb17d6bc2/eef9769a4c6990d1/b521a3788f1267a8/ffffffffffffffff (agntcy/ns/client-2/ffffffffffffffff) to the group
 Welcome to the group 169ca82eb17d6bc2/eef9769a4c6990d1/4abb367236cabc2a/ffffffffffffffff (agntcy/ns/chat/ffffffffffffffff)!
@@ -526,21 +526,21 @@ At this point, you can write messages from any terminal and they will be receive
 ## Group Communication Using the SLIM Controller
 
 Previously, we saw how to run group communication using the Python bindings with an in-application moderator. 
-This participant creates the multicast session and invites all other participants.
+This participant creates the group session and invites all other participants.
 In this section, we describe how to create and orchestrate a group using the SLIM Controller, and we show how all
-these functions can be delegated to the controller. We reuse the same multicast example code in this section as well.
+these functions can be delegated to the controller. We reuse the same group example code in this section as well.
 
 Identity handling is unchanged between the two approaches; refer back to [SLIM Identity](#configure-client-identity-and-implement-the-slim-app). Below are the steps to run the controller-managed version.
 
 
 ### Application Differences
 
-With the controller, you do not need to set up a moderator in your application. All participants can be run as we did for `client-1` and `client-2` in the previous examples. In code, this means you can avoid creating a new multicast session (using `local_app.create_session`) and the invitation loop. You only need to implement the `receive_loop` where the application waits for new sessions. This greatly simplifies your code.
+With the controller, you do not need to set up a moderator in your application. All participants can be run as we did for `client-1` and `client-2` in the previous examples. In code, this means you can avoid creating a new group session (using `local_app.create_session`) and the invitation loop. You only need to implement the `receive_loop` where the application waits for new sessions. This greatly simplifies your code.
 
 ### Run the Group Communication example
 
 Now we will show how to set up a group using the SLIM Controller. The reference code for the 
-application is still [multicast.py](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/multicast.py). To run this example, follow the steps listed here.
+application is still [group.py](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py). To run this example, follow the steps listed here.
 
 #### Run the SLIM Controller
 
@@ -661,21 +661,21 @@ Because the controller manages the group lifecycle, no participant needs to be d
 `slim/data-plane/python/bindings/examples` run:
 
 ```bash
-uv run --package slim-bindings-examples multicast                               \
+uv run --package slim-bindings-examples group                               \
     --local agntcy/ns/client-1                                                  \
     --slim '{"endpoint": "http://localhost:46357", "tls": {"insecure": true}}'  \
     --shared-secret "secret"
 ```
 
 ```bash
-uv run --package slim-bindings-examples multicast                               \
+uv run --package slim-bindings-examples group                               \
     --local agntcy/ns/client-2                                                  \
     --slim '{"endpoint": "http://localhost:46357", "tls": {"insecure": true}}'  \
     --shared-secret "secret"
 ```
 
 ```bash
-uv run --package slim-bindings-examples multicast                               \
+uv run --package slim-bindings-examples group                               \
     --local agntcy/ns/client-3                                                  \
     --slim '{"endpoint": "http://localhost:46357", "tls": {"insecure": true}}'  \
     --shared-secret "secret"
@@ -824,7 +824,7 @@ Participant deleted successfully from channel ID agntcy/ns/xyIGhc2igNGmkeBDlZ: a
 ```
 
 The application on `client-3` exits because the session related to the group was closed, which breaks the 
-reception loop in the Python code. Notice that this command does not work
+receive loop in the Python code. Notice that this command does not work
 for `client-1`, which was added as the first participant. In fact, removing `client-1` is
 equivalent to deleting the channel itself.
 

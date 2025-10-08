@@ -36,7 +36,7 @@ use SPIRE with SLIM to manage client identities. You will:
 4. Deploy the SLIM node (control / rendezvous component).
 5. Deploy two distinct SLIM client workloads, each with its own ServiceAccount
    (and thus its own SPIFFE ID).
-6. Run the unicast example using JWT-based authentication derived from SPIRE.
+6. Run the point-to-point example using JWT-based authentication derived from SPIRE.
 
 If you already have a Kubernetes cluster or an existing SPIRE deployment, you
 can adapt only the relevant subsections.
@@ -337,7 +337,7 @@ POD_NAME=$(kubectl get pods -l app.kubernetes.io/component=client-a -o jsonpath=
 kubectl exec -c slim-client -it ${POD_NAME} -- ls -l /svids
 ```
 
-### Run the unicast example (inside the cluster)
+### Run the point-to-point example (inside the cluster)
 
 Enter the first client pod (receiver):
 
@@ -354,7 +354,7 @@ ls -l /svids
 Run the receiver:
 
 ```bash
-/app/bin/unicast --slim '{"endpoint": "http://slim.slim:46357", "tls": {"insecure": true}}' \
+/app/bin/p2p --slim '{"endpoint": "http://slim.slim:46357", "tls": {"insecure": true}}' \
     --jwt /svids/jwt_svid.token \
     --spire-trust-bundle /svids/key.jwt \
     --local agntcy/example/receiver \
@@ -370,7 +370,7 @@ kubectl exec -c slim-client -it $(kubectl get pods -l app.kubernetes.io/componen
 Run the sender:
 
 ```bash
-/app/bin/unicast --slim '{"endpoint": "http://slim.slim:46357", "tls": {"insecure": true}}' \
+/app/bin/p2p --slim '{"endpoint": "http://slim.slim:46357", "tls": {"insecure": true}}' \
     --jwt /svids/jwt_svid.token \
     --spire-trust-bundle /svids/key.jwt \
     --audience slim-demo \

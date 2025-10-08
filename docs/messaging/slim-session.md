@@ -1,140 +1,22 @@
 # SLIM Sessions
 
-This document explains the SLIM session layer and the three supported session
-types. It helps you pick the right pattern, understand reliability and security
-trade‑offs, and shows concrete Python usage examples.
+This document explains the SLIM session layer and the two supported session
+types. It helps you understand the insights of the two session interfaces, 
+understand reliability and security trade‑offs, and shows concrete Python usage examples.
 
-## Quick Reference
+## Point-to-Point
 
-| Type     | Pattern        | Reliability            | MLS | Primary Uses                          | Avoid When                                 |
-|----------|----------------|------------------------|-----|----------------------------------------|--------------------------------------------|
-| Anycast  | 1:1 stateless  | Best‑effort or retries | No  | Load balance, idempotent RPC, fan‑out  | Need per‑peer state or E2E encryption      |
-| Unicast  | 1:1 stateful   | Optional acks + retries| Yes | Stateful convo, sticky peer, secure P2P| Need broadcast / many recipients           |
-| Multicast| N:N channel    | Optional acks + retries| Yes | Group chat, pub/sub, coordination      | Need strict single recipient semantics     |
+The point-to-point session enables point-to-point communication with a specific
+instance. This session
+performs a discovery phase to bind to one instance and all subsequent traffic in
+the session targets that same endpoint. With reliability enabled, each message in 
+the session must be acked.
 
-Key takeaways:
+If MLS is enabled, the point-to-point session establishes a two‑member MLS group after
+discovery. This mirrors the Group flow but with only two participants 
+(see [Group](#group) session).
 
-* Pick Anycast for simple stateless request distribution.
-* Pick Unicast when you must bind to one specific instance and optionally
-    secure with MLS.
-* Pick Multicast when many peers need to exchange messages over the same shared
-    channel.
-
-## Anycast
-
-
-The anycast session enables point-to-point (1:1) communication where each
-message sent to a service is delivered to only one of its available instances.
-This pattern provides natural load balancing and redundancy for stateless
-services. Anycast is best suited for distributing requests across multiple
-instances without maintaining session state.
-
-Let's see an example of the communication pattern in the anycast session using
-the sequence diagram below. The anycast session sends each message to a service
-(e.g., App-B) and the message is delivered to only one of its available
-instances (e.g., App-B/1 or App-B/2). The SLIM Node dynamically routes each
-message to one of the running instances, so consecutive messages may be
-delivered to different endpoints.
-
-If reliability is enabled, the sender expects an acknowledgment (Ack) for every
-message sent. This confirms successful delivery, even though the specific
-instance may vary per message.
-
-The diagram below illustrates two consecutive messages from App-A to the
-service agntcy/ns/App-B. The first message is delivered to App-B/1, the second
-to App-B/2. Each delivery is followed by an Ack:
-
-```mermaid
-sequenceDiagram
-    autonumber
-
-    participant App-A
-    participant SLIM Node
-    participant App-B/1
-    participant App-B/2
-
-    App-A->>SLIM Node: Message to agntcy/ns/App-B
-    SLIM Node->>App-B/1: Message to agntcy/ns/App-B
-    App-B/1->>SLIM Node: Ack
-    SLIM Node->>App-A: Ack
-
-    App-A->>SLIM Node: Message to agntcy/ns/App-B
-    SLIM Node->>App-B/2: Message to agntcy/ns/App-B
-    App-B/2->>SLIM Node: Ack
-    SLIM Node->>App-A: Ack
-```
-
-Note: Anycast sessions are stateless and do not allow persistent per‑recipient
-state. Consequently, Messaging Layer Security (MLS) cannot be enabled. If MLS
-is required for point‑to‑point communication, use a Unicast session instead.
-
-
-### Create an Anycast Session
-
-Using the SLIM Python bindings, you can create an Anycast session as follows:
-
-```python
-# Assume local_app is an initialized application instance
-session = await local_app.create_session(
-    slim_bindings.PySessionConfiguration.Anycast(
-        max_retries=5,  # Retries before giving up
-        timeout=datetime.timedelta(seconds=5),  # Wait per attempt for Ack 
-                                                # (omit for best-effort)
-    )
-)
-```
-
-Parameters:
-
-* `max_retries` (optional, int): Number of retry attempts if an Ack is not
-    received.
-* `timeout` (optional, timedelta): How long to wait for an Ack before retrying.
-    If omitted the session is best‑effort
-
-If timeout is not provided the session is best‑effort (unreliable): lost messages
-are not retransmitted.
-
-### Sending and Replying in Anycast
-Anycast sessions are not pinned to a single remote instance. Each outgoing
-message must therefore specify a destination application name. Use
-`publish_with_destination` for sends. The plain `publish` API is only valid for
-sessions that already have an implicit peer or channel (Unicast / Multicast).
-
-```python
-remote_name = slim_bindings.PyName("agntcy", "ns", "app") 
-await session.publish_with_destination(b"hello", remote_name)
-
-# This would raise for Anycast (no implicit peer):
-# await session.publish(b"hello")
-```
-
-To reply to a received message, use `publish_to`, which routes a response back
-to the original sender using the message context acquired via `get_message`:
-
-```python
-async def session_loop(session: slim_bindings.PySession):
-    while True:
-        try:
-            msg_ctx, payload = await session.get_message()
-        except Exception:
-            break  # Session likely closed
-        text = payload.decode()
-        await session.publish_to(msg_ctx, f"Echo: {text}".encode())
-```
-
-## Unicast
-
-The Unicast session enables point‑to‑point communication with a specific
-instance. Unlike Anycast (which re‑selects an instance each message), Unicast
-performs a discovery phase to bind to one instance; all subsequent traffic in
-the session targets that same endpoint. This enables stateful interactions and
-session continuity. With reliability enabled each message must be Acked.
-
-If MLS is enabled, the Unicast session establishes a two‑member MLS group after
-discovery. This mirrors the Multicast flow but with only two participants 
-(see [Multicast](#multicast) session).
-
-The diagram below illustrates a unicast session from App-A to agntcy/ns/App-B.
+The diagram below illustrates a point-to-point session from App-A to agntcy/ns/App-B.
 App-A first discovers an available instance (App-B/1), then performs the MLS
 setup, and finally sends multiple messages to that same instance, each followed
 by an Ack. If MLS is not enabled, the MLS setup is skipped.
@@ -158,7 +40,7 @@ sequenceDiagram
     Note over App-A,App-B/2: Invite
     App-A->>SLIM Node: Invite agntcy/ns/App-B/1
     SLIM Node->>App-B/1: Invite agntcy/ns/App-B/1
-    App-B/1->>App-B/1: Create new Unicast Session
+    App-B/1->>App-B/1: Create new point-to-point Session
     App-B/1->>SLIM Node: Invite Reply (MLS key package)
     SLIM Node->>App-A: Invite Reply (MLS key package)
     App-A->>App-A: Update MLS state
@@ -183,15 +65,15 @@ sequenceDiagram
 ```
 
 
-### Create a Unicast Session
+### Create a Point-to-Point Session
 
-Using the SLIM Python bindings, you can create a Unicast session as follows:
+Using the SLIM Python bindings, you can create a point-to-point session as follows:
 
 ```python
 # Assume local_app is an initialized application instance
 session = await local_app.create_session(
-    slim_bindings.PySessionConfiguration.Unicast(
-        unicast_name=remote_name,
+    slim_bindings.PySessionConfiguration.PointToPoint(
+        peer_name=remote_name,
         max_retries=5,
         timeout=datetime.timedelta(seconds=5),
         mls_enabled=True,  # Enable MLS for end-to-end security
@@ -201,19 +83,17 @@ session = await local_app.create_session(
 
 Parameters:
 
-* `unicast_name` (required, PyName): Identifier of the remote participant
+* `peer_name` (required, PyName): Identifier of the remote participant
     instance.
 * `max_retries` (optional, int): Retry attempts per message if Ack missing.
 * `timeout` (optional, timedelta): Wait per attempt for an Ack before retry.
     If `timeout` is not set the session is best‑effort.
 * `mls_enabled` (optional, bool): Enable end‑to‑end encryption (MLS).
 
-### Sending and Replying in Unicast
-In Unicast the session is bound to a single remote instance after discovery, so
+### Sending and Replying in a Point-to-Point Session
+In the point-to-point session is bound to a single remote instance after discovery, so
 outbound messages use the implicit destination. Use `publish` for normal sends
-and `publish_to` to reply using a previously received message context. Do not
-use `publish_with_destination` (it will raise) because the peer is already
-fixed.
+and `publish_to` to reply using a previously received message context. 
 
 ```python
 # Send a message using publish it will reach the endpoint
@@ -229,9 +109,9 @@ print(payload.decode())
 await session.publish_to(msg_ctx, payload)
 ```
 
-## Multicast
+## Group
 
-The Multicast session allows many-to-many communication on a named channel. Each
+The Group session allows many-to-many communication on a named channel. Each
 message is delivered to all participants connected to the same session.
 
 The creator of the channel can act as a moderator, meaning that it can add or 
@@ -242,17 +122,17 @@ Below are examples using the latest Python bindings, along with explanations of
 what happens inside the session layer when a participant is added or removed
 from the channel (see [Group management](./slim-group.md)).
 
-### Create a Multicast Session
+### Create a Group Session
 
-To create a multicast session, you need to configure the session with a topic
+To create a group session, you need to configure the session with a topic
 name and specify reliability and security settings. Here is an
 example:
 
 ```python
 # Assume local_app is an initialized application instance
 session = await local_app.create_session(
-    slim_bindings.PySessionConfiguration.Multicast(
-        topic=chat_topic,
+    slim_bindings.PySessionConfiguration.Group(
+        channel_name=chat_topic,
         max_retries=5,
         timeout=datetime.timedelta(seconds=5),
         mls_enabled=True,
@@ -269,10 +149,10 @@ Parameters:
     If `timeout` is not set the session is best‑effort.
 * `mls_enabled` (optional, bool): Enable secure group MLS messaging.
 
-### Sending and Replying in Multicast
-In Multicast the session targets a channel: all sends are deliverd to all the current
-participants. Use `publish` to send. `publish_with_destination` cannot be used
-in Multicast because the channel name is implicit in the session.
+### Sending and Replying in a Group Session
+In a Group the session targets a channel: all sends are deliverd to all the current
+participants. Use `publish` to send to a message to all the participants in the 
+group.
 
 ```python
 # Broadcast to the channel
@@ -303,19 +183,19 @@ This will instruct SLIM on how to forward a message with the specified name.
 This has to be done by the application for every invite. 
 
 When a moderator wants to add a new participant (e.g., an instance of App-C) to
-a multicast session, the following steps occur. All the steps are visualized in
+a group session, the following steps occur. All the steps are visualized in
 the diagram below:
 
 
 1. **Discovery Phase:** The moderator initiates a discovery request to find a
     running instance of the desired application (App-C). This request is sent to
-    the SLIM Node, which forwards it in anycast to one of the App-C instances.
+    the SLIM Node, which forwards it via anycast to one of the App-C instances.
     In the example, the message is forwarded to App-C/1 that replies with its
     full identifier. The SLIM Node relays this reply back to the moderator.
 
 2. **Invitation:** The moderator sends an invite message for the discovered
     instance (App-C/1) to the SLIM Node, which forwards it to App-C/1. Upon
-    receiving the invite, App-C/1 creates a new multicast session, subscribes to
+    receiving the invite, App-C/1 creates a new group session, subscribes to
     the channel, and replies with its MLS (Messaging Layer Security) key
     package. This reply is routed back to the moderator.
 
@@ -327,7 +207,7 @@ the diagram below:
     received, the moderator sends an MLS Welcome message to App-C/1. App-C/1
     initializes its MLS state and acknowledges receipt. At the end of this
     process, all participants (including the new one) share a secure group state
-    and can exchange encrypted messages on the multicast channel. If MLS is
+    and can exchange encrypted messages on the group channel. If MLS is
     disabled, the MLS state update and welcome step are skipped.
 
 ```mermaid
@@ -350,7 +230,7 @@ sequenceDiagram
     Note over Moderator,App-A/1: Invite
     Moderator->>SLIM Node: Invite agntcy/ns/App-C/1 
     SLIM Node->>App-C/1: Invite agntcy/ns/App-C/1
-    App-C/1->>App-C/1: Create new Multicast session
+    App-C/1->>App-C/1: Create new Group session
     App-C/1->>SLIM Node: Subscribe to Channel
     App-C/1->>SLIM Node: Invite Reply (MLS key package)
     SLIM Node->>Moderator: Invite Reply (MLS key package)
@@ -393,13 +273,13 @@ Parameter:
 * `remove_name` (PyName): Identifier of the participant to remove.
 
 
-When a moderator wants to remove a participant (e.g., App-C/1) from a multicast
+When a moderator wants to remove a participant (e.g., App-C/1) from a group
 session, the following steps occur. All the steps are visualized in the diagram
 below:
 
 
 1. **MLS State Update:** The moderator creates an MLS commit to remove App-C/1
-    from the secure group. This commit is sent to the multicast channel and the
+    from the secure group. This commit is sent to the group channel and the
     SLIM Node distributes it to all current participants (App-C/1, App-B/2, and
     App-A/1). Each participant updates its MLS state and acknowledges the
     commit. The moderator collects all acknowledgments. In case the MLS is
@@ -407,9 +287,9 @@ below:
 
 2. **Removal:** After the MLS state is updated, the moderator sends a remove
     message to App-C/1. Upon receiving the remove message, App-C/1 unsubscribes
-    from the channel, deletes its multicast session, and replies with a
+    from the channel, deletes its group session, and replies with a
     confirmation. The SLIM Node relays this confirmation back to the moderator.
-    At the end of this process, App-C/1 is no longer a member of the multicast
+    At the end of this process, App-C/1 is no longer a member of the group
     group and cannot send or receive messages on the channel.
 
 ```mermaid
@@ -445,7 +325,7 @@ sequenceDiagram
     Moderator->>SLIM Node: Remove agntcy/ns/App-C/1 
     SLIM Node->>App-C/1: Remove agntcy/ns/App-C/1 
     App-C/1->>SLIM Node: Unsubscribe from Channel
-    App-C/1->>App-C/1: Remove Multicast session
+    App-C/1->>App-C/1: Remove Group session
     App-C/1->>SLIM Node: Remove Reply
     SLIM Node->>Moderator: Remove Reply
 ```
@@ -458,23 +338,24 @@ that demonstrate how to create sessions and exchange messages between applicatio
 Python bindings.
 
 
-### Anycast & Unicast
+### Point-to-Point
 This [example](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/point_to_point.py)
-walks through creating both Anycast and Unicast sessions side by side.
-You will see how Anycast distributes stateless requests across multiple instances,
-while Unicast performs discovery and binds to a single peer. The example 
+walks through the creation of a point-to-point sessions.
+You will see how running multiple times the point-to-point example the session will
+bind to different running instances, while the message stream always sticks to the same endpoint.
+The example 
 demonstrates how to publish messages, enable reliability, and enable MLS 
-for end‑to‑end security in Unicast sessions. The associated
+for end‑to‑end security. The associated
 [README](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/README_point_to_point.md) shows more information and how to run the example using the Taskfile 
 provided in the repo.
 
 
-### Multicast
-This [example](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/multicast.py)
-demonstrates how to create a multicast session, invite participants, and 
+### Gruop
+This [example](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py)
+demonstrates how to create a group session, invite participants, and 
 (if enabled) establish an MLS group for end-to-end encryption. It also shows
 how to broadcast messages to all current members and handle inbound group
 messages. The associated 
-[README](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/README_multicast.md)
+[README](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/README_group.md)
 shows more information and how to run the example using the Taskfile.
 

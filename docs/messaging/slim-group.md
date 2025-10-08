@@ -7,14 +7,14 @@ Messaging Layer](slim-data-plane.md). When MLS is enabled, group
 communication benefits from end-to-end encryption.
 
 This guide provides all the information you need to create and manage groups within a
-SLIM network. A full toturial with examples is avaible in 
+SLIM network. A full tutorial with examples is available in 
 [Group Communication Tutorial](./slim-group-tutorial.md).
 
 ## Creating Groups with the Python Bindings
 
 
 This section shows how to use the SLIM Python bindings to create a group.
-This requires a [multicast session](./slim-session.md#multicast). A multicast
+This requires a [group session](./slim-session.md#group). A group
 session is a channel shared among multiple participants and used to
 send messages to everyone. When a new participant wants to join the channel,
 they must be invited by the channel creator.
@@ -24,20 +24,20 @@ actively participate in the communication process (possibly implementing some
 of the application logic) or serve solely as a channel moderator.
 
 This section provides the basic
-steps to follow, along with Python code snippets, for setting up a multicast session.
-The full code is available in the [multicast.py](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/multicast.py) example in the SLIM repository.
+steps to follow, along with Python code snippets, for setting up a group session.
+The full code is available in the [group.py](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py) example in the SLIM repository.
 
 ### Create the Channel
 
-The channel can be created with a Multicast session,
+The channel can be created with a group session,
 which initializes the corresponding state in the SLIM session layer.
-In a multicast session communication between participants can be encrypted
-end-to-end enabling MLS.
+In a group session, communication between participants can be encrypted
+end-to-end, enabling MLS.
 
 ```python
 created_session = await local_app.create_session(
-    slim_bindings.PySessionConfiguration.Multicast(  # type: ignore  # Build multicast session configuration
-        channel_name=chat_channel,  # Logical multicast channel (PyName) all participants join; acts as group/topic identifier.
+    slim_bindings.PySessionConfiguration.Group(  # type: ignore  # Build group session configuration
+        channel_name=chat_channel,  # Logical group channel (PyName) all participants join; acts as group/topic identifier.
         max_retries=5,  # Max per-message resend attempts upon missing ack before reporting a delivery failure.
         timeout=datetime.timedelta(
             seconds=5
@@ -49,7 +49,7 @@ created_session = await local_app.create_session(
 
 ### Invite Participants to the Channel
 
-Once the multicast session is created, new participants can be invited
+Once the group session is created, new participants can be invited
 to join. Not all participants need to be added at the beginning; you can add them later, even after communication has started.
 
 ```python
@@ -81,7 +81,7 @@ When a new session is available, the participant can start listening for message
 ```python
 while True:
     try:
-        # Await next inbound message from the multicast session.
+        # Await next inbound message from the group session.
         # The returned parameters are a message context and the raw payload bytes.
         # Check session.py for details on PyMessageContext contents.
         ctx, payload = await session.get_message()
@@ -104,8 +104,8 @@ Each participant can also send messages at any time to the new session, and each
 
 ```python
 # Send message to the channel_name specified when creating the session.
-# As the session is multicast, all participants will receive it.
-# calling publish_with_destination on a multicast session will raise an error.
+# As the session is group, all participants will receive it.
+# calling publish_with_destination on a group session will raise an error.
 await shared_session_container[0].publish(user_input.encode())
 ```
 
@@ -113,9 +113,9 @@ await shared_session_container[0].publish(user_input.encode())
 
 Another way to create a group in a SLIM network is to use the
 [SLIM Controller](./slim-controller.md). For a complete description 
-on how to run it and the commands to use for the gruop creation and 
-management please refer to the [Group Communication Tutorial](./slim-group-tutorial.md).
-In this section we list the `slimctl` commands to replicate 
+on how to run it and the commands to use for the group creation and 
+management, please refer to the [Group Communication Tutorial](./slim-group-tutorial.md).
+In this section, we list the `slimctl` commands to replicate 
 what we showed in the previous session. 
 
 
