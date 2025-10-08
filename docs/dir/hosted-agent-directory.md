@@ -204,7 +204,7 @@ The `dirctl` command line tools supports two methods to authenticate to a Outshi
     * For more details `dirctl hub apikey --help`
 
         !!! note:
-        Interactive authentication using 'dirctl hub login' takes precedence over apikey subcommands.  If you with to be certain you're using the api key for authentication, log out with 'dirctl hub logout'
+        Interactive authentication using 'dirctl hub login' takes precedence over apikey subcommands.  If you wish to be certain you're using the api key for authentication, log out with 'dirctl hub logout'
         !!! note:
         In [Release v0.3.0](https://github.com/agntcy/dir/releases/tag/v0.3.0), apikey support is enabled for dirctl hub push and pull operations only
 
