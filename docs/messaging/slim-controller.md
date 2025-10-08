@@ -148,7 +148,8 @@ sequenceDiagram
 
 ### Configuring the SLIM Controller
 
-The Controller can be configured through the `config.yaml` file. An example configuration:
+The Controller can be configured through the `config.yaml` file. 
+An example of minimal configuration:
 
 ```yaml
 northbound:
@@ -160,8 +161,40 @@ northbound:
 southbound:
   httpHost: localhost
   httpPort: 50052
+  # number of node reconciler thread
+  reconciler:
+    threads: 3  
+
+logging:
+  level: DEBUG
+```
+
+Example config to enable MTLS on Southbound endpoint using [Spire](https://spiffe.io/docs/latest/spire-about/spire-concepts/).
+
+```yaml
+  northbound:
+    httpHost: 0.0.0.0
+    httpPort: 50051
+
+  southbound:
+    httpHost: 0.0.0.0
+    httpPort: 50052  
+      tls:
+        useSpiffe: true
+      spire:
+        socketPath: "unix:///run/spire/agent-sockets/api.sock"
+
   logging:
     level: DEBUG
+  reconciler:
+    threads: 3
+
+  spire:
+    enabled: false
+    # Slim Controller SVIDs will be federated with these trust domains
+    trustedDomains: []
+      # - cluster-a.example.org
+      # - cluster-b.example.org
 ```
 
 ## Usage
@@ -235,7 +268,11 @@ To enable self-registration, configure the nodes with the Controller address:
               insecure: true
 ```
 
-Nodes can be managed through slimctl. For more information, see the [slimctl](#slimctl).
+Routes between SLIM nodes are automatically created by Controller upon receiving new subscriptions from clients.
+
+Nodes can be managed through slimctl. Although routes are automatically created for client subscription you can still add/remove routes manually.
+
+For more information, see the [slimctl](#slimctl).
 
 ## slimctl
 
@@ -263,6 +300,10 @@ The `server` endpoint should point to a [SLIM Control](https://github.com/agntcy
 
 ### Commands
 
+List nodes:
+
+`slimctl node list`
+
 List connection on a SLIM instance:
 
 `slimctl connection list --node-id=<slim_node_id>`
@@ -273,11 +314,11 @@ List routes on a SLIM instance:
 
 Add a route to the SLIM instance:
 
-`slimctl route add <organization/namespace/agentName/agentId> via <config_file> --node-id=<slim_node_id>`
+`slimctl route add <organization/namespace/agentName/agentId> via <slim-node-id or path_to_config_file> --node-id=<slim_node_id>`
 
 Delete a route from the SLIM instance:
 
-`slimctl route del <organization/namespace/agentName/agentId> via <host:port> --node-id=<slim_node_id>`
+`slimctl route del <organization/namespace/agentName/agentId> via <slim-node-id or path_to_config_file> --node-id=<slim_node_id>`
 
 Print version information:
 
@@ -285,7 +326,32 @@ Print version information:
 
 Run `slimctl <command> --help` for more details on flags and usage.
 
-### Example: Create, Delete Route
+### Example 1: Create, Delete Route using node-id
+
+Add route for node `slim/a` to forward messages for `org/default/alice/0` to node `slim/b`.
+```bash
+slimctl node list
+
+Node ID: slim/b status: CONNECTED
+  Connection details:
+  - Endpoint: 127.0.0.1:46457
+    MtlsRequired: false
+    ExternalEndpoint: test-slim.default.svc.cluster.local:46457
+Node ID: slim/a status: CONNECTED
+  Connection details:
+  - Endpoint: 127.0.0.1:46357
+    MtlsRequired: false
+    ExternalEndpoint: test-slim.default.svc.cluster.local:46357
+
+slimctl route add org/default/alice/0 via slim/b --node-id slim/a
+
+
+# Delete an existing route
+slimctl route del org/default/alice/0 via slim/b --node-id slim/a
+```
+
+### Example 2: Create, Delete Route using `connection_config.json`
+
 
 ```bash
 # Add a new route
