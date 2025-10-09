@@ -222,7 +222,7 @@ dirctl routing search --skill "images_computer_vision"
 
 # Search with multiple criteria (OR logic with minimum score)
 dirctl routing search --skill "images_computer_vision" \
-                      --skill "images_computer_vision" \
+                      --skill "audio" \
                       --min-score 2
 
 # Search with result limiting
