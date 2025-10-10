@@ -355,7 +355,7 @@ details, as these aspects are handled automatically by SLIMRPC and SLIM.
 
 All RPC services underneath utilize a sticky point-to-point session. The SLIM
 session creation is implemented in inside SLIMRPC in
-[channel.py]https://github.com/agntcy/slim/blob/slim-v0.6.0/data-plane/python/integrations/slimrpc/slimrpc/channel.py):
+[channel.py](https://github.com/agntcy/slim/blob/slim-v0.6.0/data-plane/python/integrations/slimrpc/slimrpc/channel.py):
 
 ```python
         # Create a session

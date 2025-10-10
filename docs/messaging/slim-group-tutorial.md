@@ -6,7 +6,7 @@ participants. Messages are sent to a shared channel where every member can read
 and write. All messages are end-to-end encrypted using the
 [MLS protocol](https://datatracker.ietf.org/doc/html/rfc9420). This tutorial is
 based on the
-[group.py](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py)
+[group.py](https://github.com/agntcy/slim/blob/slim-v0.6.0/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py)
 example in the SLIM repo.
 
 ## Key Features
@@ -26,7 +26,7 @@ Every participant in a group requires a unique identity for authentication and f
 
 ### Identity
 
-Each participant must have a unique identity. This is required to set up end-to-end encryption using the MLS protocol. The identity can be a JWT or a shared secret. For simplicity, this example uses a shared secret. For JWT-based identity, see the [tutorial](https://github.com/agntcy/slim/tree/main/data-plane/python/bindings/examples#running-in-kubernetes-spire--jwt) in the SLIM repository.
+Each participant must have a unique identity. This is required to set up end-to-end encryption using the MLS protocol. The identity can be a JWT or a shared secret. For simplicity, this example uses a shared secret. For JWT-based identity, see the [tutorial](https://github.com/agntcy/slim/tree/slim-v0.6.0/data-plane/python/bindings/examples#running-in-kubernetes-spire--jwt) in the SLIM repository.
 
 The Python objects managing the identity are called `PyIdentityProvider` and `PyIdentityVerifier`. The `PyIdentityProvider` provides the identity, while the `PyIdentityVerifier` verifies it:
 
@@ -52,12 +52,12 @@ def shared_secret_identity(identity: str, secret: str):
 ```
 
 This is a helper function defined in
-[common.py](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/common.py#L85)
+[common.py](https://github.com/agntcy/slim/blob/slim-v0.6.0/data-plane/python/bindings/examples/src/slim_bindings_examples/common.py#L85)
 that can be used to create a `PyIdentityProvider` and `PyIdentityVerifier` from two input strings.
 
 ### SLIM App
 
-The provider and verifier are used to create a local SLIM application that can exchange messages with other participants via the SLIM network. To create the SLIM app, use the helper function defined in [common.py](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/common.py#L289):
+The provider and verifier are used to create a local SLIM application that can exchange messages with other participants via the SLIM network. To create the SLIM app, use the helper function defined in [common.py](https://github.com/agntcy/slim/blob/slim-v0.6.0/data-plane/python/bindings/examples/src/slim_bindings_examples/common.py#L289):
 
 ```python
 async def create_local_app(
@@ -178,7 +178,7 @@ If `jwt`, `spire_trust_bundle`, and `audience` are not provided, `shared_secret`
 
 Now that you know how to set up a SLIM application, we can see how to create a group where multiple participants can exchange messages. We start by showing how to create a group session using the Python bindings.
 
-In this setting, one participant acts as moderator: it creates the group session and invites participants by sending invitation control messages. A detailed description of group sessions and the invitation process is available [here](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/SESSION.md).
+In this setting, one participant acts as moderator: it creates the group session and invites participants by sending invitation control messages. A detailed description of group sessions and the invitation process is available [here](https://github.com/agntcy/slim/blob/slim-v0.6.0/data-plane/python/bindings/SESSION.md).
 
 ### Creating the Group Session and Inviting Members
 
@@ -240,7 +240,7 @@ communication.
 
         # Invite each provided participant. Route is set before inviting to ensure
         # outbound control messages can reach them. For more info see
-        # https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/SESSION.md#invite-a-new-participant
+        # https://github.com/agntcy/slim/blob/slim-v0.6.0/data-plane/python/bindings/SESSION.md#invite-a-new-participant
         for invite in invites:
             invite_name = split_id(invite)
             await local_app.set_route(invite_name)
@@ -249,10 +249,10 @@ communication.
 ```
 
 This code comes from the
-[group.py](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py)
+[group.py](https://github.com/agntcy/slim/blob/slim-v0.6.0/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py)
 example. The local application is created using the helper function shown earlier.
 The channel name (the logical group topic) is produced via the
-[split_id](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/common.py#L63)
+[split_id](https://github.com/agntcy/slim/blob/slim-v0.6.0/data-plane/python/bindings/examples/src/slim_bindings_examples/common.py#L63)
 helper by parsing the `remote` parameter. A new group session is then created
 using `local_app.create_session(...)` with a
 `slim_bindings.PySessionConfiguration.Group` configuration. The key parameters are the following:
@@ -317,14 +317,14 @@ async def receive_loop(
 
 Each non-moderator participant listens for an incoming session using
 `local_app.listen_for_session()`. This returns a
-[PySession](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/slim_bindings/session.py)
+[PySession](https://github.com/agntcy/slim/blob/slim-v0.6.0/data-plane/python/bindings/slim_bindings/session.py)
 object containing metadata such as session ID, type, source name, and destination name.
 The moderator already holds this information and therefore reuses the existing
 `created_session` (see `session = created_session`).
 
 Participants (including the moderator) then call `ctx, payload = await session.get_message()` to receive
 messages. `payload` contains the raw message bytes and `ctx` is a
-[PyMessageContext](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/slim_bindings/_slim_bindings.pyi#L22)
+[PyMessageContext](https://github.com/agntcy/slim/blob/slim-v0.6.0/data-plane/python/bindings/slim_bindings/_slim_bindings.pyi#L22)
 with source, destination, message type, and metadata.
 
 ### Publish Messages to the Session
@@ -386,7 +386,7 @@ participants.
 
 Now we will show how to run a new group session and
 how to enable group communication on top of SLIM. The full code can be found in
-[group.py](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py)
+[group.py](https://github.com/agntcy/slim/blob/slim-v0.6.0/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py)
 in the SLIM repo. To run the example, follow the steps listed here:
 
 #### Run SLIM
@@ -396,7 +396,7 @@ up a SLIM instance representing the SLIM network. We use the pre-built
 docker image for this purpose.
 
 First execute this command to create the SLIM configuration file. Details about
-the [configuration](https://github.com/agntcy/slim/tree/main/data-plane/config)
+the [configuration](https://github.com/agntcy/slim/tree/slim-v0.6.0/data-plane/config)
 can be found in the SLIM repo.
 
 ```bash
@@ -536,7 +536,7 @@ With the controller, you do not need to set up a moderator in your application. 
 ### Run the Group Communication example
 
 Now we will show how to set up a group using the SLIM Controller. The reference code for the
-application is still [group.py](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py). To run this example, follow the steps listed here.
+application is still [group.py](https://github.com/agntcy/slim/blob/slim-v0.6.0/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py). To run this example, follow the steps listed here.
 
 #### Run the SLIM Controller
 

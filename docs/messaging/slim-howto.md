@@ -89,7 +89,7 @@ helm pull oci://ghcr.io/agntcy/slim/helm/slim --version v0.2.0
 ```
 
 For information about how to use the Helm chart, see the
-[values.yaml](https://github.com/agntcy/slim/blob/main/charts/slim/values.yaml)
+[values.yaml](https://github.com/agntcy/slim/blob/slim-v0.6.0/charts/slim/values.yaml)
 
 ### SLIM Controller
 
@@ -142,7 +142,7 @@ pip install slim-bindings
 ```toml
 [project]
 ...
-dependencies = ["slim-bindings>=0.5.0"]
+dependencies = ["slim-bindings>=0.6.0"]
 ```
 
 A tutorial on how to use the bindings in an application can be found in the [messaging layer

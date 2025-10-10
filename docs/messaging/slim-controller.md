@@ -164,7 +164,7 @@ southbound:
   httpPort: 50052
   # number of node reconciler threads
   reconciler:
-    threads: 3  
+    threads: 3
 
 logging:
   level: DEBUG
@@ -179,7 +179,7 @@ Example config to enable MTLS on Southbound endpoint using [Spire](https://spiff
 
   southbound:
     httpHost: 0.0.0.0
-    httpPort: 50052  
+    httpPort: 50052
       tls:
         useSpiffe: true
       spire:
@@ -297,7 +297,7 @@ tls:
   key_file: "/path/to/client.key"
 ```
 
-The `server` endpoint should point to a [SLIM Control](https://github.com/agntcy/slim/tree/main/control-plane/control-plane) endpoint which is a central service managing SLIM node configurations.
+The `server` endpoint should point to a [SLIM Control](https://github.com/agntcy/slim/tree/slim-v0.6.0/control-plane/control-plane) endpoint which is a central service managing SLIM node configurations.
 
 ### Commands
 
@@ -368,7 +368,7 @@ slimctl route add org/default/alice/0 via connection_config.json
 slimctl route del org/default/alice/0 via http://localhost:46367
 ```
 
-For full reference of connection_config.json, see the [client-config-schema.json](https://github.com/agntcy/slim/blob/main/data-plane/core/config/src/grpc/schema/client-config.schema.json).
+For full reference of connection_config.json, see the [client-config-schema.json](https://github.com/agntcy/slim/blob/slim-v0.6.0/data-plane/core/config/src/grpc/schema/client-config.schema.json).
 
 ### Managing SLIM Nodes Directly
 

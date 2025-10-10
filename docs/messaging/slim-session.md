@@ -237,7 +237,7 @@ sequenceDiagram
     SLIM Node->>Moderator: Discover Reply from agntcy/ns/App-C/1
 
     Note over Moderator,App-A/1: Invite
-    Moderator->>SLIM Node: Invite agntcy/ns/App-C/1 
+    Moderator->>SLIM Node: Invite agntcy/ns/App-C/1
     SLIM Node->>App-C/1: Invite agntcy/ns/App-C/1
     App-C/1->>App-C/1: Create new Group session
     App-C/1->>SLIM Node: Subscribe to Channel
@@ -328,10 +328,10 @@ sequenceDiagram
         App-A/1->>SLIM Node: Ack(MLS Commit)
         SLIM Node->>Moderator: Ack(MLS Commit)
     end
-    
+
     Note over Moderator,App-A/1: Remove
-    Moderator->>SLIM Node: Remove agntcy/ns/App-C/1 
-    SLIM Node->>App-C/1: Remove agntcy/ns/App-C/1 
+    Moderator->>SLIM Node: Remove agntcy/ns/App-C/1
+    SLIM Node->>App-C/1: Remove agntcy/ns/App-C/1
     App-C/1->>SLIM Node: Unsubscribe from Channel
     App-C/1->>App-C/1: Remove Group session
     App-C/1->>SLIM Node: Remove Reply
