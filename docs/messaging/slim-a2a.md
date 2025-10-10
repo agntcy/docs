@@ -8,15 +8,15 @@ SLIMRPC is a framework that enables Protocol Buffers (protobuf) Remote Procedure
 
 To compile a protobuf file and generate the clients and service stub you can use the [SLIMRPC compiler](./slim-slimrpc-compiler.md). This works in a similar way to the protoc compiler.
 
-For SLIM A2A we compiled the [a2a.proto](https://github.com/a2aproject/A2A/blob/main/specification/grpc/a2a.proto) file using the SLIM RPC compiler. The generated code is in [a2a_pb2_slimrpc.py](https://github.com/agntcy/slim/blob/main/data-plane/python/integrations/slima2a/slima2a/types/a2a_pb2_slimrpc.py).
+For SLIM A2A we compiled the [a2a.proto](https://github.com/a2aproject/A2A/blob/main/specification/grpc/a2a.proto) file using the SLIM RPC compiler. The generated code is in [a2a_pb2_slimrpc.py](https://github.com/agntcy/slim/tree/slim-v0.6.0/data-plane/python/integrations/slima2a/examples/travel_planner_agent).
 
 ## How to use SLIMA2A
 
-Using SLIMA2A is very similar to using the standard A2A implementation. As a reference example here we use the [travel planner agent](https://github.com/a2aproject/a2a-samples/tree/main/samples/python/agents/travel_planner_agent) available on the A2A samples repository. The version adapted to use SLIM A2A can be found in [travel_planner_agent](https://github.com/agntcy/slim/tree/main/data-plane/python/integrations/slima2a/examples/travel_planner_agent) folder. In the following section, we highlight and explain the key difference between the standard and SLIM A2A implementations.
+Using SLIMA2A is very similar to using the standard A2A implementation. As a reference example here we use the [travel planner agent](https://github.com/a2aproject/a2a-samples/tree/main/samples/python/agents/travel_planner_agent) available on the A2A samples repository. The version adapted to use SLIM A2A can be found in [travel_planner_agent](https://github.com/agntcy/slim/tree/slim-v0.6.0/data-plane/python/integrations/slima2a/examples/travel_planner_agent) folder. In the following section, we highlight and explain the key difference between the standard and SLIM A2A implementations.
 
 ### Travel Planner: Server
 
-In this section we highlight the main differences between the SLIM A2A [server](https://github.com/agntcy/slim/blob/main/data-plane/python/integrations/slima2a/examples/travel_planner_agent/server.py) implementation with respect to the original implementation in the A2A repository.
+In this section we highlight the main differences between the SLIM A2A [server](https://github.com/agntcy/slim/blob/slim-v0.6.0/data-plane/python/integrations/slima2a/examples/travel_planner_agent/server.py) implementation with respect to the original implementation in the A2A repository.
 
 1. Import the SLIMRPC package.
     ```python
@@ -76,7 +76,7 @@ Your A2A server is now ready to run on SLIM.
 
 ### Travel Planner: Client
 
-These are the main differences between the [client](https://github.com/agntcy/slim/blob/main/data-plane/python/integrations/slima2a/examples/travel_planner_agent/client.py) using SLIM A2A and the standard one.
+These are the main differences between the [client](https://github.com/agntcy/slim/blob/slim-v0.6.0/data-plane/python/integrations/slima2a/examples/travel_planner_agent/client.py) using SLIM A2A and the standard one.
 
 1. Create a channel. This requires a configuration that is similar to the server
     ```python

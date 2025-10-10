@@ -30,10 +30,10 @@ architecture.
 In this section of the tutorial, we implement and deploy two sample
 applications:
 
-- A [LlamaIndex
-  agent](https://github.com/agntcy/slim/tree/main/data-plane/integrations/mcp/slim-mcp/examples/llamaindex-time-agent) that communicates with an MCP server over SLIM to perform time queries and timezone conversions.
+- A [LlamaIndex agent](https://github.com/agntcy/slim/tree/slim-v0.6.0/data-plane/python/integrations/slim-mcp/slim_mcp/examples/llamaindex_time_agent)
+that communicates with an MCP server over SLIM to perform time queries and timezone conversions.
 - An [MCP time
-  server](https://github.com/agntcy/slim/tree/main/data-plane/integrations/mcp/slim-mcp/examples/mcp-server-time) that implements SLIM as its transport protocol and processes requests from the LlamaIndex agent.
+  server](https://github.com/agntcy/slim/tree/slim-v0.6.0/data-plane/python/integrations/slim-mcp/slim_mcp/examples/mcp_server_time) that implements SLIM as its transport protocol and processes requests from the LlamaIndex agent.
 
 ### Prerequisites
 
@@ -63,7 +63,7 @@ runtime:
 
 services:
   slim/0:
-    pubsub:
+    dataplane:
       servers:
         - endpoint: "0.0.0.0:46357"
           tls:
@@ -71,10 +71,10 @@ services:
 
       clients: []
     controller:
-      server:
-        endpoint: "0.0.0.0:46358"
-        tls:
-          insecure: true
+      servers:
+        - endpoint: "0.0.0.0:46358"
+          tls:
+            insecure: true
 EOF
 ```
 
@@ -1041,19 +1041,19 @@ local proxy instance:
    ```bash
    cat << EOF > ./config-proxy.yaml
    # SLIM-MCP Proxy Configuration
-   
+
    # Tracing settings for log visibility
    tracing:
      log_level: info
      display_thread_names: true
      display_thread_ids: true
-   
+
      # Runtime configuration
    runtime:
     n_cores: 0
     thread_name: "slim-data-plane"
     drain_timeout: 10s
-   
+
    # Service configuration for connecting to the SLIM node
    services:
      slim/0:

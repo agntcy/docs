@@ -12,4 +12,5 @@ nav:
   - Agent Workflow Server: agws
   - Agent Manifest: manifest
   - How-To Guides: how-to-guides
+  - Glossary: glossary.md
   - How to Contribute: contributing.md
