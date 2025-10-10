@@ -24,7 +24,7 @@ of the application logic) or serve solely as a channel moderator.
 
 This section provides the basic
 steps to follow, along with Python code snippets, for setting up a group session.
-The full code is available in the [group.py](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py) example in the SLIM repository.
+The full code is available in the [group.py](https://github.com/agntcy/slim/blob/slim-v0.6.0/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py) example in the SLIM repository.
 
 ### Create the Channel
 
@@ -54,7 +54,7 @@ to join. Not all participants need to be added at the beginning; you can add the
 ```python
 # Invite each provided participant. Route is set before inviting to ensure
 # outbound control messages can reach them. For more info see
-# https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/SESSION.md#invite-a-new-participant
+# https://github.com/agntcy/slim/blob/slim-v0.6.0/data-plane/python/bindings/SESSION.md#invite-a-new-participant
 for invite in invites:
     invite_name = split_id(invite)
     await local_app.set_route(invite_name)

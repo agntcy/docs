@@ -147,13 +147,13 @@ dependencies = ["slim-bindings>=0.5.0"]
 
 A tutorial on how to use the bindings in an application can be found in the [messaging layer
 documentation](./slim-data-plane.md). Otherwise examples are available in the
-[SLIM Repository](https://github.com/agntcy/slim/tree/slim-v0.5.0/data-plane/python/bindings/examples/src/slim_bindings_examples).
+[SLIM Repository](https://github.com/agntcy/slim/tree/slim-v0.6.0/data-plane/python/bindings/examples/src/slim_bindings_examples).
 
 ### Slimctl
 
 `slimctl` is a command-line tool for managing SLIM Nodes and Controllers. It can
 be downloaded from the [releases
-page](https://github.com/agntcy/slim/releases/tag/slimctl-v0.2.1) in the SLIM repo.
+page](https://github.com/agntcy/slim/releases/tag/slimctl-v0.6.0) in the SLIM repo.
 
 #### Installation
 
@@ -162,7 +162,7 @@ Choose the appropriate installation method for your operating system:
 === "macOS (Apple Silicon)"
 
     ```bash
-    curl -LO https://github.com/agntcy/slim/releases/download/slimctl-v0.2.1/slimctl-darwin-arm64
+    curl -LO https://github.com/agntcy/slim/releases/download/slimctl-v0.6.0/slimctl-darwin-arm64
     sudo mv slimctl-darwin-arm64 /usr/local/bin/slimctl
     sudo chmod +x /usr/local/bin/slimctl
     ```
@@ -179,7 +179,7 @@ Choose the appropriate installation method for your operating system:
 === "Linux (AMD64)"
 
     ```bash
-    curl -LO https://github.com/agntcy/slim/releases/download/slimctl-v0.2.1/slimctl-linux-amd64
+    curl -LO https://github.com/agntcy/slim/releases/download/slimctl-v0.6.0/slimctl-linux-amd64
     sudo mv slimctl-linux-amd64 /usr/local/bin/slimctl
     sudo chmod +x /usr/local/bin/slimctl
     ```
