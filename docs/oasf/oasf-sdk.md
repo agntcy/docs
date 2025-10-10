@@ -24,7 +24,7 @@ Deploy the OASF SDK server using the provided Helm chart:
 helm install oasf-sdk ./helm/oasf-sdk
 ```
 
-Alternatovley, you can deploy the OASF SDK server using the provided Docker image:
+Alternatively, you can deploy the OASF SDK server using the provided Docker image:
 
 ```bash
 docker run -p 31234:31234 ghcr.io/agntcy/oasf-sdk:latest
