@@ -599,10 +599,6 @@ With the controller running, start a SLIM node configured to talk to it over the
 - A shared secret token provider that will be used by the SLIM node to send messages over the SLIM network. As with the normal application, you can use a shared secret or a proper JWT.
 
 Create the `config-slim.yaml` for the node using the command below. We use the `host.docker.internal` endpoint to reach the controller from inside the Docker container via the host.
-To find your local IP address, you can use one of the following commands:
-
-- **On macOS:** `ipconfig getifaddr en0` (for Wi-Fi) or `ipconfig getifaddr en1` (for Ethernet).
-- **On Linux:** `hostname -I | awk '{print $1}'`
 
 
 ```bash
