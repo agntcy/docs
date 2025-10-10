@@ -40,6 +40,7 @@ dependencies = [
     { name = "agntcy-acp" },
     { name = "agntcy-iomapper" },
     { name = "beautifulsoup4" },
+    { name = "certifi" },
     { name = "codespell" },
     { name = "griffe" },
     { name = "griffe-pydantic" },
@@ -50,6 +51,7 @@ dependencies = [
     { name = "mkdocs-exclude" },
     { name = "mkdocs-git-revision-date-plugin" },
     { name = "mkdocs-htmlproofer-plugin" },
+    { name = "mkdocs-include-markdown-plugin" },
     { name = "mkdocs-material" },
     { name = "mkdocs-material-extensions" },
     { name = "mkdocs-swagger-ui-tag" },
@@ -64,6 +66,7 @@ requires-dist = [
     { name = "agntcy-acp", specifier = "==1.1.2" },
     { name = "agntcy-iomapper", specifier = "==0.2.2" },
     { name = "beautifulsoup4", specifier = ">=4.13.3" },
+    { name = "certifi", specifier = ">=2025.1.31" },
     { name = "codespell", specifier = ">=2.2.0" },
     { name = "griffe", specifier = "==1.7.2" },
     { name = "griffe-pydantic", specifier = "==1.1.4" },
@@ -74,6 +77,7 @@ requires-dist = [
     { name = "mkdocs-exclude", specifier = "==1.0.2" },
     { name = "mkdocs-git-revision-date-plugin", specifier = "==0.3.2" },
     { name = "mkdocs-htmlproofer-plugin", specifier = ">=1.0.0" },
+    { name = "mkdocs-include-markdown-plugin", specifier = ">=7.2.0" },
     { name = "mkdocs-material", specifier = "==9.6.12" },
     { name = "mkdocs-material-extensions", specifier = ">=1.0.3" },
     { name = "mkdocs-swagger-ui-tag", specifier = "==0.7.1" },
@@ -1864,6 +1868,19 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/1c/97/ba794c328e6bf13bf8d0293e1b339d94ccaee92b402a2e67c3eb0122bb2e/mkdocs-htmlproofer-plugin-1.3.0.tar.gz", hash = "sha256:9d9c0830305593d5f3993f0355956bee557a7c0924d63c3caacf7924ed4f444f", size = 8804, upload-time = "2024-09-13T14:46:09.097Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/7f/b1/04c7cd3c2dfb184e352ee60cfb0212644d55ac3dc82d927950f54017e692/mkdocs_htmlproofer_plugin-1.3.0-py3-none-any.whl", hash = "sha256:715e0648b60a92d2c838ca42deacc67c9c2a855486122cc328f573d27ceebc7c", size = 8920, upload-time = "2024-09-13T14:46:07.303Z" },
+]
+
+[[package]]
+name = "mkdocs-include-markdown-plugin"
+version = "7.2.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "mkdocs" },
+    { name = "wcmatch" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/90/10/b0b75ac42f4613556a808eee2dad3efe7a7d5079349aa5b9229d863e829f/mkdocs_include_markdown_plugin-7.2.0.tar.gz", hash = "sha256:4a67a91ade680dc0e15f608e5b6343bec03372ffa112c40a4254c1bfb10f42f3", size = 25509, upload-time = "2025-09-28T21:50:50.41Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ba/f9/783338d1d7fd548c7635728b67a0f8f96d9e6c265aa61c51356c03597767/mkdocs_include_markdown_plugin-7.2.0-py3-none-any.whl", hash = "sha256:d56cdaeb2d113fb66ed0fe4fb7af1da889926b0b9872032be24e19bbb09c9f5b", size = 29548, upload-time = "2025-09-28T21:50:49.373Z" },
 ]
 
 [[package]]
