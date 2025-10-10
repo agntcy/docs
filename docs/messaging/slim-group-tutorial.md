@@ -456,7 +456,7 @@ If everything goes fine, you should see an output like this one:
 
 #### Start the Participants
 In this example we use two participants: `agntcy/ns/client-1` and `agntcy/ns/client-2`.
-Authentication uses a shared secret. In the SLIM repository, go to the folder 
+Authentication uses a shared secret. In the SLIM repository, go to the folder
 `slim/data-plane/python/bindings/examples` and run these commands in two different terminals:
 
 ```bash
@@ -511,7 +511,7 @@ Send a message to the group, or type 'exit' or 'quit' to quit.
 169ca82eb17d6bc2/eef9769a4c6990d1/fc9bbc406957794b/e9f53aa5ef3fb8f2 (agntcy/ns/moderator/e9f53aa5ef3fb8f2) >
 ```
 
-Now `client-1` and `client-2` are invited to the group, so on both of their terminals you should 
+Now `client-1` and `client-2` are invited to the group, so on both of their terminals you should
 be able to see a welcome message such as:
 
 ```bash
@@ -525,7 +525,7 @@ At this point, you can write messages from any terminal and they will be receive
 
 ## Group Communication Using the SLIM Controller
 
-Previously, we saw how to run group communication using the Python bindings with an in-application moderator. 
+Previously, we saw how to run group communication using the Python bindings with an in-application moderator.
 This participant creates the group session and invites all other participants.
 In this section, we describe how to create and orchestrate a group using the SLIM Controller, and we show how all
 these functions can be delegated to the controller. We reuse the same group example code in this section as well.
@@ -539,7 +539,7 @@ With the controller, you do not need to set up a moderator in your application. 
 
 ### Run the Group Communication example
 
-Now we will show how to set up a group using the SLIM Controller. The reference code for the 
+Now we will show how to set up a group using the SLIM Controller. The reference code for the
 application is still [group.py](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py). To run this example, follow the steps listed here.
 
 #### Run the SLIM Controller
@@ -560,7 +560,7 @@ southbound:
 
 # number of node reconciler thread
 reconciler:
-  threads: 3  
+  threads: 3
 
 logging:
   level: INFO
@@ -587,8 +587,8 @@ If everything goes fine, you should see an output like this one:
 2025-10-06T08:06:06Z INF Starting Route Reconciler thread_name=reconciler-1
 2025-10-06T08:06:06Z INF Starting Route Reconciler thread_name=reconciler-0
 2025-10-06T08:06:06Z INF Starting Route Reconciler thread_name=reconciler-2
-2025-10-06T08:06:06Z INF Southbound API Service is Listening on 127.0.0.1:50052
-2025-10-06T08:06:06Z INF Northbound API Service is listening on 127.0.0.1:50051
+2025-10-06T08:06:06Z INF Southbound API Service is Listening on [::]:50052
+2025-10-06T08:06:06Z INF Northbound API Service is listening on [::]:50051
 ```
 
 #### Run the SLIM Node
@@ -598,8 +598,7 @@ With the controller running, start a SLIM node configured to talk to it over the
 - A controller client used to connect to the Southbound API running on port 50052
 - A shared secret token provider that will be used by the SLIM node to send messages over the SLIM network. As with the normal application, you can use a shared secret or a proper JWT.
 
-Create the `config-slim.yaml` for the node using the command below. You will need to replace `<YOUR_IP_ADDRESS>` with your actual IP address.
-
+Create the `config-slim.yaml` for the node using the command below. We use the `host.docker.internal` endpoint to reach the controller from inside the Docker container via the host.
 To find your local IP address, you can use one of the following commands:
 
 - **On macOS:** `ipconfig getifaddr en0` (for Wi-Fi) or `ipconfig getifaddr en1` (for Ethernet).
@@ -630,7 +629,7 @@ services:
     controller:
       servers: []
       clients:
-        - endpoint: "http://<YOUR_IP_ADDRESS>:50052"
+        - endpoint: "http://host.docker.internal:50052"
           tls:
             insecure: true
       token_provider:
@@ -638,7 +637,7 @@ services:
 EOF
 ```
 
-This starts a SLIM node that connects to the controller at `<YOUR_IP_ADDRESS>:50052`. Run the node:
+This starts a SLIM node that connects to the controller:
 
 ```bash
 docker run -it \
@@ -669,7 +668,7 @@ output should be similar to the following:
 
 #### Run the Participants
 
-Because the controller manages the group lifecycle, no participant needs to be designated as moderator in code. Every application instance just waits for a session invite. In three separate terminals, from the folder 
+Because the controller manages the group lifecycle, no participant needs to be designated as moderator in code. Every application instance just waits for a session invite. In three separate terminals, from the folder
 `slim/data-plane/python/bindings/examples` run:
 
 ```bash
@@ -762,7 +761,7 @@ To verify that `slimctl` was downloaded successfully, run the command
 ##### Create the Group
 
 
-Select any running participant to be the initial member of the group. This participant will act as the logical 
+Select any running participant to be the initial member of the group. This participant will act as the logical
 moderator of the channel, similar to the Python bindings example. However, you don't
 need to handle this explicitly in the code. Run the following command to create the channel:
 
@@ -783,7 +782,7 @@ Received response: agntcy/ns/xyIGhc2igNGmkeBDlZ
 
 The value `agntcy/ns/xyIGhc2igNGmkeBDlZ` is the channel (or group) identifier (name) that must be used in subsequent commands.
 
-On the application side, `client-1` was added to the session, so you should see 
+On the application side, `client-1` was added to the session, so you should see
 something like this:
 
 ```bash
@@ -835,7 +834,7 @@ Deleting participant from channel ID agntcy/ns/xyIGhc2igNGmkeBDlZ: agntcy/ns/cli
 Participant deleted successfully from channel ID agntcy/ns/xyIGhc2igNGmkeBDlZ: agntcy/ns/client-3
 ```
 
-The application on `client-3` exits because the session related to the group was closed, which breaks the 
+The application on `client-3` exits because the session related to the group was closed, which breaks the
 receive loop in the Python code. Notice that this command does not work
 for `client-1`, which was added as the first participant. In fact, removing `client-1` is
 equivalent to deleting the channel itself.
@@ -854,4 +853,3 @@ Channel deleted successfully with ID: agntcy/ns/xyIGhc2igNGmkeBDlZ
 ```
 
 All applications connected to the group will stop because the receive loops end.
-
