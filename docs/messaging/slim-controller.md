@@ -148,8 +148,9 @@ sequenceDiagram
 
 ### Configuring the SLIM Controller
 
-The Controller can be configured through the `config.yaml` file. 
-An example of minimal configuration:
+The Controller can be configured through the `config.yaml` file.
+
+An example of a minimal configuration:
 
 ```yaml
 northbound:
@@ -161,7 +162,7 @@ northbound:
 southbound:
   httpHost: localhost
   httpPort: 50052
-  # number of node reconciler thread
+  # number of node reconciler threads
   reconciler:
     threads: 3  
 
@@ -304,7 +305,7 @@ List nodes:
 
 `slimctl node list`
 
-List connection on a SLIM instance:
+List connections on a SLIM instance:
 
 `slimctl connection list --node-id=<slim_node_id>`
 
@@ -399,7 +400,7 @@ To enable this, configure the node to host a server allowing the client to conne
         clients: []
 ```
 
-List connection on a SLIM instance:
+List connections on a SLIM instance:
 `slimctl node-connect connection list --server=<node_control_endpoint>`
 
 List routes on a SLIM instance:

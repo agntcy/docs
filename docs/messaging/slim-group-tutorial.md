@@ -20,23 +20,15 @@ example in the SLIM repo.
 - **End-to-End Encryption**: Ensures secure communication using the [MLS
   protocol](https://datatracker.ietf.org/doc/html/rfc9420).
 
-## Table of Contents
-
-1. [Configure Client Identity and Implement the SLIM App](#configure-client-identity-and-implement-the-slim-app)
-2. [Group Communication Using the Python Bindings](#group-communication-using-the-python-bindings)
-3. [Group Communication Using the SLIM Controller](#group-communication-using-the-slim-controller)
-
-
 ## Configure Client Identity and Implement the SLIM App
 
 Every participant in a group requires a unique identity for authentication and for use by the MLS protocol. This section explains how to set up identity and create a SLIM application instance.
-
 
 ### Identity
 
 Each participant must have a unique identity. This is required to set up end-to-end encryption using the MLS protocol. The identity can be a JWT or a shared secret. For simplicity, this example uses a shared secret. For JWT-based identity, see the [tutorial](https://github.com/agntcy/slim/tree/main/data-plane/python/bindings/examples#running-in-kubernetes-spire--jwt) in the SLIM repository.
 
-The Python objects managing the identity are called `PyIdentityProvider` and `PyIdentityVerifier`. The `PyIdentityProvider` provides the identity, while the `PyIdentityVerifier` verifies it.
+The Python objects managing the identity are called `PyIdentityProvider` and `PyIdentityVerifier`. The `PyIdentityProvider` provides the identity, while the `PyIdentityVerifier` verifies it:
 
 ```python
 def shared_secret_identity(identity: str, secret: str):
@@ -63,10 +55,9 @@ This is a helper function defined in
 [common.py](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/common.py#L85)
 that can be used to create a `PyIdentityProvider` and `PyIdentityVerifier` from two input strings.
 
-
 ### SLIM App
 
-The provider and verifier are used to create a local SLIM application that can exchange messages with other participants via the SLIM network. To create the SLIM app, use the helper function defined in [common.py](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/common.py#L289).
+The provider and verifier are used to create a local SLIM application that can exchange messages with other participants via the SLIM network. To create the SLIM app, use the helper function defined in [common.py](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/common.py#L289):
 
 ```python
 async def create_local_app(
@@ -150,16 +141,17 @@ async def create_local_app(
 
 This function takes several parameters as input:
 
-- `local` (str): The SLIM name of the local application in the form
-    `org/ns/service` (required).
-- `slim` (dict): Configuration to connect to the remote SLIM node. Example:
+- `local` (required, str): The SLIM name of the local application in the form
+    `org/ns/service`.
+- `slim` (required, dict): Configuration to connect to the remote SLIM node. For example:
+
     ```python
     {
             "endpoint": "http://127.0.0.1:46357",
             "tls": {"insecure": True},
     }
     ```
-    (required)
+
 - `enable_opentelemetry` (bool, default: `False`): Enable OpenTelemetry
     tracing. If `True`, traces are sent to `http://localhost:4317` by default.
 - `shared_secret` (str | None, default: `None`): Shared secret for identity and
@@ -168,6 +160,7 @@ This function takes several parameters as input:
     `spire_trust_bundle` and `audience` for JWT-based authentication.
 - `spire_trust_bundle` (str | None, default: `None`): JWT trust bundle
   (list of JWKs, one for each trust domain). It is expected in JSON format such as:
+
     ```json
     {
         "trust-domain-1.org": "base-64-encoded-jwks",
@@ -175,16 +168,17 @@ This function takes several parameters as input:
         ...
     }
     ```
+
 - `audience` (list[str] | None, default: `None`): List of allowed audiences for
     JWT authentication.
 
-
 If `jwt`, `spire_trust_bundle`, and `audience` are not provided, `shared_secret` must be set (only recommended for local testing or examples, not production). In this example, we use the shared secret option, but the same function supports all authentication flows.
-
 
 ## Group Communication Using the Python Bindings
 
-Now that you know how to set up a SLIM application, we can see how to create a group where multiple participants can exchange messages. We will start by showing how to create a group session using the Python bindings. In this setting, one participant acts as moderator: it creates the group session and invites participants by sending invitation control messages. A detailed description of group sessions and the invitation process is available [here](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/SESSION.md).
+Now that you know how to set up a SLIM application, we can see how to create a group where multiple participants can exchange messages. We start by showing how to create a group session using the Python bindings.
+
+In this setting, one participant acts as moderator: it creates the group session and invites participants by sending invitation control messages. A detailed description of group sessions and the invitation process is available [here](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/SESSION.md).
 
 ### Creating the Group Session and Inviting Members
 
@@ -261,7 +255,7 @@ The channel name (the logical group topic) is produced via the
 [split_id](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/common.py#L63)
 helper by parsing the `remote` parameter. A new group session is then created
 using `local_app.create_session(...)` with a
-`slim_bindings.PySessionConfiguration.Group` configuration. The key parameters are:
+`slim_bindings.PySessionConfiguration.Group` configuration. The key parameters are the following:
 
 - `channel_name`: Logical channel/topic used to exchange messages among participants.
 - `max_retries`: Maximum number of retransmission attempts (upon missing ack) before
@@ -276,8 +270,8 @@ SLIM knows how to deliver the control messages.
 
 ### Implement Participants and Receive Messages
 
-The group participants will be implemented in a similar way, but they
-will not create the session. They will create the SLIM service instance and wait
+The group participants are implemented in a similar way, but they
+do not create the session. They create the SLIM service instance and wait
 for invites. Once they receive the invite, they can read and write on the shared channel.
 
 ```python
@@ -335,7 +329,7 @@ with source, destination, message type, and metadata.
 
 ### Publish Messages to the Session
 
-All participants can publish messages on the shared channel
+All participants can publish messages on the shared channel:
 
 ```python
 async def keyboard_loop(session_ready, shared_session_container, local_app):
@@ -393,11 +387,12 @@ participants.
 Now we will show how to run a new group session and
 how to enable group communication on top of SLIM. The full code can be found in
 [group.py](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py)
-in the SLIM repo. To run the example, follow the steps listed here.
+in the SLIM repo. To run the example, follow the steps listed here:
 
 #### Run SLIM
-As all members of the group will be communicating via a SLIM network, we can set
-up a SLIM instance representing the SLIM network. We will use the pre-built
+
+As all members of the group are communicating via a SLIM network, we can set
+up a SLIM instance representing the SLIM network. We use the pre-built
 docker image for this purpose.
 
 First execute this command to create the SLIM configuration file. Details about
@@ -430,7 +425,7 @@ services:
 EOF
 ```
 
-This configuration will start a SLIM instance with a server listening on port
+This configuration starts a SLIM instance with a server listening on port
 46357, without TLS encryption for simplicity. Messages are still encrypted
 using the MLS protocol, but the connections between SLIM nodes do not use TLS.
 In a production environment, it is recommended to always use TLS and configure
@@ -455,6 +450,7 @@ If everything goes fine, you should see an output like this one:
 ```
 
 #### Start the Participants
+
 In this example we use two participants: `agntcy/ns/client-1` and `agntcy/ns/client-2`.
 Authentication uses a shared secret. In the SLIM repository, go to the folder
 `slim/data-plane/python/bindings/examples` and run these commands in two different terminals:
@@ -465,6 +461,7 @@ uv run --package slim-bindings-examples group                               \
     --slim '{"endpoint": "http://localhost:46357", "tls": {"insecure": true}}'  \
     --shared-secret "secret"
 ```
+
 ```bash
 uv run --package slim-bindings-examples group                               \
     --local agntcy/ns/client-2                                                  \
@@ -472,8 +469,9 @@ uv run --package slim-bindings-examples group                               \
     --shared-secret "secret"
 
 ```
-This will start two participants authenticated with a shared secret.
-The output of these commands should look like:
+
+This start two participants authenticated with a shared secret.
+The output of these commands should look like this:
 
 ```bash
 Warning: Falling back to shared-secret authentication. Don't use this in production!
@@ -522,7 +520,6 @@ Send a message to the group, or type 'exit' or 'quit' to quit.
 
 At this point, you can write messages from any terminal and they will be received by all other group participants.
 
-
 ## Group Communication Using the SLIM Controller
 
 Previously, we saw how to run group communication using the Python bindings with an in-application moderator.
@@ -531,7 +528,6 @@ In this section, we describe how to create and orchestrate a group using the SLI
 these functions can be delegated to the controller. We reuse the same group example code in this section as well.
 
 Identity handling is unchanged between the two approaches; refer back to [SLIM Identity](#configure-client-identity-and-implement-the-slim-app). Below are the steps to run the controller-managed version.
-
 
 ### Application Differences
 
@@ -558,7 +554,7 @@ southbound:
   httpHost: 0.0.0.0
   httpPort: 50052
 
-# number of node reconciler thread
+# number of node reconciler threads
 reconciler:
   threads: 3
 
@@ -580,7 +576,7 @@ docker run -it \
     ghcr.io/agntcy/slim/control-plane:0.6.0 --config /config.yaml
 ```
 
-If everything goes fine, you should see an output like this one:
+If everything goes fine, you should see an output like this:
 
 ```bash
 2025-10-06T08:06:06Z INF Starting route reconcilers
@@ -595,11 +591,10 @@ If everything goes fine, you should see an output like this one:
 
 With the controller running, start a SLIM node configured to talk to it over the Southbound API. This node config includes two additional settings compared to the file from the previous section:
 
-- A controller client used to connect to the Southbound API running on port 50052
+- A controller client used to connect to the Southbound API running on port 50052.
 - A shared secret token provider that will be used by the SLIM node to send messages over the SLIM network. As with the normal application, you can use a shared secret or a proper JWT.
 
 Create the `config-slim.yaml` for the node using the command below. We use the `host.docker.internal` endpoint to reach the controller from inside the Docker container via the host.
-
 
 ```bash
 cat << EOF > ./config-slim.yaml
@@ -652,7 +647,8 @@ If everything goes fine, you should see an output like this one:
 ```
 
 On the Controller side, you can see that the new node registers with the controller. The
-output should be similar to the following:
+output should be similar to this:
+
 ```bash
 2025-10-06T11:47:14+02:00 INF Registering node with ID: slim/0 svc=southbound
 2025-10-06T11:47:14+02:00 INF Connection details: [endpoint: 127.0.0.1:46357] svc=southbound
@@ -749,18 +745,17 @@ curl -L "${DOWNLOAD_URL}" -o slimctl
 chmod +x slimctl
 ```
 
-To verify that `slimctl` was downloaded successfully, run the command
+To verify that `slimctl` was downloaded successfully, run the following command:
+
 ```bash
 ./slimctl version
 ```
 
 ##### Create the Group
 
-
-Select any running participant to be the initial member of the group. This participant will act as the logical
+Select any running participant to be the initial member of the group. This participant acts as the logical
 moderator of the channel, similar to the Python bindings example. However, you don't
 need to handle this explicitly in the code. Run the following command to create the channel:
-
 
 ```bash
 ./slimctl channel create moderators=agntcy/ns/client-1/9494657801285491688
@@ -789,7 +784,6 @@ Send a message to the group, or type 'exit' or 'quit' to quit.
 
 ##### Add Participants
 
-
 Now that the new group is created, add the additional participants `client-2` and `client-3` using the following `slimctl` commands:
 
 ```bash
@@ -799,13 +793,13 @@ Now that the new group is created, add the additional participants `client-2` an
 
 The expected `slimctl` output is:
 
-
 ```bash
 Adding participant to channel ID agntcy/ns/xyIGhc2igNGmkeBDlZ: agntcy/ns/client-2
 Participant added successfully to channel ID agntcy/ns/xyIGhc2igNGmkeBDlZ: agntcy/ns/client-2
 ```
 
 Now all the participants are part of the same group, and so each client log should show that the join was successful:
+
 ```bash
 Welcome to the group 169ca82eb17d6bc2/eef9769a4c6990d1/e8ab33f6d6111780/ffffffffffffffff (agntcy/ns/xyIGhc2igNGmkeBDlZ/ffffffffffffffff)!
 Send a message to the group, or type 'exit' or 'quit' to quit.
@@ -816,14 +810,13 @@ At this point, every member can send messages, and they will be received by all 
 
 ##### Remove a Participant
 
-
-To remove one of the participants from the channel, run the command:
+To remove one of the participants from the channel, run the following command:
 
 ```bash
 ./slimctl participant delete -c agntcy/ns/xyIGhc2igNGmkeBDlZ agntcy/ns/client-3
 ```
 
-The `slimctl` expected output is:
+The `slimctl` expected output is this:
 
 ```bash
 Deleting participant from channel ID agntcy/ns/xyIGhc2igNGmkeBDlZ: agntcy/ns/client-3
@@ -838,14 +831,15 @@ equivalent to deleting the channel itself.
 ##### Delete channel
 
 To delete the channel, run the following command:
+
 ```bash
 ./slimctl channel delete agntcy/ns/xyIGhc2igNGmkeBDlZ
 ```
 
-The `slimctl` output will be:
+The `slimctl` output is this:
 
 ```bash
 Channel deleted successfully with ID: agntcy/ns/xyIGhc2igNGmkeBDlZ
 ```
 
-All applications connected to the group will stop because the receive loops end.
+All applications connected to the group stop because the receive loops end.

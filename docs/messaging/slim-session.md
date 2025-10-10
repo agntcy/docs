@@ -1,20 +1,21 @@
 # SLIM Sessions
 
 This document explains the SLIM session layer and the two supported session
-types. It helps you understand the insights of the two session interfaces, 
-understand reliability and security trade‑offs, and shows concrete Python usage examples.
+types. It helps you understand the two session interfaces, reliability, and security trade‑offs.
 
-## Point-to-Point
+The SLIM repository ships with practical, runnable [examples](https://github.com/agntcy/slim/tree/main/data-plane/python/bindings/examples) that demonstrate how to create sessions and exchange messages between applications using the Python bindings.
+
+## Point-to-Point Session
 
 The point-to-point session enables point-to-point communication with a specific
 instance. This session
 performs a discovery phase to bind to one instance and all subsequent traffic in
-the session targets that same endpoint. With reliability enabled, each message in 
+the session targets that same endpoint. With reliability enabled, each message in
 the session must be acked.
 
 If MLS is enabled, the point-to-point session establishes a two‑member MLS group after
-discovery. This mirrors the Group flow but with only two participants 
-(see [Group](#group) session).
+discovery. This mirrors the Group flow but with only two participants
+(see [Group Session](#group-session)).
 
 The diagram below illustrates a point-to-point session from App-A to agntcy/ns/App-B.
 App-A first discovers an available instance (App-B/1), then performs the MLS
@@ -64,7 +65,6 @@ sequenceDiagram
     SLIM Node->>App-A: Ack
 ```
 
-
 ### Create a Point-to-Point Session
 
 Using the SLIM Python bindings, you can create a point-to-point session as follows:
@@ -87,13 +87,16 @@ Parameters:
     instance.
 * `max_retries` (optional, int): Retry attempts per message if Ack missing.
 * `timeout` (optional, timedelta): Wait per attempt for an Ack before retry.
-    If `timeout` is not set the session is best‑effort.
+    If `timeout` is not set, the session is best‑effort.
 * `mls_enabled` (optional, bool): Enable end‑to‑end encryption (MLS).
 
 ### Sending and Replying in a Point-to-Point Session
-In the point-to-point session is bound to a single remote instance after discovery, so
+
+As the point-to-point session is bound to a single remote instance after discovery,
 outbound messages use the implicit destination. Use `publish` for normal sends
-and `publish_to` to reply using a previously received message context. 
+and `publish_to` to reply using a previously received message context.
+
+This example shows how to send and reply in a point-to-point session:
 
 ```python
 # Send a message using publish it will reach the endpoint
@@ -109,12 +112,18 @@ print(payload.decode())
 await session.publish_to(msg_ctx, payload)
 ```
 
-## Group
+### Point-to-Point Example
+
+This [example](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/point_to_point.py) walks through the creation of a point-to-point session. When running the point-to-point example multiple times, the session binds to different running instances, while the message stream always sticks to the same endpoint.
+
+The example demonstrates how to publish messages, enable reliability, and enable MLS for end‑to‑end security. The associated [README](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/README_point_to_point.md) shows more information and how to run the example using the Taskfile provided in the repository.
+
+## Group Session
 
 The Group session allows many-to-many communication on a named channel. Each
 message is delivered to all participants connected to the same session.
 
-The creator of the channel can act as a moderator, meaning that it can add or 
+The creator of the channel can act as a moderator, meaning that it can add or
 remove participants from the session. Moderation can be built into your application
 or delegated to a separate control service or the SLIM control plane.
 
@@ -150,9 +159,9 @@ Parameters:
 * `mls_enabled` (optional, bool): Enable secure group MLS messaging.
 
 ### Sending and Replying in a Group Session
-In a Group the session targets a channel: all sends are deliverd to all the current
-participants. Use `publish` to send to a message to all the participants in the 
-group.
+
+In a Group, the session targets a channel: all sends are delivered to all the current
+participants. Use `publish` to send a message to all the participants in the group.
 
 ```python
 # Broadcast to the channel
@@ -176,16 +185,16 @@ await session.invite(invite_name)
 ```
 
 Parameters:
+
 * `invite_name` (PyName): Identifier of the participant to add.
 
 Notice the `await local_app.set_route(invite_name)` command before the invite.
-This will instruct SLIM on how to forward a message with the specified name.
-This has to be done by the application for every invite. 
+This instructs SLIM on how to forward a message with the specified name.
+This has to be done by the application for every invite.
 
 When a moderator wants to add a new participant (e.g., an instance of App-C) to
 a group session, the following steps occur. All the steps are visualized in
 the diagram below:
-
 
 1. **Discovery Phase:** The moderator initiates a discovery request to find a
     running instance of the desired application (App-C). This request is sent to
@@ -258,9 +267,10 @@ sequenceDiagram
 
 ### Remove a Participant
 
-
 A moderator can remove a participant from the channel using the `remove`
 method after creating the session.
+
+This example shows how to remove a participant from a group session:
 
 ```python
 # To remove a participant from the session:
@@ -268,15 +278,13 @@ remove_name = slim_bindings.PyName("agntcy", "ns", "participant")
 await session.remove(remove_name)
 ```
 
-
 Parameter:
-* `remove_name` (PyName): Identifier of the participant to remove.
 
+* `remove_name` (PyName): Identifier of the participant to remove.
 
 When a moderator wants to remove a participant (e.g., App-C/1) from a group
 session, the following steps occur. All the steps are visualized in the diagram
 below:
-
 
 1. **MLS State Update:** The moderator creates an MLS commit to remove App-C/1
     from the secure group. This commit is sent to the group channel and the
@@ -290,7 +298,7 @@ below:
     from the channel, deletes its group session, and replies with a
     confirmation. The SLIM Node relays this confirmation back to the moderator.
     At the end of this process, App-C/1 is no longer a member of the group
-    group and cannot send or receive messages on the channel.
+    and cannot send or receive messages on the channel.
 
 ```mermaid
 sequenceDiagram
@@ -330,32 +338,6 @@ sequenceDiagram
     SLIM Node->>Moderator: Remove Reply
 ```
 
-## Examples
+### Group Example
 
-
-The SLIM repository ships with practical, runnable [examples](https://github.com/agntcy/slim/tree/main/data-plane/python/bindings/examples)
-that demonstrate how to create sessions and exchange messages between applications using the
-Python bindings.
-
-
-### Point-to-Point
-This [example](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/point_to_point.py)
-walks through the creation of a point-to-point sessions.
-You will see how running multiple times the point-to-point example the session will
-bind to different running instances, while the message stream always sticks to the same endpoint.
-The example 
-demonstrates how to publish messages, enable reliability, and enable MLS 
-for end‑to‑end security. The associated
-[README](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/README_point_to_point.md) shows more information and how to run the example using the Taskfile 
-provided in the repo.
-
-
-### Gruop
-This [example](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py)
-demonstrates how to create a group session, invite participants, and 
-(if enabled) establish an MLS group for end-to-end encryption. It also shows
-how to broadcast messages to all current members and handle inbound group
-messages. The associated 
-[README](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/README_group.md)
-shows more information and how to run the example using the Taskfile.
-
+This [example](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py) demonstrates how to create a group session, invite participants, and (if enabled) establish an MLS group for end-to-end encryption. It also shows how to broadcast messages to all current members and handle inbound group messages. The associated [README](https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/examples/src/slim_bindings_examples/README_group.md) shows more information and how to run the example using the Taskfile.

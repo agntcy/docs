@@ -287,7 +287,7 @@ disables TLS for simplicity in this example. The `shared_secret` parameter is
 used for initializing the Message Layer Security (MLS) protocol. Note that using
 a hardcoded shared_secret like "my_shared_secret" is not recommended, please
 refer to [the documentation for proper MLS
-configuration](./slim-group.md#identity-management).
+configuration](./slim-group.md).
 
 Finally, the add_TestServicer_to_server function is called to register the
 implemented TestService with the SLIMRPC server, making its RPC methods

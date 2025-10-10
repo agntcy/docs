@@ -7,14 +7,13 @@ Messaging Layer](slim-data-plane.md). When MLS is enabled, group
 communication benefits from end-to-end encryption.
 
 This guide provides all the information you need to create and manage groups within a
-SLIM network. A full tutorial with examples is available in 
+SLIM network. A full tutorial with examples is available in
 [Group Communication Tutorial](./slim-group-tutorial.md).
 
 ## Creating Groups with the Python Bindings
 
-
 This section shows how to use the SLIM Python bindings to create a group.
-This requires a [group session](./slim-session.md#group). A group
+This requires a [group session](./slim-session.md#group-session). A group
 session is a channel shared among multiple participants and used to
 send messages to everyone. When a new participant wants to join the channel,
 they must be invited by the channel creator.
@@ -75,7 +74,6 @@ print_formatted_text("Waiting for session...", style=custom_style)
 session = await local_app.listen_for_session()
 ```
 
-
 When a new session is available, the participant can start listening for messages:
 
 ```python
@@ -112,12 +110,11 @@ await shared_session_container[0].publish(user_input.encode())
 ## Creating Groups with the SLIM Controller
 
 Another way to create a group in a SLIM network is to use the
-[SLIM Controller](./slim-controller.md). For a complete description 
-on how to run it and the commands to use for the group creation and 
+[SLIM Controller](./slim-controller.md). For a complete description
+on how to run it and the commands to use for the group creation and
 management, please refer to the [Group Communication Tutorial](./slim-group-tutorial.md).
-In this section, we list the `slimctl` commands to replicate 
-what we showed in the previous session. 
-
+In this section, we list the `slimctl` commands to replicate
+what we showed in the previous section.
 
 ### Create the Channel
 
@@ -128,11 +125,13 @@ but all the invites/removals will be done using the Controller and no action nee
 performed in the application.
 
 To create the group, run:
+
 ```bash
 ./slimctl channel create moderators=agntcy/ns/client-1/9494657801285491688
 ```
 
-The outcome will be something similar to this:
+The outcome should be something similar to this:
+
 ```bash
 Received response: agntcy/ns/xyIGhc2igNGmkeBDlZ
 ```
@@ -142,14 +141,14 @@ added (e.g. `moderators=agntcy/ns/client-1/9494657801285491688`).
 
 ### Invite Participants to the Channel
 
-Now that the channel is created, you can start to invite new participants. To do so, you can use 
+Now that the channel is created, you can start to invite new participants. To do so, you can use
 the following command:
 
 ```bash
 ./slimctl participant add -c agntcy/ns/xyIGhc2igNGmkeBDlZ agntcy/ns/client-2
 ```
 
-The reply to the command will be similar to this:
+The reply to the command should be similar to this:
 
 ```bash
 Adding participant to channel ID agntcy/ns/xyIGhc2igNGmkeBDlZ: agntcy/ns/client-2
