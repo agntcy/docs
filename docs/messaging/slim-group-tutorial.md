@@ -441,7 +441,7 @@ You can run the SLIM instance using Docker:
 ```bash
 docker run -it \
     -v ./config.yaml:/config.yaml -p 46357:46357 \
-    ghcr.io/agntcy/slim:latest /slim --config /config.yaml
+    ghcr.io/agntcy/slim:0.6.0 /slim --config /config.yaml
 ```
 
 If everything goes fine, you should see an output like this one:
@@ -547,33 +547,37 @@ application is still [group.py](https://github.com/agntcy/slim/blob/main/data-pl
 First, start the SLIM Controller. Full details are in the [Controller](./slim-controller.md) documentation; here we reproduce the minimal setup. Create a configuration file:
 
 ```bash
-cat << EOF > ./config.yaml
+cat << EOF > ./config-controller.yaml
 northbound:
-  httpHost: localhost
+  httpHost: 0.0.0.0
   httpPort: 50051
+  logging:
+    level: DEBUG
 
 southbound:
-  httpHost: localhost
+  httpHost: 0.0.0.0
   httpPort: 50052
 
+# number of node reconciler thread
 reconciler:
-  threads: 3
+  threads: 3  
 
 logging:
-  level: DEBUG
+  level: INFO
 EOF
 ```
 
 This config defines two APIs exposed by the controller:
+
 - Northbound API: used by an operator (e.g. via slimctl) to configure channels and participants, as well as the SLIM network.
 - Southbound API: used by SLIM nodes to synchronize with the controller.
 
 Start the controller with Docker:
 
 ```bash
-docker run -v ./config.yaml:/config.yaml \
-    ghcr.io/agntcy/slim/control-plane:latest \
-    --config /config.yaml
+docker run -it \
+    -v ./config-controller.yaml:/config.yaml -p 50051:50051 -p 50052:50052 \
+    ghcr.io/agntcy/slim/control-plane:0.6.0 --config /config.yaml
 ```
 
 If everything goes fine, you should see an output like this one:
@@ -590,12 +594,20 @@ If everything goes fine, you should see an output like this one:
 #### Run the SLIM Node
 
 With the controller running, start a SLIM node configured to talk to it over the Southbound API. This node config includes two additional settings compared to the file from the previous section:
+
 - A controller client used to connect to the Southbound API running on port 50052
 - A shared secret token provider that will be used by the SLIM node to send messages over the SLIM network. As with the normal application, you can use a shared secret or a proper JWT.
-Create the `config.yaml` for the node:
+
+Create the `config-slim.yaml` for the node using the command below. You will need to replace `<YOUR_IP_ADDRESS>` with your actual IP address.
+
+To find your local IP address, you can use one of the following commands:
+
+- **On macOS:** `ipconfig getifaddr en0` (for Wi-Fi) or `ipconfig getifaddr en1` (for Ethernet).
+- **On Linux:** `hostname -I | awk '{print $1}'`
+
 
 ```bash
-cat << EOF > ./config.yaml
+cat << EOF > ./config-slim.yaml
 tracing:
   log_level: info
   display_thread_names: true
@@ -618,7 +630,7 @@ services:
     controller:
       servers: []
       clients:
-        - endpoint: "http://127.0.0.1:50052"
+        - endpoint: "http://<YOUR_IP_ADDRESS>:50052"
           tls:
             insecure: true
       token_provider:
@@ -626,12 +638,12 @@ services:
 EOF
 ```
 
-This starts a SLIM node that connects to the controller at `127.0.0.1:50052`. Run the node:
+This starts a SLIM node that connects to the controller at `<YOUR_IP_ADDRESS>:50052`. Run the node:
 
 ```bash
 docker run -it \
-    -v ./config.yaml:/config.yaml -p 46357:46357 \
-    ghcr.io/agntcy/slim:latest /slim --config /config.yaml
+    -v ./config-slim.yaml:/config.yaml -p 46357:46357 \
+    ghcr.io/agntcy/slim:0.6.0 /slim --config /config.yaml
 ```
 
 If everything goes fine, you should see an output like this one:
@@ -730,7 +742,7 @@ if [ "$OS" != "linux" ] && [ "$OS" != "darwin" ]; then
 fi
 
 # Construct the download URL
-VERSION="v0.2.2"
+VERSION="v0.6.0"
 BINARY_NAME="slimctl-${OS}-${ARCH}"
 DOWNLOAD_URL="https://github.com/agntcy/slim/releases/download/slimctl-${VERSION}/${BINARY_NAME}"
 
