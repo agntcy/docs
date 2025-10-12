@@ -85,11 +85,11 @@ EOF
 We also provide a Helm chart for deploying SLIM in Kubernetes environments.
 
 ```bash
-helm pull oci://ghcr.io/agntcy/slim/helm/slim --version v0.1.8
+helm pull oci://ghcr.io/agntcy/slim/helm/slim --version v0.2.0
 ```
 
 For information about how to use the Helm chart, see the
-[values.yaml](https://github.com/agntcy/slim/blob/main/charts/slim/values.yaml)
+[values.yaml](https://github.com/agntcy/slim/blob/slim-v0.6.0/charts/slim/values.yaml)
 
 ### SLIM Controller
 
@@ -124,10 +124,12 @@ docker run -it \
 ### Using Helm
 
 ```bash
-helm pull oci://ghcr.io/agntcy/slim/helm/slim-control-plane --version v0.1.3
+helm pull oci://ghcr.io/agntcy/slim/helm/slim-control-plane --version v0.1.4
 ```
 
-### SLIM Python Bindings
+### SLIM Bindings
+
+#### Python
 
 SLIM provides Python bindings for easy integration with Python applications. You
 can install the bindings using pip, or you can include them into your app's
@@ -140,18 +142,18 @@ pip install slim-bindings
 ```toml
 [project]
 ...
-dependencies = ["slim-bindings>=0.3.6"]
+dependencies = ["slim-bindings>=0.6.0"]
 ```
 
 A tutorial on how to use the bindings in an application can be found in the [messaging layer
 documentation](./slim-data-plane.md). Otherwise examples are available in the
-[SLIM Repository](https://github.com/agntcy/slim/tree/slim-v0.4.0/data-plane/python-bindings/examples/src/slim_bindings_examples).
+[SLIM Repository](https://github.com/agntcy/slim/tree/slim-v0.6.0/data-plane/python/bindings/examples/src/slim_bindings_examples).
 
 ### Slimctl
 
 `slimctl` is a command-line tool for managing SLIM Nodes and Controllers. It can
 be downloaded from the [releases
-page](https://github.com/agntcy/slim/releases/tag/slimctl-v0.2.1) in the SLIM repo.
+page](https://github.com/agntcy/slim/releases/tag/slimctl-v0.6.0) in the SLIM repo.
 
 #### Installation
 
@@ -160,14 +162,14 @@ Choose the appropriate installation method for your operating system:
 === "macOS (Apple Silicon)"
 
     ```bash
-    curl -LO https://github.com/agntcy/slim/releases/download/slimctl-v0.2.1/slimctl-darwin-arm64
+    curl -LO https://github.com/agntcy/slim/releases/download/slimctl-v0.6.0/slimctl-darwin-arm64
     sudo mv slimctl-darwin-arm64 /usr/local/bin/slimctl
     sudo chmod +x /usr/local/bin/slimctl
     ```
 
     !!! note "macOS Security"
         You may need to allow the binary to run if it's blocked by Gatekeeper:
-        
+
         ```bash
         sudo xattr -rd com.apple.quarantine /usr/local/bin/slimctl
         ```
@@ -177,7 +179,7 @@ Choose the appropriate installation method for your operating system:
 === "Linux (AMD64)"
 
     ```bash
-    curl -LO https://github.com/agntcy/slim/releases/download/slimctl-v0.2.1/slimctl-linux-amd64
+    curl -LO https://github.com/agntcy/slim/releases/download/slimctl-v0.6.0/slimctl-linux-amd64
     sudo mv slimctl-linux-amd64 /usr/local/bin/slimctl
     sudo chmod +x /usr/local/bin/slimctl
     ```

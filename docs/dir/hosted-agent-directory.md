@@ -80,7 +80,7 @@ You can refine the results using predefined filters and open search:
 * Use the record type drop down menu to filter by agent or MCP server records.
 * Use the drop-down **Agent Skills** list to narrow the results by skill.
 * Use the drop-down **Locators** list to narrow the results by locator type.
-* Use the drop-down **Extensions** list to narrow the results by extension type.
+* Use the drop-down **Modules** list to narrow the results by module name.
 * Use the drop-down sort by list to sort the displayed items by most recent or oldest.
 
 ### Manage Records Associated with Your Organization
@@ -94,7 +94,7 @@ You can refine the results using predefined filters and open search:
 * Use the record type drop down menu to filter by agent or MCP server records.
 * Use the drop-down **Agent Skills** list to narrow the results by skill.
 * Use the drop-down **Locators** list to narrow the results by locator type.
-* Use the drop-down **Extensions** list to narrow the results by extension type.
+* Use the drop-down **Modules** list to narrow the results by module name.
 
 ![The My Directory Page](../assets/hosted-dir/directory.png)
 
@@ -228,18 +228,24 @@ And it will look like this:
 
 ```json
 {
+  "schema_version": "0.7.0",
   "name": "organization/my-agent",
   "version": "2.0",
+  "authors": [
+    "Organization Name"
+  ],
   "description": "This agent takes any text input and condenses it down to 3 bullets of less than 100 characters each using any LLM.",
+  "created_at": "2025-08-11T16:20:37.159072Z",
   "locators": [
     {
       "url": "https://github.com/example/agent_A",
-      "type": "package-source-code"
+      "type": "source_code"
     }
   ],
   "skills": [
     {
-      "class_uid": 10201
+      "id": 10201,
+      "name": "natural_language_processing/natural_language_generation/text_completion"
     }
   ]
 }

@@ -33,7 +33,7 @@ cat << EOF > record.json
     "name": "my-record",
     "version": "v1.0.0",
     "description": "insert description here",
-    "schema_version": "v0.7.0",
+    "schema_version": "0.7.0",
     "skills": [
         {
             "id": 201,
@@ -222,7 +222,7 @@ dirctl routing search --skill "images_computer_vision"
 
 # Search with multiple criteria (OR logic with minimum score)
 dirctl routing search --skill "images_computer_vision" \
-                      --skill "images_computer_vision" \
+                      --skill "audio" \
                       --min-score 2
 
 # Search with result limiting
@@ -230,7 +230,7 @@ dirctl routing search --skill "images_computer_vision" \
                       --limit 5
 ```
 
-Network search supports hierarchical matching where skills, domains, and features use both
+Network search supports hierarchical matching where skills, domains, and modules use both
 exact and prefix matching (e.g., `images_computer_vision` matches both `images_computer_vision`
 and `images_computer_vision/image_segmentation` as a prefix).
 
@@ -241,7 +241,7 @@ they rely on cached announcements from other peers.
 
 This example demonstrates how to search for records in your local directory using various filters
 and query parameters. The search functionality allows you to find records based on specific
-attributes like name, version, skills, locators, and extensions using structured query
+attributes like name, version, skills, locators, domains and modules using structured
 filters with wildcard support. All searches are case insensitive.
 
 Search operations leverage an SQLite database for efficient record indexing and querying,
@@ -250,38 +250,46 @@ other Directory commands like `pull`, `info`, and `verify`.
 
 ```bash
 # Basic search for records by name
-dirctl search --query "name=my-agent-name"
+dirctl search --name "my-agent-name"
 
 # Search for records with a specific version
-dirctl search --query "version=v1.0.0"
+dirctl search --version "v1.0.0"
 
 # Search for records that have a particular skill by ID
-dirctl search --query "skill-id=10201"
+dirctl search --skill-id "10201"
 
 # Search for records with a specific skill name
-dirctl search --query "skill-name=images_computer_vision/image_segmentation"
+dirctl search --skill "images_computer_vision/image_segmentation"
 
-# Search for records with a specific locator type and URL
-dirctl search --query "locator=docker_image:https://example.com/my-agent"
+# Search for records with a specific locator type
+dirctl search --locator "docker-image"
 
-# Search for records with a specific extension
-dirctl search --query "extension=my-custom-extension:v1.0.0"
+# Search for records with a specific domain
+dirctl search --domain "healthcare"
 
-# Combine multiple query filters (AND operation)
+# Search for records with a specific module
+dirctl search --module "runtime/framework"
+
+# Combine multiple filters (AND operation)
 dirctl search \
-  --query "name=my-agent" \
-  --query "version=v1.0.0" \
-  --query "skill-name=images_computer_vision/image_segmentation"
+  --name "my-agent" \
+  --version "v1.0.0" \
+  --skill "images_computer_vision/image_segmentation"
+
+# Use multiple values for the same filter (OR operation within filter type)
+dirctl search \
+  --skill "images_computer_vision" \
+  --skill "natural_language_processing"
 
 # Use pagination to limit results and specify offset
 dirctl search \
-  --query "skill-name=images_computer_vision/image_segmentation" \
+  --skill "images_computer_vision/image_segmentation" \
   --limit 10 \
   --offset 0
 
 # Get the next page of results
 dirctl search \
-  --query "skill-name=images_computer_vision/image_segmentation" \
+  --skill "images_computer_vision/image_segmentation" \
   --limit 10 \
   --offset 10
 ```
@@ -292,41 +300,44 @@ The search functionality supports wildcard patterns for flexible matching:
 
 ```bash
 # Asterisk (*) wildcard - matches zero or more characters
-dirctl search --query "name=web*"              # Find all web-related agents
-dirctl search --query "version=v1.*"           # Find all v1.x versions
-dirctl search --query "skill-name=audio*"      # Find Audio-related skills
-dirctl search --query "locator=http*"          # Find HTTP-based locators
+dirctl search --name "web*"                    # Find all web-related agents
+dirctl search --version "v1.*"                 # Find all v1.x versions
+dirctl search --skill "audio*"                 # Find Audio-related skills
+dirctl search --locator "http*"                # Find HTTP-based locators
 
 # Question mark (?) wildcard - matches exactly one character
-dirctl search --query "version=v1.0.?"         # Find version v1.0.x (single digit)
-dirctl search --query "name=???api"            # Find 3-character names ending in "api"
-dirctl search --query "skill-name=Pytho?"      # Find skills with single character variations
+dirctl search --version "v1.0.?"               # Find version v1.0.x (single digit)
+dirctl search --name "???api"                  # Find 3-character names ending in "api"
+dirctl search --skill "Pytho?"                 # Find skills with single character variations
 
 # List wildcards ([]) - matches any character within brackets
-dirctl search --query "name=agent-[0-9]"       # Find agents with numeric suffixes
-dirctl search --query "version=v[0-9].*"       # Find versions starting with v + digit
-dirctl search --query "skill-name=[A-M]*"      # Find skills starting with A-M
-dirctl search --query "locator=[hf]tt[ps]*"    # Find HTTP/HTTPS/FTP locators
+dirctl search --name "agent-[0-9]"             # Find agents with numeric suffixes
+dirctl search --version "v[0-9].*"             # Find versions starting with v + digit
+dirctl search --skill "[a-m]*"                 # Find skills starting with a-m
+dirctl search --locator "[hf]tt[ps]*"          # Find HTTP/HTTPS/FTP locators
 
 # Complex wildcard combinations
-dirctl search --query "name=api-*-service" --query "version=v2.*"
-dirctl search --query "skill-name=*machine*learning*"
-dirctl search --query "name=web-[0-9]?" --query "version=v?.*.?"
+dirctl search --name "api-*-service" --version "v2.*"
+dirctl search --skill "*machine*learning*"
+dirctl search --name "web-[0-9]?" --version "v?.*.?"
 ```
 
-**Available Query Types:**
+**Available Search Flags:**
 
-- `name` - Search by record name
-- `version` - Search by record version  
-- `skill-id` - Search by skill ID number
-- `skill-name` - Search by skill name
-- `locator` - Search by locator (format: `type:url`)
-- `extension` - Search by extension (format: `name:version`)
+- `--name <name>` - Search by record name
+- `--version <version>` - Search by record version
+- `--skill-id <id>` - Search by skill ID number
+- `--skill <skill>` - Search by skill name
+- `--locator <type>` - Search by locator type
+- `--domain <domain>` - Search by domain
+- `--module <module>` - Search by module name
 
-**Query Format:**
+**Search Logic:**
 
-All queries use the format `field=value`. Multiple queries are combined with AND logic,
-meaning results must match all specified criteria.
+Multiple flags of different types are combined with AND logic (all criteria must match).
+Multiple flags of the same type are combined with OR logic (any criteria can match).
+For example, `--skill "audio" --skill "video" --locator "docker-image"` finds records that have
+either "audio" OR "video" skills AND use "docker-image" locators.
 
 ## Sync
 
