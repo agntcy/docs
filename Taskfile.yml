@@ -51,24 +51,6 @@ tasks:
       - task: lint
       - echo "All documentation tests passed!"
 
-  test:tracking:
-    desc: Test visit tracking setup and flow
-    cmds:
-      - task: test:tracking:setup
-      - task: test:tracking:flow
-
-  test:tracking:setup:
-    desc: Test tracking script is properly loaded and configured
-    internal: true
-    cmds:
-      - bash .github/scripts/test-tracking-simple.sh
-
-  test:tracking:flow:
-    desc: Simulate the full visit tracking flow
-    internal: true
-    cmds:
-      - bash .github/scripts/test-tracking-flow.sh
-
   lint:
     desc: Run all linting checks (spelling, markdown)
     deps:
