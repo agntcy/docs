@@ -1,0 +1,65 @@
+# SPDX-FileCopyrightText: Copyright (c) 2025 Cisco and/or its affiliates.
+# SPDX-License-Identifier: Apache-2.0
+
+name: Process Website Visits
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Run daily at midnight UTC
+  workflow_dispatch:  # Allow manual trigger
+
+permissions:
+  contents: write
+
+jobs:
+  process-visits:
+    name: Process and Report Visits
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Process visit data from Gist
+        env:
+          GIST_ID: ${{ secrets.VISIT_GIST_ID }}
+          GITHUB_TOKEN: ${{ secrets.VISIT_GIST_TOKEN }}
+        run: |
+          python3 .github/scripts/process_visits.py
+
+      - name: Configure Git
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
+      - name: Commit visit reports
+        run: |
+          git add .github/scripts/visit_report.md || true
+          git add .github/scripts/visit_stats.json || true
+          git add .github/scripts/visit_archive/ || true
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "docs: update visit statistics [skip ci]"
+            git push
+          fi
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: visit-reports
+          path: |
+            .github/scripts/visit_report.md
+            .github/scripts/visit_stats.json
+            .github/scripts/visit_archive/
+          retention-days: 90
+
+

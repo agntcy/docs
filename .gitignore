@@ -17,3 +17,7 @@ generated/
 # Python cache
 __pycache__/
 *.pyc
+
+# Node modules for tracking tests
+node_modules/
+package-lock.json

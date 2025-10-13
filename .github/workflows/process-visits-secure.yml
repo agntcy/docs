@@ -1,0 +1,132 @@
+# SPDX-FileCopyrightText: Copyright (c) 2025 Cisco and/or its affiliates.
+# SPDX-License-Identifier: Apache-2.0
+
+name: Process Website Visits (Secure)
+
+on:
+  # Triggered when issue is created with visit-data label
+  issues:
+    types: [opened, labeled]
+
+  # Also run daily to process all data
+  schedule:
+    - cron: '0 0 * * *'
+
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  # Job 1: Process visit data from issue
+  process-issue:
+    name: Process Visit Data from Issue
+    if: github.event_name == 'issues' && contains(github.event.issue.labels.*.name, 'visit-data')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Extract visit data from issue
+        id: extract
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          # Extract JSONL data between ```jsonl markers
+          echo "$ISSUE_BODY" | sed -n '/```jsonl/,/```/p' | sed '/```/d' > /tmp/visit_data.jsonl
+
+          # Count lines
+          LINES=$(wc -l < /tmp/visit_data.jsonl)
+          echo "Extracted $LINES visit records"
+          echo "lines=$LINES" >> $GITHUB_OUTPUT
+
+      - name: Append to Gist
+        if: steps.extract.outputs.lines > 0
+        env:
+          GIST_ID: ${{ secrets.VISIT_GIST_ID }}
+          GITHUB_TOKEN: ${{ secrets.VISIT_GIST_TOKEN }}
+        run: |
+          # Fetch current gist
+          GIST_DATA=$(curl -s -H "Authorization: Bearer $GITHUB_TOKEN" \
+            "https://api.github.com/gists/$GIST_ID")
+
+          # Get filename and current content
+          FILENAME=$(echo "$GIST_DATA" | jq -r '.files | keys[0]')
+          CURRENT_CONTENT=$(echo "$GIST_DATA" | jq -r ".files.\"$FILENAME\".content")
+
+          # Append new data
+          NEW_CONTENT="$CURRENT_CONTENT"$'\n'"$(cat /tmp/visit_data.jsonl)"
+
+          # Update gist
+          jq -n --arg filename "$FILENAME" --arg content "$NEW_CONTENT" \
+            '{files: {($filename): {content: $content}}}' | \
+          curl -s -X PATCH \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d @- \
+            "https://api.github.com/gists/$GIST_ID"
+
+          echo "✓ Appended ${LINES} visits to Gist"
+
+      - name: Close issue
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue close $ISSUE_NUMBER \
+            --comment "✓ Visit data processed and stored. Thank you!" \
+            --repo ${{ github.repository }}
+
+  # Job 2: Generate daily report
+  generate-report:
+    name: Generate Daily Report
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Generate report from Gist data
+        env:
+          GIST_ID: ${{ secrets.VISIT_GIST_ID }}
+          GITHUB_TOKEN: ${{ secrets.VISIT_GIST_TOKEN }}
+        run: |
+          python3 .github/scripts/process_visits.py
+
+      - name: Configure Git
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
+      - name: Commit reports
+        run: |
+          git add .github/scripts/visit_report.md || true
+          git add .github/scripts/visit_stats.json || true
+          git add .github/scripts/visit_archive/ || true
+
+          if git diff --cached --quiet; then
+            echo "No changes"
+          else
+            git commit -m "docs: update visit statistics [skip ci]"
+            git push
+          fi
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: visit-reports
+          path: |
+            .github/scripts/visit_report.md
+            .github/scripts/visit_stats.json
+          retention-days: 90
+
+
