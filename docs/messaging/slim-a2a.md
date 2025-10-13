@@ -2,7 +2,7 @@
 
 SLIM A2A is a native integration of A2A built on top of SLIM. It utilizes SLIMRPC (SLIM Remote Procedure Call) and the SLIMRPC compiler to compile A2A protobuf file and generate the necessary code to enable A2A functionality on SLIM.
 
-## What is SLIMRPC and SLIMRCP compiler
+## What is SLIMRPC and SLIMRPC compiler
 
 SLIMRPC is a framework that enables Protocol Buffers (protobuf) Remote Procedure Calls (RPC) over SLIM. This is similar to gRPC, which uses HTTP/2 as its transport layer for protobuf-based RPC. More information can be found [here](./slim-rpc.md)
 

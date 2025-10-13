@@ -258,7 +258,7 @@ To enable self-registration, configure the nodes with the Controller address:
 
   services:
     slim/1:
-      pubsub:
+      dataplane:
         servers: []
         clients: []
       controller:
@@ -389,7 +389,7 @@ To enable this, configure the node to host a server allowing the client to conne
 
   services:
     slim/1:
-      pubsub:
+      dataplane:
         servers: []
         clients: []
       controller:
