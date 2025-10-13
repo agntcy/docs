@@ -29,22 +29,52 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Extract visit data from issue
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate and extract visit data from issue
         id: extract
+        continue-on-error: true
         env:
           ISSUE_BODY: ${{ github.event.issue.body }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
-          # Extract JSONL data between ```jsonl markers
-          echo "$ISSUE_BODY" | sed -n '/```jsonl/,/```/p' | sed '/```/d' > /tmp/visit_data.jsonl
+          # Use secure validation script
+          if echo "$ISSUE_BODY" | python3 .github/scripts/validate_visit_data.py > /tmp/visit_data.jsonl 2> /tmp/validation_error.log; then
+            # Count valid lines
+            LINES=$(wc -l < /tmp/visit_data.jsonl | tr -d ' ')
+            echo "Validated and extracted $LINES visit records"
+            echo "lines=$LINES" >> $GITHUB_OUTPUT
+            echo "validation_success=true" >> $GITHUB_OUTPUT
+          else
+            echo "validation_success=false" >> $GITHUB_OUTPUT
+            echo "ERROR: Validation failed:"
+            cat /tmp/validation_error.log
+            exit 1
+          fi
 
-          # Count lines
-          LINES=$(wc -l < /tmp/visit_data.jsonl)
-          echo "Extracted $LINES visit records"
-          echo "lines=$LINES" >> $GITHUB_OUTPUT
+      - name: Close invalid issue
+        if: steps.extract.outputs.validation_success != 'true'
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue close $ISSUE_NUMBER \
+            --comment "⚠️ This issue was automatically closed because the visit data failed validation. This is likely due to:
+
+            - Invalid JSON format
+            - Missing required fields
+            - Invalid data types or values
+            - Security policy violations
+
+            If you believe this is an error, please contact the maintainers." \
+            --repo ${{ github.repository }}
+          exit 1
 
       - name: Append to Gist
-        if: steps.extract.outputs.lines > 0
+        if: steps.extract.outputs.validation_success == 'true' && steps.extract.outputs.lines > 0
         env:
           GIST_ID: ${{ secrets.VISIT_GIST_ID }}
           GITHUB_TOKEN: ${{ secrets.VISIT_GIST_TOKEN }}
@@ -71,13 +101,17 @@ jobs:
 
           echo "✓ Appended ${LINES} visits to Gist"
 
-      - name: Close issue
+      - name: Close issue with success message
+        if: steps.extract.outputs.validation_success == 'true'
         env:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh issue close $ISSUE_NUMBER \
-            --comment "✓ Visit data processed and stored. Thank you!" \
+            --comment "✓ Visit data processed and stored securely. Thank you!
+
+            - Visits validated: ${{ steps.extract.outputs.lines }}
+            - All security checks passed" \
             --repo ${{ github.repository }}
 
   # Job 2: Generate daily report
