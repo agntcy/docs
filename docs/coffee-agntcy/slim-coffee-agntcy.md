@@ -42,7 +42,7 @@ The `expected_responses` parameter defines how many replies the caller waits for
 You can explore the CoffeeAGNTCY code to see these concepts in context:  
 
 - **Client implementation** (message sending logic):  
-  [coffee_agents/lungo/exchange/graph/tools.py](https://github.com/agntcy/coffeeAgntcy/blob/main/coffeeAGNTCY/coffee_agents/lungo/exchange/graph/tools.py)  
+  [coffee_agents/lungo/agents/supervisors/auction/graph/tools.py](https://github.com/agntcy/coffeeAgntcy/blob/main/coffeeAGNTCY/coffee_agents/lungo/agents/supervisors/auction/graph/tools.py)
 
 - **Server implementation** (message handling logic):  
-  [coffee_agents/lungo/farms/brazil/farm_server.py](https://github.com/agntcy/coffeeAgntcy/blob/main/coffeeAGNTCY/coffee_agents/lungo/farms/brazil/farm_server.py)  
+  [coffee_agents/lungo/agents/farms/brazil/farm_server.py](https://github.com/agntcy/coffeeAgntcy/blob/main/coffeeAGNTCY/coffee_agents/lungo/agents/farms/brazil/farm_server.py)
