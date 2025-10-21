@@ -1,6 +1,19 @@
 nav:
  - Introduction: identity.md
  - Identifiers: identifiers.md
+ - Identity Service:
+    - Overview: identity_service.md
+    - Connecting an Identity Provider: connecting_idp.md
+    - Creating Agentic Service Identities: creating_identities.md
+    - Verifying an Identity: verify_identity.md
+    - Creating Policies for Agentic Services: creating_policies.md
+    - API Access: identity_service_api_access.md
+    - Identity Service API Reference: identity_service_api.md
+    - Protofiles: identity_service_protofiles.md
+    - Settings: identity_service_settings.md
+    - Identity Service SDK: identity_service_sdk.md
+    - Development Guide: identity_service_development.md
+    - Contributing Guide: identity_service_contributing.md
  - Identifier Examples: identifier_examples.md
  - Verifiable Credentials: credentials.md
  - Agent Badge Examples: vc_agent_badge.md
