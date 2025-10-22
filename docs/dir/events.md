@@ -23,11 +23,11 @@ The Directory tracks 9 distinct event types organized by service:
 
 ## Key Characteristics
 
-- **Real-time delivery**: Events are delivered immediately as operations occur
-- **Forward-only**: No historical events or replay capability
-- **Filtered subscriptions**: Server-side filtering by event type, labels, and CIDs
-- **Type-safe**: Protocol buffer enums prevent invalid event types
-- **Asynchronous**: Event publishing never blocks API operations
+- **Real-time delivery**: Events are delivered immediately as operations occur.
+- **Forward-only**: No historical events or replay capability.
+- **Filtered subscriptions**: Server-side filtering by event type, labels, and CIDs.
+- **Type-safe**: Protocol buffer enums prevent invalid event types.
+- **Asynchronous**: Event publishing never blocks API operations.
 
 ## Using the CLI
 
@@ -42,6 +42,7 @@ dirctl events listen
 ```
 
 **Output:**
+
 ```
 Listening to events (press Ctrl+C to stop)...
 
@@ -174,7 +175,7 @@ func main() {
 }
 ```
 
-### Subscribe with Filters
+### Subscribe with Filters with Go SDK
 
 ```go
 // Subscribe to specific event types
@@ -220,7 +221,7 @@ finally:
     client.close()
 ```
 
-### Subscribe with Filters
+### Subscribe with Filters with Python SDK
 
 ```python
 # Subscribe to specific event types
@@ -353,7 +354,7 @@ sequenceDiagram
 
 ### For Client Applications
 
-**Handle Connection Failures**
+#### Handle Connection Failures
 
 Implement retry logic with exponential backoff:
 
@@ -388,7 +389,7 @@ reconnect:
 }
 ```
 
-**Use Appropriate Filters**
+#### Use Appropriate Filters
 
 Filter server-side to reduce bandwidth and processing:
 
@@ -411,7 +412,7 @@ for {
 }
 ```
 
-**Set Appropriate Timeouts**
+#### Set Appropriate Timeouts
 
 Use context timeouts to prevent hanging connections:
 
@@ -490,4 +491,3 @@ DIRECTORY_SERVER_EVENTS_LOG_PUBLISHED_EVENTS=false
 - [CLI Reference](directory-cli.md) - Complete CLI command documentation
 - [SDK Reference](directory-sdk.md) - Language-specific SDK usage guides
 - [Getting Started](getting-started.md) - Initial setup and deployment guide
-

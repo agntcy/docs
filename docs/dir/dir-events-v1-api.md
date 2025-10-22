@@ -7,9 +7,7 @@
   - [Event](#agntcy-dir-events-v1-Event)
   - [ListenRequest](#agntcy-dir-events-v1-ListenRequest)
   - [ListenResponse](#agntcy-dir-events-v1-ListenResponse)
-  
   - [EventType](#agntcy-dir-events-v1-EventType)
-  
   - [EventService](#agntcy-dir-events-v1-EventService)
   
 - [Scalar Value Types](#scalar-value-types)
