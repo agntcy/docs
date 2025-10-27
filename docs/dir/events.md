@@ -97,10 +97,20 @@ dirctl events listen --cids bafybe...,bafkyb...
 For programmatic processing:
 
 ```bash
-# JSON format output
-dirctl events listen --json
+# JSONL format output (streaming-friendly, one event per line)
+dirctl events listen --output jsonl
+
+# JSON format output (pretty-printed)
+dirctl events listen --output json
 ```
 
+**JSONL format** (recommended for streaming - compact, one event per line):
+```json
+{"id":"550e8400-...","type":"EVENT_TYPE_RECORD_PUSHED","timestamp":"2025-10-18T14:23:15.123456Z","resource_id":"bafybeig...","labels":["/skills/AI"]}
+{"id":"550e8401-...","type":"EVENT_TYPE_RECORD_PUBLISHED","timestamp":"2025-10-18T14:23:16.456789Z","resource_id":"bafybeig...","labels":["/skills/AI"]}
+```
+
+**JSON format** (pretty-printed):
 ```json
 {
   "id": "550e8400-e29b-41d4-a716-446655440000",
@@ -111,6 +121,8 @@ dirctl events listen --json
 }
 ```
 
+> **Note:** For streaming events, use `--output jsonl` format as it outputs one compact JSON object per line, making it ideal for real-time processing with tools like `jq`.
+
 ### Combine Filters
 
 All filter types can be combined for precise event monitoring:
@@ -120,7 +132,7 @@ All filter types can be combined for precise event monitoring:
 dirctl events listen \
   --types RECORD_PUSHED,RECORD_PULLED \
   --labels /skills/AI \
-  --json
+  --output jsonl
 ```
 
 ## Using the Go SDK
@@ -251,7 +263,7 @@ Track system activity for operational awareness:
 
 ```bash
 # Monitor all operations in production
-dirctl events listen --json | tee events.log
+dirctl events listen --output jsonl | tee events.log
 
 # Alert on failed syncs
 dirctl events listen --types SYNC_FAILED | \
@@ -294,7 +306,7 @@ Maintain audit trails for critical operations:
 
 ```bash
 # Record all signature events
-dirctl events listen --types RECORD_SIGNED --json >> audit.jsonl
+dirctl events listen --types RECORD_SIGNED --output jsonl >> audit.jsonl
 ```
 
 ### Development and Debugging
@@ -303,7 +315,7 @@ Monitor system behavior during development:
 
 ```bash
 # Watch all events during testing
-dirctl events listen --json | jq .
+dirctl events listen --output jsonl | jq -c .
 
 # Track specific record through the system
 dirctl events listen --cids $RECORD_CID

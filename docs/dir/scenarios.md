@@ -384,7 +384,7 @@ match specific criteria:
 ```bash
 # Search for agents with a given skill across
 # the network and sync them automatically
-dirctl routing search --skill "Audio" --json | dirctl sync create --stdin
+dirctl routing search --skill "Audio" --output json | dirctl sync create --stdin
 ```
 
 This creates separate sync operations for each remote peer found in the search results,
