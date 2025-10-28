@@ -33,7 +33,7 @@ organizations are flat and cannot belong to one another.
 * Agent Records - An Agent Record is a collection of data and metadata about a
 particular agentic application or service. The schema of the Record is defined
 in [OASF](../oasf/open-agentic-schema-framework.md) and contains, for example, a
-[collection of skills](https://schema.oasf.outshift.com/main_skills).
+[collection of skills](https://schema.oasf.outshift.com/skill_categories).
 * Repositories - An agent repository collects agent records that describe
 different versions of the same agent into one location to provide an overview of
 its history and current status. A record can belong to only one repo, while a
@@ -283,7 +283,7 @@ You need to provide the following details:
 
 ![Record Composer Metadata](../assets/hosted-dir/record-composer-metadata.png)
 
-You can also provide skill classifications in-line with the [OASF taxonomy](https://schema.oasf.outshift.com/main_skills). This skill classification aids in discoverability within the Hub's search functionality, helping users find agents with specific capabilities. Optional fields such as license information, searchable tags, and locator URLs following the [OASF locator schema](https://schema.oasf.outshift.com/objects/locator?extensions=) can be added to provide additional context and accessibility.
+You can also provide skill classifications in-line with the [OASF taxonomy](https://schema.oasf.outshift.com/skill_categories). This skill classification aids in discoverability within the Hub's search functionality, helping users find agents with specific capabilities. Optional fields such as license information, searchable tags, and locator URLs following the [OASF locator schema](https://schema.oasf.outshift.com/objects/locator?extensions=) can be added to provide additional context and accessibility.
 
 ##### Adding Functional Modules
 
