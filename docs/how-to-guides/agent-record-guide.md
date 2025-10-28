@@ -28,7 +28,7 @@ Start by filling out the basic metadata of your record:
 
 The skills section outlines the capabilities of the agent record.
 Retrieve skill definitions from the
-[OASF skills catalog](https://schema.oasf.outshift.com/main_skills).
+[OASF skills catalog](https://schema.oasf.outshift.com/skill_categories).
 Each skill must include the following:
 
 - `name`:
@@ -44,7 +44,7 @@ You can add multiple skills to your record.
 
 The domains section outlines the domains in which your agent record excels.
 Retrieve domain definitions from the
-[OASF domains catalog](https://schema.oasf.outshift.com/main_domains).
+[OASF domains catalog](https://schema.oasf.outshift.com/domain_categories).
 Each domain must include the following:
 
 - `name`:
@@ -76,7 +76,7 @@ You can also provide the source code:
 The modules section is critical for describing the features and operational
 parameters of your record.
 To ensure compatibility, you must select extensions from the
-[OASF modules catalog](https://schema.oasf.outshift.com/main_modules).
+[OASF modules catalog](https://schema.oasf.outshift.com/module_categories).
 
 ## Validate and Finalize
 

@@ -81,4 +81,4 @@ See [Creating an Agent Record](../how-to-guides/agent-record-guide.md) for mo
 information on the Agent Record.
 
 The current skill set taxonomy is described in
-[Taxonomy of AI Agent Skills](https://schema.oasf.outshift.com/main_skills).
+[Taxonomy of AI Agent Skills](https://schema.oasf.outshift.com/skill_categories).
