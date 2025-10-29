@@ -6,6 +6,9 @@ nav:
   - Getting Started: getting-started.md
   - Features and Usage: scenarios.md
   - Event Streaming: events.md
+  - Directory Sandbox Environment:
+    - Public Staging Instance: directory-public-staging.md
+    - Deployment: directory-sandbox-deployment.md
   - Hosted AGNTCY Agent Directory: hosted-agent-directory.md
   - CLI Reference: directory-cli.md
   - SDK Reference: directory-sdk.md
