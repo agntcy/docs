@@ -45,7 +45,7 @@ same structure as client names, but the last component is left empty, as it is
 shared among all connected clients.
 
 For further details, please refer to the [SLIM
-Specification](https://spec.slim.agntcy.org/draft-agntcy-slim.html)
+Specification](https://datatracker.ietf.org/doc/draft-mpsb-agntcy-slim/).
 
 ## SLIM Sessions Layer
 
