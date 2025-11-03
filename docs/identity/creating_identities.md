@@ -51,7 +51,7 @@ For services that are not directly accessible from the public internet (e.g., se
 **Steps:**
 
 1.  **Install the Python SDK:**
-    - Ensure you have the Python SDK installed. Refer to [the SDK section](/docs/sdk) of the documentation for detailed installation instructions.
+    - Ensure you have the Python SDK installed. Refer to [the SDK section](./identity_service_sdk.md) of the documentation for detailed installation instructions.
 2.  **Perform the Badge Creation Command:**
     - Open your terminal or command prompt.
     - Execute the following command:

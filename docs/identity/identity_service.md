@@ -73,7 +73,7 @@ To run these steps successfully, you need to have the following installed:
    ```
 
    !!! note
-       You can also install the `Backend` and the `Frontend` using our [Helm charts](charts).
+       You can also install the `Backend` and the `Frontend` using our [Helm charts](https://github.com/agntcy/identity-service/tree/main/charts).
 
 3. Access the Frontend UI and the Backend APIs:
 

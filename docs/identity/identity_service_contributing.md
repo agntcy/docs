@@ -228,7 +228,7 @@ The [`internal/pkg/errutil`](https://github.com/agntcy/identity-service/blob/mai
 The `id` provides a way to identify the error without relying on the message, and also enables custom error messages to be displayed on the frontend.
 Throughout the codebase, the `id` is constructed as `<domain>.<errId>`, where the `<domain>` corresponds to either the Application Service name or the directory name of the domain.
 
-> For more information about the Application layer and its packages, see the [architecture](architecture.md) document.
+> For more information about the Application layer and its packages, see the [architecture](./identity_service_contributing.md#agent-identity-service-backend-architecture) section.
 
 In case a technical error must be returned, it should be wrapped to provide additional context and traceability:
 

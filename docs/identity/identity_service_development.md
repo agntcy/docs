@@ -59,7 +59,7 @@ except Exception as e:
     print("Error verifying badge: ", e)
 ```
 
-_Replace `{YOUR_ORGANIZATION_API_KEY}` with your actual [Organization API Key](/docs/api#organization-api-key) and `{JOSE_ENVELOPED_BADGE}` with the JOSE enveloped badge you want to verify._
+Replace `{YOUR_ORGANIZATION_API_KEY}` with your actual [Organization API Key](./identity_service_api_access.md#organization-api-key) and `{JOSE_ENVELOPED_BADGE}` with the JOSE enveloped badge you want to verify.
 
 Here is the same operation using the REST API:
 
