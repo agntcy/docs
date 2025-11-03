@@ -78,7 +78,7 @@ plugins:
       - "../dir-*-v1-api/#*"   # Build format
     raise_error: false
     raise_error_after_finish: false
-    validate_external_urls: false
+    validate_external_urls: true
   include-markdown:
 
 theme:

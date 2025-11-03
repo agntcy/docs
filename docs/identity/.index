@@ -21,3 +21,4 @@ nav:
  - Architecture Diagrams: arch_diagrams.md
  - Sequence Flows: flow.md
  - OpenAPI Reference: openapi.md
+ - Identity Quickstart Guide: identity-quickstart.md
