@@ -231,7 +231,7 @@ trustDomainBundle: |-
 ### Step 3: Configure Your SPIRE Server
 
 Add the Directory SPIRE server as a federation peer in your SPIRE server configuration
-by obtaining the [Directory trust bundle](spire.directory.yaml).
+by obtaining the [Directory trust bundle](https://github.com/agntcy/dir-staging/tree/feat/deploy/onboarding).
 
 Save the trust bundle to the specified path.
 
@@ -292,4 +292,4 @@ curl https://spire.directory.agntcy.org/
 - **GitHub Issues**: [Open an issue](https://github.com/agntcy/dir/issues) for bugs and feature requests.
 - **Discussions**: [GitHub Discussions](https://github.com/agntcy/dir/discussions) for questions and community help.
 
-For the next steps and getting started, see the [Quick Start Guide](../how-to-guides/agent-directory.md). For sample applications, see the [Usage Scenarios](./scenarios.md).
+For the next steps and getting started, see the [Quick Start Guide](./getting-started.md). For sample applications, see the [Usage Scenarios](./scenarios.md).
