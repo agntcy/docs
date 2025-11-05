@@ -7,12 +7,14 @@ The Observe SDK emits raw telemetry (traces, metrics, and optional logs) to an O
 The API Layer abstracts the underlying database so that we are not locked into a single storage technology. While ClickHouse is the initial implementation, the interface is intentionally narrow (session lookup, span search, metric fetch, write‑back of computed artifacts) to keep alternative backends (e.g., PostgreSQL, BigQuery, Elastic, Parquet lake) easily pluggable.
 
 Capabilities:
+
 - Retrieve raw session traces (for replay, graph reconstruction, diffing).
 - Fetch primary metrics emitted directly by the SDK (e.g., latency histograms, token usage counters).
 - Provide bounded, pagination‑friendly queries for the MCE (avoids heavy ad‑hoc joins inside the engine).
 - Enforce schema normalization/translation so upstream differences (SDK versions, framework variants) do not leak into evaluator logic.
 
 Design goals:
+
 - **Decoupling:** Evaluation logic never embeds vendor‑specific SQL.
 - **Portability:** Swap storage by implementing a small provider contract.
 - **Consistency:** Uniform response envelopes (metadata + data + pagination cursor).
@@ -21,18 +23,15 @@ Design goals:
 ## Metrics Computation Engine (MCE)
 
 The Metrics Computation Engine computes **derived** metrics at multiple aggregation levels:
+
 - **Span level:** e.g., answer relevance for a single LLM call or tool invocation success rate.
 - **Session level:** overall MAS completion status, agent collaboration success rate, delegation accuracy.
 - **Population level:** metrics computed over a set of sessions, like graph determinism score.
 
 The MCE uses a plugin architecture, making it straightforward to add new metrics.  
-It can run either as:
-- A stand‑alone service exposed through a REST API, or
-- An embeddable SDK integrated into a third‑party data or analytics platform.
+It was designed to be running either as a stand-alone service, exposed through a REST API; or as an embeddable SDK, integrated into a third-party data or analytics platform.
 
-Computed metrics can be:
-- Stored back into the database via the API Layer for longitudinal analysis, and/or
-- Returned directly to the caller for immediate consumption.
+The metrics computed by the MCE can either be stored back into the database via the API Layer for longitudinal analysis, and/or returned directly to the caller for immediate consumpltion.
 
 ## Detailed Usage
 
