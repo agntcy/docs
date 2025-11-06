@@ -2,6 +2,12 @@
 
 CoffeeAGNTCY is a reference implementation built around a fictitious coffee company to demonstrate how components in the AGNTCY Internet of Agents ecosystem work together.
 
+<div>
+  <div style="position:relative;padding-top:56.25%;">
+    <iframe style="position:absolute;top:0;left:0;width:100%;height:100%;" src="https://www.youtube.com/embed/kCAe8gHqJ9g" title="AGNTCY Reference Application and SDK" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+</div>
+
 This project is meant to exemplify how AGNTCY and open-source agentic standards interoperate through clean, reproducible example code. It is purposefully designed for developers across experience levels, from those taking their first steps in building agentic systems to those with more experience curious about AGNTCY's offerings.
 
 With CoffeeAGNTCY, you can:
@@ -19,6 +25,8 @@ With CoffeeAGNTCY, you can:
 * Understand how to integrate data sources via MCP.
 
 CoffeeAGNTCY exposes two demo apps: Corto and Lungo.
+
+For an in-depth tutorial, see the [CoffeeAGNTCY Tutorial](https://github.com/agntcy/coffeeAgntcy/blob/main/TUTORIAL.md).
 
 ## Corto
 
@@ -73,4 +81,5 @@ flowchart TB
     SLIM --> F3
     F2 --> MCP
 ```
+
 Learn more on how to deploy Lungo locally by visiting the [Lungo Deployment Guide](https://github.com/agntcy/coffeeAgntcy/blob/main/coffeeAGNTCY/coffee_agents/lungo/README.md)
