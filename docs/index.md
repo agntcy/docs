@@ -37,29 +37,16 @@ The initial set of IoA components and architecture is outlined below. This is a 
 
 ![IoA Stack](assets/ioa_stack.png)
 
-1. **Agent Identity**: A system that leverages decentralized technologies to manage and verify the identities of Agents or Tools issued by any organization, ensuring secure and trustworthy interactions.
-2. **Open Agent Schema Framework (OASF)**: An OCI based extensible data model allowing to describe agents' attributes and ensuring unique identification of agents. OASF supports the description of A2A agents, MCP servers and can be extended to support other popular formats, such as Copilot agent manifests and many more. Current OASF repo can be found [here](https://github.com/agntcy/oasf), OASF schema documentation can be found [here](https://schema.oasf.outshift.com).
-3. **Agent Directory**: Allows announcing and discover agents or multi-agent applications which are described using OASF. Any organization can run its directory and keep it in sync with others, forming the Internet of Agents inventory. Agent Directory supports A2A agent cards, ACP agent manifests, and MCP server descriptions among other data models.
-4. **Semantic SDK**:
-
-      * Support various protocols: A2A, MCP, and ACP.
-      * **I/O Mapper Agent**: Handles semantic data adaptations between agents that need to communicate with each other.
-      * **Semantic Router**: Directs workflows via semantic matches. (coming soon)
-
-5. **Syntactic SDK**:
-
-      * **Agent Connect Protocol (ACP)**: A standard interface to invoke agents (or agentic applications), provide input, retrieve output, retrieve supported schemas, graph topology and other useful information. Current ACP spec can be found [here](https://spec.acp.agntcy.org/).
-      * **API-bridge Agent** to connect an Agent with any API end-point (tools or data sources)
-      * **Human in the Loop Agent** to interface with human input/output seamlessly. (coming soon)
-
-6. **Messaging SDK**:
-
+1. **[Open Agent Schema Framework (OASF)](./oasf/open-agentic-schema-framework.md)**: An OCI based extensible data model allowing to describe agents' attributes and ensuring unique identification of agents. OASF supports the description of A2A agents, MCP servers and can be extended to support other popular formats, such as Copilot agent manifests and many more. Current OASF repo can be found [here](https://github.com/agntcy/oasf), OASF schema documentation can be found [here](https://schema.oasf.outshift.com).
+1. **[Agent Directory](./dir/overview.md)**: Allows announcing and discover agents or multi-agent applications which are described using OASF. Any organization can run its directory and keep it in sync with others, forming the Internet of Agents inventory. Agent Directory supports A2A agent cards, ACP agent manifests, and MCP server descriptions among other data models.
+1. **[Messaging SDK](./messaging/slim-core.md)**:
       * **SLIM** (Secure Low-latency Interactive Messaging): A protocol that defines the standards and guidelines for secure and efficient network-level communication between AI agents. SLIM ensures interoperability and seamless data exchange by specifying message formats, transport mechanisms, and interaction patterns.
       * **SLIM Nodes and SDK**: Offers handy secure (MLS and quantum safe) network-level communication services to a group of agents (typically those of a given multi-agent application) through SDK/Libraries. It extends gRPC to support pub/sub interactions in addition to request/reply, streaming, fire & forget and more.
+1. **[Identity](./identity/identity.md)**: A system that leverages decentralized technologies to manage and verify the identities of Agents or Tools issued by any organization, ensuring secure and trustworthy interactions.
+1. **[Observability and Evaluation](./obs-and-eval/observe-and-eval.md)**: Telemetry collectors, tools and services to enable multi-agent application observability and evaluation.
+1. **Security**: Tools and services to trust and  protect multi-agent applications.
 
-7. **Agent Workflow Server**: Deploys and supervises agent workflows written in various frameworks and makes them available through the Agent Connect Protocol. Such workflows could be multi-agent applications including a mix of toolkit agents, local and remote agents.
-8. **Agentic Ensemble Observability & Evaluation**: Telemetry collectors, tools and services to enable multi-agent application observability and evaluation
-9. **Agentic Ensemble Security**: Tools and services to trust and  protect multi-agent applications.
+[CoffeeAGNTCY](./coffee-agntcy/get-started.md) is a reference implementation demopnsttrating the core components that can be used to build multi-agent applications.
 
 The following diagram shows a simplified architecture of the core components described above.
 

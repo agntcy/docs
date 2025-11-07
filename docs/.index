@@ -6,6 +6,6 @@ nav:
   - Identity: identity
   - Observability and Evaluation: obs-and-eval
   - CSIT: csit
-  - CoffeeAGNTCY: coffee-agntcy
+  - Getting Started: coffee-agntcy
   - Glossary: glossary.md
   - How to Contribute: contributing.md
