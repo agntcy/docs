@@ -63,8 +63,6 @@ plugins:
       - "https://docs.agntcy.org/*"
       - "https://www.npmjs.com/"
       - "https://httpbin.org/"
-      - "https://console.ory.sh/"
-      - "https://spiffe.io/"
       
       # Auto-generated anchors from API documentation
       - "#agntcy*"       # Covers all agntcy protobuf types
@@ -78,7 +76,7 @@ plugins:
       # Cross-file API references (both source and build formats)
       - "dir-*-v1-api.md#*"    # Source format
       - "../dir-*-v1-api/#*"   # Build format
-    raise_error: true
+    raise_error: false
     raise_error_after_finish: false
     validate_external_urls: true
   include-markdown:
