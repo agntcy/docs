@@ -64,6 +64,7 @@ plugins:
       - "https://www.npmjs.com/"
       - "https://httpbin.org/"
       - "https://console.ory.sh/"
+      - "https://spiffe.io/"
       
       # Auto-generated anchors from API documentation
       - "#agntcy*"       # Covers all agntcy protobuf types
