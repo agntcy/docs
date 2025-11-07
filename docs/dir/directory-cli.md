@@ -454,7 +454,9 @@ The following workflow demonstrates how to publish a record to the network:
 1. Store your record
 
     ```bash
-    CID=$(dirctl push my-agent.json)
+    # Using --output raw for clean scripting
+    CID=$(dirctl push my-agent.json --output raw)
+    echo "Stored with CID: $CID"
     ```
 
 1. Publish for discovery
@@ -466,7 +468,8 @@ The following workflow demonstrates how to publish a record to the network:
 1. Verify the record is published
 
     ```bash
-    dirctl routing list --cid $CID
+    # Use JSON output for programmatic verification
+    dirctl routing list --cid $CID --output json
     ```
 
 1. Check routing statistics
@@ -482,18 +485,22 @@ The following workflow demonstrates how to discover records from the network:
 1. Search for records by skill
 
     ```bash
-    dirctl routing search --skill "AI" --limit 10
+    # Use JSON output to process results
+    dirctl routing search --skill "AI" --limit 10 --output json
     ```
 
 1. Search with multiple criteria
 
     ```bash
-    dirctl routing search --skill "AI" --locator "docker-image" --min-score 2
+    dirctl routing search --skill "AI" --locator "docker-image" --min-score 2 --output json
     ```
 
-1. Pull interesting records
+1. Pull discovered records
     ```bash
-    dirctl pull <discovered-cid>
+    # Extract CIDs and pull records
+    dirctl routing search --skill "AI" --output json | \
+      jq -r '.[].record_ref.cid' | \
+      xargs -I {} dirctl pull {}
     ```
 
 ### Synchronization Workflow
@@ -503,19 +510,23 @@ The following workflow demonstrates how to synchronize records between remote di
 1. Create sync with remote peer
 
     ```bash
-    SYNC_ID=$(dirctl sync create https://peer.example.com)
+    # Using --output raw for clean variable capture
+    SYNC_ID=$(dirctl sync create https://peer.example.com --output raw)
+    echo "Sync created with ID: $SYNC_ID"
     ```
 
 1. Monitor sync progress
 
     ```bash
-    dirctl sync status $SYNC_ID
+    # Use JSON output for programmatic monitoring
+    dirctl sync status $SYNC_ID --output json
     ```
 
 1. List all syncs
 
     ```bash
-    dirctl sync list
+    # Use JSONL output for streaming results
+    dirctl sync list --output jsonl
     ```
 
 1. Clean up when done
@@ -523,6 +534,18 @@ The following workflow demonstrates how to synchronize records between remote di
     ```bash
     dirctl sync delete $SYNC_ID
     ```
+
+### Advanced Synchronization: Search-to-Sync Pipeline
+
+Automatically sync records that match specific criteria from the network:
+
+```bash
+# Search for AI-related records and create sync operations
+dirctl routing search --skill "AI" --output json | dirctl sync create --stdin
+
+# This creates separate sync operations for each remote peer found,
+# syncing only the specific CIDs that matched your search criteria
+```
 
 ## Command Organization
 
