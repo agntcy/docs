@@ -188,6 +188,14 @@ The `dirctl` command line tools supports two methods to authenticate to a Outshi
 
     * For more details `dirctl hub apikey --help`
 
+        !!! note
+
+            Interactive authentication using `dirctl hub login` takes precedence over API key subcommands.  If you want to ensure that you are using the API key for authentication, log out with `dirctl hub logout`.
+
+        !!! note
+
+            In [Release v0.3.0](https://github.com/agntcy/dir/releases/tag/v0.3.0), API key support is enabled for dirctl hub push and pull operations only.
+
 #### Creating an Agent Directory Record
 
 An Agent Directory record is stored in JSON format. The record is specific to
