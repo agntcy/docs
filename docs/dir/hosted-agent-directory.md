@@ -177,7 +177,7 @@ The `dirctl` command line tools supports two methods to authenticate to a Outshi
         ```
 
         ```bash
-        $ dirctl hub apikey create --org-name your-user --role ROLE_ADMIN --json > api-key-creds.json
+        $ dirctl hub apikey create --org-name your-user --role ROLE_ADMIN --output json > api-key-creds.json
         ```
 
     * Set the environment variable and use the dirctl commands as usual or provide the JSON file with the credentials:
