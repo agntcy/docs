@@ -279,6 +279,28 @@ For more information, see the [slimctl](#slimctl).
 
 `slimctl` is the command-line interface for the SLIM controller.
 
+### Installing slimctl
+
+Slimctl is available for multiple operating systems and architectures. 
+
+To install slimctl, download the appropriate release asset from GitHub or, if you are on macOS, by using Homebrew.
+
+#### Downloading Slimctl from Github
+
+1. Go to the slimctl [GitHub releases page](https://github.com/agntcy/slim/releases).
+2. Download the asset matching your operating system and architecture -- for example, Linux, macOS, Windows.
+3. Extract the downloaded archive and then move the `slimctl` binary to a directory in your `PATH`.
+
+#### Installing Slimctl via Homebrew (MacOS)
+
+If you are using macOS, you can install slimctl via Homebrew:
+
+```
+brew tap agntcy/slim
+brew install slimctl
+```
+This automatically downloads and installs the latest version of slimctl for your system.
+
 ### Configuring slimctl
 
 `slimctl` supports configuration through a configuration file, environment variables, or command-line flags.
