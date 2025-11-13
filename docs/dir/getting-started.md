@@ -120,3 +120,7 @@ This deploys Directory services using Docker Compose:
 cd install/docker
 docker compose up -d
 ```
+
+## Directory MCP Server
+
+The Directory services are also accessible through the Directory MCP Server. It provides a standardized interface for AI assistants and tools to interact with the Directory system and work with OASF agent records. See the [Directory CLI Reference](directory-cli.md#directory-mcp-server) for more information.
