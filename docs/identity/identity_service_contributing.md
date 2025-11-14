@@ -244,7 +244,7 @@ Since only two types of errors are returned from the Application layer, error ha
 
 - If the error is a *domain error*, a [`status.Status`](https://pkg.go.dev/google.golang.org/grpc/status#Status) is returned with a code corresponding to the `DomainError.Reason` field.
 - If the error is a *technical error*, it is forwarded as-is.
-Later, a custom gRPC interceptor [`ErrorInterceptor`](https://github.com/agntcy/identity-service/blob/main/backend/internal/pkg/interceptors/error.go) logs the error and returns a [`status.Status`](https://pkg.go.dev/google.golang.org/grpc/status#Status) with an `Internal` code as a response.
+Later, a custom gRPC interceptor `ErrorInterceptor` logs the error and returns a [`status.Status`](https://pkg.go.dev/google.golang.org/grpc/status#Status) with an `Internal` code as a response.
 
 The helper function [`grpcutil.Error()`](https://github.com/agntcy/identity-service/blob/main/backend/internal/pkg/grpcutil/errors.go) encapsulates the error handling process described above and can be called from gRPC services, as shown in the following example:
 
@@ -324,7 +324,7 @@ What log level to use?
 
 ## Error logging
 
-In case an unexpected error happened and the execution flow needs to be stopped, **do not** log the error, there is a global gRPC interceptor [`ErrorInterceptor`](https://github.com/agntcy/identity-service/blob/main/backend/internal/pkg/interceptors/error.go) that catches these errors and logs them.
+In case an unexpected error happened and the execution flow needs to be stopped, **do not** log the error, there is a global gRPC interceptor `ErrorInterceptor` that catches these errors and logs them.
 This prevents errors from being logged more than once, which facilitates tracing.
 
 ## Formats
@@ -375,7 +375,7 @@ The context is propagated to the application and domain services, as well as to 
 For example, repositories use the tenant ID from the context to filter data using the custom GORM scope [`BelongsToTenant`](https://github.com/agntcy/identity-service/blob/main/backend/internal/pkg/gormutil/scopes.go),
 while HTTP clients can use the context to cancel requests if the user closes the connection to the server.
 
-The population of the `Context` with user and tenant metadata is managed by the [`AuthInterceptor`](https://github.com/agntcy/identity-service/blob/main/backend/internal/pkg/interceptors/auth.go) gRPC interceptor.
+The population of the `Context` with user and tenant metadata is managed by the `AuthInterceptor` gRPC interceptor.
 
 # Database
 
