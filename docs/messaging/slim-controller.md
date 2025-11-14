@@ -279,28 +279,6 @@ For more information, see the [slimctl](#slimctl).
 
 `slimctl` is the command-line interface for the SLIM controller.
 
-### Installing slimctl
-
-Slimctl is available for multiple operating systems and architectures. 
-
-To install slimctl, download the appropriate release asset from GitHub or, if you are on macOS, by using Homebrew.
-
-#### Downloading Slimctl from Github
-
-1. Go to the slimctl [GitHub releases page](https://github.com/agntcy/slim/releases).
-2. Download the asset matching your operating system and architecture -- for example, Linux, macOS, Windows.
-3. Extract the downloaded archive and then move the `slimctl` binary to a directory in your `PATH`.
-
-#### Installing Slimctl via Homebrew (MacOS)
-
-If you are using macOS, you can install slimctl via Homebrew:
-
-```
-brew tap agntcy/slim
-brew install slimctl
-```
-This automatically downloads and installs the latest version of slimctl for your system.
-
 ### Configuring slimctl
 
 `slimctl` supports configuration through a configuration file, environment variables, or command-line flags.
@@ -325,23 +303,23 @@ The `server` endpoint should point to a [SLIM Control](https://github.com/agntcy
 
 List nodes:
 
-`slimctl node list`
+`slimctl controller node list`
 
 List connections on a SLIM instance:
 
-`slimctl connection list --node-id=<slim_node_id>`
+`slimctl controller connection list --node-id=<slim_node_id>`
 
 List routes on a SLIM instance:
 
-`slimctl route list --node-id=<slim_node_id>`
+`slimctl controller route list --node-id=<slim_node_id>`
 
 Add a route to the SLIM instance:
 
-`slimctl route add <organization/namespace/agentName/agentId> via <slim-node-id or path_to_config_file> --node-id=<slim_node_id>`
+`slimctl controller route add <organization/namespace/agentName/agentId> via <slim-node-id or path_to_config_file> --node-id=<slim_node_id>`
 
 Delete a route from the SLIM instance:
 
-`slimctl route del <organization/namespace/agentName/agentId> via <slim-node-id or path_to_config_file> --node-id=<slim_node_id>`
+`slimctl controller route del <organization/namespace/agentName/agentId> via <slim-node-id or path_to_config_file> --node-id=<slim_node_id>`
 
 Print version information:
 
@@ -353,7 +331,7 @@ Run `slimctl <command> --help` for more details on flags and usage.
 
 Add route for node `slim/a` to forward messages for `org/default/alice/0` to node `slim/b`.
 ```bash
-slimctl node list
+slimctl controller node list
 
 Node ID: slim/b status: CONNECTED
   Connection details:
@@ -366,11 +344,11 @@ Node ID: slim/a status: CONNECTED
     MtlsRequired: false
     ExternalEndpoint: test-slim.default.svc.cluster.local:46357
 
-slimctl route add org/default/alice/0 via slim/b --node-id slim/a
+slimctl controller route add org/default/alice/0 via slim/b --node-id slim/a
 
 
 # Delete an existing route
-slimctl route del org/default/alice/0 via slim/b --node-id slim/a
+slimctl controller route del org/default/alice/0 via slim/b --node-id slim/a
 ```
 
 ### Example 2: Create, Delete Route Using `connection_config.json`
@@ -383,18 +361,18 @@ cat > connection_config.json <<EOF
 "endpoint": "http://127.0.0.1:46357"
 }
 EOF
-slimctl route add org/default/alice/0 via connection_config.json
+slimctl controller route add org/default/alice/0 via connection_config.json
 
 
 # Delete an existing route
-slimctl route del org/default/alice/0 via http://localhost:46367
+slimctl controller route del org/default/alice/0 via http://localhost:46367
 ```
 
 For full reference of connection_config.json, see the [client-config-schema.json](https://github.com/agntcy/slim/blob/slim-v0.6.0/data-plane/core/config/src/grpc/schema/client-config.schema.json).
 
 ### Managing SLIM Nodes Directly
 
-SLIM nodes can be configured to expose a Controller endpoint of a SLIM instance, slimctl can connect to this endpoint to manage the SLIM instance directly by using slimctl `node-connect` sub-command. In this case, in the configuration file, the server should point to the SLIM instance endpoint.
+SLIM nodes can be configured to expose a Controller endpoint of a SLIM instance, slimctl can connect to this endpoint to manage the SLIM instance directly by using slimctl `node` sub-command. In this case, in the configuration file, the server should point to the SLIM instance endpoint.
 
 To enable this, configure the node to host a server allowing the client to connect:
 
@@ -423,13 +401,13 @@ To enable this, configure the node to host a server allowing the client to conne
 ```
 
 List connections on a SLIM instance:
-`slimctl node-connect connection list --server=<node_control_endpoint>`
+`slimctl node connection list --server=<node_control_endpoint>`
 
 List routes on a SLIM instance:
-`slimctl node-connect route list --server=<node_control_endpoint>`
+`slimctl node route list --server=<node_control_endpoint>`
 
 Add a route to the SLIM instance:
-`slimctl node-connect route add <organization/namespace/agentName/agentId> via <config_file> --server=<node_control_endpoint>`
+`slimctl node route add <organization/namespace/agentName/agentId> via <config_file> --server=<node_control_endpoint>`
 
 Delete a route from the SLIM instance:
-`slimctl node-connect route del <organization/namespace/agentName/agentId> via <host:port> --server=<node_control_endpoint>`
+`slimctl node route del <organization/namespace/agentName/agentId> via <host:port> --server=<node_control_endpoint>`

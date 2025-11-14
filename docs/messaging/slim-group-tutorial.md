@@ -758,7 +758,7 @@ moderator of the channel, similar to the Python bindings example. However, you d
 need to handle this explicitly in the code. Run the following command to create the channel:
 
 ```bash
-./slimctl channel create moderators=agntcy/ns/client-1/9494657801285491688
+./slimctl controller channel create moderators=agntcy/ns/client-1/9494657801285491688
 ```
 
 The full name of the application can be taken from the output in the console. The value
@@ -787,8 +787,8 @@ Send a message to the group, or type 'exit' or 'quit' to quit.
 Now that the new group is created, add the additional participants `client-2` and `client-3` using the following `slimctl` commands:
 
 ```bash
-./slimctl participant add -c agntcy/ns/xyIGhc2igNGmkeBDlZ agntcy/ns/client-2
-./slimctl participant add -c agntcy/ns/xyIGhc2igNGmkeBDlZ agntcy/ns/client-3
+./slimctl controller participant add -c agntcy/ns/xyIGhc2igNGmkeBDlZ agntcy/ns/client-2
+./slimctl controller participant add -c agntcy/ns/xyIGhc2igNGmkeBDlZ agntcy/ns/client-3
 ```
 
 The expected `slimctl` output is:
@@ -813,7 +813,7 @@ At this point, every member can send messages, and they will be received by all 
 To remove one of the participants from the channel, run the following command:
 
 ```bash
-./slimctl participant delete -c agntcy/ns/xyIGhc2igNGmkeBDlZ agntcy/ns/client-3
+./slimctl c participant delete -c agntcy/ns/xyIGhc2igNGmkeBDlZ agntcy/ns/client-3
 ```
 
 The `slimctl` expected output is this:
@@ -833,7 +833,7 @@ equivalent to deleting the channel itself.
 To delete the channel, run the following command:
 
 ```bash
-./slimctl channel delete agntcy/ns/xyIGhc2igNGmkeBDlZ
+./slimctl controller channel delete agntcy/ns/xyIGhc2igNGmkeBDlZ
 ```
 
 The `slimctl` output is this:
