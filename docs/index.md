@@ -46,7 +46,7 @@ The initial set of IoA components and architecture is outlined below. This is a 
 1. **[Observability and Evaluation](./obs-and-eval/observe-and-eval.md)**: Telemetry collectors, tools and services to enable multi-agent application observability and evaluation.
 1. **Security**: Tools and services to trust and  protect multi-agent applications.
 
-[CoffeeAGNTCY](./coffee-agntcy/get-started.md) is a reference implementation demopnsttrating the core components that can be used to build multi-agent applications.
+[CoffeeAGNTCY](./coffee-agntcy/get-started.md) is a reference implementation demonstrating the core components that can be used to build multi-agent applications.
 
 The following diagram shows a simplified architecture of the core components described above.
 

@@ -127,7 +127,7 @@ performed in the application.
 To create the group, run:
 
 ```bash
-./slimctl channel create moderators=agntcy/ns/client-1/9494657801285491688
+./slimctl controller channel create moderators=agntcy/ns/client-1/9494657801285491688
 ```
 
 The outcome should be something similar to this:
@@ -145,7 +145,7 @@ Now that the channel is created, you can start to invite new participants. To do
 the following command:
 
 ```bash
-./slimctl participant add -c agntcy/ns/xyIGhc2igNGmkeBDlZ agntcy/ns/client-2
+./slimctl controller participant add -c agntcy/ns/xyIGhc2igNGmkeBDlZ agntcy/ns/client-2
 ```
 
 The reply to the command should be similar to this:

@@ -1,9 +1,9 @@
 nav:
   - Overview: overview.md
+  - Getting Started: getting-started.md
   - Architecture: architecture.md
   - Records: ads-records.md
   - Trust Model: trust-model.md
-  - Getting Started: getting-started.md
   - Features and Usage: scenarios.md
   - Event Streaming: events.md
   - Hosted AGNTCY Agent Directory: hosted-agent-directory.md

@@ -23,6 +23,7 @@ dependencies = [
     "beautifulsoup4>=4.13.3",
     "mkdocs-swagger-ui-tag==0.7.1",
     "mkdocs-include-markdown-plugin>=7.2.0",
+    "mkdocs-redirects>=1.2.0",
     # Linting and testing tools
     "codespell>=2.2.0",
     "pymarkdownlnt>=0.9.0",

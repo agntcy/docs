@@ -32,6 +32,10 @@ hooks:
 
 plugins:
   search:
+  redirects:
+    redirect_maps:
+      'how-to-guides/identity-quickstart/index.md': 'identity/identity-quickstart.md'
+      'how-to-guides/agent-directory/index.md': 'dir/getting-started.md'
   awesome-pages:
     filename: ".index"
     collapse_single_pages: true
