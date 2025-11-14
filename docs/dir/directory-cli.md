@@ -67,62 +67,6 @@ The following example demonstrates how to store, publish, search, and retrieve a
     dirctl pull baeareihdr6t7s6sr2q4zo456sza66eewqc7huzatyfgvoupaqyjw23ilvi
     ```
 
-## Output Formats
-
-All `dirctl` commands support multiple output formats via the `--output` (or `-o`) flag, making it easy to switch between human-readable output and machine-processable formats.
-
-### Available Formats
-
-| Format | Description | Use Case |
-|--------|-------------|----------|
-| `human` | Human-readable, formatted output with colors and tables (default) | Interactive terminal use |
-| `json` | Pretty-printed JSON with indentation | Debugging, single-record processing |
-| `jsonl` | Newline-delimited JSON (compact, one object per line) | Streaming, batch processing, logging |
-| `raw` | Raw values only (e.g., CIDs, IDs) | Shell scripting, piping to other commands |
-
-### Usage
-
-```bash
-# Human-readable output (default)
-dirctl routing list
-
-# JSON output (pretty-printed)
-dirctl routing list --output json
-dirctl routing list -o json
-
-# JSONL output (streaming-friendly)
-dirctl events listen --output jsonl
-
-# Raw output (just values)
-dirctl push my-agent.json --output raw
-```
-
-### Piping and Processing
-
-Structured formats (`json`, `jsonl`, `raw`) automatically route data to **stdout** and metadata messages to **stderr**, enabling clean piping to tools like `jq`:
-
-```bash
-# Process JSON output with jq
-dirctl routing search --skill "AI" -o json | jq '.[] | .cid'
-
-# Stream events and filter by type
-dirctl events listen -o jsonl | jq -c 'select(.type == "EVENT_TYPE_RECORD_PUSHED")'
-
-# Capture CID for scripting
-CID=$(dirctl push my-agent.json -o raw)
-echo "Stored with CID: $CID"
-
-# Chain commands
-dirctl routing list -o json | jq -r '.[].cid' | xargs -I {} dirctl pull {}
-```
-
-### Format Selection Guidelines
-
-- **`human`**: Default for terminal interaction, provides context and formatting
-- **`json`**: Best for debugging or when you need readable structured data
-- **`jsonl`**: Ideal for streaming events, logs, or processing large result sets line-by-line
-- **`raw`**: Perfect for shell scripts and command chaining where you only need the value
-
 ## Directory MCP Server
 
 The Directory MCP Server provides a standardized interface for AI assistants and tools to interact with the AGNTCY Agent Directory and work with OASF agent records.
@@ -221,6 +165,62 @@ Using the Directory MCP Server, you can access the following tools:
 - `agntcy_dir_search_local` - Searches for agent records on the local directory node using structured query filters.
 
 For a full list of tools and usage examples, see the [Directory MCP Server documentation](https://github.com/agntcy/dir/blob/main/mcp/README.md).
+
+## Output Formats
+
+All `dirctl` commands support multiple output formats via the `--output` (or `-o`) flag, making it easy to switch between human-readable output and machine-processable formats.
+
+### Available Formats
+
+| Format | Description | Use Case |
+|--------|-------------|----------|
+| `human` | Human-readable, formatted output with colors and tables (default) | Interactive terminal use |
+| `json` | Pretty-printed JSON with indentation | Debugging, single-record processing |
+| `jsonl` | Newline-delimited JSON (compact, one object per line) | Streaming, batch processing, logging |
+| `raw` | Raw values only (e.g., CIDs, IDs) | Shell scripting, piping to other commands |
+
+### Usage
+
+```bash
+# Human-readable output (default)
+dirctl routing list
+
+# JSON output (pretty-printed)
+dirctl routing list --output json
+dirctl routing list -o json
+
+# JSONL output (streaming-friendly)
+dirctl events listen --output jsonl
+
+# Raw output (just values)
+dirctl push my-agent.json --output raw
+```
+
+### Piping and Processing
+
+Structured formats (`json`, `jsonl`, `raw`) automatically route data to **stdout** and metadata messages to **stderr**, enabling clean piping to tools like `jq`:
+
+```bash
+# Process JSON output with jq
+dirctl routing search --skill "AI" -o json | jq '.[] | .cid'
+
+# Stream events and filter by type
+dirctl events listen -o jsonl | jq -c 'select(.type == "EVENT_TYPE_RECORD_PUSHED")'
+
+# Capture CID for scripting
+CID=$(dirctl push my-agent.json -o raw)
+echo "Stored with CID: $CID"
+
+# Chain commands
+dirctl routing list -o json | jq -r '.[].cid' | xargs -I {} dirctl pull {}
+```
+
+### Format Selection Guidelines
+
+- **`human`**: Default for terminal interaction, provides context and formatting
+- **`json`**: Best for debugging or when you need readable structured data
+- **`jsonl`**: Ideal for streaming events, logs, or processing large result sets line-by-line
+- **`raw`**: Perfect for shell scripts and command chaining where you only need the value
 
 ## Command Reference
 
