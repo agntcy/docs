@@ -17,6 +17,28 @@ All pull requests should solve an existing issue. Make sure to add the issue num
 
 To submit a new pull request, fork the repository. Create a new branch for your feature or fix. Make your changes then submit a pull request.
 
+## Moving or Renaming Documentation Files
+
+If you move or rename a documentation file, **you must add a redirect** to preserve existing links. This ensures that bookmarks, external links, and search engine results continue to work.
+
+To add a redirect:
+
+1. Open `mkdocs/mkdocs.yml`
+1. Add an entry to the `redirect_maps` under the `redirects` plugin:
+
+    ```yaml
+    plugins:
+      - redirects:
+          redirect_maps:
+            'old/path/to/file.md': 'new/path/to/file.md'
+    ```
+
+1. Test the redirect locally by running `task build` or `task run` and verifying the old URL redirects to the new location
+
+!!! warning
+
+    Failing to add redirects will result in broken links and a poor user experience. Always add redirects when moving content.
+
 ## Markdown and Writing Style
 
 Generic markdown intro (if needed):
