@@ -7,6 +7,8 @@ scenarios. All code snippets below are tested against the Directory `v0.3.0` rel
     Although the following example is shown for a CLI-based usage scenario, the same
     functionality can be performed using language-specific SDKs.
 
+The Agent Directory Service is also accessible through the Directory MCP Server. It provides a standardized interface for AI assistants and tools to interact with the Directory system and work with OASF agent records. See the [Directory CLI Reference](directory-cli.md#directory-mcp-server) for more information.
+
 ## Prerequisites
 
 The following prerequisites are required to follow the examples below:
@@ -384,7 +386,7 @@ match specific criteria:
 ```bash
 # Search for agents with a given skill across
 # the network and sync them automatically
-dirctl routing search --skill "Audio" --json | dirctl sync create --stdin
+dirctl routing search --skill "Audio" --output json | dirctl sync create --stdin
 ```
 
 This creates separate sync operations for each remote peer found in the search results,

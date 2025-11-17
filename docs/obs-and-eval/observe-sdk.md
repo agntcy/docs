@@ -13,6 +13,7 @@ For more information, see the [schema directory in the observe repository](https
 We provide a framework‑agnostic, OTel‑compliant observability SDK for multi‑agent systems. Each agent in the MAS can be instrumented by applying lightweight decorators to key functions or by using native OpenTelemetry primitives directly. The SDK exports metrics and traces using the [OpenTelemetry (OTel)](https://opentelemetry.io/) standard.
 
 OTel is central to effective MAS observability as it provides:
+
 - **Unified telemetry collection:** A single, vendor‑neutral API/SDK for metrics, traces, and (optionally) logs across heterogeneous agent components.
 - **Consistent instrumentation & standardization:** Semantic conventions and stable APIs ensure uniform telemetry shape, enabling backend flexibility without re‑instrumentation.
 - **Distributed tracing for complex workflows:** OTel’s tracing links agent spans, LLM calls, and tool interactions into an end‑to‑end execution graph—critical for understanding non‑deterministic decision paths and debugging across agent boundaries.

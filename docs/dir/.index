@@ -1,16 +1,12 @@
 nav:
   - Overview: overview.md
+  - Getting Started: getting-started.md
   - Architecture: architecture.md
   - Records: ads-records.md
   - Trust Model: trust-model.md
-  - Getting Started: getting-started.md
   - Features and Usage: scenarios.md
+  - Event Streaming: events.md
   - Hosted AGNTCY Agent Directory: hosted-agent-directory.md
   - CLI Reference: directory-cli.md
   - SDK Reference: directory-sdk.md
-  - API Reference:
-    - Core: dir-core-v1-api.md
-    - Routing: dir-routing-v1-api.md
-    - Search: dir-search-v1-api.md
-    - Sign: dir-sign-v1-api.md
-    - Store: dir-store-v1-api.md
+  - API Reference: dir-api-reference.md

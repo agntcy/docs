@@ -2,7 +2,7 @@
 
 AGNTCY supports various types of Verifiable Credentials (VCs). A verifiable credential is a structured and cryptographically verifiable way to express claims made by an issuer. These claims can pertain to:
 
-- Agent definitions (for example, an [OASF definition](../oasf/open-agentic-schema-framework.md) or an [A2A Agent Card](https://google.github.io/A2A/specification/agent-card/))
+- Agent definitions (for example, an [OASF definition](../oasf/open-agentic-schema-framework.md) or an [A2A Agent Card](https://a2a-protocol.org/latest/topics/key-concepts/))
 - Deployment configurations
 - Authorization assertions used in processes such as Multi-Factor Authentication (MFA)
 

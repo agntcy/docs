@@ -82,7 +82,7 @@ Hence, the A2A model may benefit from the use of verifiable identities and `Reso
 ID: A2A-Agent_ID
 ```
 
-In the [Agent2Agent (A2A) model](https://google.github.io/A2A/#/documentation), the `ID` could be represented by a URL, e.g., hosted at `https://YOUR-DOMAIN/.well-known/agent.json`, which links to a structured metadata file in the form of an [Agent Card](https://google.github.io/A2A/specification/agent-card/).
+In the [Agent2Agent (A2A) model](https://a2a-protocol.org/latest/#/documentation), the `ID` could be represented by a URL, e.g., hosted at `https://YOUR-DOMAIN/.well-known/agent.json`, which links to a structured metadata file in the form of an [Agent Card](https://a2a-protocol.org/latest/topics/key-concepts/).
 
 ### ResolverMetadata
 

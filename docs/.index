@@ -6,11 +6,6 @@ nav:
   - Identity: identity
   - Observability and Evaluation: obs-and-eval
   - CSIT: csit
-  - CoffeeAGNTCY: coffee-agntcy
-  - Semantic SDK: semantic
-  - Syntactic SDK: syntactic
-  - Agent Workflow Server: agws
-  - Agent Manifest: manifest
-  - How-To Guides: how-to-guides
+  - Getting Started: coffee-agntcy
   - Glossary: glossary.md
   - How to Contribute: contributing.md
