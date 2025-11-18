@@ -6,7 +6,7 @@ participants. Messages are sent to a shared channel where every member can read
 and write. All messages are end-to-end encrypted using the
 [MLS protocol](https://datatracker.ietf.org/doc/html/rfc9420). This tutorial is
 based on the
-[group.py](https://github.com/agntcy/slim/blob/slim-v0.6.0/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py)
+[group.py](https://github.com/agntcy/slim/blob/slim-v0.7.0/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py)
 example in the SLIM repo.
 
 ## Key Features
@@ -26,7 +26,7 @@ Every participant in a group requires a unique identity for authentication and f
 
 ### Identity
 
-Each participant must have a unique identity. This is required to set up end-to-end encryption using the MLS protocol. The identity can be a JWT or a shared secret. For simplicity, this example uses a shared secret. For JWT-based identity, see the [tutorial](https://github.com/agntcy/slim/tree/slim-v0.6.0/data-plane/python/bindings/examples#running-in-kubernetes-spire--jwt) in the SLIM repository.
+Each participant must have a unique identity. This is required to set up end-to-end encryption using the MLS protocol. The identity can be a JWT or shared secret. For simplicity, this example uses a shared secret. For JWT-based identity, see the [tutorial](https://github.com/agntcy/slim/tree/slim-v0.7.0/data-plane/python/bindings/examples#running-in-kubernetes-spire--jwt) in the SLIM repository.
 
 The Python objects managing the identity are called `PyIdentityProvider` and `PyIdentityVerifier`. The `PyIdentityProvider` provides the identity, while the `PyIdentityVerifier` verifies it:
 
@@ -34,30 +34,23 @@ The Python objects managing the identity are called `PyIdentityProvider` and `Py
 def shared_secret_identity(identity: str, secret: str):
     """
     Create a provider & verifier pair for shared-secret (symmetric) authentication.
-
-    Args:
-        identity: Logical identity string (often same as PyName string form).
-        secret: Shared secret used to sign / verify tokens (not for production).
-
-    Returns:
-        (provider, verifier): Tuple of PyIdentityProvider & PyIdentityVerifier.
     """
-    provider = slim_bindings.PyIdentityProvider.SharedSecret(  # type: ignore
+    provider = slim_bindings.IdentityProvider.SharedSecret(
         identity=identity, shared_secret=secret
     )
-    verifier = slim_bindings.PyIdentityVerifier.SharedSecret(  # type: ignore
+    verifier = slim_bindings.IdentityVerifier.SharedSecret(
         identity=identity, shared_secret=secret
     )
     return provider, verifier
 ```
 
 This is a helper function defined in
-[common.py](https://github.com/agntcy/slim/blob/slim-v0.6.0/data-plane/python/bindings/examples/src/slim_bindings_examples/common.py#L85)
+[common.py](https://github.com/agntcy/slim/blob/slim-v0.7.0/data-plane/python/bindings/examples/src/slim_bindings_examples/common.py#L85)
 that can be used to create a `PyIdentityProvider` and `PyIdentityVerifier` from two input strings.
 
 ### SLIM App
 
-The provider and verifier are used to create a local SLIM application that can exchange messages with other participants via the SLIM network. To create the SLIM app, use the helper function defined in [common.py](https://github.com/agntcy/slim/blob/slim-v0.6.0/data-plane/python/bindings/examples/src/slim_bindings_examples/common.py#L289):
+The provider and verifier are used to create a local SLIM application that can exchange messages with other participants via the SLIM network. To create the SLIM app, use the helper function defined in [common.py](https://github.com/agntcy/slim/blob/slim-v0.7.0/data-plane/python/bindings/examples/src/slim_bindings_examples/common.py#L289):
 
 ```python
 async def create_local_app(
@@ -65,10 +58,13 @@ async def create_local_app(
     slim: dict,
     remote: str | None = None,
     enable_opentelemetry: bool = False,
-    shared_secret: str = "secret",
+    shared_secret: str = "abcde-12345-fedcb-67890-deadc",
     jwt: str | None = None,
     spire_trust_bundle: str | None = None,
     audience: list[str] | None = None,
+    spire_socket_path: str | None = None,
+    spire_target_spiffe_id: str | None = None,
+    spire_jwt_audience: list[str] | None = None,
 ):
     """
     Build and connect a Slim application instance given user CLI parameters.
@@ -111,21 +107,26 @@ async def create_local_app(
             spire_trust_bundle,
             aud=audience,
         )
-    else:
-        print(
-            "Warning: Falling back to shared-secret authentication. Don't use this in production!"
+    elif spire_socket_path or spire_target_spiffe_id or spire_jwt_audience:
+        print("Using SPIRE dynamic identity authentication.")
+        provider, verifier = spire_identity(
+            socket_path=spire_socket_path,
+            target_spiffe_id=spire_target_spiffe_id,
+            jwt_audiences=spire_jwt_audience,
         )
-        # Fall back to shared secret (dev-friendly default).
+    else:
+        print("Using shared-secret authentication.")
+        # Fall back to shared secret.
         provider, verifier = shared_secret_identity(
             identity=local,
             secret=shared_secret,
         )
 
-    # Convert local identifier to a strongly typed PyName.
+    # Convert local identifier to a strongly typed Name.
     local_name = split_id(local)
 
-    # Instantiate Slim (async constructor prepares underlying PyService).
-    local_app = await slim_bindings.Slim.new(local_name, provider, verifier)
+    # Instantiate Slim (async constructor prepares underlying Service).
+    local_app = slim_bindings.Slim(local_name, provider, verifier)
 
     # Provide feedback to user (instance numeric id).
     format_message_print(f"{local_app.id_str}", "Created app")
@@ -159,7 +160,7 @@ This function takes several parameters as input:
 - `jwt` (str | None, default: `None`): JWT token for identity. Used with
     `spire_trust_bundle` and `audience` for JWT-based authentication.
 - `spire_trust_bundle` (str | None, default: `None`): JWT trust bundle
-  (list of JWKs, one for each trust domain). It is expected in JSON format such as:
+  (list of JWKs, one for each trust domain). Expected in JSON format such as:
 
     ```json
     {
@@ -171,14 +172,30 @@ This function takes several parameters as input:
 
 - `audience` (list[str] | None, default: `None`): List of allowed audiences for
     JWT authentication.
+- `spire_socket_path` (str | None, default: `None`): Path to the SPIRE agent
+    socket for dynamic identity authentication. When provided along with
+    `spire_target_spiffe_id` and `spire_jwt_audience`, enables SPIRE-based
+    authentication.
+- `spire_target_spiffe_id` (str | None, default: `None`): The SPIFFE ID of the
+    target service for SPIRE authentication. Used in conjunction with
+    `spire_socket_path` and `spire_jwt_audience`.
+- `spire_jwt_audience` (list[str] | None, default: `None`): List of audiences
+    for SPIRE JWT authentication. Required when using SPIRE dynamic identity
+    authentication along with `spire_socket_path` and `spire_target_spiffe_id`.
 
-If `jwt`, `spire_trust_bundle`, and `audience` are not provided, `shared_secret` must be set (only recommended for local testing or examples, not production). In this example, we use the shared secret option, but the same function supports all authentication flows.
+The function supports three authentication flows with the following precedence:
+
+1. JWT/JWKS authentication (if `jwt`, `spire_trust_bundle`, and `audience` are provided)
+2. SPIRE dynamic identity (if `spire_socket_path`, `spire_target_spiffe_id`, and `spire_jwt_audience` are provided)
+3. Shared secret authentication (fallback, only recommended for local testing or examples, not production)
+
+In this example, we use the shared secret option.
 
 ## Group Communication Using the Python Bindings
 
 Now that you know how to set up a SLIM application, we can see how to create a group where multiple participants can exchange messages. We start by showing how to create a group session using the Python bindings.
 
-In this setting, one participant acts as moderator: it creates the group session and invites participants by sending invitation control messages. A detailed description of group sessions and the invitation process is available [here](https://github.com/agntcy/slim/blob/slim-v0.6.0/data-plane/python/bindings/SESSION.md).
+In this setting, one participant acts as moderator: it creates the group session and invites participants by sending invitation control messages. A detailed description of group sessions and the invitation process is available [here](https://github.com/agntcy/slim/blob/slim-v0.7.0/data-plane/python/bindings/SESSION.md).
 
 ### Creating the Group Session and Inviting Members
 
@@ -196,76 +213,84 @@ end-to-end encrypted, providing confidentiality and integrity for the group
 communication.
 
 ```python
-    # Create & connect the local Slim instance (auth derived from args).
-    local_app = await create_local_app(
-        local,
-        slim,
-        enable_opentelemetry=enable_opentelemetry,
-        shared_secret=shared_secret,
-        jwt=jwt,
-        spire_trust_bundle=spire_trust_bundle,
-        audience=audience,
+# Create & connect the local Slim instance (auth derived from args).
+local_app = await create_local_app(
+    local,
+    slim,
+    enable_opentelemetry=enable_opentelemetry,
+    shared_secret=shared_secret,
+    jwt=jwt,
+    spire_trust_bundle=spire_trust_bundle,
+    audience=audience,
+    spire_socket_path=spire_socket_path,
+    spire_target_spiffe_id=spire_target_spiffe_id,
+    spire_jwt_audience=spire_jwt_audience,
+)
+
+# Parse the remote channel/topic if provided; else None triggers passive mode.
+chat_channel = split_id(remote) if remote else None
+
+# Track background tasks (receiver loop + optional keyboard loop).
+tasks: list[asyncio.Task] = []
+
+# Session sharing between tasks
+session_ready = asyncio.Event()
+shared_session_container = [None]  # Use list to make it mutable across functions
+
+# Session object only exists immediately if we are moderator.
+created_session = None
+if chat_channel and invites:
+    # We are the moderator; create the group session now.
+    format_message_print(
+        f"Creating new group session (moderator)... {split_id(local)}"
+    )
+    config = slim_bindings.SessionConfiguration.Group(
+        max_retries=5,  # Max per-message resend attempts upon missing ack before reporting a delivery failure.
+        timeout=datetime.timedelta(
+            seconds=5
+        ),  # Ack / delivery wait window; after this duration a retry is triggered (until max_retries).
+        mls_enabled=enable_mls,  # Enable Messaging Layer Security for end-to-end encrypted & authenticated group communication.
     )
 
-    # Parse the remote channel/topic if provided; else None triggers passive mode.
-    chat_channel = split_id(remote) if remote else None
+    created_session, handle = await local_app.create_session(
+        chat_channel,  # Logical group channel (Name) all participants join; acts as group/topic identifier.
+        config,  # session configuration
+    )
 
-    # Track background tasks (receiver loop + optional keyboard loop).
-    tasks: list[asyncio.Task] = []
+    await handle
 
-    # Session sharing between tasks
-    session_ready = asyncio.Event()
-    shared_session_container = [None]  # Use list to make it mutable across functions
-
-    # Session object only exists immediately if we are moderator.
-    created_session = None
-    if chat_channel and invites:
-        # We are the moderator; create the group session now.
-        format_message_print(
-            f"Creating new group session (moderator)... {split_id(local)}"
-        )
-        created_session = await local_app.create_session(
-            slim_bindings.PySessionConfiguration.Group(  # type: ignore  # Build group session configuration
-                channel_name=chat_channel,  # Logical group channel (PyName) all participants join; acts as group/topic identifier.
-                max_retries=5,  # Max per-message resend attempts upon missing ack before reporting a delivery failure.
-                timeout=datetime.timedelta(
-                    seconds=5
-                ),  # Ack / delivery wait window; after this duration a retry is triggered (until max_retries).
-                mls_enabled=enable_mls,  # Enable Messaging Layer Security for end-to-end encrypted & authenticated group communication.
-            )
-        )
-
-        # Small delay so underlying routing / session creation stabilizes.
-        await asyncio.sleep(1)
-
-        # Invite each provided participant. Route is set before inviting to ensure
-        # outbound control messages can reach them. For more info see
-        # https://github.com/agntcy/slim/blob/slim-v0.6.0/data-plane/python/bindings/SESSION.md#invite-a-new-participant
-        for invite in invites:
-            invite_name = split_id(invite)
-            await local_app.set_route(invite_name)
-            await created_session.invite(invite_name)
-            print(f"{local} -> add {invite_name} to the group")
+    # Invite each provided participant. Route is set before inviting to ensure
+    # outbound control messages can reach them. For more info, see
+    # https://github.com/agntcy/slim/blob/main/data-plane/python/bindings/SESSION.md#invite-a-new-participant
+    for invite in invites:
+        invite_name = split_id(invite)
+        await local_app.set_route(invite_name)
+        handle = await created_session.invite(invite_name)
+        await handle
+        print(f"{local} -> add {invite_name} to the group")
 ```
 
 This code comes from the
-[group.py](https://github.com/agntcy/slim/blob/slim-v0.6.0/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py)
+[group.py](https://github.com/agntcy/slim/blob/slim-v0.7.0/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py)
 example. The local application is created using the helper function shown earlier.
 The channel name (the logical group topic) is produced via the
-[split_id](https://github.com/agntcy/slim/blob/slim-v0.6.0/data-plane/python/bindings/examples/src/slim_bindings_examples/common.py#L63)
-helper by parsing the `remote` parameter. A new group session is then created
-using `local_app.create_session(...)` with a
-`slim_bindings.PySessionConfiguration.Group` configuration. The key parameters are the following:
+[split_id](https://github.com/agntcy/slim/blob/slim-v0.7.0/data-plane/python/bindings/examples/src/slim_bindings_examples/common.py#L63)
+helper by parsing the `remote` parameter. 
 
-- `channel_name`: Logical channel/topic used to exchange messages among participants.
+A new group session is created by calling `local_app.create_session(...)` with two parameters:
+the channel name and a `slim_bindings.SessionConfiguration.Group` configuration object.
+The `create_session` call returns a tuple containing the session object and a handle that must be awaited.
+The key configuration parameters to setup the `SessionConfiguration` are:
+
 - `max_retries`: Maximum number of retransmission attempts (upon missing ack) before
     notifying the application of delivery failure.
-- `timeout`: Duration to wait for an acknowledgment; if the ack is not received in time a retry is triggered. If
+- `timeout`: Duration to wait for an acknowledgment; if the ack is not received in time, a retry is triggered. If
     omitted / None, the session is unreliable (no retry/ack flow).
 - `mls_enabled`: Set to `True` to enable MLS for end-to-end encryption.
 
-After the session creation, the moderator invites participants via `created_session.invite`.
-Before sending each invitation it must call `local_app.set_route(invite_name)` so
+After the session creation, the moderator invites participants via `created_session.invite(invite_name)`.
+Each `invite` call returns a handle that should be awaited to ensure the invitation completes.
+Before sending each invitation, the moderator must call `local_app.set_route(invite_name)` so
 SLIM knows how to deliver the control messages.
 
 ### Implement Participants and Receive Messages
@@ -300,7 +325,7 @@ async def receive_loop(
         try:
             # Await next inbound message from the group session.
             # The returned parameters are a message context and the raw payload bytes.
-            # Check session.py for details on PyMessageContext contents.
+            # Check session.py for details on MessageContext contents.
             ctx, payload = await session.get_message()
             print_formatted_text(
                 f"{ctx.source_name} > {payload.decode()}",
@@ -316,15 +341,14 @@ async def receive_loop(
 ```
 
 Each non-moderator participant listens for an incoming session using
-`local_app.listen_for_session()`. This returns a
-[PySession](https://github.com/agntcy/slim/blob/slim-v0.6.0/data-plane/python/bindings/slim_bindings/session.py)
-object containing metadata such as session ID, type, source name, and destination name.
+`local_app.listen_for_session()`. This returns a session object containing metadata 
+such as session ID, type, source name, and destination name.
 The moderator already holds this information and therefore reuses the existing
 `created_session` (see `session = created_session`).
 
 Participants (including the moderator) then call `ctx, payload = await session.get_message()` to receive
 messages. `payload` contains the raw message bytes and `ctx` is a
-[PyMessageContext](https://github.com/agntcy/slim/blob/slim-v0.6.0/data-plane/python/bindings/slim_bindings/_slim_bindings.pyi#L22)
+[MessageContext](https://github.com/agntcy/slim/blob/slim-v0.7.0/data-plane/python/bindings/slim_bindings/session.py)
 with source, destination, message type, and metadata.
 
 ### Publish Messages to the Session
@@ -337,7 +361,7 @@ async def keyboard_loop(session_ready, shared_session_container, local_app):
     Interactive loop allowing participants to publish messages.
 
     Typing 'exit' or 'quit' (case-insensitive) terminates the loop.
-    Each line is published to the group topic as UTF-8 bytes.
+    Each line is published to the group channel as UTF-8 bytes.
     """
     try:
         # 1. Initialize an async session
@@ -359,34 +383,40 @@ async def keyboard_loop(session_ready, shared_session_container, local_app):
 
             if user_input.lower() in ("exit", "quit"):
                 # Also terminate the receive loop.
-                await local_app.delete_session(shared_session_container[0])
+                handle = await local_app.delete_session(shared_session_container[0])
+                await handle
                 break
 
-            try:
-                # Send message to the channel_name specified when creating the session.
-                # As the session is group, all participants will receive it.
-                # calling publish_with_destination on a group session will raise an error.
-                await shared_session_container[0].publish(user_input.encode())
-            except KeyboardInterrupt:
-                # Handle Ctrl+C gracefully
-                break
-            except Exception as e:
-                print_formatted_text(f"-> Error sending message: {e}")
+            # Send message to the channel_name specified when creating the session.
+            # As the session is group, all participants will receive it.
+            await shared_session_container[0].publish(user_input.encode())
+    except KeyboardInterrupt:
+        # Handle Ctrl+C gracefully
+        pass
     except asyncio.CancelledError:
         # Handle task cancellation gracefully
         pass
+    except Exception as e:
+        print_formatted_text(f"-> Error sending message: {e}")
 ```
 
 Messages are sent using `shared_session_container[0].publish(user_input.encode())`.
 Only the payload is provided and there is no explicit destination, because the
-group channel was fixed at session creation and delivery fan-outs to all
+group channel was fixed at session creation and delivery fans out to all
 participants.
+
+When a user types 'exit' or 'quit', the application calls `local_app.delete_session()`
+which returns a handle that must be awaited to ensure proper session cleanup before
+terminating the loop. When the moderator closes the session,
+all other participants are automatically notified, causing their receive loops to terminate
+and their sessions to close gracefully. If the session closure is initiated by a participant,
+only their local session is closed.
 
 ### Run the Group Communication Example
 
 Now we will show how to run a new group session and
 how to enable group communication on top of SLIM. The full code can be found in
-[group.py](https://github.com/agntcy/slim/blob/slim-v0.6.0/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py)
+[group.py](https://github.com/agntcy/slim/blob/slim-v0.7.0/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py)
 in the SLIM repo. To run the example, follow the steps listed here:
 
 #### Run SLIM
@@ -396,7 +426,7 @@ up a SLIM instance representing the SLIM network. We use the pre-built
 docker image for this purpose.
 
 First execute this command to create the SLIM configuration file. Details about
-the [configuration](https://github.com/agntcy/slim/tree/slim-v0.6.0/data-plane/config)
+the [configuration](https://github.com/agntcy/slim/tree/slim-v0.7.0/data-plane/config)
 can be found in the SLIM repo.
 
 ```bash
@@ -436,7 +466,7 @@ You can run the SLIM instance using Docker:
 ```bash
 docker run -it \
     -v ./config.yaml:/config.yaml -p 46357:46357 \
-    ghcr.io/agntcy/slim:0.6.0 /slim --config /config.yaml
+    ghcr.io/agntcy/slim:0.7.0 /slim --config /config.yaml
 ```
 
 If everything goes fine, you should see an output like this one:
@@ -451,7 +481,7 @@ If everything goes fine, you should see an output like this one:
 
 #### Start the Participants
 
-In this example we use two participants: `agntcy/ns/client-1` and `agntcy/ns/client-2`.
+In this example, we use two participants: `agntcy/ns/client-1` and `agntcy/ns/client-2`.
 Authentication uses a shared secret. In the SLIM repository, go to the folder
 `slim/data-plane/python/bindings/examples` and run these commands in two different terminals:
 
@@ -459,18 +489,18 @@ Authentication uses a shared secret. In the SLIM repository, go to the folder
 uv run --package slim-bindings-examples group                               \
     --local agntcy/ns/client-1                                                  \
     --slim '{"endpoint": "http://localhost:46357", "tls": {"insecure": true}}'  \
-    --shared-secret "secret"
+    --shared-secret "very-long-shared-secret-value-0123456789abcdef"
 ```
 
 ```bash
 uv run --package slim-bindings-examples group                               \
     --local agntcy/ns/client-2                                                  \
     --slim '{"endpoint": "http://localhost:46357", "tls": {"insecure": true}}'  \
-    --shared-secret "secret"
+    --shared-secret "very-long-shared-secret-value-0123456789abcdef"
 
 ```
 
-This start two participants authenticated with a shared secret.
+This starts two participants authenticated with a shared secret.
 The output of these commands should look like this:
 
 ```bash
@@ -489,7 +519,7 @@ participants. In another terminal run:
 uv run --package slim-bindings-examples group                               \
     --local agntcy/ns/moderator                                                 \
     --slim '{"endpoint": "http://localhost:46357", "tls": {"insecure": true}}'  \
-    --shared-secret "secret"                                                    \
+    --shared-secret "very-long-shared-secret-value-0123456789abcdef"            \
     --remote agntcy/ns/chat                                                     \
     --invites agntcy/ns/client-1                                                \
     --invites agntcy/ns/client-2                                                \
@@ -520,6 +550,8 @@ Send a message to the group, or type 'exit' or 'quit' to quit.
 
 At this point, you can write messages from any terminal and they will be received by all other group participants.
 
+Writing 'exit' or 'quit' from the moderator will close all the applications.
+
 ## Group Communication Using the SLIM Controller
 
 Previously, we saw how to run group communication using the Python bindings with an in-application moderator.
@@ -533,10 +565,10 @@ Identity handling is unchanged between the two approaches; refer back to [SLIM I
 
 With the controller, you do not need to set up a moderator in your application. All participants can be run as we did for `client-1` and `client-2` in the previous examples. In code, this means you can avoid creating a new group session (using `local_app.create_session`) and the invitation loop. You only need to implement the `receive_loop` where the application waits for new sessions. This greatly simplifies your code.
 
-### Run the Group Communication example
+### Run the Group Communication Example
 
 Now we will show how to set up a group using the SLIM Controller. The reference code for the
-application is still [group.py](https://github.com/agntcy/slim/blob/slim-v0.6.0/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py). To run this example, follow the steps listed here.
+application is still [group.py](https://github.com/agntcy/slim/blob/slim-v0.7.0/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py). To run this example, follow the steps listed here.
 
 #### Run the SLIM Controller
 
@@ -573,7 +605,7 @@ Start the controller with Docker:
 ```bash
 docker run -it \
     -v ./config-controller.yaml:/config.yaml -p 50051:50051 -p 50052:50052 \
-    ghcr.io/agntcy/slim/control-plane:0.6.0 --config /config.yaml
+    ghcr.io/agntcy/slim/control-plane:0.7.0 --config /config.yaml
 ```
 
 If everything goes fine, you should see an output like this:
@@ -624,7 +656,7 @@ services:
           tls:
             insecure: true
       token_provider:
-        shared_secret: "secret"
+        shared_secret: "very-long-shared-secret-value-0123456789abcdef"
 EOF
 ```
 
@@ -633,7 +665,7 @@ This starts a SLIM node that connects to the controller:
 ```bash
 docker run -it \
     -v ./config-slim.yaml:/config.yaml -p 46357:46357 \
-    ghcr.io/agntcy/slim:0.6.0 /slim --config /config.yaml
+    ghcr.io/agntcy/slim:0.7.0 /slim --config /config.yaml
 ```
 
 If everything goes fine, you should see an output like this one:
@@ -667,21 +699,21 @@ Because the controller manages the group lifecycle, no participant needs to be d
 uv run --package slim-bindings-examples group                               \
     --local agntcy/ns/client-1                                                  \
     --slim '{"endpoint": "http://localhost:46357", "tls": {"insecure": true}}'  \
-    --shared-secret "secret"
+    --shared-secret "very-long-shared-secret-value-0123456789abcdef"
 ```
 
 ```bash
 uv run --package slim-bindings-examples group                               \
     --local agntcy/ns/client-2                                                  \
     --slim '{"endpoint": "http://localhost:46357", "tls": {"insecure": true}}'  \
-    --shared-secret "secret"
+    --shared-secret "very-long-shared-secret-value-0123456789abcdef"
 ```
 
 ```bash
 uv run --package slim-bindings-examples group                               \
     --local agntcy/ns/client-3                                                  \
     --slim '{"endpoint": "http://localhost:46357", "tls": {"insecure": true}}'  \
-    --shared-secret "secret"
+    --shared-secret "very-long-shared-secret-value-0123456789abcdef"
 ```
 
 Each terminal should show output similar to:
@@ -733,7 +765,7 @@ if [ "$OS" != "linux" ] && [ "$OS" != "darwin" ]; then
 fi
 
 # Construct the download URL
-VERSION="v0.6.0"
+VERSION="v0.7.0"
 BINARY_NAME="slimctl-${OS}-${ARCH}"
 DOWNLOAD_URL="https://github.com/agntcy/slim/releases/download/slimctl-${VERSION}/${BINARY_NAME}"
 
@@ -842,4 +874,4 @@ The `slimctl` output is this:
 Channel deleted successfully with ID: agntcy/ns/xyIGhc2igNGmkeBDlZ
 ```
 
-All applications connected to the group stop because the receive loops end.
+All applications connected to the group stop as their receive loops terminate.

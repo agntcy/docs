@@ -3,15 +3,14 @@
 This document explains the SLIM session layer and the two supported session
 types. It helps you understand the two session interfaces, reliability, and security trade‑offs.
 
-The SLIM repository ships with practical, runnable [examples](https://github.com/agntcy/slim/tree/slim-v0.6.0/data-plane/python/bindings/examples) that demonstrate how to create sessions and exchange messages between applications using the Python bindings.
+The SLIM repository ships with practical, runnable [examples](https://github.com/agntcy/slim/tree/slim-v0.7.0/data-plane/python/bindings/examples) that demonstrate how to create sessions and exchange messages between applications using the Python bindings.
 
 ## Point-to-Point Session
 
 The point-to-point session enables point-to-point communication with a specific
-instance. This session
-performs a discovery phase to bind to one instance and all subsequent traffic in
-the session targets that same endpoint. With reliability enabled, each message in
-the session must be acked.
+instance. This session performs a discovery phase to bind to one instance and all
+subsequent traffic in the session targets that same endpoint. With reliability
+enabled, each message in the session must be acked.
 
 If MLS is enabled, the point-to-point session establishes a two‑member MLS group after
 discovery. This mirrors the Group flow but with only two participants
@@ -70,25 +69,30 @@ sequenceDiagram
 Using the SLIM Python bindings, you can create a point-to-point session as follows:
 
 ```python
-# Assume local_app is an initialized application instance
-session = await local_app.create_session(
-    slim_bindings.PySessionConfiguration.PointToPoint(
-        peer_name=remote_name,
-        max_retries=5,
-        timeout=datetime.timedelta(seconds=5),
-        mls_enabled=True,  # Enable MLS for end-to-end security
-    )
+config = slim_bindings.SessionConfiguration.PointToPoint(
+    max_retries=5,
+    timeout=datetime.timedelta(seconds=5),
+    mls_enabled=enable_mls,
 )
+session, handle = await local_app.create_session(remote_name, config)
+await handle
 ```
 
-Parameters:
+Config Parameters:
 
-* `peer_name` (required, PyName): Identifier of the remote participant
-    instance.
 * `max_retries` (optional, int): Retry attempts per message if Ack missing.
 * `timeout` (optional, timedelta): Wait per attempt for an Ack before retry.
     If `timeout` is not set, the session is best‑effort.
 * `mls_enabled` (optional, bool): Enable end‑to‑end encryption (MLS).
+
+Create Session Parameters:
+
+* `remote_name` (required, Name): Identifier of the remote participant
+    instance.
+* `config` (required, SessionConfiguration): The configuration object created for this session.
+
+The `await handle` guarantees that once returned all the underlying message exchange
+is done and the remote is correctly connected to the session.
 
 ### Sending and Replying in a Point-to-Point Session
 
@@ -99,8 +103,8 @@ and `publish_to` to reply using a previously received message context.
 This example shows how to send and reply in a point-to-point session:
 
 ```python
-# Send a message using publish it will reach the endpoint
-# specified and the session creation
+# Send a message using publish; it will reach the endpoint
+# specified at session creation
 await session.publish(b"hello")
 
 # Await reply from remote (pattern depends on your control loop)
@@ -114,9 +118,9 @@ await session.publish_to(msg_ctx, payload)
 
 ### Point-to-Point Example
 
-This [example](https://github.com/agntcy/slim/blob/slim-v0.6.0/data-plane/python/bindings/examples/src/slim_bindings_examples/point_to_point.py) walks through the creation of a point-to-point session. When running the point-to-point example multiple times, the session binds to different running instances, while the message stream always sticks to the same endpoint.
+This [example](https://github.com/agntcy/slim/blob/slim-v0.7.0/data-plane/python/bindings/examples/src/slim_bindings_examples/point_to_point.py) walks through the creation of a point-to-point session. When running the point-to-point example multiple times, the session binds to different running instances, while the message stream always sticks to the same endpoint.
 
-The example demonstrates how to publish messages, enable reliability, and enable MLS for end‑to‑end security. The associated [README](https://github.com/agntcy/slim/blob/slim-v0.6.0/data-plane/python/bindings/examples/src/slim_bindings_examples/README_point_to_point.md) shows more information and how to run the example using the Taskfile provided in the repository.
+The example demonstrates how to publish messages, enable reliability, and enable MLS for end‑to‑end security. The associated [README](https://github.com/agntcy/slim/blob/slim-v0.7.0/data-plane/python/bindings/examples/src/slim_bindings_examples/README_point_to_point.md) shows more information and how to run the example using the Taskfile provided in the repository.
 
 ## Group Session
 
@@ -138,25 +142,37 @@ name and specify reliability and security settings. Here is an
 example:
 
 ```python
-# Assume local_app is an initialized application instance
-session = await local_app.create_session(
-    slim_bindings.PySessionConfiguration.Group(
-        channel_name=chat_topic,
-        max_retries=5,
-        timeout=datetime.timedelta(seconds=5),
-        mls_enabled=True,
-    )
+config = slim_bindings.SessionConfiguration.Group(
+    max_retries=5,  # Max per-message resend attempts upon missing ack before reporting a delivery failure.
+    timeout=datetime.timedelta(
+        seconds=5
+    ),  # Ack / delivery wait window; after this duration a retry is triggered (until max_retries).
+    mls_enabled=enable_mls,  # Enable Messaging Layer Security for end-to-end encrypted & authenticated group communication.
 )
+
+created_session, handle = await local_app.create_session(
+    chat_channel,  # Logical group channel (Name) all participants join; acts as group/topic identifier.
+    config,  # session configuration
+)
+
+await handle
 ```
 
-Parameters:
+Config Parameters:
 
-* `topic` (required, PyName): Channel/Topic name where all the messages are
-    delivered.
-* `max_retries` (optional, int): Retry attempts for missing Acks.
-* `timeout` (optional, timedelta): Wait per attempt for Ack before retry.
-    If `timeout` is not set the session is best‑effort.
-* `mls_enabled` (optional, bool): Enable secure group MLS messaging.
+* `max_retries` (optional, int): Retry attempts per message if Ack missing.
+* `timeout` (optional, timedelta): Wait per attempt for an Ack before retry.
+    If `timeout` is not set, the session is best‑effort.
+* `mls_enabled` (optional, bool): Enable end‑to‑end encryption (MLS).
+
+Create Session Parameters:
+
+* `chat_channel` (required, Name): Identifier of the group channel that all
+    participants join.
+* `config` (required, SessionConfiguration): The configuration object created for this session.
+
+As in the case of point to point session, the `await handle` guarantees that once returned all the 
+underlying message exchange is completed.
 
 ### Sending and Replying in a Group Session
 
@@ -179,22 +195,26 @@ method after creating the session.
 
 ```python
 # After creating the session:
-invite_name = slim_bindings.PyName("agntcy", "ns", "participant")
-await local_app.set_route(invite_name)
-await session.invite(invite_name)
+for invite in invites:
+    invite_name = split_id(invite)
+    await local_app.set_route(invite_name)
+    handle = await created_session.invite(invite_name)
+    await handle
+    print(f"{local} -> add {invite_name} to the group")
 ```
 
 Parameters:
 
-* `invite_name` (PyName): Identifier of the participant to add.
+* `invite_name` (required, Name): Identifier of the participant to add.
 
 Notice the `await local_app.set_route(invite_name)` command before the invite.
 This instructs SLIM on how to forward a message with the specified name.
 This has to be done by the application for every invite.
 
-When a moderator wants to add a new participant (e.g., an instance of App-C) to
-a group session, the following steps occur. All the steps are visualized in
-the diagram below:
+The `await handle` returns once the remote participant is correctly added to the
+group and all the state on every participant is updated. In fact,
+when a moderator wants to add a new participant (e.g., an instance of App-C) to
+a group session, all the following steps need to be executed (see diagram below):
 
 1. **Discovery Phase:** The moderator initiates a discovery request to find a
     running instance of the desired application (App-C). This request is sent to
@@ -208,16 +228,20 @@ the diagram below:
     the channel, and replies with its MLS (Messaging Layer Security) key
     package. This reply is routed back to the moderator.
 
-3. **MLS State Update:** The moderator initiates an MLS commit to add App-C/1
+3. **Group State Update:** The moderator initiates an MLS commit to add App-C/1
     to the secure group. The message is sent using the channel name and so the
     SLIM Node distributes this commit to all current participants (App-B/2 and
-    App-A/1), who update their MLS state and acknowledge the commit. The
-    moderator collects all acknowledgments. Once all acknowledgments are
+    App-A/1), who update their MLS state and acknowledge the commit. This message
+    also contains the new list of participants in the group, in particular the
+    newly added participant. The
+    moderator collects all acknowledgments for the update message. Once all acknowledgments are
     received, the moderator sends an MLS Welcome message to App-C/1. App-C/1
-    initializes its MLS state and acknowledges receipt. At the end of this
+    initializes its MLS state, gets the current list of participants in the group
+    and acknowledges receipt. At the end of this
     process, all participants (including the new one) share a secure group state
     and can exchange encrypted messages on the group channel. If MLS is
-    disabled, the MLS state update and welcome step are skipped.
+    disabled, the update and welcome messages are used only to exchange the new list of
+    participants in the group, so that they are all aware of who is connected.
 
 ```mermaid
 sequenceDiagram
@@ -245,24 +269,24 @@ sequenceDiagram
     SLIM Node->>Moderator: Invite Reply (MLS key package)
     Moderator->>Moderator: Update MLS state
 
-    Note over Moderator,App-A/1: MLS State Update
-    Moderator->>SLIM Node: MLS commit (Add agntcy/ns/App-C/1) to Channel
-    par Handle MLS commit on App-C/1
-        SLIM Node->>App-B/2: MLS commit (Add agntcy/ns/App-C/1) to Channel
-        App-B/2->>App-B/2: Update MLS state
-        App-B/2->>SLIM Node: Ack(MLS Commit)
-        SLIM Node->>Moderator: Ack(MLS Commit)
-    and Handle MLS commit on App-A/1
-        SLIM Node->>App-A/1: MLS commit (Add agntcy/ns/App-C/1) to Channel
-        App-A/1->>App-A/1: Update MLS state
-        App-A/1->>SLIM Node: Ack(MLS Commit)
-        SLIM Node->>Moderator: Ack(MLS Commit)
+    Note over Moderator,App-A/1: Group State Update
+    Moderator->>SLIM Node: Group Update (Add agntcy/ns/App-C/1, MLS commit) to Channel
+    par Group State Update on App-C/1
+        SLIM Node->>App-B/2: Group Update (Add agntcy/ns/App-C/1, MLS commit) to Channel
+        App-B/2->>App-B/2: Update Group and MLS state
+        App-B/2->>SLIM Node: Ack(Group Update)
+        SLIM Node->>Moderator: Ack(Group Update)
+    and Group State Update on App-A/1
+        SLIM Node->>App-A/1: Group Update (Add agntcy/ns/App-C/1, MLS commit) to Channel
+        App-A/1->>App-A/1: Update Group and MLS state
+        App-A/1->>SLIM Node: Ack(Group Update)
+        SLIM Node->>Moderator: Ack(Group Update)
     end
-    Moderator->>SLIM Node: MLS Welcome agntcy/ns/App-C/1
-    SLIM Node->>App-C/1: MLS Welcome agntcy/ns/App-C/1
-    App-C/1->>App-C/1: Init MLS state
-    App-C/1->>SLIM Node: Ack(MLS Welcome)
-    SLIM Node->>Moderator: Ack(MLS Welcome)
+    Moderator->>SLIM Node: Welcome agntcy/ns/App-C/1
+    SLIM Node->>App-C/1: Welcome agntcy/ns/App-C/1
+    App-C/1->>App-C/1: Init Group and MLS state
+    App-C/1->>SLIM Node: Ack(Welcome)
+    SLIM Node->>Moderator: Ack(Welcome)
 ```
 
 ### Remove a Participant
@@ -274,24 +298,25 @@ This example shows how to remove a participant from a group session:
 
 ```python
 # To remove a participant from the session:
-remove_name = slim_bindings.PyName("agntcy", "ns", "participant")
 await session.remove(remove_name)
 ```
 
 Parameter:
 
-* `remove_name` (PyName): Identifier of the participant to remove.
+* `remove_name` (required, Name): Identifier of the participant to remove.
 
 When a moderator wants to remove a participant (e.g., App-C/1) from a group
 session, the following steps occur. All the steps are visualized in the diagram
 below:
 
-1. **MLS State Update:** The moderator creates an MLS commit to remove App-C/1
+1. **Group State Update:** The moderator creates an MLS commit to remove App-C/1
     from the secure group. This commit is sent to the group channel and the
     SLIM Node distributes it to all current participants (App-C/1, App-B/2, and
-    App-A/1). Each participant updates its MLS state and acknowledges the
-    commit. The moderator collects all acknowledgments. In case the MLS is
-    disabled, this step is not executed.
+    App-A/1). The message also contains the name of the participant to remove so
+    that all the endpoints can update their list of participants.
+    Each participant updates its MLS state and acknowledges the
+    commit. The moderator collects all acknowledgments. If MLS is
+    disabled, only the name of the participant to remove is sent using this message.
 
 2. **Removal:** After the MLS state is updated, the moderator sends a remove
     message to App-C/1. Upon receiving the remove message, App-C/1 unsubscribes
@@ -310,23 +335,23 @@ sequenceDiagram
     participant App-B/2
     participant App-A/1
 
-    Note over Moderator,App-A/1: MLS State Update
-    Moderator->>SLIM Node: MLS commit (Remove agntcy/ns/App-C/1) to Channel
-    par Handle MLS commit on App-C/1
-        SLIM Node->>App-C/1: MLS commit (Remove agntcy/ns/App-C/1) to Channel
-        App-C/1->>App-C/1: Update MLS state
-        App-C/1->>SLIM Node: Ack(MLS Commit)
-        SLIM Node->>Moderator: Ack(MLS Commit)
-    and Handle MLS commit on App-B/2
-        SLIM Node->>App-B/2: MLS commit (Remove agntcy/ns/App-C/1) to Channel
-        App-B/2->>App-B/2: Update MLS state
-        App-B/2->>SLIM Node: Ack(MLS Commit)
-        SLIM Node->>Moderator: Ack(MLS Commit)
-    and Handle MLS commit on App-A/1
-        SLIM Node->>App-A/1: MLS commit (Remove agntcy/ns/App-C/1) to Channel
-        App-A/1->>App-A/1: Update MLS state
-        App-A/1->>SLIM Node: Ack(MLS Commit)
-        SLIM Node->>Moderator: Ack(MLS Commit)
+    Note over Moderator,App-A/1: Group State Update
+    Moderator->>SLIM Node: Group Update (Remove agntcy/ns/App-C/1, MLS commit) to Channel
+    par Handle Group State Update on App-C/1
+        SLIM Node->>App-C/1: Group Update (Remove agntcy/ns/App-C/1, MLS commit) to Channel
+        App-C/1->>App-C/1: Update Group and MLS state
+        App-C/1->>SLIM Node: Ack(Group Update)
+        SLIM Node->>Moderator: Ack(Group Update)
+    and Handle Group State Update on App-B/2
+        SLIM Node->>App-B/2: Group Update (Remove agntcy/ns/App-C/1, MLS commit) to Channel
+        App-B/2->>App-B/2: Update Group and MLS state
+        App-B/2->>SLIM Node: Ack(Group Update)
+        SLIM Node->>Moderator: Ack(Group Update)
+    and Handle Group State Update on App-A/1
+        SLIM Node->>App-A/1: Group Update (Remove agntcy/ns/App-C/1, MLS commit) to Channel
+        App-A/1->>App-A/1: Update Group and MLS state
+        App-A/1->>SLIM Node: Ack(Group Update)
+        SLIM Node->>Moderator: Ack(Group Update)
     end
 
     Note over Moderator,App-A/1: Remove
@@ -338,6 +363,12 @@ sequenceDiagram
     SLIM Node->>Moderator: Remove Reply
 ```
 
+If the moderator is removed from the group, or it simply closes the session, it sends a
+close message on the channel that is received by all the group participants. Upon reception,
+all the participants acknowledge that the message was received and they close the local session,
+similar to the reception of the remove message (see the diagram). In this way, when the moderator
+stops, all participants are removed from the group.
+
 ### Group Example
 
-This [example](https://github.com/agntcy/slim/blob/slim-v0.6.0/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py) demonstrates how to create a group session, invite participants, and (if enabled) establish an MLS group for end-to-end encryption. It also shows how to broadcast messages to all current members and handle inbound group messages. The associated [README](https://github.com/agntcy/slim/blob/slim-v0.6.0/data-plane/python/bindings/examples/src/slim_bindings_examples/README_group.md) shows more information and how to run the example using the Taskfile.
+This [example](https://github.com/agntcy/slim/blob/slim-v0.7.0/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py) demonstrates how to create a group session, invite participants, and (if enabled) establish an MLS group for end-to-end encryption. It also shows how to broadcast messages to all current members and handle inbound group messages. The associated [README](https://github.com/agntcy/slim/blob/slim-v0.7.0/data-plane/python/bindings/examples/src/slim_bindings_examples/README_group.md) shows more information and how to run the example using the Taskfile.
