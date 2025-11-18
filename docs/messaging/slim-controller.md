@@ -187,8 +187,16 @@ Example config to enable MTLS on Southbound endpoint using [Spire](https://spiff
 
   logging:
     level: DEBUG
+
   reconciler:
-    threads: 3
+    # Max number of times a failed reconcile will be retried
+    maxRequeues: 15
+    # Max number of reconciles that can be run in parallel for different nodes
+    maxNumOfParallelReconciles: 1000
+
+  # Specifies the SQLite database file path for storing control plane data
+  database:
+    filePath: controlplane.db
 
   spire:
     enabled: false
