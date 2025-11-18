@@ -373,7 +373,7 @@ slimctl route add org/default/alice/0 via slim/b --node-id slim/a
 slimctl route del org/default/alice/0 via slim/b --node-id slim/a
 ```
 
-### Example 2: Create, Delete Route using `connection_config.json`
+### Example 2: Create, Delete Route Using `connection_config.json`
 
 
 ```bash
