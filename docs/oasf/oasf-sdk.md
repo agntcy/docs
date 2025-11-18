@@ -15,7 +15,7 @@ The OASF SDK is available as a Go module and a Helm chart.
 Add the OASF SDK package to your Go project:
 
 ```bash
-go install github.com/agntcy/oasf-sdk/pkg@v0.0.6
+go get github.com/agntcy/oasf-sdk/pkg@latest
 ```
 
 Deploy the OASF SDK server using the provided Helm chart:
