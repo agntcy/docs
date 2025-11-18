@@ -17,6 +17,10 @@ All pull requests should solve an existing issue. Make sure to add the issue num
 
 To submit a new pull request, fork the repository. Create a new branch for your feature or fix. Make your changes then submit a pull request.
 
+!!! note
+
+    Make sure to add a sign-off to your commit messages. Un-signed commits will not be accepted.
+
 ## Moving or Renaming Documentation Files
 
 If you move or rename a documentation file, **you must add a redirect** to preserve existing links. This ensures that bookmarks, external links, and search engine results continue to work.
