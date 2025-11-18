@@ -577,21 +577,26 @@ First, start the SLIM Controller. Full details are in the [Controller](./slim-co
 ```bash
 cat << EOF > ./config-controller.yaml
 northbound:
-  httpHost: 0.0.0.0
+  httpHost: localhost
   httpPort: 50051
   logging:
     level: DEBUG
 
 southbound:
-  httpHost: 0.0.0.0
+  httpHost: localhost
   httpPort: 50052
+  logging:
+    level: DEBUG
 
-# number of node reconciler threads
 reconciler:
-  threads: 3
+  maxRequeues: 15
+  maxNumOfParallelReconciles: 1000
 
 logging:
-  level: INFO
+  level: DEBUG
+
+database:
+  filePath: db/controlplane.db
 EOF
 ```
 
@@ -766,12 +771,15 @@ fi
 
 # Construct the download URL
 VERSION="v0.7.0"
-BINARY_NAME="slimctl-${OS}-${ARCH}"
-DOWNLOAD_URL="https://github.com/agntcy/slim/releases/download/slimctl-${VERSION}/${BINARY_NAME}"
+COMMIT_HASH="35c37ab"
+ARCHIVE_NAME="slimctl_slimctl-${VERSION}-SNAPSHOT-${COMMIT_HASH}_${OS}_${ARCH}.tar.gz"
+DOWNLOAD_URL="https://github.com/agntcy/slim/releases/download/slimctl-${VERSION}/${ARCHIVE_NAME}"
 
-# Download the binary
+# Download and extract the binary
 echo "Downloading slimctl for ${OS}-${ARCH}..."
-curl -L "${DOWNLOAD_URL}" -o slimctl
+curl -L "${DOWNLOAD_URL}" -o "${ARCHIVE_NAME}"
+tar -xzf "${ARCHIVE_NAME}"
+rm "${ARCHIVE_NAME}"
 
 # Make it executable
 chmod +x slimctl
