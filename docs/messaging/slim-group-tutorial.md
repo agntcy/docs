@@ -577,26 +577,26 @@ First, start the SLIM Controller. Full details are in the [Controller](./slim-co
 ```bash
 cat << EOF > ./config-controller.yaml
 northbound:
-  httpHost: localhost
+  httpHost: 0.0.0.0
   httpPort: 50051
   logging:
-    level: DEBUG
+    level: INFO
 
 southbound:
-  httpHost: localhost
+  httpHost: 0.0.0.0
   httpPort: 50052
   logging:
-    level: DEBUG
+    level: INFO
 
 reconciler:
   maxRequeues: 15
   maxNumOfParallelReconciles: 1000
 
 logging:
-  level: DEBUG
+  level: INFO
 
 database:
-  filePath: db/controlplane.db
+  filePath: /db/controlplane.db
 EOF
 ```
 
@@ -609,7 +609,7 @@ Start the controller with Docker:
 
 ```bash
 docker run -it \
-    -v ./config-controller.yaml:/config.yaml -p 50051:50051 -p 50052:50052 \
+    -v ./config-controller.yaml:/config.yaml -v .:/db -p 50051:50051 -p 50052:50052 \
     ghcr.io/agntcy/slim/control-plane:0.7.0 --config /config.yaml
 ```
 
@@ -661,7 +661,8 @@ services:
           tls:
             insecure: true
       token_provider:
-        shared_secret: "very-long-shared-secret-value-0123456789abcdef"
+        type: shared_secret
+        data: "very-long-shared-secret-value-0123456789abcdef"
 EOF
 ```
 
