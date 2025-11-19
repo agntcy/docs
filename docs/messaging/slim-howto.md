@@ -21,7 +21,7 @@ installed using the provided container image, with
 #### Using Docker
 
 ```bash
-docker pull ghcr.io/agntcy/slim:latest
+docker pull ghcr.io/agntcy/slim:v0.7.0
 
 cat << EOF > ./config.yaml
 tracing:
@@ -47,7 +47,7 @@ EOF
 
 docker run -it \
     -v ./config.yaml:/config.yaml -p 46357:46357 \
-    ghcr.io/agntcy/slim:latest /slim --config /config.yaml
+    ghcr.io/agntcy/slim:v0.7.0 /slim --config /config.yaml
 ```
 
 #### Using Cargo
@@ -100,7 +100,7 @@ provided container image or with [Helm](https://helm.sh/).
 ### Using Docker
 
 ```bash
-docker pull ghcr.io/agntcy/slim/control-plane:latest
+docker pull ghcr.io/agntcy/slim/control-plane:v0.7.0
 
 cat << EOF > ./slim-control-plane.yaml
 northbound:
@@ -129,7 +129,7 @@ EOF
 docker run -it \
     -v ./slim-control-plane.yaml:/config.yaml -v .:/db \
     -p 50051:50051 -p 50052:50052                      \
-    ghcr.io/agntcy/slim/control-plane:latest           \
+    ghcr.io/agntcy/slim/control-plane:v0.7.0           \
     -config /config.yaml
 ```
 
