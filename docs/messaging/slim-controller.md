@@ -279,7 +279,29 @@ For more information, see the [slimctl](#slimctl).
 
 `slimctl` is the command-line interface for the SLIM controller.
 
-The command line tool communicates either with the `controller` (using "controller" or "c" subcommand) or directly with the SLIM node (using the "node" or "n" subcommand)
+### Installing slimctl
+
+Slimctl is available for multiple operating systems and architectures. 
+
+To install slimctl, download the appropriate release asset from GitHub or, if you are on macOS, by using Homebrew.
+
+#### Downloading Slimctl from Github
+
+1. Go to the slimctl [GitHub releases page](https://github.com/agntcy/slim/releases).
+2. Download the asset matching your operating system and architecture -- for example, Linux, macOS, Windows.
+3. Extract the downloaded archive and then move the `slimctl` binary to a directory in your `PATH`.
+
+#### Installing Slimctl via Homebrew (MacOS)
+
+If you are using macOS, you can install slimctl via Homebrew:
+
+```
+brew tap agntcy/slim git@github.com:agntcy/slim.git
+brew install slimctl
+```
+
+This automatically downloads and installs the latest version of slimctl for your system.
+
 
 ### Configuring slimctl
 
@@ -353,7 +375,7 @@ slimctl controller route add org/default/alice/0 via slim/b --node-id slim/a
 slimctl controller route del org/default/alice/0 via slim/b --node-id slim/a
 ```
 
-### Example 2: Create, Delete Route using `connection_config.json`
+### Example 2: Create, Delete Route Using `connection_config.json`
 
 
 ```bash
