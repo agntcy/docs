@@ -28,7 +28,7 @@ Every participant in a group requires a unique identity for authentication and f
 
 Each participant must have a unique identity. This is required to set up end-to-end encryption using the MLS protocol. The identity can be a JWT or shared secret. For simplicity, this example uses a shared secret. For JWT-based identity, see the [tutorial](https://github.com/agntcy/slim/tree/slim-v0.7.0/data-plane/python/bindings/examples#running-in-kubernetes-spire--jwt) in the SLIM repository.
 
-The Python objects managing the identity are called `PyIdentityProvider` and `PyIdentityVerifier`. The `PyIdentityProvider` provides the identity, while the `PyIdentityVerifier` verifies it:
+The Python objects managing the identity are called `IdentityProvider` and `IdentityVerifier`. The `IdentityProvider` provides the identity, while the `IdentityVerifier` verifies it:
 
 ```python
 def shared_secret_identity(identity: str, secret: str):
@@ -46,7 +46,7 @@ def shared_secret_identity(identity: str, secret: str):
 
 This is a helper function defined in
 [common.py](https://github.com/agntcy/slim/blob/slim-v0.7.0/data-plane/python/bindings/examples/src/slim_bindings_examples/common.py#L85)
-that can be used to create a `PyIdentityProvider` and `PyIdentityVerifier` from two input strings.
+that can be used to create a `IdentityProvider` and `IdentityVerifier` from two input strings.
 
 ### SLIM App
 
