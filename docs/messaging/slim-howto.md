@@ -85,7 +85,7 @@ EOF
 We also provide a Helm chart for deploying SLIM in Kubernetes environments.
 
 ```bash
-helm pull oci://ghcr.io/agntcy/slim/helm/slim --version v0.2.0
+helm pull oci://ghcr.io/agntcy/slim/helm/slim --version v0.7.0
 ```
 
 For information about how to use the Helm chart, see the
@@ -104,27 +104,39 @@ docker pull ghcr.io/agntcy/slim/control-plane:latest
 
 cat << EOF > ./slim-control-plane.yaml
 northbound:
-  httpHost: localhost
+  httpHost: 0.0.0.0
   httpPort: 50051
   logging:
-    level: DEBUG
+    level: INFO
 
 southbound:
-  httpHost: localhost
+  httpHost: 0.0.0.0
   httpPort: 50052
   logging:
-    level: DEBUG
+    level: INFO
+
+reconciler:
+  maxRequeues: 15
+  maxNumOfParallelReconciles: 1000
+
+logging:
+  level: INFO
+
+database:
+  filePath: /db/controlplane.db
 EOF
 
 docker run -it \
-    -v ./slim-control-plane.yaml:/config.yaml -p 50051:50051 -p 50052:50052 \
-    ghcr.io/agntcy/slim/control-plane:latest -config /config.yaml
+    -v ./slim-control-plane.yaml:/config.yaml -v .:/db \
+    -p 50051:50051 -p 50052:50052                      \
+    ghcr.io/agntcy/slim/control-plane:latest           \
+    -config /config.yaml
 ```
 
 ### Using Helm
 
 ```bash
-helm pull oci://ghcr.io/agntcy/slim/helm/slim-control-plane --version v0.1.4
+helm pull oci://ghcr.io/agntcy/slim/helm/slim-control-plane --version v0.7.0
 ```
 
 ### SLIM Bindings
@@ -162,7 +174,7 @@ Choose the appropriate installation method for your operating system:
 === "macOS (Apple Silicon)"
 
     ```bash
-    curl -LO https://github.com/agntcy/slim/releases/download/slimctl-v0.7.0/slimctl-darwin-arm64
+    curl -LO https://github.com/agntcy/slim/releases/download/slimctl-v0.7.0/slimctl_slimctl-v0.7.0-SNAPSHOT-35c37ab_darwin_arm64.tar.gz
     sudo mv slimctl-darwin-arm64 /usr/local/bin/slimctl
     sudo chmod +x /usr/local/bin/slimctl
     ```
@@ -179,7 +191,7 @@ Choose the appropriate installation method for your operating system:
 === "Linux (AMD64)"
 
     ```bash
-    curl -LO https://github.com/agntcy/slim/releases/download/slimctl-v0.7.0/slimctl-linux-amd64
+    curl -LO https://github.com/agntcy/slim/releases/download/slimctl-v0.7.0/slimctl_slimctl-v0.7.0-SNAPSHOT-35c37ab_linux_amd64.tar.gz
     sudo mv slimctl-linux-amd64 /usr/local/bin/slimctl
     sudo chmod +x /usr/local/bin/slimctl
     ```
