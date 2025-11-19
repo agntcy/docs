@@ -53,7 +53,8 @@ await handle # await for the session to be created
 ### Invite Participants to the Channel
 
 Once the group session is created, new participants can be invited
-to join. Not all participants need to be added at the beginning; you can add them later, even after communication has started.
+to join. Not all participants need to be added at the beginning;
+you can add them later, even after communication has started.
 
 ```python
 for invite in invites:

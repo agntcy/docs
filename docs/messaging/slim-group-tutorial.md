@@ -146,12 +146,12 @@ This function takes several parameters as input:
     `org/ns/service`.
 - `slim` (required, dict): Configuration to connect to the remote SLIM node. For example:
 
-    ```python
+```python
     {
-            "endpoint": "http://127.0.0.1:46357",
-            "tls": {"insecure": True},
+        "endpoint": "http://127.0.0.1:46357",
+        "tls": {"insecure": True},
     }
-    ```
+  ```
 
 - `enable_opentelemetry` (bool, default: `False`): Enable OpenTelemetry
     tracing. If `True`, traces are sent to `http://localhost:4317` by default.
@@ -162,13 +162,13 @@ This function takes several parameters as input:
 - `spire_trust_bundle` (str | None, default: `None`): JWT trust bundle
   (list of JWKs, one for each trust domain). Expected in JSON format such as:
 
-    ```json
+  ```json
     {
         "trust-domain-1.org": "base-64-encoded-jwks",
         "trust-domain-2.org": "base-64-encoded-jwks",
         ...
     }
-    ```
+  ```
 
 - `audience` (list[str] | None, default: `None`): List of allowed audiences for
     JWT authentication.
@@ -290,8 +290,6 @@ The key configuration parameters to setup the `SessionConfiguration` are:
 
 After the session creation, the moderator invites participants via `created_session.invite(invite_name)`.
 Each `invite` call returns a handle that should be awaited to ensure the invitation completes.
-Before sending each invitation, the moderator must call `local_app.set_route(invite_name)` so
-SLIM knows how to deliver the control messages.
 
 ### Implement Participants and Receive Messages
 
@@ -410,7 +408,7 @@ which returns a handle that must be awaited to ensure proper session cleanup bef
 terminating the loop. When the moderator closes the session,
 all other participants are automatically notified, causing their receive loops to terminate
 and their sessions to close gracefully. If the session closure is initiated by a participant,
-only their local session is closed.
+only its local session is closed.
 
 ### Run the Group Communication Example
 
