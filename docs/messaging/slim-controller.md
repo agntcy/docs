@@ -296,10 +296,12 @@ To install slimctl, download the appropriate release asset from GitHub or, if yo
 If you are using macOS, you can install slimctl via Homebrew:
 
 ```
-brew tap agntcy/slim
+brew tap agntcy/slim git@github.com:agntcy/slim.git
 brew install slimctl
 ```
+
 This automatically downloads and installs the latest version of slimctl for your system.
+
 
 ### Configuring slimctl
 
