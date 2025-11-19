@@ -98,7 +98,7 @@ is done and the remote is correctly connected to the session.
 
 As the point-to-point session is bound to a single remote instance after discovery,
 outbound messages use the implicit destination. Use `publish` for normal sends
-and `publish_to` to reply using a previously received message context.
+and to reply back to the sender.
 
 This example shows how to send and reply in a point-to-point session:
 
@@ -112,8 +112,8 @@ msg_ctx, payload = await session.get_message()
 print(payload.decode())
 
 # Send a correlated response back (echo style)
-# The message will be sent according to the info in msg_ctx
-await session.publish_to(msg_ctx, payload)
+# The message will be sent according to the info in the session
+await session.publish(payload)
 ```
 
 ### Point-to-Point Example
