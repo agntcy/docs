@@ -1057,7 +1057,7 @@ local proxy instance:
    # Service configuration for connecting to the SLIM node
    services:
      slim/0:
-       pubsub:
+       dataplane:
          clients:
            - endpoint: "http://${LOCAL_ADDRESS}:46357"
              tls:

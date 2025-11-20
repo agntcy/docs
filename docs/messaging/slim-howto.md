@@ -36,7 +36,7 @@ runtime:
 
 services:
   slim/0:
-    pubsub:
+    dataplane:
       servers:
         - endpoint: "0.0.0.0:46357"
           tls:
@@ -68,7 +68,7 @@ runtime:
 
 services:
   slim/0:
-    pubsub:
+    dataplane:
       servers:
         - endpoint: "0.0.0.0:46357"
           tls:
