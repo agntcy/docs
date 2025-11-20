@@ -23,6 +23,8 @@ To onboard a new environment to **Directory Public Staging Network**, check the 
 
 ## Quick Start
 
+This guide sets up the development environment for local testing and development. It uses a local Kind cluster with NodePort services and simplified security. For production deployment with Ingress and TLS, see the [Production Setup](#production-setup) section below.
+
 This guide demonstrates how to set up AGNTCY Directory project using Argo CD in Kubernetes [Kind](https://kind.sigs.k8s.io/) cluster.
 
 1. Create Kind cluster
@@ -72,15 +74,11 @@ This guide demonstrates how to set up AGNTCY Directory project using Argo CD in 
     kind delete cluster --name dir-dev
     ```
 
-### Token-based Directory Client authentication
+### Token-based Directory Client Authentication (Dev)
 
-In some cases, you may want to use Directory Client locally
-without SPIRE stack.
-In this case, you can use token-based authentication
-using SPIFFE X509 SVID tokens.
+In some cases, you may want to use Directory Client locally without SPIRE stack. In this case, you can use token-based authentication using SPIFFE X509 SVID tokens.
 
-To generate a SPIFFE SVID token for authenticating local Directory Client
-with the Directory Server, follow these steps:
+To generate a SPIFFE SVID token for authenticating local Directory Client with the Directory Server in the dev environment, follow the steps below:
 
 1. Create a SPIFFE SVID for local Directory Client.
 
