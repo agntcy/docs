@@ -360,7 +360,7 @@ session creation is implemented in inside SLIMRPC in
 ```python
         # Create a session
         session = await self.local_app.create_session(
-            slim_bindings.PySessionConfiguration.FireAndForget(
+            slim_bindings.SessionConfiguration.FireAndForget(
                 max_retries=10,
                 timeout=datetime.timedelta(seconds=1),
                 sticky=True,

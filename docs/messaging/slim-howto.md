@@ -21,7 +21,7 @@ installed using the provided container image, with
 #### Using Docker
 
 ```bash
-docker pull ghcr.io/agntcy/slim:latest
+docker pull ghcr.io/agntcy/slim:v0.7.0
 
 cat << EOF > ./config.yaml
 tracing:
@@ -47,7 +47,7 @@ EOF
 
 docker run -it \
     -v ./config.yaml:/config.yaml -p 46357:46357 \
-    ghcr.io/agntcy/slim:latest /slim --config /config.yaml
+    ghcr.io/agntcy/slim:v0.7.0 /slim --config /config.yaml
 ```
 
 #### Using Cargo
@@ -85,11 +85,11 @@ EOF
 We also provide a Helm chart for deploying SLIM in Kubernetes environments.
 
 ```bash
-helm pull oci://ghcr.io/agntcy/slim/helm/slim --version v0.2.0
+helm pull oci://ghcr.io/agntcy/slim/helm/slim --version v0.7.0
 ```
 
 For information about how to use the Helm chart, see the
-[values.yaml](https://github.com/agntcy/slim/blob/slim-v0.6.0/charts/slim/values.yaml)
+[values.yaml](https://github.com/agntcy/slim/blob/slim-v0.7.0/charts/slim/values.yaml)
 
 ### SLIM Controller
 
@@ -100,31 +100,43 @@ provided container image or with [Helm](https://helm.sh/).
 ### Using Docker
 
 ```bash
-docker pull ghcr.io/agntcy/slim/control-plane:latest
+docker pull ghcr.io/agntcy/slim/control-plane:v0.7.0
 
 cat << EOF > ./slim-control-plane.yaml
 northbound:
-  httpHost: localhost
+  httpHost: 0.0.0.0
   httpPort: 50051
   logging:
-    level: DEBUG
+    level: INFO
 
 southbound:
-  httpHost: localhost
+  httpHost: 0.0.0.0
   httpPort: 50052
   logging:
-    level: DEBUG
+    level: INFO
+
+reconciler:
+  maxRequeues: 15
+  maxNumOfParallelReconciles: 1000
+
+logging:
+  level: INFO
+
+database:
+  filePath: /db/controlplane.db
 EOF
 
 docker run -it \
-    -v ./slim-control-plane.yaml:/config.yaml -p 50051:50051 -p 50052:50052 \
-    ghcr.io/agntcy/slim/control-plane:latest -config /config.yaml
+    -v ./slim-control-plane.yaml:/config.yaml -v .:/db \
+    -p 50051:50051 -p 50052:50052                      \
+    ghcr.io/agntcy/slim/control-plane:v0.7.0           \
+    -config /config.yaml
 ```
 
 ### Using Helm
 
 ```bash
-helm pull oci://ghcr.io/agntcy/slim/helm/slim-control-plane --version v0.1.4
+helm pull oci://ghcr.io/agntcy/slim/helm/slim-control-plane --version v0.7.0
 ```
 
 ### SLIM Bindings
@@ -142,18 +154,18 @@ pip install slim-bindings
 ```toml
 [project]
 ...
-dependencies = ["slim-bindings>=0.6.0"]
+dependencies = ["slim-bindings>=0.7.0"]
 ```
 
 A tutorial on how to use the bindings in an application can be found in the [messaging layer
 documentation](./slim-data-plane.md). Otherwise examples are available in the
-[SLIM Repository](https://github.com/agntcy/slim/tree/slim-v0.6.0/data-plane/python/bindings/examples/src/slim_bindings_examples).
+[SLIM Repository](https://github.com/agntcy/slim/tree/slim-v0.7.0/data-plane/python/bindings/examples/src/slim_bindings_examples).
 
 ### Slimctl
 
 `slimctl` is a command-line tool for managing SLIM Nodes and Controllers. It can
 be downloaded from the [releases
-page](https://github.com/agntcy/slim/releases/tag/slimctl-v0.6.0) in the SLIM repo.
+page](https://github.com/agntcy/slim/releases/tag/slimctl-v0.7.0) in the SLIM repo.
 
 #### Installation
 
@@ -162,7 +174,7 @@ Choose the appropriate installation method for your operating system:
 === "macOS (Apple Silicon)"
 
     ```bash
-    curl -LO https://github.com/agntcy/slim/releases/download/slimctl-v0.6.0/slimctl-darwin-arm64
+    curl -LO https://github.com/agntcy/slim/releases/download/slimctl-v0.7.0/slimctl_slimctl-v0.7.0-SNAPSHOT-35c37ab_darwin_arm64.tar.gz
     sudo mv slimctl-darwin-arm64 /usr/local/bin/slimctl
     sudo chmod +x /usr/local/bin/slimctl
     ```
@@ -179,7 +191,7 @@ Choose the appropriate installation method for your operating system:
 === "Linux (AMD64)"
 
     ```bash
-    curl -LO https://github.com/agntcy/slim/releases/download/slimctl-v0.6.0/slimctl-linux-amd64
+    curl -LO https://github.com/agntcy/slim/releases/download/slimctl-v0.7.0/slimctl_slimctl-v0.7.0-SNAPSHOT-35c37ab_linux_amd64.tar.gz
     sudo mv slimctl-linux-amd64 /usr/local/bin/slimctl
     sudo chmod +x /usr/local/bin/slimctl
     ```
