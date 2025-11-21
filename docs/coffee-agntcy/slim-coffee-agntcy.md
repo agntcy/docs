@@ -40,36 +40,72 @@ SLIM accommodates both targeted and broadcast messaging within the same API:
 
 * **Publisher/Subscriber Pattern**
 
-    Used when the supervisor agent sends the same request to multiple farm agents and waits for all the responses:
-
-    ```python
-    responses = await client.broadcast_message(request, broadcast_topic=BROADCAST_TOPIC, recipients=recipients)
-    ```
-
-    Here the `broadcast_topic` is the topic to which the message is broadcasted and the `recipients` is the list of agents to which the message is sent.
-
-* **Group Communication Pattern**
-
-    Used when multiple agents participate in a group chat session, where all agents can send messages and listen to communications from other agents in the group:
+    Used when the auction supervisor sends the same request to multiple farm agents and waits for all the responses:
 
     ```python
     responses = await client.broadcast_message(
-            request,
-            broadcast_topic=f"{uuid4()}",
-            recipients=recipients,
-            end_message="DELIVERED",
-            group_chat=True,
-            timeout=60,
-          )
+        request, 
+        broadcast_topic=BROADCAST_TOPIC, 
+        recipients=recipients
+    )
     ```
 
     Where:
 
     * `broadcast_topic` is the topic to which the message is broadcasted.
     * `recipients` is the list of agents to which the message is sent.
-    * `end_message` is the message that is sent to all agents when the group chat is closed.
-    * `group_chat` is a boolean that indicates whether we want to send a message as a group chat or not.
-    * `timeout` is the timeout for the group chat session.
+
+    ### Streaming Publisher/Subscriber
+
+    For real-time responses as farms reply, use the streaming variant:
+
+    ```python
+    response_stream = client.broadcast_message_streaming(
+        request,
+        broadcast_topic=BROADCAST_TOPIC,
+        recipients=recipients
+    )
+    ```
+
+    This returns a stream of data from the farms.
+
+* **Group Communication Pattern**
+
+    Used when multiple agents participate in a group chat session, where all agents can send messages and listen to communications from other agents in the group:
+
+    ```python
+    responses = await client.start_groupchat(
+        init_message=request,
+        group_channel=f"{uuid4()}",
+        participants=recipients,
+        end_message="DELIVERED",
+        timeout=60,
+    )
+    ```
+
+    Where:
+
+    * `init_message` is the initial message to start the group chat.
+    * `group_channel` is the unique channel ID for the group chat session.
+    * `participants` is the list of agent topics participating in the group chat.
+    * `end_message` is the message that signals the end of the group chat.
+    * `timeout` is the timeout for the group chat session in seconds.
+
+    ### Streaming Group Communication
+
+    For real-time order state transitions as each agent processes the order:
+
+    ```python
+    response_stream = client.start_streaming_groupchat(
+        init_message=request,
+        group_channel=f"{uuid4()}",
+        participants=recipients,
+        end_message="DELIVERED",
+        timeout=60,
+    )
+    ```
+
+    This returns a stream of data as agents process the order.
 
 ## Example Implementations  
 
