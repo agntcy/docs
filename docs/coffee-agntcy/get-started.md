@@ -2,19 +2,13 @@
 
 CoffeeAGNTCY is a reference implementation built around a fictitious coffee company to demonstrate how components in the AGNTCY Internet of Agents ecosystem work together.
 
-<div>
-  <div style="position:relative;padding-top:56.25%;">
-    <iframe style="position:absolute;top:0;left:0;width:100%;height:100%;" src="https://www.youtube.com/embed/kCAe8gHqJ9g" title="AGNTCY Reference Application and SDK" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-  </div>
-</div>
-
 This project is meant to exemplify how AGNTCY and open-source agentic standards interoperate through clean, reproducible example code. It is purposefully designed for developers across experience levels, from those taking their first steps in building agentic systems to those with more experience curious about AGNTCY's offerings.
 
 With CoffeeAGNTCY, you can:
 
 * Learn how to leverage the AGNTCY App SDK Factory to write transport and agentic protocol-agnostic clients and server code.
 
-* Explore SLIM and its support for broadcast and unicast messaging.
+* Explore SLIM v0.4.0 and its support for request-reply, unicast (fire-and-forget), publisher/subscriber, and group communication patterns (with additional support for NATS transport for publisher/subscriber messaging).
 
 * Enable observability with the AGNTCY Observe SDK.
 
@@ -25,8 +19,6 @@ With CoffeeAGNTCY, you can:
 * Understand how to integrate data sources via MCP.
 
 CoffeeAGNTCY exposes two demo apps: Corto and Lungo.
-
-For an in-depth tutorial, see the [CoffeeAGNTCY Tutorial](https://github.com/agntcy/coffeeAgntcy/blob/main/TUTORIAL.md).
 
 ## Corto
 
@@ -50,21 +42,23 @@ Learn more on how to deploy Corto locally by visiting the [Corto deployment guid
 
 ### Lungo
 
-Lungo is our ever-evolving demo application. As AGNTCY expands, Lungo grows alongside it. It adds new features and capabilities, demonstrating how they work together in an interoperable ecosystem. Like the Corto demo, it includes a LangGraph-orchestrated supervisor agent, but instead of connecting to a single farm, Lungo integrates with three.
+Lungo is our ever-evolving demo application. As AGNTCY expands, Lungo grows alongside it. It adds new features and capabilities, demonstrating how they work together in an interoperable ecosystem. Like the Corto demo, it includes a LangGraph-orchestrated supervisor agent, but instead of connecting to a single farm, Lungo integrates with different farms and logistics agents in two different setups like publisher/subscriber and group communication.
 
-Each farm is designed to demonstrate different agentic protocols and implementations. For now, the agents are similar to Corto’s: LangGraph-orchestrated A2A agents that communicate with the exchange using both pub/sub and request–response patterns. The farms are distinguished by "location". In addition to being a A2A server, the Colombia farm acts as a MCP client that connects to a Weather MCP Server.
+#### Setup 1: Publisher/Subscriber pattern
 
-By default, all agents and MCP servers use SLIM as the transport layer, showcasing its flexibility by switching between one-to-many broadcasts via pub/sub and direct agent-to-agent request–response interactions based on the need specified by the prompt. To learn more about how this works, explore the [CoffeeAGNTCY SLIM Integration](./slim-coffee-agntcy.md)
+Each farm is designed to demonstrate different agentic protocols and implementations. For now, the agents are similar to Corto’s: LangGraph-orchestrated A2A agents that communicate with the exchange using both pub/sub and request–response patterns. The farms are distinguished by "location". In addition to being an A2A server, the Colombia farm acts as a MCP client that connects to a Weather MCP Server.
 
-AGNTCY’s Agent Identity Service handles authentication between agents, allowing them to verify each other’s identity before establishing a connection. This exemplifies the requirement within larger agentic networks for secure communication and trust. To learn more about how this works in Lungo, explore the [CoffeeAGNTCY Identity integration](./identity-coffee-agntcy.md)
+All agents and MCP servers use SLIM as the transport layer (can switch between transports: SLIM and NATS), showcasing its flexibility by switching between one-to-many broadcasts via pub/sub and direct agent-to-agent request–response interactions based on the need specified by the prompt. To learn more about how this works, explore the [CoffeeAGNTCY SLIM Transport Integration](./slim-coffee-agntcy.md).
+
+AGNTCY’s Agent Identity Service handles authentication between agents, allowing them to verify each other’s identity before establishing a connection. This exemplifies the requirement for secure communication and trust within larger agentic networks. To learn more about how this works in Lungo, explore the [CoffeeAGNTCY Identity integration](./identity-coffee-agntcy.md)
 
 ```mermaid
 flowchart TB
     %% Top
-    S["Supervisor Agent<br/>Buyer"]
+    S["Auction Supervisor Agent<br/>Buyer"]
 
     %% Middle transport bus
-    SLIM["SLIM : PubSub or Request Response"]
+    SLIM["SLIM(NATS can be used as transport too) : PubSub or Request Response"]
 
     %% Farm agents
     F1["Coffee Farm Agent<br/>Brazil<br/>(Unverified)"]
@@ -81,5 +75,18 @@ flowchart TB
     SLIM --> F3
     F2 --> MCP
 ```
+
+#### Setup 2: Group Communication pattern
+
+In this setup, we have multiple LangGraph agents that communicate with each other using SLIM's group communication, where all agents participate in a group session, sending messages and listening for relevant chats from other agents in the group. The logistics agent sends a message to other agents (farm, shipper, accountant) to fulfill the coffee order, and all other agents listen to the communication and respond accordingly to complete the order.
+
+```mermaid
+graph LR
+    SA[Shipper Agent] <--> GC((SLIM: group communication))
+    AA[Accountant Agent] <--> GC
+    GC <--> LA[Logistics Agent]
+    GC <--> TF[Tatooine Farm Agent]
+```
+
 
 Learn more on how to deploy Lungo locally by visiting the [Lungo Deployment Guide](https://github.com/agntcy/coffeeAgntcy/blob/main/coffeeAGNTCY/coffee_agents/lungo/README.md)
