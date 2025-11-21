@@ -58,7 +58,7 @@ Each farm is designed to demonstrate different agentic protocols and implementat
 
 All agents and MCP servers use SLIM as the transport layer (can switch between transports: SLIM and NATS), showcasing its flexibility by switching between one-to-many broadcasts via pub/sub and direct agent-to-agent request–response interactions based on the need specified by the prompt. The auction supervisor also supports **streaming responses**, allowing real-time updates as farms respond to queries. To learn more about how this works, explore the [CoffeeAGNTCY SLIM Transport Integration](./slim-coffee-agntcy.md).
 
-AGNTCY’s Agent Identity Service handles authentication between agents, allowing them to verify each other’s identity before establishing a connection. This exemplifies the requirement for secure communication and trust within larger agentic networks. To learn more about how this works in Lungo, explore the [CoffeeAGNTCY Identity integration](./identity-coffee-agntcy.md)
+AGNTCY's Agent Identity Service handles authentication and implements TBAC (Tool-Based Access Control) to enforce authorization policies across services. TBAC controls which agents can invoke specific services and tools, ensuring secure access control across all communication patterns. To learn more about how this works in Lungo, explore the [CoffeeAGNTCY Identity integration](./identity-coffee-agntcy.md)
 
 ```mermaid
 flowchart TB
