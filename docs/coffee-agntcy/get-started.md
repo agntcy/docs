@@ -50,7 +50,7 @@ Learn more on how to deploy Corto locally by visiting the [Corto deployment guid
 
 ### Lungo
 
-Lungo is our ever-evolving demo application. As AGNTCY expands, Lungo grows alongside it. It adds new features and capabilities, demonstrating how they work together in an interoperable ecosystem. Like the Corto demo, it includes a LangGraph-orchestrated supervisor agent, but instead of connecting to a single farm, Lungo integrates with different farms and logistics agents in two different setups like publisher/subscriber and group communication.
+Lungo is our ever-evolving demo application. As AGNTCY expands, Lungo grows alongside it. It adds new features and capabilities, demonstrating how they work together in an interoperable ecosystem. It includes a LangGraph-orchestrated supervisor agent, but instead of connecting to a single farm like Corto, Lungo integrates with different farms and logistics agents in two different setups like publisher/subscriber and group communication.
 
 #### Setup 1: Publisher/Subscriber pattern
 
