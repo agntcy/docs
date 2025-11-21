@@ -1,4 +1,4 @@
-# SLIM v0.4.0 in CoffeeAGNTCY
+# SLIM v0.6.0 in CoffeeAGNTCY
 
 CoffeeAGNTCY works with both NATS and [SLIM](../messaging/slim-core.md) transports and illustrates multiple messaging patterns including request-reply, unicast (fire-and-forget), publisher/subscriber, and group communication, making them well-suited for CoffeeAGNTCY's dynamic multi-agent workflows.
 
