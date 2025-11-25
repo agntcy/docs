@@ -42,7 +42,7 @@ This is a public staging environment for development and testing. Keep in mind t
 
 Before you begin, ensure you have:
 
-- A SPIRE server setup in your organization.
+- A SPIRE server set up in your organization.
 - Basic understanding of SPIFFE/SPIRE concepts.
 - Directory client SDK or CLI tools available.
 

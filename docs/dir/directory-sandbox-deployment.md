@@ -1,7 +1,6 @@
 # Sandbox Deployment
 
-This repository contains the deployment manifests for AGNTCY Directory project.
-It is designed to be used with Argo CD for GitOps-style continuous deployment.
+The [dir-staging](https://github.com/agntcy/dir-staging) repository contains the deployment manifests for AGNTCY Directory project. It is designed to be used with Argo CD for GitOps-style continuous deployment.
 
 The manifests are organized into two main sections:
 
@@ -10,8 +9,8 @@ The manifests are organized into two main sections:
 
 The project will deploy the following components:
 
-- `applications/dir` - AGNTCY Directory server with storage backend.
-- `applications/dir-admin` - AGNTCY Directory Admin CLI client.
+- `applications/dir` - AGNTCY Directory server with storage backend (v0.5.2).
+- `applications/dir-admin` - AGNTCY Directory Admin CLI client (v0.5.2).
 - `applications/spire*` - SPIRE stack for identity and federation.
 
 !!! note
@@ -36,15 +35,15 @@ This guide demonstrates how to set up AGNTCY Directory project using Argo CD in 
 2. Install Argo CD in the cluster.
 
     ```bash
-    # Install ArgoCD
+    # Install Argo CD
     kubectl create namespace argocd
     kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
-    # Wait for ArgoCD to be ready
+    # Wait for Argo CD to be ready
     kubectl wait --namespace argocd --for=condition=available deployment --all --timeout=120s
     ```
 
-3. Deploy Directory via ArgoCD.
+3. Deploy Directory via Argo CD.
 
     ```bash
     # Add project
@@ -54,7 +53,7 @@ This guide demonstrates how to set up AGNTCY Directory project using Argo CD in 
     kubectl apply -f https://raw.githubusercontent.com/agntcy/dir-staging/main/projectapps/dir/dev/dir-dev-projectapp.yaml
     ```
 
-4. Check results in ArgoCD UI.
+4. Check results in Argo CD UI.
 
     ```bash
     # Retrieve password
@@ -85,8 +84,8 @@ To generate a SPIFFE SVID token for authenticating local Directory Client with t
     ```bash
     kubectl exec spire-dir-dev-argoapp-server-0 -n dir-dev-spire -c spire-server -- \
     /opt/spire/bin/spire-server x509 mint \
-    -dns dev.api.directory.outshift.test \
-    -spiffeID spiffe://dev.directory.outshift/local-client \
+    -dns dev.api.example.org \
+    -spiffeID spiffe://example.org/local-client \
     -output json > spiffe-dev.json
     ```
 
@@ -114,9 +113,51 @@ To generate a SPIFFE SVID token for authenticating local Directory Client with t
     dirctl info baeareiesad3lyuacjirp6gxudrzheltwbodtsg7ieqpox36w5j637rchwq
     ```
 
+## Production Deployment
+
+This example configuration uses simplified settings for local Kind/Minikube testing.
+For production deployment, consider these enhancements:
+
+### This Example vs Production
+
+| Feature | This Example (Kind) | Production |
+|---------|---------------------|------------|
+| **Storage** | emptyDir (ephemeral) | PVCs (persistent) |
+| **Credentials** | Hardcoded in values.yaml | ExternalSecrets + Vault |
+| **Resources** | 250m/512Mi | 500m-2000m / 1-4Gi |
+| **Ingress** | NodePort (local) | Ingress + TLS |
+| **Rate Limits** | 50 RPS | 500+ RPS |
+| **Trust Domain** | example.org | your-domain.com |
+| **Read-Only FS** | No (emptyDir) | Yes (with PVCs) |
+
+**This configuration is optimized for local testing. For production, enable the optional features documented below.**
+
+### Key Production Features
+
+**Persistent Storage**:
+- Enable PVCs for routing datastore and database (v0.5.2+)
+- Prevents data loss across pod restarts
+- See `pvc.create` and `database.pvc.enabled` in values.yaml
+
+**Secure Credential Management**:
+- Use ExternalSecrets Operator with Vault instead of hardcoded secrets
+- See commented ExternalSecrets configuration in values.yaml
+- Reference: agntcy-deployment repository for production patterns
+
+**Resource Sizing**:
+- Increase limits based on expected load (CPU: 500m-2000m, Memory: 1-4Gi)
+- Monitor and adjust after observing production traffic
+
+**Ingress & TLS**:
+- Configure Ingress for external access
+- Use cert-manager with Let's Encrypt for production certificates
+- Enable SSL passthrough for DIR API (SPIFFE mTLS)
+
+### Minikube Production Simulation
+
 ## Production Setup
 
-If you wish to deploy production-grade setup with your own domains and Ingress capabilities on top, follow the steps below.
+If you wish to test production-like setup locally with Ingress and TLS, follow the steps below using Minikube.
 
 !!! note
     We are using Minikube to simulate production setup, as it supports Ingress and TLS out of the box. Steps below marked as (local) are optional and intended for local testing purposes only.
@@ -176,21 +217,21 @@ If you wish to deploy production-grade setup with your own domains and Ingress c
     kubectl edit configmap coredns -n kube-system
     ```
 
-4. (local) Install CertManager with Self-Signed Issuer.
+4. (local) Install [cert-manager](https://cert-manager.io) with Self-Signed Issuer.
 
-    The deployment uses CertManager `letsencrypt` issuer to issue TLS certificates for Ingress resources.
+    The deployment uses cert-manager `letsencrypt` issuer to issue TLS certificates for Ingress resources.
 
     For local testing purposes, we will create a self-signed root CA certificate
-    and configure CertManager to use it as `letsencrypt` issuer.
+    and configure cert-manager to use it as `letsencrypt` issuer.
 
-    Otherwise, if you are deploying to a cloud provider with its own CertManager,
+    Otherwise, if you are deploying to a cloud provider with its own cert-manager,
     you can skip this step, but ensure that `letsencrypt` issuer is available.
 
     ```bash
-    # Install Cert-Manager
+    # Install cert-manager
     kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.19.1/cert-manager.yaml
 
-    # Wait for Cert-Manager to be ready
+    # Wait for cert-manager to be ready
     kubectl wait --namespace cert-manager --for=condition=available deployment --all --timeout=120s
 
     # Create Self-Signed Issuer and Root CA Certificate
@@ -232,15 +273,15 @@ If you wish to deploy production-grade setup with your own domains and Ingress c
 5. Install Argo CD in the cluster.
 
     ```bash
-    # Install ArgoCD
+    # Install Argo CD
     kubectl create namespace argocd
     kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
-    # Wait for ArgoCD to be ready
+    # Wait for Argo CD to be ready
     kubectl wait --namespace argocd --for=condition=available deployment --all --timeout=120s
     ```
 
-6. Deploy Directory via ArgoCD.
+6. Deploy Directory via Argo CD.
 
     ```bash
     # Add project
@@ -250,13 +291,13 @@ If you wish to deploy production-grade setup with your own domains and Ingress c
     kubectl apply -f https://raw.githubusercontent.com/agntcy/dir-staging/main/projectapps/dir/prod/dir-prod-projectapp.yaml
     ```
 
-7. Check results in ArgoCD UI.
+7. Check results in Argo CD UI.
 
     ```bash
     # Retrieve password
     kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath="{.data.password}" | base64 -d; echo
 
-    # Port forward the ArgoCD API to localhost:8080
+    # Port forward the Argo CD API to localhost:8080
     kubectl port-forward svc/argocd-server -n argocd 8080:443
     ```
 
@@ -280,8 +321,8 @@ with the Directory Server, follow these steps:
     ```bash
     kubectl exec spire-dir-prod-argoapp-server-0 -n dir-prod-spire -c spire-server -- \
     /opt/spire/bin/spire-server x509 mint \
-    -dns prod.api.directory.outshift.test \
-    -spiffeID spiffe://prod.directory.outshift/local-client \
+    -dns prod.api.example.org \
+    -spiffeID spiffe://example.org/local-client \
     -output json > spiffe-prod.json
     ```
 
@@ -293,7 +334,7 @@ with the Directory Server, follow these steps:
     export DIRECTORY_CLIENT_SPIFFE_TOKEN="spiffe-prod.json"
 
     # Set Directory Server address (via Ingress)
-    export DIRECTORY_CLIENT_SERVER_ADDRESS="prod.api.directory.outshift.test:443"
+    export DIRECTORY_CLIENT_SERVER_ADDRESS="prod.api.example.org:443"
 
     # Or, set Directory Server address and skip TLS verification (via port-forwarding)
     export DIRECTORY_CLIENT_SERVER_ADDRESS="127.0.0.1:8888"
