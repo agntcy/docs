@@ -32,6 +32,7 @@ tasks:
       - pushd mkdocs && uv run mkdocs build --site-dir {{.BUILD_SITE_DIR}} && popd
       - |
         echo "Docs available at: file://{{.BUILD_SITE_DIR}}/index.html"
+      - task: lint:links
 
   run:
     desc: Run documentation website in live editing mode
@@ -52,12 +53,13 @@ tasks:
       - echo "All documentation tests passed!"
 
   lint:
-    desc: Run all linting checks (spelling, markdown)
+    desc: Run all linting checks (spelling, markdown, links)
     deps:
       - deps/patch
     cmds:
       - task: lint:spelling
       - task: lint:markdown
+      - task: lint:links
 
   lint:spelling:
     desc: Check spelling in documentation
@@ -76,6 +78,14 @@ tasks:
     dir: mkdocs
     cmds:
       - uv run pymarkdown --config ../.pymarkdown scan ../docs
+
+  lint:links:
+    desc: Check for broken links in built documentation
+    internal: true
+    vars:
+      BUILD_SITE_DIR: "{{.BUILD_DIR}}/site"
+    cmds:
+      - lychee --config lychee.toml {{.BUILD_SITE_DIR}}
 
   lint:fix:
     desc: Auto-fix spelling and markdown issues where possible

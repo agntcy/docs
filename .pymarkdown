@@ -12,8 +12,8 @@ plugins:
   md031:
     enabled: false  
   md033:
-    enabled: true
-    allowed_elements: [details, summary, img, br, sub, sup]
+    enabled: false
+    allowed_elements: [details, summary, img, br, sub, sup, div]
   md041:
     enabled: false
   md046:
@@ -21,4 +21,8 @@ plugins:
   md051:
     enabled: false
   md007:  
+    enabled: false
+  md034:
+    enabled: true
+  md036:
     enabled: false
