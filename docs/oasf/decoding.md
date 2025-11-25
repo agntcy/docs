@@ -44,7 +44,6 @@ func ProtoToStruct[T any](obj *structpb.Struct) (*T, error)
 
 Returns `*T`: Pointer to the converted Go struct.
 
-
 ## `DecodeRecord`
 
 Decodes a record object into a structured format based on its schema version.

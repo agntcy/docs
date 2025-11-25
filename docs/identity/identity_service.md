@@ -13,8 +13,8 @@ Whether you are integrating existing services or deploying new ones, AGNTCY Iden
 
 To begin using AGNTCY Identity Service's features, you have two primary pathways:
 
-1.  **Verify Existing Identities**: If you already possess identity badges for your Agentic Services, you can use AGNTCY Identity Service to verify their authenticity and integrate them into the system.
-2.  **Register New Agentic Services**: For new deployments or services that require a fresh identity, AGNTCY Identity Service facilitates the registration process, allowing you to create and manage their digital presence.
+1. **Verify Existing Identities**: If you already possess identity badges for your Agentic Services, you can use AGNTCY Identity Service to verify their authenticity and integrate them into the system.
+2. **Register New Agentic Services**: For new deployments or services that require a fresh identity, AGNTCY Identity Service facilitates the registration process, allowing you to create and manage their digital presence.
 
 ### Get Started in 5 Minutes
 

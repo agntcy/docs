@@ -8,25 +8,25 @@ The first step involves defining your Agentic Service, which automatically creat
 
 **Steps:**
 
-1.  Navigate to **Agentic Services** in the left-hand menu.
-2.  Click on **Create Agentic Service**.
-3.  **Select Agentic Service Type & Source:**
+1. Navigate to **Agentic Services** in the left-hand menu.
+2. Click on **Create Agentic Service**.
+3. **Select Agentic Service Type & Source:**
     - Choose the appropriate type for your service:
       - **OASF:** For Open Agent Schema defined services.
       - **MCP Server:** For services running on an MCP (Model Context Protocol) Server. _(As shown in the screenshot, this is the selected option.)_
       - **A2A Protocol:** For Application-to-Application protocol services.
 
-    ![Create Agentic Service MCP Server](../assets/identity/identity_service/agentic-service-mcp.png)
+   ![Create Agentic Service MCP Server](../assets/identity/identity_service/agentic-service-mcp.png)
 
-4.  **Details:**
+4. **Details:**
     - **Name:** Enter a descriptive name for your Agentic Service (e.g., "Currency Exchange MCP Server"). This name will help you identify the service within the platform.
     - **Description:** Provide a brief explanation of your service's purpose (e.g., "A Currency Exchange MCP Server").
 
-    ![Create Agentic Service MCP Server](../assets/identity/identity_service/agentic-service-mcp-2.png)
+   ![Create Agentic Service MCP Server](../assets/identity/identity_service/agentic-service-mcp-2.png)
 
-5.  Click **Next** to proceed. Upon creation, an API Key will be generated for your Agentic Service. Ensure you securely store this API Key, as it will be required for issuing the badge.
+5. Click **Next** to proceed. Upon creation, an API Key will be generated for your Agentic Service. Ensure you securely store this API Key, as it will be required for issuing the badge.
 
-    ![Create Agentic Service MCP Server](../assets/identity/identity_service/agentic-service-mcp-no-badge.png)
+   ![Create Agentic Service MCP Server](../assets/identity/identity_service/agentic-service-mcp-no-badge.png)
 
 ## 2. Issuing the Badge
 
@@ -38,9 +38,9 @@ If your Agentic Service can be accessed directly from the public internet, you c
 
 **Steps:**
 
-1.  During the "Register Agentic Service" step, you will be prompted to provide the **Deployment URL** for your service.
-2.  Enter the full URL where your service is hosted and accessible.
-3.  The service will then perform online discovery using this URL.
+1. During the "Register Agentic Service" step, you will be prompted to provide the **Deployment URL** for your service.
+2. Enter the full URL where your service is hosted and accessible.
+3. The service will then perform online discovery using this URL.
 
 ![Issue the Badge using the UI](../assets/identity/identity_service/issue-badge-online.png)
 
@@ -50,9 +50,9 @@ For services that are not directly accessible from the public internet (e.g., se
 
 **Steps:**
 
-1.  **Install the Python SDK:**
+1. **Install the Python SDK:**
     - Ensure you have the Python SDK installed. Refer to [the SDK section](./identity_service_sdk.md) of the documentation for detailed installation instructions.
-2.  **Perform the Badge Creation Command:**
+2. **Perform the Badge Creation Command:**
     - Open your terminal or command prompt.
     - Execute the following command:
       ```bash

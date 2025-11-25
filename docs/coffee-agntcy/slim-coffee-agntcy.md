@@ -23,14 +23,14 @@ transport = factory.create_transport("SLIM", endpoint=SLIM_ENDPOINT, name="defau
 
 Where:
 
-* `AgntcyFactory` initializes the factory for the agent.  
-* `create_transport("SLIM", ...)` provisions a SLIM transport instance connected to the configured endpoint.  
+- `AgntcyFactory` initializes the factory for the agent.  
+- `create_transport("SLIM", ...)` provisions a SLIM transport instance connected to the configured endpoint.  
 
 ## Sending Messages  
 
 SLIM accommodates both targeted and broadcast messaging within the same API:  
 
-* **1-to-1 Message**
+- **1-to-1 Message**
 
     Used when the supervisor agent needs to send a request to a single farm agent:  
 
@@ -38,7 +38,7 @@ SLIM accommodates both targeted and broadcast messaging within the same API:
     response = await client.send_message(request)
     ```
 
-* **Publisher/Subscriber Pattern**
+- **Publisher/Subscriber Pattern**
 
     Used when the auction supervisor sends the same request to multiple farm agents and waits for all the responses:
 
@@ -52,10 +52,10 @@ SLIM accommodates both targeted and broadcast messaging within the same API:
 
     Where:
 
-    * `broadcast_topic` is the topic to which the message is broadcasted.
-    * `recipients` is the list of agents to which the message is sent.
+    - `broadcast_topic` is the topic to which the message is broadcasted.
+    - `recipients` is the list of agents to which the message is sent.
 
-    ### Streaming Publisher/Subscriber
+  ### Streaming Publisher/Subscriber
 
     For real-time responses as farms reply, use the streaming variant:
 
@@ -69,7 +69,7 @@ SLIM accommodates both targeted and broadcast messaging within the same API:
 
     This returns a stream of data from the farms.
 
-* **Group Communication Pattern**
+- **Group Communication Pattern**
 
     Used when multiple agents participate in a group chat session, where all agents can send messages and listen to communications from other agents in the group:
 
@@ -85,13 +85,13 @@ SLIM accommodates both targeted and broadcast messaging within the same API:
 
     Where:
 
-    * `init_message` is the initial message to start the group chat.
-    * `group_channel` is the unique channel ID for the group chat session.
-    * `participants` is the list of agent topics participating in the group chat.
-    * `end_message` is the message that signals the end of the group chat.
-    * `timeout` is the timeout for the group chat session in seconds.
+    - `init_message` is the initial message to start the group chat.
+    - `group_channel` is the unique channel ID for the group chat session.
+    - `participants` is the list of agent topics participating in the group chat.
+    - `end_message` is the message that signals the end of the group chat.
+    - `timeout` is the timeout for the group chat session in seconds.
 
-    ### Streaming Group Communication
+  ### Streaming Group Communication
 
     For real-time order state transitions as each agent processes the order:
 
