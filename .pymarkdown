@@ -8,7 +8,7 @@ plugins:
     enabled: true
     siblings_only: true
   md030:
-    enabled: true
+    enabled: false
   md031:
     enabled: false  
   md033:
