@@ -32,7 +32,7 @@ tasks:
       - pushd mkdocs && uv run mkdocs build --site-dir {{.BUILD_SITE_DIR}} && popd
       - |
         echo "Docs available at: file://{{.BUILD_SITE_DIR}}/index.html"
-      - task: lint:links
+      - lychee --config lychee.toml {{.BUILD_SITE_DIR}}
 
   run:
     desc: Run documentation website in live editing mode
