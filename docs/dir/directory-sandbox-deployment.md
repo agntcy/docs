@@ -20,7 +20,7 @@ The project will deploy the following components:
 
 To onboard a new environment to **Directory Public Staging Network**, check the [onboarding guide](./directory-public-staging.md).
 
-## Quick Start
+## Quick Starting a Development Environment
 
 This guide sets up the development environment for local testing and development. It uses a local Kind cluster with NodePort services and simplified security. For production deployment with Ingress and TLS, see the [Production Setup](#production-setup) section below.
 
@@ -73,7 +73,7 @@ This guide demonstrates how to set up AGNTCY Directory project using Argo CD in 
     kind delete cluster --name dir-dev
     ```
 
-### Token-based Directory Client Authentication (Dev)
+### Token-based Directory Client Authentication for Development Environment
 
 In some cases, you may want to use Directory Client locally without SPIRE stack. In this case, you can use token-based authentication using SPIFFE X509 SVID tokens.
 
@@ -118,9 +118,7 @@ To generate a SPIFFE SVID token for authenticating local Directory Client with t
 This example configuration uses simplified settings for local Kind/Minikube testing.
 For production deployment, consider these enhancements:
 
-### This Example vs Production
-
-| Feature | This Example (Kind) | Production |
+| Feature | Kind/Minikube Deployment | Production Deployment |
 |---------|---------------------|------------|
 | **Storage** | emptyDir (ephemeral) | PVCs (persistent) |
 | **Credentials** | Hardcoded in values.yaml | ExternalSecrets + Vault |
@@ -130,7 +128,8 @@ For production deployment, consider these enhancements:
 | **Trust Domain** | example.org | your-domain.com |
 | **Read-Only FS** | No (emptyDir) | Yes (with PVCs) |
 
-**This configuration is optimized for local testing. For production, enable the optional features documented below.**
+!!! note
+    This configuration is optimized for local testing. For production, enable the optional features documented below.
 
 ### Key Production Features
 
@@ -155,8 +154,6 @@ For production deployment, consider these enhancements:
 
 ### Minikube Production Simulation
 
-## Production Setup
-
 If you wish to test production-like setup locally with Ingress and TLS, follow the steps below using Minikube.
 
 !!! note
@@ -165,10 +162,7 @@ If you wish to test production-like setup locally with Ingress and TLS, follow t
 !!! warning
     It is not recommended to deploy both dev and prod environments in the same cluster, as they may conflict with each other.
 
-<details>
-<summary><strong>View Production Setup</strong></summary>
-
-<br/>
+### Production Setup
 
 1. Create Minikube cluster.
 
@@ -353,4 +347,3 @@ with the Directory Server, follow these steps:
     dirctl info baeareiesad3lyuacjirp6gxudrzheltwbodtsg7ieqpox36w5j637rchwq
     ```
 
-</details>

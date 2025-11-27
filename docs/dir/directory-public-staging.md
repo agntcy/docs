@@ -1,8 +1,4 @@
-# Public Staging Instance
-
-Welcome to the **Directory Public Staging Environment** - a place to develop and test
-with the decentralized AI agent discovery network.
-This environment provides a fully functional Directory instance for development, testing, and exploration purposes.
+# Public Staging Environment
 
 This is a public staging environment for development and testing. Keep in mind the following:
 
@@ -174,7 +170,9 @@ Note that this SDK is intended for Node.js applications only and does not work i
 
 </details>
 
-### Federation Setup (Required)
+### Federation Setup
+
+It is required to establish a trusted federation between your SPIRE server and the Directory SPIRE server to interact with the Directory.
 
 To interact with the Directory, you need to establish a trusted federation between your SPIRE server and the Directory SPIRE server.
 
