@@ -17,3 +17,6 @@ generated/
 # Python cache
 __pycache__/
 *.pyc
+
+# Lychee cache
+.lycheecache

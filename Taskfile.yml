@@ -80,12 +80,10 @@ tasks:
       - uv run pymarkdown --config ../.pymarkdown scan ../docs
 
   lint:links:
-    desc: Check for broken links in built documentation
+    desc: Check for broken links in markdown documentation
     internal: true
-    vars:
-      BUILD_SITE_DIR: "{{.BUILD_DIR}}/site"
     cmds:
-      - lychee --config lychee.toml {{.BUILD_SITE_DIR}}
+      - lychee --config lychee.toml docs/
 
   lint:fix:
     desc: Auto-fix spelling and markdown issues where possible
