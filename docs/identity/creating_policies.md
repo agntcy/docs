@@ -30,7 +30,7 @@ The **AGNTCY Identity Service** leverages Task-Based Access Control (TBAC) to en
 
 2. **Policy Details:**
 
-    - **Name:** Enter a descriptive name for your policy (e.g., "Email Policy").
+   - **Name:** Enter a descriptive name for your policy (e.g., "Email Policy").
     - **Assigned To:** Select the Agentic Service the policy will apply to (e.g., "SuperAgent").
     - **Description:** Provide a brief description of the policy's purpose and scope.
 
@@ -38,7 +38,7 @@ The **AGNTCY Identity Service** leverages Task-Based Access Control (TBAC) to en
 
 3. **Policy Rules:**
 
-    - **Add Rule:** Define the specific actions and permissions associated with the policy.
+   - **Add Rule:** Define the specific actions and permissions associated with the policy.
     - **Name:** Specify the rule name (e.g., "Search & Read Emails").
     - **Tasks:** Choose the tasks this rule will allow or restrict (e.g., "gmail_find_email").
     - **Action:** Select the action type, such as "Allow" or "Deny".
@@ -46,17 +46,17 @@ The **AGNTCY Identity Service** leverages Task-Based Access Control (TBAC) to en
 
     ![Policy Rule Creation](../assets/identity/identity_service/policies_03.png)
     ![Policy Rule Tasks Selection](../assets/identity/identity_service/policies_04.png)
-    ![Policy Rule Submittion](../assets/identity/identity_service/policies_05.png)
+    ![Policy Rule Submission](../assets/identity/identity_service/policies_05.png)
 
 4. **Add Multiple Rules:**
 
-    - You can add additional rules by clicking "Add Rule" and repeating the steps above for each new rule. This is useful for complex policies requiring multiple permissions.
+   - You can add additional rules by clicking "Add Rule" and repeating the steps above for each new rule. This is useful for complex policies requiring multiple permissions.
 
     ![Multiple Rule Addition](../assets/identity/identity_service/policies_06.png)
 
 5. **Review and Save Policy:**
 
-    - Review all policy details and rules to ensure accuracy. Once satisfied, click "Save" to finalize and save the policy.
+   - Review all policy details and rules to ensure accuracy. Once satisfied, click "Save" to finalize and save the policy.
 
     ![Review Policy](../assets/identity/identity_service/policies_07.png)
     ![Review Policy Rule Details](../assets/identity/identity_service/policies_08.png)
@@ -79,7 +79,7 @@ The **AGNTCY Identity Service** leverages Task-Based Access Control (TBAC) to en
 
 3. **Deleting Policies:**
 
-   - If a policy is no longer needed, select "Delete" from the options menu to remove it from the system. Confirm the deletion when prompted.
+    - If a policy is no longer needed, select "Delete" from the options menu to remove it from the system. Confirm the deletion when prompted.
 
 ## Best Practices
 

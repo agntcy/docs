@@ -215,7 +215,7 @@ To be useful, an agent, A2A card, or MCP server record should include at least t
 * Skills, following the [OASF skills schema](https://schema.oasf.outshift.com/skills?extensions=).
 * Previous Record CID: if this is a new or related version to another record, indicate the CID of the related record.
 
-And it will look like this: 
+And it will look like this:
 
 ```json
 {
@@ -387,7 +387,6 @@ dir hub verify <record CID>
 ```
 
 For further details on signing, use the `dirctl hub sign --help` command.
-
 
 #### Pulling Agent Directory Records using `dirctl`
 

@@ -36,7 +36,7 @@ Where:
 
 ## A2A Agent Badge
 
-Similarly, the example below shows a second Agent Badge, using in this case another definition, that is, an [A2A Agent Card](https://github.com/google/A2A/blob/main/specification/json/a2a.json#AgentCard) schema.
+Similarly, the example below shows a second Agent Badge, using in this case another definition, that is, an [A2A Agent Card](https://a2a-protocol.org/latest/definitions/) schema.
 
 ```json
 CREDENTIAL
@@ -66,7 +66,7 @@ CREDENTIAL
 Where:
 
 - `credentialSubject.id`: represents the [ID](identifiers.md#definitions) of the Agent subject.
-- `credentialSubject.badge`: adheres to the [A2A Agent Card](https://github.com/google/A2A/blob/main/specification/json/a2a.json#AgentCard) schema.
+- `credentialSubject.badge`: adheres to the [A2A Agent Card](https://a2a-protocol.org/latest/definitions/) schema.
 
 The `proof` in an Agent Badge can be verified using the `assertionMethod` defined in the `ResolverMetadata` object (various `ResolverMetadata` examples are available [here](./identifier_examples.md)).
 

@@ -1,0 +1,68 @@
+# Lychee Link Checker Configuration
+# https://github.com/lycheeverse/lychee
+
+# Maximum number of concurrent network requests
+max_concurrency = 10
+
+# Request timeout in seconds
+timeout = 10
+
+# Accept these HTTP status codes as valid
+accept = [200, 201, 204, 403, 429, 503]
+
+# Exclude URL patterns (regex)
+exclude = [
+    # Local development URLs
+    'localhost',
+    'http://127\.0\.0\.1',
+    'https://127\.0\.0\.1',
+    'http://0\.0\.0\.0',
+    'host\.docker\.internal',
+    
+    # Well-known endpoints and example domains
+    '\.well-known',
+    'api\.node',
+    'https://api\.NODE',
+    
+    # Self-referential docs URLs (may not exist yet)
+    'https://docs\.agntcy\.org/.*',
+    
+    # GitHub raw URLs that are generated but may not exist
+    'https://github\.com/agntcy/docs/raw/main/docs/.*',
+    
+    # Example/placeholder URLs used in documentation
+    'example\.com',
+    'your-username',
+    'company\.com',
+    'remote-slim',
+    'otel-collector',
+    'slim\.slim',
+    'schema\.oasf\.agntcy\.org',
+    'api\.agent-identity\.outshift\.com',
+    'token\.actions\.githubusercontent\.com',
+    'github\.com/example/',
+    'spiffe\.github\.io/helm-charts-hardened',
+]
+
+# Exclude paths (glob patterns relative to the input)
+exclude_path = ['overrides']
+
+# Enable link caching for faster subsequent runs
+cache = true
+
+# Only show errors and summary (not every checked link)
+# Set to "info" or "debug" for more verbose output
+# Omit or set to false for minimal output
+
+# Maximum number of retries per link
+max_retries = 2
+
+# HTTP method to use for checking links
+method = "get"
+
+# Exclude links from code blocks, preformatted text, and other verbatim content
+include_verbatim = false
+
+# User agent string
+user_agent = "lychee/agntcy-docs"
+

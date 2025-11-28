@@ -1,0 +1,54 @@
+# SPDX-FileCopyrightText: Copyright (c) 2025 Cisco and/or its affiliates.
+# SPDX-License-Identifier: Apache-2.0
+
+name: Links
+
+on:
+  repository_dispatch:
+  workflow_dispatch:
+  schedule:
+    - cron: "00 06 * * *"
+
+jobs:
+  linkChecker:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: 'recursive'
+
+      - name: Setup Golang
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23.1'
+
+      - name: Setup Taskfile
+        shell: bash
+        run: |
+          sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
+
+      - name: Setup UV
+        shell: bash
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      - name: Update GITHUB_PATH
+        shell: bash
+        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Build docs
+        shell: bash
+        run: |
+          task build
+
+      - name: Link Checker
+        id: lychee
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: '--config lychee.toml .build/site'
+          fail: false
+

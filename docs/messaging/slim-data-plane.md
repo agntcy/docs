@@ -68,7 +68,6 @@ The session layer offers several functionalities:
   formatting, routing, and delivery confirmation, while providing simple send
   and receive primitives to applications.
 
-
 The session layer offers two primary APIs for establishing new sessions:
 
 - **Point-to-Point**: Facilitates point-to-point communication with a specific service

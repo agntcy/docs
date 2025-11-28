@@ -47,11 +47,11 @@ This tutorial is based on the [SLIM examples](https://github.com/agntcy/slim/blo
 
 The following prerequisites are required:
 
-- [Docker](https://docs.docker.com/get-docker/)
-- [kubectl](https://kubernetes.io/docs/tasks/tools/)
-- [Helm](https://helm.sh/docs/intro/install/)
-- [KIND](https://kind.sigs.k8s.io/docs/user/quick-start/)
-- [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+* [Docker](https://docs.docker.com/get-docker/)
+* [kubectl](https://kubernetes.io/docs/tasks/tools/)
+* [Helm](https://helm.sh/docs/intro/install/)
+* [KIND](https://kind.sigs.k8s.io/docs/user/quick-start/)
+* [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 
 Clone the SLIM repository if you haven't already:
 
@@ -142,10 +142,10 @@ kubectl get pods -n slim
 We first provide a config for `spiffe-helper`, which retrieves SVIDs or JWTs from
 the SPIRE agent and writes them to disk. The key fields are:
 
-- `agent_address`: Path to the SPIRE agent API socket.
-- `cert_dir`: Where artifacts (cert, key, bundles, or JWTs) are written.
-- `jwt_svids`: Audience and output filename for requested JWT SVIDs.
-- `daemon_mode = true`: Run continuously to renew materials.
+* `agent_address`: Path to the SPIRE agent API socket.
+* `cert_dir`: Where artifacts (cert, key, bundles, or JWTs) are written.
+* `jwt_svids`: Audience and output filename for requested JWT SVIDs.
+* `daemon_mode = true`: Run continuously to renew materials.
 
 ```bash
 kubectl apply -f - <<EOF
@@ -179,11 +179,11 @@ EOF
 
 Each Deployment:
 
-- Has its own ServiceAccount (`slim-client-a`, `slim-client-b`).
-- Mounts the SPIRE agent socket from the host (in KIND, agent runs as a
+* Has its own ServiceAccount (`slim-client-a`, `slim-client-b`).
+* Mounts the SPIRE agent socket from the host (in KIND, agent runs as a
   DaemonSet).
-- Runs `spiffe-helper` sidecar to continuously refresh identities.
-- Runs a placeholder `slim-client` container (sleep) you can exec into.
+* Runs `spiffe-helper` sidecar to continuously refresh identities.
+* Runs a placeholder `slim-client` container (sleep) you can exec into.
 
 ```bash
 kubectl apply -f - <<EOF

@@ -9,7 +9,6 @@ Agent Identity offers a Python SDK package allowing developers to use it as:
 
 To see more details about the development integration, you can refer to the [Dev section](./identity_service_development.md) section of the documentation.
 
-
 ### Installation
 
 To install the Python SDK for Agent Identity, you can use pip:

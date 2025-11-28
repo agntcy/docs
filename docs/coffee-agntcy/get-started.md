@@ -99,5 +99,4 @@ graph LR
     GC <--> TF[Tatooine Farm Agent]
 ```
 
-
 Learn more on how to deploy Lungo locally by visiting the [Lungo Deployment Guide](https://github.com/agntcy/coffeeAgntcy/blob/main/coffeeAGNTCY/coffee_agents/lungo/README.md)

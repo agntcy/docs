@@ -275,7 +275,7 @@ This code comes from the
 example. The local application is created using the helper function shown earlier.
 The channel name (the logical group topic) is produced via the
 [split_id](https://github.com/agntcy/slim/blob/slim-v0.7.0/data-plane/python/bindings/examples/src/slim_bindings_examples/common.py#L63)
-helper by parsing the `remote` parameter. 
+helper by parsing the `remote` parameter.
 
 A new group session is created by calling `local_app.create_session(...)` with two parameters:
 the channel name and a `slim_bindings.SessionConfiguration.Group` configuration object.
@@ -339,7 +339,7 @@ async def receive_loop(
 ```
 
 Each non-moderator participant listens for an incoming session using
-`local_app.listen_for_session()`. This returns a session object containing metadata 
+`local_app.listen_for_session()`. This returns a session object containing metadata
 such as session ID, type, source name, and destination name.
 The moderator already holds this information and therefore reuses the existing
 `created_session` (see `session = created_session`).
