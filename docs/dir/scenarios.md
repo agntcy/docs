@@ -403,14 +403,14 @@ This example demonstrates how to import records from external registries into yo
 **Supported Registries:**
 - `mcp` - [Model Context Protocol registry v0.1](https://github.com/modelcontextprotocol/registry)
 
-**Basic Usage:**
+### Basic Usage
 
 ```bash
 # Import from MCP registry
 dirctl import --type=mcp --url=https://registry.modelcontextprotocol.io/v0.1
 ```
 
-**Automated Imports:**
+### Automated Imports
 
 For Kubernetes deployments, you can configure automated imports using the [Helm chart configuration](https://github.com/agntcy/dir/blob/2aea0d670ef9d537b9a9237928dd1af7b02de447/install/charts/dirctl/values.yaml#L55):
 
@@ -426,7 +426,7 @@ cronjobs:
       - '--url=https://registry.modelcontextprotocol.io/v0.1'
 ```
 
-**Common Import Options:**
+### Common Import Options
 
 ```bash
 # Basic import from MCP registry
