@@ -394,13 +394,40 @@ syncing only the specific CIDs that matched your search criteria.
 
 ## Import
 
-Import records from external registries into DIR. Supports automated batch imports from various registry types.
+The import feature extends Directory's synchronization capabilities beyond DIR-to-DIR sync to support heterogeneous external registries. This enables you to aggregate agent records from multiple registry types into your local Directory instance.
+
+**How Import Works**: The import system uses registry-specific adapters to fetch records from external sources and transform them into OASF-compliant records. Each registry type has its own import logic that handles authentication, pagination, filtering, and data transformation. Records are automatically deduplicated and can be enriched with LLM-powered skill and domain mapping to ensure consistency with the OASF schema.
+
+This example demonstrates how to import records from external registries into your local Directory instance. The import feature supports automated batch imports with filtering, deduplication, and optional LLM-based enrichment.
+
+**Supported Registries:**
+- `mcp` - [Model Context Protocol registry v0.1](https://github.com/modelcontextprotocol/registry)
+
+**Basic Usage:**
+
+```bash
+# Import from MCP registry
+dirctl import --type=mcp --url=https://registry.modelcontextprotocol.io/v0.1
+```
+
+**Automated Imports:**
+
+For Kubernetes deployments, you can configure automated imports using the [Helm chart configuration](https://github.com/agntcy/dir/blob/2aea0d670ef9d537b9a9237928dd1af7b02de447/install/charts/dirctl/values.yaml#L55):
+
+```yaml
+cronjobs:
+  # Import cronjob - sync from MCP registry every 6 hours
+  import-mcp:
+    enabled: true
+    schedule: '0 */6 * * *'  # Every 6 hours
+    args:
+      - 'import'
+      - '--type=mcp'
+      - '--url=https://registry.modelcontextprotocol.io/v0.1'
+```
 
 #### `dirctl import [flags]`
 Fetch and import records from external registries.
-
-**Supported Registries:**
-- `mcp` - Model Context Protocol registry v0.1
 
 **Examples:**
 ```bash
