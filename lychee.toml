@@ -42,6 +42,10 @@ exclude = [
     'token\.actions\.githubusercontent\.com',
     'github\.com/example/',
     'spiffe\.github\.io/helm-charts-hardened',
+    
+    # Sites that timeout from GitHub Actions IPs
+    'w3\.org',
+    'gnu\.org',
 ]
 
 # Exclude paths (glob patterns relative to the input)
