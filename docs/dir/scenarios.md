@@ -398,11 +398,18 @@ The import feature extends Directory's synchronization capabilities beyond DIR-t
 
 **How Import Works**: The import system uses registry-specific adapters to fetch records from external sources and transform them into OASF-compliant records. Each registry type has its own import logic that handles authentication, pagination, filtering, and data transformation. Records are automatically deduplicated and can be enriched with LLM-powered skill and domain mapping to ensure consistency with the OASF schema.
 
-**How Translation and Enrichment Work**: Records are transformed from external registry data to OASF-compliant format, directly impacting how records are indexed and discovered across the network. Three methods are available: **Basic translation** uses [OASF-SDK basic translation](https://github.com/agntcy/oasf-sdk/blob/main/pkg/translator/translation.go#L393) with rule-based mapping and assigns default skills (`technology/software_engineering/apis_integration`) and domains (`agent_orchestration/agent_coordination`, `multi_modal/any_to_any`) - fast and deterministic with no additional infrastructure required. **Local LLM enrichment** runs LLM locally for intelligent skill and domain mapping, requiring local LLM runtime. **Remote LLM enrichment** uses external LLM services for skill and domain mapping, requiring API credentials. Both LLM methods require [MCPHost environment setup](https://github.com/mark3labs/mcphost?tab=readme-ov-file#environment-setup-).
+**How Translation and Enrichment Work**: Records are transformed from external registry data to OASF-compliant format, directly impacting how records are indexed and discovered across the network. 
+
+Three methods are available: 
+
+- **Basic translation** uses [OASF-SDK basic translation](https://github.com/agntcy/oasf-sdk/blob/main/pkg/translator/translation.go#L393) with rule-based mapping and assigns default skills (`technology/software_engineering/apis_integration`) and domains (`agent_orchestration/agent_coordination`, `multi_modal/any_to_any`). This method is fast and deterministic with no additional infrastructure required.
+- **Local LLM enrichment** runs LLM locally for intelligent skill and domain mapping, requiring local LLM runtime.
+- **Remote LLM enrichment** uses external LLM services for skill and domain mapping, requiring API credentials. Both LLM methods require [MCPHost environment setup](https://github.com/mark3labs/mcphost?tab=readme-ov-file#environment-setup).
 
 This example demonstrates how to import records from external registries into your local Directory instance. The import feature supports automated batch imports with filtering, deduplication, and optional LLM-based enrichment.
 
 **Supported Registries:**
+
 - `mcp` - [Model Context Protocol registry v0.1](https://github.com/modelcontextprotocol/registry)
 
 ### Basic Usage
