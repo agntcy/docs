@@ -392,6 +392,74 @@ dirctl routing search --skill "Audio" --output json | dirctl sync create --stdin
 This creates separate sync operations for each remote peer found in the search results,
 syncing only the specific CIDs that matched your search criteria.
 
+## Import
+
+The import feature extends Directory's synchronization capabilities beyond DIR-to-DIR sync to support heterogeneous external registries. This enables you to aggregate agent records from multiple registry types into your local Directory instance.
+
+**How Import Works**: The import system uses registry-specific adapters to fetch records from external sources and transform them into OASF-compliant records. Each registry type has its own import logic that handles authentication, pagination, filtering, and data transformation. Records are automatically deduplicated and can be enriched with LLM-powered skill and domain mapping to ensure consistency with the OASF schema.
+
+**How Translation and Enrichment Work**: Records are transformed from external registry data to OASF-compliant format, directly impacting how records are indexed and discovered across the network. 
+
+Three methods are available: 
+
+- **Basic translation** uses [OASF-SDK basic translation](https://github.com/agntcy/oasf-sdk/blob/main/pkg/translator/translation.go#L393) with rule-based mapping and assigns default skills (`technology/software_engineering/apis_integration`) and domains (`agent_orchestration/agent_coordination`, `multi_modal/any_to_any`). This method is fast and deterministic with no additional infrastructure required.
+- **Local LLM enrichment** runs LLM locally for intelligent skill and domain mapping, requiring local LLM runtime.
+- **Remote LLM enrichment** uses external LLM services for skill and domain mapping, requiring API credentials. Both LLM methods require [MCPHost environment setup](https://github.com/mark3labs/mcphost?tab=readme-ov-file#environment-setup).
+
+This example demonstrates how to import records from external registries into your local Directory instance. The import feature supports automated batch imports with filtering, deduplication, and optional LLM-based enrichment.
+
+**Supported Registries:**
+
+- `mcp` - [Model Context Protocol registry v0.1](https://github.com/modelcontextprotocol/registry)
+
+### Basic Usage
+
+```bash
+# Import from MCP registry
+dirctl import --type=mcp --url=https://registry.modelcontextprotocol.io/v0.1
+```
+
+### Automated Imports
+
+For Kubernetes deployments, you can configure automated imports using the [Helm chart configuration](https://github.com/agntcy/dir/blob/2aea0d670ef9d537b9a9237928dd1af7b02de447/install/charts/dirctl/values.yaml#L55):
+
+```yaml
+cronjobs:
+  # Import cronjob - sync from MCP registry every 6 hours
+  import-mcp:
+    enabled: true
+    schedule: '0 */6 * * *'  # Every 6 hours
+    args:
+      - 'import'
+      - '--type=mcp'
+      - '--url=https://registry.modelcontextprotocol.io/v0.1'
+```
+
+### Common Import Options
+
+```bash
+# Basic import from MCP registry
+dirctl import --type=mcp --url=https://registry.modelcontextprotocol.io/v0.1
+
+# Import with filtering and limits
+dirctl import --type=mcp \
+  --url=https://registry.modelcontextprotocol.io/v0.1 \
+  --filter=version=latest \
+  --limit=50
+
+# Import with LLM enrichment
+dirctl import --type=mcp \
+  --url=https://registry.modelcontextprotocol.io/v0.1 \
+  --enrich
+
+# Force reimport of existing records (bypasses deduplication)
+dirctl import --type=mcp \
+  --url=https://registry.modelcontextprotocol.io/v0.1 \
+  --force
+```
+
+For comprehensive documentation including all configuration options, filtering capabilities, LLM enrichment setup, and advanced usage examples, see the [CLI Import Workflow documentation](https://github.com/agntcy/dir/tree/main/cli#-import-workflow).
+
 ## gRPC Error Codes
 
 The following table lists the gRPC error codes returned by the server APIs, along with a
