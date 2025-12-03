@@ -32,6 +32,13 @@ This is a public staging environment for development and testing. Keep in mind t
 | **SPIRE Federation** | `https://spire.directory.agntcy.org`  | SPIRE server for secure identity federation |
 | **Status Dashboard** | `https://status.directory.agntcy.org` | Real-time service status and monitoring     |
 
+For the testbed production deployment the following endpoints are available:
+
+- `prod.api.ads.outshift.io`
+- `prod.zot.ads.outshift.io` (for sync)
+- `prod.spire.ads.outshift.io` (spire federation)
+- `prod.oidc-discovery.spire.ads.outshift.io` (for OIDC discovery)
+
 ## Quick Start Guide
 
 ### Prerequisites
@@ -47,28 +54,24 @@ Before you begin, ensure you have:
 #### Option 1: Using Directory CLI
 
 1. **Install the CLI**:
-   ```bash
-   # Using Homebrew (Linux/macOS)
-   brew tap agntcy/dir https://github.com/agntcy/dir
-   brew install dirctl
-   
-   # Or download directly from releases
-   curl -L https://github.com/agntcy/dir/releases/latest/download/dirctl-linux-amd64 -o dirctl
-   chmod +x dirctl
-   sudo mv dirctl /usr/local/bin/
-   ```
+
+    ```bash
+    # Using Homebrew (Linux/macOS)
+    brew tap agntcy/dir https://github.com/agntcy/dir
+    brew install dirctl
+    
+    # Or download directly from releases
+    curl -L https://github.com/agntcy/dir/releases/latest/download/dirctl-linux-amd64 -o dirctl
+    chmod +x dirctl
+    sudo mv dirctl /usr/local/bin/
+    ```
 
 2. **Configure the client**:
-   ```bash
-   dirctl config set server-address api.directory.agntcy.org
-   dirctl config set spiffe-socket-path /tmp/spire-agent/public.sock
-   ```
 
-3. **Test the connection**:
-   ```bash
-   dirctl ping
-   # Expected: ✅ Connected to Directory API at api.directory.agntcy.org
-   ```
+    ```bash
+    dirctl config set server-address api.directory.agntcy.org
+    dirctl config set spiffe-socket-path /tmp/spire-agent/public.sock
+    ```
 
 #### Option 2: Using Directory Client SDK
 

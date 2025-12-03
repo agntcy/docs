@@ -120,7 +120,9 @@ For production deployment, consider these enhancements:
 
 | Feature | Kind/Minikube Deployment | Production Deployment |
 |---------|---------------------|------------|
+| **SPIFFE CSI Driver** | ✅ Enabled (v0.5.5+) | ✅ Enabled |
 | **Storage** | emptyDir (ephemeral) | PVCs (persistent) |
+| **Deployment Strategy** | Recreate (default) | Recreate (required with PVCs) |
 | **Credentials** | Hardcoded in values.yaml | ExternalSecrets + Vault |
 | **Resources** | 250m/512Mi | 500m-2000m / 1-4Gi |
 | **Ingress** | NodePort (local) | Ingress + TLS |
@@ -133,24 +135,37 @@ For production deployment, consider these enhancements:
 
 ### Key Production Features
 
+**SPIFFE CSI Driver** (v0.5.5+):
+- Enabled by default via `spire.useCSIDriver: true`.
+- Provides synchronous workload identity injection.
+- Eliminates authentication race conditions ("certificate contains no URI SAN" errors).
+- More secure than hostPath mounts in workload containers.
+
 **Persistent Storage**:
-- Enable PVCs for routing datastore and database (v0.5.2+)
-- Prevents data loss across pod restarts
-- See `pvc.create` and `database.pvc.enabled` in values.yaml
+
+- Enable PVCs for routing datastore and database (v0.5.2+).
+- Prevents data loss across pod restarts.
+- See `pvc.create` and `database.pvc.enabled` in values.yaml.
+
+    !!! warning
+        When using PVCs, set `strategy.type: Recreate` to prevent database lock conflicts.
 
 **Secure Credential Management**:
-- Use ExternalSecrets Operator with Vault instead of hardcoded secrets
-- See commented ExternalSecrets configuration in values.yaml
-- Reference: agntcy-deployment repository for production patterns
+
+- Use ExternalSecrets Operator with Vault instead of hardcoded secrets.
+- See commented ExternalSecrets configuration in values.yaml.
+- Reference: [agntcy-deployment](https://github.com/agntcy/agntcy-deployment) repository for production patterns.
 
 **Resource Sizing**:
-- Increase limits based on expected load (CPU: 500m-2000m, Memory: 1-4Gi)
-- Monitor and adjust after observing production traffic
+
+- Increase limits based on expected load (CPU: 500m-2000m, Memory: 1-4Gi).
+- Monitor and adjust after observing production traffic.
 
 **Ingress & TLS**:
-- Configure Ingress for external access
-- Use cert-manager with Let's Encrypt for production certificates
-- Enable SSL passthrough for DIR API (SPIFFE mTLS)
+
+- Configure Ingress for external access.
+- Use cert-manager with Let's Encrypt for production certificates.
+- Enable SSL passthrough for DIR API (SPIFFE mTLS).
 
 ### Minikube Production Simulation
 
