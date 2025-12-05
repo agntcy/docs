@@ -43,6 +43,21 @@ To add a redirect:
 
     Failing to add redirects will result in broken links and a poor user experience. Always add redirects when moving content.
 
+## Linting and Running the Documentation Site Locally
+
+The documentation site is built using [MkDocs](https://www.mkdocs.org/) and [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/). It also uses [Lychee](https://github.com/lycheeverse/lychee) to check for broken links and Taskfile to run the documentation site locally and lint the documentation.
+
+To run the documentation site locally and lint the documentation, you need the following prerequisites:
+
+- [Taskfile](https://taskfile.dev/)
+- [Uv](https://docs.astral.sh/uv/getting-started/installation/)
+- [Python version 3.13 or higher](https://www.python.org/)
+- [Lychee](https://github.com/lycheeverse/lychee)
+
+To run the documentation site locally, use `task run`. This will start a live-reloading server at `http://localhost:8000`, allowing you to view the documentation site in your browser real-time.
+
+To lint and check for errors in the documentation, use `task lint`. This checks for broken links, spelling errors, and markdown syntax errors.
+
 ## Markdown and Writing Style
 
 Generic markdown intro (if needed):
@@ -84,6 +99,9 @@ Don't add hard line breaks at a certain line-length, enable line-wrapping in you
 - When linking to an external URL, or to a static HTML file within the project, use normal markdown linking `[text](url)`
 - When linking to a file within the docs, use `[link text](/docs/path/to/file.md)`.
 - Use project-absolute paths in the links/refs: start with a /, then the path relative to the `content` directory, for example: `/docs/getting-started/example.md` (easier to update when a file is moved, and easier to recognize where it is pointing).
+
+!!! note
+    Make sure to check for broken links by running `task lint` before submitting a pull request.
 
 ### Images
 
