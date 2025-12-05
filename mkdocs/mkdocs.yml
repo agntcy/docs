@@ -50,39 +50,6 @@ plugins:
             - griffe_pydantic:
                 schema: true
   swagger-ui-tag:
-  # htmlproofer:
-  #   ignore_urls:
-  #     # Local development URLs
-  #     - "http://localhost*"
-  #     - "https://localhost*"
-  #     - "*127.0.0.1*"
-  #     
-  #     # Generic file patterns and placeholders
-  #     - "*/screenshot.png"
-  #     - "*/image.png" 
-  #     - "*/docs/path/to/file.md"
-  #     - "https://api.NODE/*"
-  #     
-  #     # External URLs with false negatives (rate limiting/blocking)
-  #     - "https://docs.agntcy.org/*"
-  #     - "https://www.npmjs.com/"
-  #     - "https://httpbin.org/"
-  #     
-  #     # Auto-generated anchors from API documentation
-  #     - "#agntcy*"       # Covers all agntcy protobuf types
-  #     - "#google*"       # Covers all Google protobuf types
-  #     - "#uint32"
-  #     - "#string"
-  #     - "#bytes" 
-  #     - "#bool"
-  #     - "#top"
-  #     
-  #     # Cross-file API references (both source and build formats)
-  #     - "dir-*-v1-api.md#*"    # Source format
-  #     - "../dir-*-v1-api/#*"   # Build format
-  #   raise_error: false
-  #   raise_error_after_finish: false
-  #   validate_external_urls: true
   include-markdown:
 
 theme:
