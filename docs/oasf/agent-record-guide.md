@@ -16,7 +16,7 @@ Start by filling out the basic metadata of your record:
 - `version`:
   Use semantic versioning to indicate the current version of your record.
 - `schema_version`:
-  Provide the OASF schema version the record needs to be valid against. 
+  Provide the OASF schema version the record needs to be valid against.
   Must be in semantic versioning format (see [https://semver.org/](https://semver.org/)), e.g., `"0.7.0"`.
 - `authors`:
   List the authors in the `Name <email>` format.

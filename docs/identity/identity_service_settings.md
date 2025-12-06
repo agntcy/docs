@@ -108,7 +108,7 @@ Once a device is successfully added, you can view and manage it from the Devices
 
    ![Mobile Device Registered](../assets/identity/identity_service/Settings_DEVICE_10.png)
 
-3. **Testing Device Notifications:**
+2. **Testing Device Notifications:**
 
    - To ensure your device is receiving notifications correctly, you can send a test notification.
    - Locate the desired device in the list and click the options menu next to its entry.
@@ -120,7 +120,7 @@ Once a device is successfully added, you can view and manage it from the Devices
 
 ![Mobile Device notification testing](../assets/identity/identity_service/Settings_DEVICE_12.png)
 
-5. **Deleting a Device:**
+1. **Deleting a Device:**
 
    - If a device is no longer needed or you wish to remove it from your account, you can delete it.
    - From the options menu next to the device entry, select Delete.

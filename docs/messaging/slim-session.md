@@ -171,7 +171,7 @@ Create Session Parameters:
     participants join.
 * `config` (required, SessionConfiguration): The configuration object created for this session.
 
-As in the case of point to point session, the `await handle` guarantees that once returned all the 
+As in the case of point to point session, the `await handle` guarantees that once returned all the
 underlying message exchange is completed.
 
 ### Sending and Replying in a Group Session

@@ -15,7 +15,6 @@ Before you begin, ensure you have the necessary tools and access to the **AGNTCY
     Most of the development examples are provided in Python, but you can also use other programming languages to interact with the Agent Identity API. The endpoints are accessible via REST and gRPC protocols.
     To see more details about the API access, you can refer to the [API](./identity_service_api_access.md) section of the documentation.
 
-
 ## Issuing and Verifying Badges
 
 ### Issuing a Badge
@@ -88,13 +87,12 @@ In order to use `TBAC` effectively, you need to follow the following steps:
   NOTE
 
   The tasks available for `TBAC` are automatically discovered from the Agentic Services when you issue the badge.
- 
 
-2. **Define the `TBAC` policies and rules for your Agentic Services.**
+1. **Define the `TBAC` policies and rules for your Agentic Services.**
 
 - To integrate `TBAC` in your application, you can use the UI to define policies and rules for your Agentic Services. Please follow the detailed instructions in the [Policies and Rules Documentation](./creating_policies.md) to set up and manage access control for your services.
 
-3. **Integrate `TBAC` in your application** following one of the methods below.
+1. **Integrate `TBAC` in your application** following one of the methods below.
 
 ### A2A Integration using the Python SDK
 
@@ -104,8 +102,7 @@ When using the Python SDK for `TBAC`, you need to provide in your environment th
 
 - `IDENTITY_SERVICE_API_KEY`: Your Agentic Service API Key. You can obtain this key from the Agent Services details page.
 
-
-##### Invoke using HTTPX Auth Class
+#### Invoke using HTTPX Auth Class
 
 For HTTPX-based applications, you can use the `IdentityServiceAuth` class to integrate `TBAC`. This class provides an easy way to authorize Agentic Services and manage access tokens.
 
@@ -181,11 +178,10 @@ When using the Python SDK for `TBAC`, you need to provide in your environment th
 
 - `IDENTITY_SERVICE_API_KEY`: Your Agentic Service API Key. You can obtain this key from the Agent Services details page.
 
-
-##### MCP ClientSession using HTTPX Auth Class
+#### MCP ClientSession using HTTPX Auth Class
 
 For HTTPX-based applications, you can use the `IdentityServiceAuth` class to integrate `TBAC`. This class provides an easy way to authorize Agentic Services and manage access tokens.
-Bellow you can find an example of how to use the `IdentityServiceAuth` class with HTTPX and Langchain's `MultiServerMCPClient` MCP adapter:
+Below you can find an example of how to use the `IdentityServiceAuth` class with HTTPX and Langchain's `MultiServerMCPClient` MCP adapter:
 
 ```python
 # Other imports
@@ -242,7 +238,7 @@ async def main():
 
 ##### Authorize using the MCP Starlette/FastAPI auth middleware
 
-For MCP(Model Context Protocl) based applications using Starlette, you can use the `IdentityServiceMCPAuthMiddleware` to integrate `TBAC`. This middleware automatically handles authorization for incoming requests:
+For MCP(Model Context Protocol) based applications using Starlette, you can use the `IdentityServiceMCPAuthMiddleware` to integrate `TBAC`. This middleware automatically handles authorization for incoming requests:
 
 ```python
 # Other imports
@@ -312,7 +308,6 @@ When using the REST APIs for `TBAC`, you need to replace the following variables
 
 - `REST_API_ENDPOINT`: The endpoint of the Agent Identity REST API. This can be obtained from the [API Access documentation](./identity_service_api_access.md).
 - `YOUR_AGENTIC_SERVICE_API_KEY`: Your Agentic Service API Key. You can obtain this key from the Agent Services details page.
-
 
 The REST API provides endpoints to integrate `TBAC` in your application. You can follow these steps to authorize and verify Agentic Services:
 
