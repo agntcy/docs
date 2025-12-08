@@ -8,8 +8,7 @@ reporting bugs that we ask you to review.
 Before reporting a new issue, please ensure that the issue was not already reported or fixed by searching through our
 [issues list](https://github.com/agntcy/docs/issues).
 
-When creating a new issue, please be use the **New Issue** template, and provide as much relevant information as
-possible.
+When creating a new issue, use the **New Issue** template and provide as much relevant information as possible.
 
 ## Sending Pull Requests
 
@@ -27,7 +26,7 @@ If you move or rename a documentation file, **you must add a redirect** to prese
 
 To add a redirect:
 
-1. Open `mkdocs/mkdocs.yml`
+1. Open `mkdocs/mkdocs.yml`.
 1. Add an entry to the `redirect_maps` under the `redirects` plugin:
 
     ```yaml
@@ -37,32 +36,48 @@ To add a redirect:
             'old/path/to/file.md': 'new/path/to/file.md'
     ```
 
-1. Test the redirect locally by running `task build` or `task run` and verifying the old URL redirects to the new location
+1. Test the redirect locally by running `task build` or `task run` and verifying the old URL redirects to the new location.
 
 !!! warning
 
     Failing to add redirects will result in broken links and a poor user experience. Always add redirects when moving content.
 
+## Linting and Running the Documentation Site Locally
+
+The documentation site is built using [MkDocs](https://www.mkdocs.org/) and [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/). It also uses [Lychee](https://github.com/lycheeverse/lychee) to check for broken links and Taskfile to run the documentation site locally and lint the documentation.
+
+To run the documentation site locally and lint the documentation, you need the following prerequisites:
+
+- [Taskfile](https://taskfile.dev/)
+- [Uv](https://docs.astral.sh/uv/getting-started/installation/)
+- [Python version 3.13 or higher](https://www.python.org/)
+- [Lychee](https://github.com/lycheeverse/lychee)
+
+To run the documentation site locally, use `task run`. This will start a live-reloading server at `http://localhost:8000`, allowing you to view the documentation site in your browser in real time.
+
+To lint and check for errors in the documentation, use `task lint`. This checks for broken links, spelling errors, and markdown syntax errors.
+
 ## Markdown and Writing Style
 
-Generic markdown intro (if needed):
-    - [commonmark.org/help/tutorial](https://commonmark.org/help/tutorial/)
-    - [www.markdownguide.org](https://www.markdownguide.org)
+For a general overview of Markdown, see the following resources:
 
-Don't add hard line breaks at a certain line-length, enable line-wrapping in your editor instead. Otherwise searching for sentences in the code becomes a pain.
+- [commonmark.org/help/tutorial](https://commonmark.org/help/tutorial/)
+- [www.markdownguide.org](https://www.markdownguide.org)
+
+Do not add hard line breaks at a certain line-length, enable line-wrapping in your editor instead. Otherwise searching for sentences in the code becomes a pain.
 
 ### Headings
 
 - Start with level 1 heading (#).
 - Use hashmarks for headings.
-- Use title case (`# Start Every Word with Uppercase Except for Articles and Coordinating Conjunctions`)
-- Keep titles reasonably short (they show up in the right-hand toc)
+- Use title case (`# Start Every Word with Uppercase Except for Articles and Coordinating Conjunctions`).
+- Keep titles reasonably short (they show up in the right-hand toc).
 - Do not skip heading levels.
 
 ### Lists
 
-- Use dash (`-`) for bulleted lists
-- Use only `1.` for ordered lists, they are automatically numbered in the output
+- Use dash (`-`) for bulleted lists.
+- Use only `1.` for ordered lists, they are automatically numbered in the output.
 - Indent additional stuff that belongs to a list element by 4 spaces, for example:
 
     ```md
@@ -81,9 +96,14 @@ Don't add hard line breaks at a certain line-length, enable line-wrapping in you
 
 ### Links
 
-- When linking to an external URL, or to a static HTML file within the project, use normal markdown linking `[text](url)`
+- When linking to an external URL, or to a static HTML file within the project, use normal markdown linking `[text](url)`.
 - When linking to a file within the docs, use `[link text](/docs/path/to/file.md)`.
-- Use project-absolute paths in the links/refs: start with a /, then the path relative to the `content` directory, for example: `/docs/getting-started/example.md` (easier to update when a file is moved, and easier to recognize where it is pointing).
+- Use project-absolute paths in the links and references: start with a `/`, then the path relative to the `content` directory.
+
+    !!! example
+        `/docs/getting-started/example.md` (easier to update when a file is moved, and easier to recognize where it is pointing).
+
+- Always check for broken links by running `task lint` before submitting a pull request.
 
 ### Images
 
@@ -134,4 +154,4 @@ Is displayed as:
 
     This is a note.
 
-For more information, see the [Material for MkDocs reference](https://squidfunk.github.io/mkdocs-material/reference/).
+For more information on formatting, see the [Material for MkDocs reference](https://squidfunk.github.io/mkdocs-material/reference/).

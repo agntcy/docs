@@ -289,7 +289,7 @@ For more information, see the [slimctl](#slimctl).
 
 ### Installing slimctl
 
-Slimctl is available for multiple operating systems and architectures. 
+Slimctl is available for multiple operating systems and architectures.
 
 To install slimctl, download the appropriate release asset from GitHub or, if you are on macOS, by using Homebrew.
 
@@ -309,7 +309,6 @@ brew install slimctl
 ```
 
 This automatically downloads and installs the latest version of slimctl for your system.
-
 
 ### Configuring slimctl
 
@@ -384,7 +383,6 @@ slimctl controller route del org/default/alice/0 via slim/b --node-id slim/a
 ```
 
 ### Example 2: Create, Delete Route Using `connection_config.json`
-
 
 ```bash
 # Add a new route

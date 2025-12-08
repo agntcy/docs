@@ -111,8 +111,8 @@ populate it as described below.
 
 3. `type`: Review OASF data_types and ensure you utilize appropriate types
    while defining new fields.
-    * All the available data_types can be accessed [here](https://schema.oasf.outshift.com/data_types).
-    * They are also accessible in your [local instance of the OASF server](http://localhost:8080/data_types).
+    - All the available data_types can be accessed [here](https://schema.oasf.outshift.com/data_types).
+    - They are also accessible in your [local instance of the OASF server](http://localhost:8080/data_types).
 4. `is_array`: This a boolean key:value pair that you would need to add if the field you are defining is an array.
 
 #### Defining an `object`
