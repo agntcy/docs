@@ -63,7 +63,7 @@ This sequence diagram illustrates the process of creating, publishing, and regis
 sequenceDiagram
 autonumber
 
-Agent Creator->>e.g. Github: Publish agent source<br/>code and ACP manifest
+Agent Creator->>e.g. Github: Publish agent source<br/>code
 
 Agent Creator->>Identity CLI: Create and publish ResolverMetadata with an Agent ID
 
@@ -82,7 +82,7 @@ This sequence diagram illustrates the process of updating an existing Agent alon
 sequenceDiagram
 autonumber
 
-Agent Creator->>e.g. Github: Update and publish agent source<br/>code and ACP manifest
+Agent Creator->>e.g. Github: Update and publish agent source<br/>code
 
 Agent Creator->>Directory CLI: Update Agent OASF keeping the same<br/>Agent ID in identity extension
 
@@ -135,7 +135,7 @@ Agent Consumer->>Identity CLI: Verify the Agent Badge
 sequenceDiagram
 autonumber
 
-Agent Creator->>e.g. Github: Publish agent source<br/>code and ACP manifest
+Agent Creator->>e.g. Github: Publish agent source<br/>code
 activate e.g. Github
 e.g. Github-->>Agent Creator: Published
 deactivate e.g. Github
@@ -192,7 +192,7 @@ deactivate Identity CLI
 sequenceDiagram
 autonumber
 
-Agent Creator->>e.g. Github: Update and publish agent source<br/>code and ACP manifest
+Agent Creator->>e.g. Github: Update and publish agent source<br/>code
 activate e.g. Github
 e.g. Github-->>Agent Creator: Published
 deactivate e.g. Github

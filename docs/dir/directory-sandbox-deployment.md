@@ -154,7 +154,7 @@ For production deployment, consider these enhancements:
 
 - Use ExternalSecrets Operator with Vault instead of hardcoded secrets.
 - See commented ExternalSecrets configuration in values.yaml.
-- Reference: [agntcy-deployment](https://github.com/agntcy/agntcy-deployment) repository for production patterns.
+- RefFor more information, see the [ExternalSecrets configuration](https://github.com/agntcy/dir/blob/4bac23d129f030736198bf25708c24db97fc4547/install/charts/dir/values.yaml#L341-L382).
 
 **Resource Sizing**:
 
