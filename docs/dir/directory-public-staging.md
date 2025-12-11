@@ -60,17 +60,25 @@ Before you begin, ensure you have:
     brew tap agntcy/dir https://github.com/agntcy/dir
     brew install dirctl
     
-    # Or download directly from releases
-    curl -L https://github.com/agntcy/dir/releases/latest/download/dirctl-linux-amd64 -o dirctl
+    # Or download directly from releases (auto-detects OS and architecture)
+    curl -L "https://github.com/agntcy/dir/releases/latest/download/dirctl-$(uname -s | tr '[:upper:]' '[:lower:]')-$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/')" -o dirctl
     chmod +x dirctl
     sudo mv dirctl /usr/local/bin/
     ```
 
-2. **Configure the client**:
+2. **Configure the client** using environment variables:
 
     ```bash
-    dirctl config set server-address api.directory.agntcy.org
-    dirctl config set spiffe-socket-path /tmp/spire-agent/public.sock
+    export DIRECTORY_CLIENT_SERVER_ADDRESS=api.directory.agntcy.org
+    export DIRECTORY_CLIENT_SPIFFE_SOCKET_PATH=/tmp/spire-agent/public.sock
+    ```
+
+    Or pass flags directly to commands:
+
+    ```bash
+    dirctl --server-addr api.directory.agntcy.org \
+           --spiffe-socket-path /tmp/spire-agent/public.sock \
+           <command>
     ```
 
 #### Option 2: Using Directory Client SDK
