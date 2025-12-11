@@ -222,14 +222,14 @@ trustDomainBundle: |-
 
 ### Step 2: Submit Federation Request
 
-1. **Fork the repository**: Go to https://github.com/agntcy/dir and click "Fork"
+1. **Fork the repository**: Go to https://github.com/agntcy/dir-staging and click "Fork"
 
 2. **Create your federation file**:
    ```bash
-   git clone https://github.com/your-username/dir.git
-   cd dir/deployment/onboarding/
-   cp spire.template.yaml your-org.com.yaml
-   # Edit your-org.com.yaml with your details
+   git clone https://github.com/<your-username>/dir-staging.git
+   cd dir-staging/onboarding/federation
+   cp dir.agntcy.org.yaml <your-org.com>.yaml
+   # Edit <your-org.com>.yaml with your details
    ```
 
 3. **Submit a Pull Request**:
