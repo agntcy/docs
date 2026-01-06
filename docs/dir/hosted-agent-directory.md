@@ -1,5 +1,9 @@
 # Hosted Outshift Agent Directory, powered by AGNTCY
 
+!!! note
+    Thank you for your engagement with this public hosted service. Based on your valuable feedback and usage patterns, we have evolved the AGNTCY Directory code base and will be decommissioning this service effective **January 20, 2026**. Please stay engaged by joining the [AGNTCY Directory Core Working Group](https://calendar.google.com/calendar/u/0/embed?src=admin@ops.agntcy.org).
+
+
 A public hosted instance of the Agent Directory is available at
 [https://agent-directory.outshift.com/](https://agent-directory.outshift.com/). In
 this section we describe the main features of this instance which is provided __AS
