@@ -151,7 +151,7 @@ A string representation for each enum value should also be generated using the [
 For example:
 
 ```go
-// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// Copyright 2026 AGNTCY Contributors (https://github.com/agntcy)
 // SPDX-License-Identifier: Apache-2.0
 
 //go:generate stringer -type=AppType
