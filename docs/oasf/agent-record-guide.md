@@ -20,7 +20,7 @@ Start by filling out the basic metadata of your record:
   Must be in semantic versioning format (see [https://semver.org/](https://semver.org/)), e.g., `"0.7.0"`.
 - `authors`:
   List the authors in the `Name <email>` format.
-  Replace `Your Name` and `you@example.com` with the appropriate details.
+  Replace `Your Name` and `you@example.com` with the appropriate details. Providing an email is optional.
 - `created_at`:
   Use RFC 3339 format to specify when the record was created.
 
@@ -88,3 +88,31 @@ schema of the record or the
 [validation endpoint](https://schema.oasf.outshift.com/doc/index.html#/Validation/SchemaWeb.SchemaController.validate_object)
 of OASF to validate your record.
 Test the agent's configuration to verify that it works as expected.
+
+## Example Agent Record
+
+Below is an example of an agent record for a tourist scheduling coordinator.
+
+```json
+{
+  "name": "Tourist Scheduling Coordinator",
+  "description": "Central scheduling coordinator that matches tourists with tour guides…",
+  "version": "2.0.0",
+  "schema_version": "0.8.0",
+  "authors": ["AGNTCY <example@agntcy.org>"],
+  "created_at": "2025-01-01T00:00:00Z",
+  "domains": [
+    {"name": "hospitality_and_tourism/tourism_management", "id": 1505}
+  ],
+  "skills": [
+    {"name": "agent_orchestration/task_decomposition", "id": 1001},
+    {"name": "agent_orchestration/agent_coordination", "id": 1004},
+    {"name": "agent_orchestration/multi_agent_planning", "id": 1003}
+  ],
+  "modules": [
+  ],
+  "locators": [
+    {"type": "source_code", "url": "https://github.com/agntcy/agentic-apps/tree/main/tourist_scheduling_system"}
+  ]
+} 
+```
