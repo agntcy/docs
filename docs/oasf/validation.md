@@ -1,29 +1,78 @@
 # Validation Service
 
-The validation service validates OASF records against JSON schemas. It supports both embedded schemas and custom schema URLs. The validation service supports the following features:
+The validation service validates OASF records against an OASF schema server via API validation.
+The validation service supports the following features:
 
-* Validates records against embedded schema versions (0.3.1 and 0.7.0).
-* Supports custom schema URLs for remote validation.
-* Returns detailed validation errors.
-* Automatic schema version detection from records.
+- Validates records against any OASF schema server URL.
+- Returns detailed validation errors and warnings separately.
+- Automatic schema version detection from records.
+- Warnings do not affect validation result (only errors cause validation to fail).
 
-Use `ValidateRecord` to validate a record against a specified schema URL or its embedded schema version.
+## Initialization
+
+Create a validator instance by providing a schema URL:
+
+```go
+validator, err := validator.New("https://schema.oasf.outshift.com")
+if err != nil {
+    // Handle error
+}
+```
+
+The schema URL is required and must be provided when creating the validator.
+The validator will use this URL for all validation operations.
+
+## Validation
+
+Use `ValidateRecord` to validate a record against the configured schema URL.
 
 **Parameters:**
 
-* `record`: The OASF record to validate (as a Protocol Buffer Struct)
-* `options`: Optional validation options
+- `ctx`:
+  Context for cancellation and timeout control
+- `record`:
+  The OASF record to validate (as a Protocol Buffer Struct)
 
 **Returns:**
 
-* `bool`: Whether the record is valid
-* `[]string`: List of validation errors (empty if valid)
-* `error`: Any error that occurred during validation
+- `bool`:
+  Whether the record is valid (true if no errors, false if errors present)
+- `[]string`:
+  List of validation error messages (empty if valid)
+- `[]string`:
+  List of validation warning messages (may be non-empty even if valid)
+- `error`:
+  Any error that occurred during validation
 
-**Options:**
+**Note:** Warnings do not affect the validation result.
+A record is considered valid if there are no errors, regardless of whether warnings are present.
 
-* `WithSchemaURL(url string)`: Validate against a custom schema URL instead of embedded schemas
+## Validation Response
+
+The validation response includes:
+
+- **Errors**:
+  Critical validation failures that must be fixed.
+  If any errors are present, the record is invalid.
+- **Warnings**:
+  Non-critical issues or deprecation notices.
+  Warnings do not affect the validation result.
+
+Error messages include:
+
+- Clear descriptions of what failed validation
+- Attribute paths (e.g., `data.servers[0]`)
+- Constraint details for `constraint_failed` errors
+
+Warning messages include:
+
+- Descriptions of non-critical issues
+- Attribute paths where applicable
 
 ## Example Usage
 
-For detailed examples, see the [OASF SDK repository](https://github.com/agntcy/oasf-sdk/blob/main/USAGE.md).
+For detailed examples, see the [OASF SDK repository](https://github.com/agntcy/oasf-sdk/blob/main/USAGE.md).
+
+## Validation Comparison
+
+For a detailed comparison between the API validator and JSON Schema Draft-07 validation, including differences in error handling, warnings, and validation coverage, see the [Validation Comparison](validation-comparison.md) page.
