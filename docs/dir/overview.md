@@ -2,7 +2,7 @@
 
 The Agent Directory Service (ADS) is a distributed directory service designed to
 store metadata for AI agent applications. This metadata, stored as directory
-records, enables the discovery of agent applications with specific skills for
+records, enables the discovery of agent applications possessing specific skills for
 solving various problems.
 The implementation features distributed directories that interconnect through a
 content-routing protocol. This protocol maps agent skills to directory record
