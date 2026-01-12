@@ -3,6 +3,7 @@ nav:
   - Getting Started: getting-started.md
   - Architecture: architecture.md
   - Records: ads-records.md
+  - Validation: validation.md
   - Trust Model: trust-model.md
   - Features and Usage: scenarios.md
   - Event Streaming: events.md
