@@ -1,6 +1,6 @@
 # SLIM Messaging Layer
 
-The [SLIM](slim-core.md) Messaging Layer implements an efficient message routing and
+The [SLIM](overview.md) Messaging Layer implements an efficient message routing and
 delivery system between applications.
 
 ## Client and Channel Naming

@@ -5,7 +5,7 @@ unifies state-of-the-art capabilities from all mentioned frameworks into a
 single implementation.
 
 For more information on SLIM, see the [detailed
-documentation](./slim-core.md).
+documentation](./overview.md).
 
 ## Installation
 

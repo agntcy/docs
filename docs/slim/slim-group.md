@@ -1,6 +1,6 @@
 # SLIM Group Creation and Management
 
-One of the key features of [SLIM](slim-core.md) is its support for secure group communication.
+One of the key features of [SLIM](overview.md) is its support for secure group communication.
 In SLIM, a group consists of multiple clients that communicate through a shared
 channel. Each channel is identified by a unique name, as described in the [SLIM
 Messaging Layer](slim-data-plane.md). When MLS is enabled, group

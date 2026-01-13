@@ -1,6 +1,6 @@
 # SLIM Controller
 
-The [SLIM](slim-core.md) Controller is a central management component that
+The [SLIM](overview.md) Controller is a central management component that
 orchestrates and manages SLIM nodes in a distributed messaging system. It
 provides a unified interface for configuring routes, managing node registration,
 and coordinating communication between nodes.

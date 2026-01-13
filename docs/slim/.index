@@ -1,5 +1,5 @@
 nav:
- - Secure Low-Latency Interactive Messaging (SLIM): slim-core.md
+ - Overview: overview.md
  - Getting Started with SLIM:
     - Getting Started: slim-howto.md
     - Configuration Reference: slim-data-plane-config.md

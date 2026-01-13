@@ -1,4 +1,4 @@
-# Secure Low-Latency Interactive Messaging (SLIM)
+# Overview
 
 Secure Low-Latency Interactive Messaging (SLIM) is a secure, scalable, and
 user-friendly communication framework that unifies state-of-the-art capabilities
@@ -24,4 +24,4 @@ The main components of SLIM are:
 - [SLIM Controller](./slim-controller.md)
 
 To get started with SLIM, see the [Getting Started with
-SLIM](../messaging/slim-howto.md) guide.
+SLIM](../slim/slim-howto.md) guide.
