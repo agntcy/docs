@@ -2,7 +2,7 @@ nav:
   - Introduction: index.md
   - OASF: oasf
   - Agent Directory Service: dir
-  - Messaging SDK: messaging
+  - Secure Low-Latency Interactive Messaging (SLIM): slim
   - Identity: identity
   - Observability and Evaluation: obs-and-eval
   - CSIT: csit
