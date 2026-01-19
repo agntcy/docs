@@ -6,7 +6,6 @@ nav:
   - Trust Model: trust-model.md
   - Features and Usage: scenarios.md
   - Event Streaming: events.md
-  - Hosted AGNTCY Agent Directory: hosted-agent-directory.md
   - CLI Reference: directory-cli.md
   - SDK Reference: directory-sdk.md
   - API Reference: dir-api-reference.md
