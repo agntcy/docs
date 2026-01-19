@@ -1,0 +1,72 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 Cisco and/or its affiliates.
+# SPDX-License-Identifier: Apache-2.0
+
+name: PR Links
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  linkChecker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: 'recursive'
+
+      - name: Setup Golang
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23.1'
+
+      - name: Setup Taskfile
+        shell: bash
+        run: |
+          sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
+
+      - name: Setup UV
+        shell: bash
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      - name: Update GITHUB_PATH
+        shell: bash
+        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Build docs
+        shell: bash
+        run: |
+          task build
+
+      - name: Check links in PR changes
+        uses: lycheeverse/lychee-action@v2
+        with:
+          # Remap live URLs to build directory because the links are potentially not live yet
+          args: |
+            --config lychee.toml
+            --root-dir $PWD/.build/site
+            --exclude-all-private
+            --remap 'https://docs\.agntcy\.org/(.*)/ file://'$PWD'/.build/site/$1/index.html'
+            .build/site/
+          fail: true
+          output: lychee/out.md
+
+      - name: Comment Broken Links
+        if: failure()
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          path: lychee/out.md
+
+      - name: Suggestions
+        if: failure()
+        run: |
+          echo -e "\nPlease review the links reported in the 'Check links in PR changes' step above."
+          echo -e "If a link is valid but fails due to a CAPTCHA challenge, IP blocking, login requirements, etc.,"
+          echo -e "consider adding such links to lychee.toml exclude list to bypass future checks.\n"
+          exit 1
+

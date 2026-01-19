@@ -15,7 +15,7 @@ The OASF SDK is available as a Go module and a Helm chart.
 Add the OASF SDK package to your Go project:
 
 ```bash
-go install github.com/agntcy/oasf-sdk/pkg@v0.0.6
+go get github.com/agntcy/oasf-sdk/pkg@latest
 ```
 
 Deploy the OASF SDK server using the provided Helm chart:
@@ -32,7 +32,7 @@ docker run -p 31234:31234 ghcr.io/agntcy/oasf-sdk:latest
 
 ## Usage
 
-The OASF SDK can be used in two ways: 
+The OASF SDK can be used in two ways:
 
 * As a Go Package you can import and use the packages directly in your Go application.
 * As a gRPC Service you can deploy the server and communicate via gRPC.

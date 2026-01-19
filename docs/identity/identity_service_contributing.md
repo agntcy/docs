@@ -151,7 +151,7 @@ A string representation for each enum value should also be generated using the [
 For example:
 
 ```go
-// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// Copyright 2026 AGNTCY Contributors (https://github.com/agntcy)
 // SPDX-License-Identifier: Apache-2.0
 
 //go:generate stringer -type=AppType
@@ -286,7 +286,7 @@ log.Info("Sharing some information")
 log.Error("Oh no! ", err)
 ```
 
-It is encouraged to exploit structured logging as much as possible, to add fields into the log simply use the `WithFields` function found in the same pacakge:
+It is encouraged to exploit structured logging as much as possible, to add fields into the log simply use the `WithFields` function found in the same package:
 
 ```go
 log.WithFields(logrus.Fields{
@@ -305,7 +305,7 @@ log.WithError(err).Error("Oh no!")
 
 ## Contextual logging
 
-For better and rich logs, it is highly recommanded to use a contextual logger which enriches the log with additional key-value pairs attached to `context.Context` (e.g, `tenantID`, `appID`, `requestID`, http & gRPC requests).
+For better and rich logs, it is highly recommended to use a contextual logger which enriches the log with additional key-value pairs attached to `context.Context` (e.g, `tenantID`, `appID`, `requestID`, http & gRPC requests).
 
 For example:
 
@@ -320,7 +320,7 @@ What log level to use?
 - **`log.Debug`:** Useful for times where verbosity is needed and for logs of high frequency, such as the ones used for debugging.
 - **`log.Info`:** Useful for giving a steady state information about the service and important log messages.
 - **`log.Warn`:** Logs that indicate a potential issue or a weird state but doesn't prevent the system from functioning. If used, it may require attention.
-- **`log.Error`:** Error logs indicating unexpected behaviours occured somewhere in the code, most of these errors are not handled.
+- **`log.Error`:** Error logs indicating unexpected behaviours occurred somewhere in the code, most of these errors are not handled.
 
 ## Error logging
 
@@ -351,7 +351,7 @@ DEBUG[2025-10-06T10:45:13+02:00] Creating badge with claims full_method=/agntcy.
 
 > **Enabled for non development environment, such as production (`GO_ENV=production`)**
 
-Each log is written in a JSON format, which is more effecient for parsing and to be fed to observability platforms such as Grafana.
+Each log is written in a JSON format, which is more efficient for parsing and to be fed to observability platforms such as Grafana.
 
 Example:
 
@@ -422,7 +422,7 @@ Only pull requests with passing unit tests are merged.
   - If table-driven tests aren't suitable:
     - Create one test function per test case, or
     - Use [`T.Run()`](https://pkg.go.dev/testing#T.Run) to create subtests within the same function.
-- Arrange the body of the test using the "*Arrage -> Act -> Assert*" pattern:
+- Arrange the body of the test using the "*Arrange -> Act -> Assert*" pattern:
   - **Arrange** your objects, data, and set them up as necessary.
   - **Act** on the code under test by executing it.
   - **Assert** the result based on what is expected.
@@ -462,7 +462,7 @@ Only pull requests with passing unit tests are merged.
 
 When a test function covers a single scenario, its name should be composed of four parts:
 
-1. **Struct name** - *(incude only if testing a struct method; omit for standalone functions)*.
+1. **Struct name** - *(include only if testing a struct method; omit for standalone functions)*.
 2. **Function/method name** - The specific function or method being tested.
 3. **Expected behavior** - The outcome expected when the scenario is invoked, prefer the use of the verb `should`.
 4. **Test scenario** - The specific condition or context in which the function/method is being tested.

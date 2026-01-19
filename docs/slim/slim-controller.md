@@ -1,6 +1,6 @@
 # SLIM Controller
 
-The [SLIM](slim-core.md) Controller is a central management component that
+The [SLIM](overview.md) Controller is a central management component that
 orchestrates and manages SLIM nodes in a distributed messaging system. It
 provides a unified interface for configuring routes, managing node registration,
 and coordinating communication between nodes.
@@ -187,8 +187,16 @@ Example config to enable MTLS on Southbound endpoint using [Spire](https://spiff
 
   logging:
     level: DEBUG
+
   reconciler:
-    threads: 3
+    # Max number of times a failed reconcile will be retried
+    maxRequeues: 15
+    # Max number of reconciles that can be run in parallel for different nodes
+    maxNumOfParallelReconciles: 1000
+
+  # Specifies the SQLite database file path for storing control plane data
+  database:
+    filePath: controlplane.db
 
   spire:
     enabled: false
@@ -279,7 +287,28 @@ For more information, see the [slimctl](#slimctl).
 
 `slimctl` is the command-line interface for the SLIM controller.
 
-The command line tool communicates either with the `controller` (using "controller" or "c" subcommand) or directly with the SLIM node (using the "node" or "n" subcommand)
+### Installing slimctl
+
+Slimctl is available for multiple operating systems and architectures.
+
+To install slimctl, download the appropriate release asset from GitHub or, if you are on macOS, by using Homebrew.
+
+#### Downloading Slimctl from Github
+
+1. Go to the slimctl [GitHub releases page](https://github.com/agntcy/slim/releases).
+2. Download the asset matching your operating system and architecture -- for example, Linux, macOS, Windows.
+3. Extract the downloaded archive and then move the `slimctl` binary to a directory in your `PATH`.
+
+#### Installing Slimctl via Homebrew (MacOS)
+
+If you are using macOS, you can install slimctl via Homebrew:
+
+```
+brew tap agntcy/slim git@github.com:agntcy/slim.git
+brew install slimctl
+```
+
+This automatically downloads and installs the latest version of slimctl for your system.
 
 ### Configuring slimctl
 
@@ -299,7 +328,7 @@ tls:
   key_file: "/path/to/client.key"
 ```
 
-The `server` endpoint should point to a [SLIM Control](https://github.com/agntcy/slim/tree/slim-v0.6.0/control-plane/control-plane) endpoint which is a central service managing SLIM node configurations.
+The `server` endpoint should point to a [SLIM Control](https://github.com/agntcy/slim/tree/slim-v0.7.0/control-plane/control-plane) endpoint which is a central service managing SLIM node configurations.
 
 ### Commands
 
@@ -353,8 +382,7 @@ slimctl controller route add org/default/alice/0 via slim/b --node-id slim/a
 slimctl controller route del org/default/alice/0 via slim/b --node-id slim/a
 ```
 
-### Example 2: Create, Delete Route using `connection_config.json`
-
+### Example 2: Create, Delete Route Using `connection_config.json`
 
 ```bash
 # Add a new route
@@ -370,7 +398,7 @@ slimctl controller route add org/default/alice/0 via connection_config.json
 slimctl controller route del org/default/alice/0 via http://localhost:46367
 ```
 
-For full reference of connection_config.json, see the [client-config-schema.json](https://github.com/agntcy/slim/blob/slim-v0.6.0/data-plane/core/config/src/grpc/schema/client-config.schema.json).
+For full reference of connection_config.json, see the [client-config-schema.json](https://github.com/agntcy/slim/blob/slim-v0.7.0/data-plane/core/config/src/grpc/schema/client-config.schema.json).
 
 ### Managing SLIM Nodes Directly
 

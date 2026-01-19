@@ -1,6 +1,6 @@
 # SLIM Group Creation and Management
 
-One of the key features of [SLIM](slim-core.md) is its support for secure group communication.
+One of the key features of [SLIM](overview.md) is its support for secure group communication.
 In SLIM, a group consists of multiple clients that communicate through a shared
 channel. Each channel is identified by a unique name, as described in the [SLIM
 Messaging Layer](slim-data-plane.md). When MLS is enabled, group
@@ -24,7 +24,7 @@ of the application logic) or serve solely as a channel moderator.
 
 This section provides the basic
 steps to follow, along with Python code snippets, for setting up a group session.
-The full code is available in the [group.py](https://github.com/agntcy/slim/blob/slim-v0.6.0/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py) example in the SLIM repository.
+The full code is available in the [group.py](https://github.com/agntcy/slim/blob/slim-v0.7.0/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py) example in the SLIM repository.
 
 ### Create the Channel
 
@@ -34,31 +34,34 @@ In a group session, communication between participants can be encrypted
 end-to-end, enabling MLS.
 
 ```python
-created_session = await local_app.create_session(
-    slim_bindings.PySessionConfiguration.Group(  # type: ignore  # Build group session configuration
-        channel_name=chat_channel,  # Logical group channel (PyName) all participants join; acts as group/topic identifier.
-        max_retries=5,  # Max per-message resend attempts upon missing ack before reporting a delivery failure.
-        timeout=datetime.timedelta(
-            seconds=5
-        ),  # Ack / delivery wait window; after this duration a retry is triggered (until max_retries).
-        mls_enabled=enable_mls,  # Enable Messaging Layer Security for end-to-end encrypted & authenticated group communication.
-    )
+config = slim_bindings.SessionConfiguration.Group(
+    max_retries=5,  # Max per-message resend attempts upon missing ack before reporting a delivery failure.
+    timeout=datetime.timedelta(
+        seconds=5
+    ),  # Ack / delivery wait window; after this duration a retry is triggered (until max_retries).
+    mls_enabled=enable_mls,  # Enable Messaging Layer Security for end-to-end encrypted & authenticated group communication.
 )
+
+created_session, handle = await local_app.create_session(
+    chat_channel,  # Logical group channel (Name) all participants join; acts as group/topic identifier.
+    config,  # session configuration
+)
+
+await handle # await for the session to be created
 ```
 
 ### Invite Participants to the Channel
 
 Once the group session is created, new participants can be invited
-to join. Not all participants need to be added at the beginning; you can add them later, even after communication has started.
+to join. Not all participants need to be added at the beginning;
+you can add them later, even after communication has started.
 
 ```python
-# Invite each provided participant. Route is set before inviting to ensure
-# outbound control messages can reach them. For more info see
-# https://github.com/agntcy/slim/blob/slim-v0.6.0/data-plane/python/bindings/SESSION.md#invite-a-new-participant
 for invite in invites:
     invite_name = split_id(invite)
     await local_app.set_route(invite_name)
-    await created_session.invite(invite_name)
+    handle = await created_session.invite(invite_name) # invite participant
+    await handle   # awit for the invite to be finished
     print(f"{local} -> add {invite_name} to the group")
 ```
 
@@ -81,7 +84,7 @@ while True:
     try:
         # Await next inbound message from the group session.
         # The returned parameters are a message context and the raw payload bytes.
-        # Check session.py for details on PyMessageContext contents.
+        # Check session.py for details on MessageContext contents.
         ctx, payload = await session.get_message()
         print_formatted_text(
             f"{ctx.source_name} > {payload.decode()}",
@@ -103,7 +106,6 @@ Each participant can also send messages at any time to the new session, and each
 ```python
 # Send message to the channel_name specified when creating the session.
 # As the session is group, all participants will receive it.
-# calling publish_with_destination on a group session will raise an error.
 await shared_session_container[0].publish(user_input.encode())
 ```
 

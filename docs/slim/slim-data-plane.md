@@ -1,6 +1,6 @@
 # SLIM Messaging Layer
 
-The [SLIM](slim-core.md) Messaging Layer implements an efficient message routing and
+The [SLIM](overview.md) Messaging Layer implements an efficient message routing and
 delivery system between applications.
 
 ## Client and Channel Naming
@@ -67,7 +67,6 @@ The session layer offers several functionalities:
   applications and the SLIM message distribution network. It handles message
   formatting, routing, and delivery confirmation, while providing simple send
   and receive primitives to applications.
-
 
 The session layer offers two primary APIs for establishing new sessions:
 
