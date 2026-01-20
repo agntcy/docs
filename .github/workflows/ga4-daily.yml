@@ -1,0 +1,37 @@
+name: Publish GA4 Data
+on:
+  schedule:
+    - cron: '0 8 * * *' # Run at 8:00 AM UTC daily (adjust as needed for timezone)
+  workflow_dispatch: # Allow manual trigger
+
+permissions:
+  contents: write
+
+jobs:
+  fetch-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r .github/scripts/requirements.txt
+
+      - name: Fetch GA4 Data
+        env:
+          GA4_PROPERTY_ID: ${{ secrets.GA4_PROPERTY_ID }}
+          GA4_SERVICE_ACCOUNT_JSON: ${{ secrets.GA4_SERVICE_ACCOUNT_JSON }}
+        run: python .github/scripts/fetch_ga4.py
+
+      - name: Upload GA4 statistics artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ga4-daily-stats
+          path: data/ga4_stats.csv
