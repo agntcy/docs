@@ -1,4 +1,4 @@
-
 requests
 playwright
 beautifulsoup4
+google-analytics-data
