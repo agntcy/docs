@@ -7,5 +7,6 @@ nav:
   - Features and Usage: scenarios.md
   - Event Streaming: events.md
   - CLI Reference: directory-cli.md
+  - GUI Application: directory-gui.md
   - SDK Reference: directory-sdk.md
   - API Reference: dir-api-reference.md
