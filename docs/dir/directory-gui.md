@@ -75,3 +75,10 @@ repository](https://github.com/agntcy/dir/tree/main/gui).
 
 Build and release workflows are defined in
 [gui-ci.yaml](https://github.com/agntcy/dir/blob/main/.github/workflows/gui-ci.yaml).
+
+#### macOS Troubleshooting
+If you receive an "App is damaged" or "can't be opened" error, this is due to macOS security checks on downloaded apps. Run the following command in your terminal to clear the quarantine attribute:
+
+```bash
+xattr -d com.apple.quarantine /Applications/AGNTCY\ Directory.app
+```
