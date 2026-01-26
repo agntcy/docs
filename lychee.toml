@@ -18,18 +18,18 @@ exclude = [
     'https://127\.0\.0\.1',
     'http://0\.0\.0\.0',
     'host\.docker\.internal',
-    
+
     # Well-known endpoints and example domains
     '\.well-known',
     'api\.node',
     'https://api\.NODE',
-    
+
     # Self-referential docs URLs (may not exist yet)
     'https://docs\.agntcy\.org/.*',
-    
+
     # GitHub raw URLs that are generated but may not exist
     'https://github\.com/agntcy/docs/raw/main/docs/.*',
-    
+
     # Example/placeholder URLs used in documentation
     'example\.com',
     'your-username',
@@ -42,10 +42,16 @@ exclude = [
     'token\.actions\.githubusercontent\.com',
     'github\.com/example/',
     'spiffe\.github\.io/helm-charts-hardened',
-    
+
     # Sites that timeout from GitHub Actions IPs
     'w3\.org',
     'gnu\.org',
+
+    # GitHub Actions Artifacts (may expire or require login)
+    'https://github\.com/agntcy/dir/actions/runs/.*',
+
+    # Video file path (structure differs in build vs source)
+    '.*assets/dir-gui\.mov',
 ]
 
 # Exclude paths (glob patterns relative to the input)
