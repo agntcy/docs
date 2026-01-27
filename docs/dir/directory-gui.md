@@ -65,8 +65,8 @@ You can switch between different AI models to power the chat experience:
 
 You can find the latest build artifacts for each platform below:
 
-*   **Windows**: [Download Windows App](https://github.com/agntcy/dir/actions/runs/21296208888/artifacts/5237661764)
-*   **macOS**: [Download macOS App](https://github.com/agntcy/dir/actions/runs/21296208888/artifacts/5237651572)
+*   **Windows**: [Download Windows App](https://github.com/agntcy/dir/releases/download/gui%2Fv1.0.0/AGNTCY-Directory-Windows.zip)
+*   **macOS**: [Download macOS App](https://github.com/agntcy/dir/releases/download/gui%2Fv1.0.0/AGNTCY-Directory-macOS.zip)
 
 ## Source Code
 
@@ -76,9 +76,16 @@ repository](https://github.com/agntcy/dir/tree/main/gui).
 Build and release workflows are defined in
 [gui-ci.yaml](https://github.com/agntcy/dir/blob/main/.github/workflows/gui-ci.yaml).
 
-#### macOS Troubleshooting
-If you receive an "App is damaged" or "can't be opened" error, this is due to macOS security checks on downloaded apps. Run the following command in your terminal to clear the quarantine attribute:
+## macOS Troubleshooting
+
+macOS apps without an Apple Developer Program attestation (code signing/notarization)
+can be built using Xcode, but they will be blocked by Gatekeeper upon installation,
+displaying a malware warning. Users can bypass this by overriding **Privacy & Security**
+settings in **System Settings** to "Open Anyway".
+
+Alternatively, you can run the following command in your terminal to clear the quarantine attribute:
 
 ```bash
 xattr -d com.apple.quarantine /Applications/AGNTCY\ Directory.app
 ```
+
