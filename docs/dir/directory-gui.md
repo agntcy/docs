@@ -105,12 +105,12 @@ When the blue warning screen appears:
 
 ### Why This Happens
 *   **Unknown Publisher/Unsigned Code**: Many independent developers on GitHub
-*   do not purchase expensive digital code-signing certificates. Windows
-*   defaults to blocking these.
+   do not purchase expensive digital code-signing certificates. Windows
+   defaults to blocking these.
 *   **Low Reputation**: Even if signed, new apps need time for Windows to build
-*   a "reputation score" based on user adoption. New or rarely downloaded tools
-*   will trigger this warning.
+   a "reputation score" based on user adoption. New or rarely downloaded tools
+   will trigger this warning.
 *   **False Positives**: Sometimes, generic malware detection flags legitimate
-*   software, particularly in installer packages.
+   software, particularly in installer packages.
 
 

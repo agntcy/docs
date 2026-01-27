@@ -6,5 +6,6 @@ nav:
     - Decoding Service: decoding.md
     - Translation Service: translation.md
     - Validation Service: validation.md
+  - Validation Comparison: validation-comparison.md
   - OASF Record Guide: agent-record-guide.md
   - OASF Contribution Guide: contributing.md
