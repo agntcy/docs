@@ -97,6 +97,10 @@ Do not add hard line breaks at a certain line-length, enable line-wrapping in yo
 ### Links
 
 - When linking to an external URL, or to a static HTML file within the project, use normal markdown linking `[text](url)`.
+
+    !!! note
+        Avoid putting the url in brackets and using the url as the link text. This is not supported by the link checker.
+
 - When linking to a file within the docs, use `[link text](/docs/path/to/file.md)`.
 - Use project-absolute paths in the links and references: start with a `/`, then the path relative to the `content` directory.
 

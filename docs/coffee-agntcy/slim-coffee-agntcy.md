@@ -113,16 +113,12 @@ You can explore the CoffeeAGNTCY code to see these concepts in context:
 
 Publisher/Subscriber pattern:
 
-- **Client implementation** (message sending logic):
-  [coffee_agents/lungo/agents/supervisors/auction/graph/tools.py](https://github.com/agntcy/coffeeAgntcy/blob/main/coffeeAGNTCY/coffee_agents/lungo/agents/supervisors/auction/graph/tools.py)
+- [**Client implementation** (message sending logic)](https://github.com/agntcy/coffeeAgntcy/blob/main/coffeeAGNTCY/coffee_agents/lungo/agents/supervisors/auction/graph/tools.py)
 
-- **Server implementation** (message handling logic):
-  [coffee_agents/lungo/agents/farms/brazil/farm_server.py](https://github.com/agntcy/coffeeAgntcy/blob/main/coffeeAGNTCY/coffee_agents/lungo/agents/farms/brazil/farm_server.py)
+- [**Server implementation** (message handling logic)](https://github.com/agntcy/coffeeAgntcy/blob/main/coffeeAGNTCY/coffee_agents/lungo/agents/farms/brazil/farm_server.py)
 
 Group Communication pattern:
 
-- **Client implementation** (message sending logic):
-  [coffee_agents/lungo/agents/supervisors/logistic/graph/tools.py](https://github.com/agntcy/coffeeAgntcy/blob/main/coffeeAGNTCY/coffee_agents/lungo/agents/supervisors/logistics/graph/tools.py)
+- [**Client implementation** (message sending logic)](https://github.com/agntcy/coffeeAgntcy/blob/main/coffeeAGNTCY/coffee_agents/lungo/agents/supervisors/logistics/graph/tools.py)
 
-- **Server implementation** (message handling logic):
-  [coffee_agents/lungo/agents/logistics/accountant/server.py](https://github.com/agntcy/coffeeAgntcy/blob/main/coffeeAGNTCY/coffee_agents/lungo/agents/logistics/accountant/server.py)
+- [**Server implementation** (message handling logic)](https://github.com/agntcy/coffeeAgntcy/blob/main/coffeeAGNTCY/coffee_agents/lungo/agents/logistics/accountant/server.py)
