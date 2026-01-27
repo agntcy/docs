@@ -39,7 +39,7 @@ The following table shows which OASF instance configurations can exchange record
 
 | Instance Type | Can Pull From | Can Be Pulled By |
 |--------------|---------------|------------------|
-| **Official OASF Instance** | Official OASF instance only | Official OASF instance only |
+| **Official OASF Instance** | Official OASF instance only | Official OASF instance and custom instances with additional taxonomy |
 | **Custom OASF Instance (Additional Taxonomy)** | Official OASF instance, custom instances with same extended taxonomy | Custom instances with same extended taxonomy only |
 | **Custom OASF Instance (Changed Taxonomy)** | Custom instances with same changed taxonomy only | Custom instances with same changed taxonomy only |
 
@@ -136,11 +136,11 @@ Follow the steps below:
 
     This creates the cluster and loads the Directory server images.
 
-2. Build and tag your local OASF image
+2. Build your local OASF image with the `latest` tag
 
     ```bash
     cd /path/to/oasf/server
-    docker build -t ghcr.io/agntcy/oasf-server:latest .
+    task build
     ```
 
 3. Load the OASF image into Kind
@@ -162,14 +162,12 @@ Follow the steps below:
             default: true
     ```
 
-5. Deploy with Helm
+5. Deploy the Directory
 
     Don't use `task deploy:local` as it will recreate the cluster.
 
     ```bash
-    helm upgrade --install dir ./install/charts/dir \
-      -f ./install/charts/dir/values.yaml \
-      -n dir-server --create-namespace
+    task deploy:kubernetes:dir
     ```
 
 !!! note
