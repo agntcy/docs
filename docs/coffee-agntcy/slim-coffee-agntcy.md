@@ -23,16 +23,16 @@ transport = factory.create_transport("SLIM", endpoint=SLIM_ENDPOINT, name="defau
 
 Where:
 
-- `AgntcyFactory` initializes the factory for the agent.  
-- `create_transport("SLIM", ...)` provisions a SLIM transport instance connected to the configured endpoint.  
+- `AgntcyFactory` initializes the factory for the agent.
+- `create_transport("SLIM", ...)` provisions a SLIM transport instance connected to the configured endpoint.
 
-## Sending Messages  
+## Sending Messages
 
-SLIM accommodates both targeted and broadcast messaging within the same API:  
+SLIM accommodates both targeted and broadcast messaging within the same API:
 
 - **1-to-1 Message**
 
-    Used when the supervisor agent needs to send a request to a single farm agent:  
+    Used when the supervisor agent needs to send a request to a single farm agent:
 
     ```python
     response = await client.send_message(request)
@@ -44,8 +44,8 @@ SLIM accommodates both targeted and broadcast messaging within the same API:
 
     ```python
     responses = await client.broadcast_message(
-        request, 
-        broadcast_topic=BROADCAST_TOPIC, 
+        request,
+        broadcast_topic=BROADCAST_TOPIC,
         recipients=recipients
     )
     ```
@@ -107,9 +107,9 @@ SLIM accommodates both targeted and broadcast messaging within the same API:
 
     This returns a stream of data as agents process the order.
 
-## Example Implementations  
+## Example Implementations
 
-You can explore the CoffeeAGNTCY code to see these concepts in context:  
+You can explore the CoffeeAGNTCY code to see these concepts in context:
 
 Publisher/Subscriber pattern:
 
@@ -122,7 +122,7 @@ Publisher/Subscriber pattern:
 Group Communication pattern:
 
 - **Client implementation** (message sending logic):
-  [coffee_agents/lungo/agents/supervisors/logistic/graph/tools.py](https://github.com/agntcy/coffeeAgntcy/blob/main/coffeeAGNTCY/coffee_agents/lungo/agents/supervisors/logistic/graph/tools.py)
+  [coffee_agents/lungo/agents/supervisors/logistic/graph/tools.py](https://github.com/agntcy/coffeeAgntcy/blob/main/coffeeAGNTCY/coffee_agents/lungo/agents/supervisors/logistics/graph/tools.py)
 
 - **Server implementation** (message handling logic):
   [coffee_agents/lungo/agents/logistics/accountant/server.py](https://github.com/agntcy/coffeeAgntcy/blob/main/coffeeAGNTCY/coffee_agents/lungo/agents/logistics/accountant/server.py)
