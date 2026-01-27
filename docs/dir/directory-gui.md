@@ -65,8 +65,10 @@ You can switch between different AI models to power the chat experience:
 
 You can find the latest build artifacts for each platform below:
 
-*   **Windows**: [Download Windows App](https://github.com/agntcy/dir/releases/download/gui%2Fv1.0.0/agntcy-directory-windows.zip)
-*   **macOS**: [Download macOS App](https://github.com/agntcy/dir/releases/download/gui%2Fv1.0.0/AGNTCY-Directory.dmg)
+*   **Windows**: [Download Windows App](https://github.com/agntcy/dir/releases/download/gui/v1.0.0/agntcy-directory-windows.zip)
+*   **macOS**: [Download macOS App](https://github.com/agntcy/dir/releases/download/gui/v1.0.0/AGNTCY-Directory.dmg)
+
+or check the [Release Page](https://github.com/agntcy/dir/releases/tag/gui%2Fv1.0.0).
 
 ## Source Code
 
