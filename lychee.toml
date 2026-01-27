@@ -70,9 +70,8 @@ max_retries = 2
 # HTTP method to use for checking links
 method = "get"
 
-# Include links from code blocks, preformatted text, and other verbatim content
-# Note: This is needed because lychee treats file-path-like link text as verbatim
-include_verbatim = true
+# Exclude links from code blocks, preformatted text, and other verbatim content
+include_verbatim = false
 
 # User agent string
 user_agent = "lychee/agntcy-docs"
