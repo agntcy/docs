@@ -91,3 +91,26 @@ Alternatively, you can run the following command in your terminal to clear the q
 xattr -d com.apple.quarantine /Applications/AGNTCY\ Directory.app
 ```
 
+## Windows Troubleshooting
+
+The "Windows protected your PC" message (Microsoft Defender SmartScreen)
+commonly appears when installing software downloaded from GitHub because the
+application is unrecognized, unsigned, or lacks a high reputation score.
+
+### How to Run the App ("Run Anyway")
+When the blue warning screen appears:
+
+1.  Click the **More info** link in the text of the popup.
+2.  Click the **Run anyway** button that appears at the bottom.
+
+### Why This Happens
+*   **Unknown Publisher/Unsigned Code**: Many independent developers on GitHub
+*   do not purchase expensive digital code-signing certificates. Windows
+*   defaults to blocking these.
+*   **Low Reputation**: Even if signed, new apps need time for Windows to build
+*   a "reputation score" based on user adoption. New or rarely downloaded tools
+*   will trigger this warning.
+*   **False Positives**: Sometimes, generic malware detection flags legitimate
+*   software, particularly in installer packages.
+
+
