@@ -1,19 +1,17 @@
 # Validation
 
 The Directory enforces validation on all records before accepting them.
-Validation is performed using the [OASF SDK](https://github.com/agntcy/oasf-sdk), which requires an OASF schema server URL for validation.
+Validation is performed using the [OASF SDK](../oasf/oasf-sdk.md), which requires an OASF schema server URL for validation.
 
 ## Required Configuration
 
-**The Directory server requires an OASF schema URL to start.** You must provide a valid OASF schema server URL for validation to work.
-
-### Environment Variable
+The Directory server requires an OASF schema URL to start. You must provide a valid OASF schema server URL for validation to work:
 
 ```bash
 DIRECTORY_SERVER_OASF_API_VALIDATION_SCHEMA_URL=https://schema.oasf.outshift.com task server:start
 ```
 
-### YAML Configuration
+The configuration can also be set via YAML file:
 
 ```yaml
 # server.config.yml
@@ -26,37 +24,29 @@ listen_address: "0.0.0.0:8888"
 
 The Directory server uses API-based validation against the configured OASF schema server:
 
-- **Validation Method**:
-  HTTP requests to the OASF schema server API
-- **Errors vs Warnings**:
-  Only errors cause validation to fail.
-  Warnings are returned but do not affect the validation result.
-- **Schema Version Detection**:
-  The schema version is automatically detected from each record's `schema_version` field
-- **Supported Versions**:
-  The OASF SDK decoder supports specific schema versions (currently:
-  0.3.1, 0.7.0, 0.8.0).
-  Records using unsupported versions will fail validation.
-- **Unknown Classes**:
-  Classes (modules, skills, domains) not defined in the OASF schema are rejected with an error.
-  Records must only use classes that are defined in the configured OASF schema instance.
+- **Validation Method**: HTTP requests to the OASF schema server API.
+- **Errors vs Warnings**: Only errors cause validation to fail. Warnings are returned but do not affect the validation result.
+- **Schema Version Detection**: The schema version is automatically detected from each record's `schema_version` field.
+- **Supported Versions**: The OASF SDK decoder supports specific schema versions (currently: 0.3.1, 0.7.0, and 0.8.0). Records using unsupported versions are not validated.
+- **Unknown Classes**: Classes (such as modules, skills, and domains) not defined in the OASF schema are rejected with an error. Records must only use classes that are defined in the configured OASF schema instance.
 
 ## OASF Instance Configurations
 
 While there is only one validation method (API validation), you can configure the Directory server to use different OASF instances.
 The choice of OASF instance affects which records are accepted and how compatible your directory instance is with other directory instances.
 
-### 1. Official OASF Instance
+The following table shows which OASF instance configurations can exchange records with each other:
+
+| Instance Type | Can Pull From | Can Be Pulled By |
+|--------------|---------------|------------------|
+| **Official OASF Instance** | Official OASF instance only | Official OASF instance only |
+| **Custom OASF Instance (Additional Taxonomy)** | Official OASF instance, custom instances with same extended taxonomy | Custom instances with same extended taxonomy only |
+| **Custom OASF Instance (Changed Taxonomy)** | Custom instances with same changed taxonomy only | Custom instances with same changed taxonomy only |
+
+### Official OASF Instance
 
 Using the official OASF instance (`https://schema.oasf.outshift.com`) provides the baseline for the official network.
 Records validated here form the most strict, compatible set.
-
-**Network Compatibility:**
-
-- **Can Pull From**:
-  Official OASF instance only
-- **Can Be Pulled By**:
-  Official OASF instance only
 
 **Configuration:**
 
@@ -65,17 +55,11 @@ oasf_api_validation:
   schema_url: "https://schema.oasf.outshift.com"
 ```
 
-### 2. Custom OASF Instance (Additional Taxonomy)
+### Custom OASF Instance (Additional Taxonomy)
 
-Using a custom OASF instance with extensions that add to the taxonomy (modules, skills, domains - extends but doesn't change or remove).
+Using a custom OASF instance with extensions that add to the taxonomy (with modules, skills, and domains that extend the official taxonomy but doesn't change or remove).
+
 Records using the extended taxonomy can only be pulled by nodes using the exact same extended taxonomy.
-
-**Network Compatibility:**
-
-- **Can Pull From**:
-  Official OASF instance, custom instances with same extended taxonomy
-- **Can Be Pulled By**:
-  Custom instances with same extended taxonomy only
 
 **Configuration:**
 
@@ -84,18 +68,11 @@ oasf_api_validation:
   schema_url: "https://your-custom-oasf-instance.com"
 ```
 
-### 3. Custom OASF Instance (Changed Taxonomy)
+### Custom OASF Instance (Changed Taxonomy)
 
-Using a custom OASF instance with extensions that modify the taxonomy (modules, skills, domains - changes or removes from taxonomy).
-Completely incompatible with all other options.
-Can only work with nodes using the exact same changed taxonomy.
+Using a custom OASF instance with extensions that modify the taxonomy (with modules, skills, and domains that change or remove from the official taxonomy).
 
-**Network Compatibility:**
-
-- **Can Pull From**:
-  Custom instances with same changed taxonomy only
-- **Can Be Pulled By**:
-  Custom instances with same changed taxonomy only
+This approach is completely incompatible with all other options, can only work with nodes using the exact same changed taxonomy.
 
 **Configuration:**
 
@@ -112,89 +89,101 @@ You can deploy a local OASF instance alongside the Directory server for testing 
 
 To test with a local OASF instance deployed alongside the directory server:
 
-1. **Enable OASF in Helm values** - Edit `install/charts/dir/values.yaml`:
+1. Enable OASF in Helm values
 
-   ```yaml
-   apiserver:
-     oasf:
-       enabled: true
-   ```
+    Edit `install/charts/dir/values.yaml` with the following configuration:
 
-2. **Set schema URL to use the deployed OASF instance** - In the same file, set:
+    ```yaml
+    apiserver:
+      oasf:
+        enabled: true
+    ```
 
-   ```yaml
-   apiserver:
-     config:
-       oasf_api_validation:
-         schema_url: "http://dir-ingress-controller.dir-server.svc.cluster.local"
-   ```
+2. Set schema URL to use the deployed OASF instance
 
-   Replace `dir` with your Helm release name and `dir-server` with your namespace if different.
+    In the same file, set the schema URL to use the deployed OASF instance:
 
-3. **Deploy**:
-   ```bash
-   task build
-   task deploy:local
-   ```
+    ```yaml
+    apiserver:
+      config:
+        oasf_api_validation:
+          schema_url: "http://dir-ingress-controller.dir-server.svc.cluster.local"
+    ```
 
-The OASF instance will be deployed as a subchart in the same namespace and automatically configured for multi-version routing via ingress.
+    Replace `dir` with your Helm release name and `dir-server` with your namespace if different.
+
+3. Deploy the local OASF instance
+
+    ```bash
+    task build
+    task deploy:local
+    ```
+
+The OASF instance is deployed as a subchart in the same namespace and automatically configured for multi-version routing via ingress.
 
 ### Using a Locally Built OASF Image
 
-If you want to deploy with a locally built OASF image (e.g., containing `0.9.0-dev` schema files), you need to load the image into Kind **before** deploying.
+If you want to deploy with a locally built OASF image (e.g., containing `0.9.0-dev` schema files), you need to load the image into Kind before deploying.
 The `task deploy:local` command automatically creates a cluster and loads images, but it doesn't load custom OASF images.
-Follow these steps:
 
-1. **Create the Kind cluster first**:
+Follow the steps below:
 
-   ```bash
-   task deploy:kubernetes:setup-cluster
-   ```
+1. Create the Kind cluster
 
-   This creates the cluster and loads the Directory server images.
+    ```bash
+    task deploy:kubernetes:setup-cluster
+    ```
 
-2. **Build and tag your local OASF image**:
+    This creates the cluster and loads the Directory server images.
 
-   ```bash
-   cd /path/to/oasf/server
-   docker build -t ghcr.io/agntcy/oasf-server:latest .
-   ```
+2. Build and tag your local OASF image
 
-3. **Load the OASF image into Kind**:
+    ```bash
+    cd /path/to/oasf/server
+    docker build -t ghcr.io/agntcy/oasf-server:latest .
+    ```
 
-   ```bash
-   kind load docker-image ghcr.io/agntcy/oasf-server:latest --name agntcy-cluster
-   ```
+3. Load the OASF image into Kind
 
-4. **Configure values.yaml** to use the local image:
+    ```bash
+    kind load docker-image ghcr.io/agntcy/oasf-server:latest --name agntcy-cluster
+    ```
 
-   ```yaml
-   oasf:
-     enabled: true
-     image:
-       repository: ghcr.io/agntcy/oasf-server
-       versions:
-         - server: latest
-           schema: 0.9.0-dev
-           default: true
-   ```
+4. Configure `values.yaml` to use the local image:
 
-5. **Deploy with Helm** (don't use `task deploy:local` as it will recreate the cluster):
-   ```bash
-   helm upgrade --install dir ./install/charts/dir \
-     -f ./install/charts/dir/values.yaml \
-     -n dir-server --create-namespace
-   ```
+    ```yaml
+    oasf:
+      enabled: true
+      image:
+        repository: ghcr.io/agntcy/oasf-server
+        versions:
+          - server: latest
+            schema: 0.9.0-dev
+            default: true
+    ```
 
-**Note**:
-If you update the local OASF image, reload it into Kind and restart the deployment:
+5. Deploy with Helm
 
-```bash
-kind load docker-image ghcr.io/agntcy/oasf-server:latest --name agntcy-cluster
-kubectl rollout restart deployment/dir-oasf-0-9-0-dev -n dir-server
-```
+    Don't use `task deploy:local` as it will recreate the cluster.
+
+    ```bash
+    helm upgrade --install dir ./install/charts/dir \
+      -f ./install/charts/dir/values.yaml \
+      -n dir-server --create-namespace
+    ```
+
+!!! note
+
+    If you update the local OASF image, reload it into Kind and restart the deployment:
+
+    ```bash
+    kind load docker-image ghcr.io/agntcy/oasf-server:latest --name agntcy-cluster
+    kubectl rollout restart deployment/dir-oasf-0-9-0-dev -n dir-server
+    ```
 
 ## Related Documentation
+
+For more information, see the following:
 
 - [OASF Validation Service](../oasf/validation.md) - Detailed validation service documentation
 - [Validation Comparison](../oasf/validation-comparison.md) - Comparison between API validator and JSON Schema

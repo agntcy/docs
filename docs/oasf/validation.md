@@ -20,7 +20,7 @@ if err != nil {
 ```
 
 The schema URL is required and must be provided when creating the validator.
-The validator will use this URL for all validation operations.
+The validator uses this URL for all validation operations.
 
 ## Validation
 
@@ -28,46 +28,35 @@ Use `ValidateRecord` to validate a record against the configured schema URL.
 
 **Parameters:**
 
-- `ctx`:
-  Context for cancellation and timeout control
-- `record`:
-  The OASF record to validate (as a Protocol Buffer Struct)
+- `ctx`: Context for cancellation and timeout control
+- `record`: The OASF record to validate (as a Protocol Buffer Struct)
 
 **Returns:**
 
-- `bool`:
-  Whether the record is valid (true if no errors, false if errors present)
-- `[]string`:
-  List of validation error messages (empty if valid)
-- `[]string`:
-  List of validation warning messages (may be non-empty even if valid)
-- `error`:
-  Any error that occurred during validation
+- `bool`: Whether the record is valid (true if no errors, false if errors present)
+- `[]string`: List of validation error messages (empty if valid)
+- `[]string`: List of validation warning messages (may be non-empty even if valid)
+- `error`: Any error that occurred during validation
 
-**Note:** Warnings do not affect the validation result.
-A record is considered valid if there are no errors, regardless of whether warnings are present.
+!!! note 
+    Warnings do not affect the validation result. A record is considered valid if there are no errors, regardless of whether warnings are present.
 
 ## Validation Response
 
-The validation response includes:
+The validation response includes errors and warnings.
 
-- **Errors**:
-  Critical validation failures that must be fixed.
-  If any errors are present, the record is invalid.
-- **Warnings**:
-  Non-critical issues or deprecation notices.
-  Warnings do not affect the validation result.
+Errors are critical validation failures that must be fixed. If any errors are present, the record is invalid. Warnings are non-critical issues or deprecation notices. Warnings do not affect the validation result.
 
-Error messages include:
+Error messages include the following:
 
-- Clear descriptions of what failed validation
-- Attribute paths (e.g., `data.servers[0]`)
-- Constraint details for `constraint_failed` errors
+- Clear descriptions of what failed validation.
+- Attribute paths (e.g., `data.servers[0]`).
+- Constraint details for `constraint_failed` errors.
 
-Warning messages include:
+Warning messages include the following:
 
-- Descriptions of non-critical issues
-- Attribute paths where applicable
+- Descriptions of non-critical issues.
+- Attribute paths where applicable.
 
 ## Example Usage
 
