@@ -103,6 +103,11 @@ This starts the necessary components such as storage and API services.
 DIRECTORY_SERVER_OASF_API_VALIDATION_SCHEMA_URL=https://schema.oasf.outshift.com task server:start
 ```
 
+!!! note
+
+    MacOS users may encounter a "port 5000 already in use" error. This is likely caused by the AirPlay Receiver feature. You can disable it in your System Settings.
+
+
 ### Using Helm chart
 
 This deploys Directory services into an existing Kubernetes cluster.
@@ -112,14 +117,63 @@ helm pull oci://ghcr.io/agntcy/dir/helm-charts/dir --version v0.3.0
 helm upgrade --install dir oci://ghcr.io/agntcy/dir/helm-charts/dir --version v0.3.0
 ```
 
+Alternatively, you can configure the OASF schema URL explicitly:
+
+```bash
+helm upgrade --install dir oci://ghcr.io/agntcy/dir/helm-charts/dir --version v0.3.0 \
+  --set apiserver.config.oasf_api_validation.schema_url=https://schema.oasf.outshift.com
+```
+
+Or create a `values.yaml` file:
+
+```yaml
+apiserver:
+  config:
+    oasf_api_validation:
+      schema_url: "https://schema.oasf.outshift.com"
+```
+
+Then deploy:
+
+```bash
+helm upgrade --install dir oci://ghcr.io/agntcy/dir/helm-charts/dir --version v0.3.0 -f values.yaml
+```
+
+For more configuration options, see the [Validation](validation.md) documentation.
+
 ### Using Docker Compose
 
-This deploys Directory services using Docker Compose:
+This deploys Directory services using Docker Compose.
+  
+ While the Directory server has a default OASF schema URL, Docker Compose deployments may require explicitly setting the `DIRECTORY_SERVER_OASF_API_VALIDATION_SCHEMA_URL` environment variable:
 
 ```bash
 cd install/docker
+export DIRECTORY_SERVER_OASF_API_VALIDATION_SCHEMA_URL=https://schema.oasf.outshift.com
 docker compose up -d
 ```
+
+Alternatively, you can disable API validation (not recommended for production):
+
+```bash
+cd install/docker
+export DIRECTORY_SERVER_OASF_API_VALIDATION_DISABLE=true
+docker compose up -d
+```
+
+For more configuration options, see the [Validation](validation.md) documentation.
+
+## Next Steps
+
+Now that you have the Directory services running, you can start using the Directory CLI to create and store your first agent record. See the [Directory CLI Reference](directory-cli.md) for more information.
+
+For detailed use cases, see the [Features and Usage Scenarios](scenarios.md) documentation, includng:
+
+- [Building Records](scenarios.md#build)
+- [Storing Records](scenarios.md#store)
+- [Signing and Verifying Records](scenarios.md#signing-and-verification)
+- [Discovering Records](scenarios.md#discover)
+- [Searching Records](scenarios.md#search)
 
 ## Directory MCP Server
 

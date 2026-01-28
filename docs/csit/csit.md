@@ -1,8 +1,6 @@
 # Continuous System Integration Testing
 
-The Agncty Continuous System Integration Testing (CSIT) system design needs to
-meet the continuously expanding requirements of Agntcy projects including Agent
-Gateway Protocol, Agent Directory, and others.
+The Agncty Continuous System Integration Testing (CSIT) system design needs to meet the continuously expanding requirements of Agntcy projects, such as the [Agent Directory Service](../dir/overview.md).
 
 Tests can be run locally using taskfile or in GitHub Actions.
 
