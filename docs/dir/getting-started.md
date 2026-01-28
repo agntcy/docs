@@ -103,6 +103,11 @@ This starts the necessary components such as storage and API services.
 DIRECTORY_SERVER_OASF_API_VALIDATION_SCHEMA_URL=https://schema.oasf.outshift.com task server:start
 ```
 
+!!! note
+
+    MacOS users may encounter a "port 5000 already in use" error. This is likely caused by the AirPlay Receiver feature. You can disable it in your System Settings.
+
+
 ### Using Helm chart
 
 This deploys Directory services into an existing Kubernetes cluster.
