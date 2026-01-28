@@ -112,14 +112,51 @@ helm pull oci://ghcr.io/agntcy/dir/helm-charts/dir --version v0.3.0
 helm upgrade --install dir oci://ghcr.io/agntcy/dir/helm-charts/dir --version v0.3.0
 ```
 
+Alternatively, you can configure the OASF schema URL explicitly:
+
+```bash
+helm upgrade --install dir oci://ghcr.io/agntcy/dir/helm-charts/dir --version v0.3.0 \
+  --set apiserver.config.oasf_api_validation.schema_url=https://schema.oasf.outshift.com
+```
+
+Or create a `values.yaml` file:
+
+```yaml
+apiserver:
+  config:
+    oasf_api_validation:
+      schema_url: "https://schema.oasf.outshift.com"
+```
+
+Then deploy:
+
+```bash
+helm upgrade --install dir oci://ghcr.io/agntcy/dir/helm-charts/dir --version v0.3.0 -f values.yaml
+```
+
+For more configuration options, see the [Validation](validation.md) documentation.
+
 ### Using Docker Compose
 
-This deploys Directory services using Docker Compose:
+This deploys Directory services using Docker Compose.
+  
+ While the Directory server has a default OASF schema URL, Docker Compose deployments may require explicitly setting the `DIRECTORY_SERVER_OASF_API_VALIDATION_SCHEMA_URL` environment variable:
 
 ```bash
 cd install/docker
+export DIRECTORY_SERVER_OASF_API_VALIDATION_SCHEMA_URL=https://schema.oasf.outshift.com
 docker compose up -d
 ```
+
+Alternatively, you can disable API validation (not recommended for production):
+
+```bash
+cd install/docker
+export DIRECTORY_SERVER_OASF_API_VALIDATION_DISABLE=true
+docker compose up -d
+```
+
+For more configuration options, see the [Validation](validation.md) documentation.
 
 ## Directory MCP Server
 
