@@ -158,6 +158,18 @@ docker compose up -d
 
 For more configuration options, see the [Validation](validation.md) documentation.
 
+## Next Steps
+
+Now that you have the Directory services running, you can start using the Directory CLI to create and store your first agent record. See the [Directory CLI Reference](directory-cli.md) for more information.
+
+For detailed use cases, see the [Features and Usage Scenarios](scenarios.md) documentation, includng:
+
+- [Building Records](scenarios.md#build)
+- [Storing Records](scenarios.md#store)
+- [Signing and Verifying Records](scenarios.md#signing-and-verification)
+- [Discovering Records](scenarios.md#discover)
+- [Searching Records](scenarios.md#search)
+
 ## Directory MCP Server
 
 The Directory services are also accessible through the Directory MCP Server. It provides a standardized interface for AI assistants and tools to interact with the Directory system and work with OASF agent records. See the [Directory CLI Reference](directory-cli.md#directory-mcp-server) for more information.
