@@ -58,6 +58,8 @@ ADS leverages [Content Identifiers](https://github.com/multiformats/cid) for
 naming directory records. CIDs provide a self-describing, content-addressed
 naming scheme that ensures data integrity and immutability.
 
+In addition to CID-based addressing, ADS supports verifiable domain-based names that enable human-readable references while maintaining cryptographic verification. See the [Directory CLI documentation](directory-cli.md#name-verification) for details.
+
 ## Content Routing
 
 ADS implements capability-based record discovery through a hierarchical skill
