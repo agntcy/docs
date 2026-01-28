@@ -7,14 +7,16 @@ an existing MCP server:
 
 1. **Using SLIM as an MCP Custom Transport Protocol**: MCP is designed to support
    multiple transport protocols, with SLIM now available as one of these options.
-   To implement SLIM as a custom transport, you can install the SLIM-MCP package
+   To implement SLIM as a custom transport, you can install the
+   [slim-mcp](https://github.com/agntcy/slim-mcp-python) Python package
    through pip and integrate it directly into your application. This approach is
    ideal for new systems where you control both client and server components,
    providing native SLIM support for efficient MCP message transport.
 
 2. **Using SLIM with a Proxy Server**: If you have an existing MCP server running
    that uses SSE (Server-Sent Events) for transport, you can integrate SLIM by
-   deploying a proxy server. This proxy handles translation between SLIM clients
+   deploying the [SLIM-MCP proxy](https://github.com/agntcy/slim-mcp-rust),
+   written in Rust for high performance. This proxy handles translation between SLIM clients
    and your SSE-based MCP server, allowing SLIM clients to connect seamlessly
    without requiring modifications to your existing server, making it an
    effective solution for established systems.
@@ -30,10 +32,11 @@ architecture.
 In this section of the tutorial, we implement and deploy two sample
 applications:
 
-- A [LlamaIndex agent](https://github.com/agntcy/slim/tree/slim-v0.7.0/data-plane/python/integrations/slim-mcp/slim_mcp/examples/llamaindex_time_agent)
+- A [LlamaIndex agent](https://github.com/agntcy/slim-mcp-python/tree/v0.1.8/slim_mcp/examples/llamaindex_time_agent)
 that communicates with an MCP server over SLIM to perform time queries and timezone conversions.
 - An [MCP time
-  server](https://github.com/agntcy/slim/tree/slim-v0.7.0/data-plane/python/integrations/slim-mcp/slim_mcp/examples/mcp_server_time) that implements SLIM as its transport protocol and processes requests from the LlamaIndex agent.
+  server](https://github.com/agntcy/slim-mcp-python/tree/v0.1.8/slim_mcp/examples/mcp_server_time) 
+  that implements SLIM as its transport protocol and processes requests from the LlamaIndex agent.
 
 ### Prerequisites
 
@@ -44,7 +47,7 @@ that communicates with an MCP server over SLIM to perform time queries and timez
 
 ### Setting Up the SLIM Instance
 
-Since the client and server communicate using SLIM, we first need to deploy
+Since client and server communicate using SLIM, we first need to deploy
 a SLIM instance. We are using a pre-built Docker image for this purpose.
 
 First, execute the following command to create a configuration file for SLIM:
@@ -52,7 +55,7 @@ First, execute the following command to create a configuration file for SLIM:
 ```bash
 cat << EOF > ./config.yaml
 tracing:
-  log_level: debug
+  log_level: info
   display_thread_names: true
   display_thread_ids: true
 
@@ -71,10 +74,7 @@ services:
 
       clients: []
     controller:
-      servers:
-        - endpoint: "0.0.0.0:46358"
-          tls:
-            insecure: true
+      servers: []
 EOF
 ```
 
@@ -112,8 +112,8 @@ dependencies:
 name = "mcp-server-time"
 version = "0.1.0"
 description = "MCP server providing tools for time queries and timezone conversions"
-requires-python = ">=3.10"
-dependencies = ["mcp==1.6.0", "slim-mcp>=0.1.0", "click>=8.1.8"]
+requires-python = ">=3.11"
+dependencies = ["mcp==1.6.0", "slim-mcp>=0.1.8", "click>=8.1.8"]
 
 [project.scripts]
 mcp-server-time = "mcp_server_time:main"
@@ -471,35 +471,20 @@ class TimeServerApp:
             except Exception as e:
                 raise ValueError(f"Error processing mcp-server-time query: {str(e)}")
 
-    async def handle_session(self, session, slim_server, tasks):
+    async def handle_session(self, slim_server, session):
         """
         Handle a single session with proper error handling and logging.
 
         Args:
             session: The session to handle
             slim_server: The SLIM server instance
-            tasks: Set of active tasks
         """
-        try:
-            async with slim_server.new_streams(session) as streams:
-                logger.info(
-                    f"new session started - session_id: {session.id}, active_sessions: {len(tasks)}"
-                )
-                await self.app.run(
-                    streams[0],
-                    streams[1],
-                    self.app.create_initialization_options(),
-                )
-                logger.info(
-                    f"session {session.id} ended - active_sessions: {len(tasks)}"
-                )
-        except Exception:
-            logger.error(
-                f"Error handling session {session.id}",
-                extra={"session_id": session.id},
-                exc_info=True,
+        async with slim_server.new_streams(session) as streams:
+            await self.app.run(
+                streams[0],
+                streams[1],
+                self.app.create_initialization_options(),
             )
-            raise
 
 
 async def cleanup_tasks(tasks):
@@ -542,19 +527,36 @@ async def serve_slim(
     time_app = TimeServerApp(local_timezone)
     tasks: set[asyncio.Task] = set()
 
-    async with SLIMServer(config, organization, namespace, mcp_server) as slim_server:
+    async with SLIMServer([config], organization, namespace, mcp_server) as slim_server:
         try:
             async for new_session in slim_server:
+                # Copy session ID from session as it not available after the session closes.
+                session_id = new_session.id
+                logger.info(
+                    f"new session started - session_id: {session_id}, active_sessions: {len(tasks) + 1}"
+                )
                 task = asyncio.create_task(
-                    time_app.handle_session(new_session, slim_server, tasks)
+                    time_app.handle_session(slim_server, new_session)
                 )
                 tasks.add(task)
-        except Exception:
-            logger.error("Error in session handler", exc_info=True)
-            raise
+
+                def on_session_end(task: asyncio.Task):
+                    try:
+                        task.exception()  # Check for exceptions
+                    except Exception as e:
+                        logger.error(
+                            f"Error handling session {session_id}: {str(e)}",
+                            extra={"session_id": session_id},
+                            exc_info=True,
+                        )
+                    tasks.discard(task)
+                    logger.info(
+                        f"session ended - {session_id}, active_sessions: {len(tasks)}"
+                    )
+
+                task.add_done_callback(on_session_end)
         finally:
             await cleanup_tasks(tasks)
-            logger.info("Server stopped")
 
 
 def serve_sse(
@@ -697,19 +699,36 @@ async def serve_slim(
     time_app = TimeServerApp(local_timezone)
     tasks: set[asyncio.Task] = set()
 
-    async with SLIMServer(config, organization, namespace, mcp_server) as slim_server:
+    async with SLIMServer([config], organization, namespace, mcp_server) as slim_server:
         try:
             async for new_session in slim_server:
+                # Copy session ID from session as it not available after the session closes.
+                session_id = new_session.id
+                logger.info(
+                    f"new session started - session_id: {session_id}, active_sessions: {len(tasks) + 1}"
+                )
                 task = asyncio.create_task(
-                    time_app.handle_session(new_session, slim_server, tasks)
+                    time_app.handle_session(slim_server, new_session)
                 )
                 tasks.add(task)
-        except Exception:
-            logger.error("Error in session handler", exc_info=True)
-            raise
+
+                def on_session_end(task: asyncio.Task):
+                    try:
+                        task.exception()  # Check for exceptions
+                    except Exception as e:
+                        logger.error(
+                            f"Error handling session {session_id}: {str(e)}",
+                            extra={"session_id": session_id},
+                            exc_info=True,
+                        )
+                    tasks.discard(task)
+                    logger.info(
+                        f"session ended - {session_id}, active_sessions: {len(tasks)}"
+                    )
+
+                task.add_done_callback(on_session_end)
         finally:
             await cleanup_tasks(tasks)
-            logger.info("Server stopped")
 ```
 
 After implementing all the necessary files, your project structure looks
@@ -755,7 +774,7 @@ description = "A llamaindex agent using MCP server over SLIM for time queries"
 requires-python = ">=3.12"
 dependencies = [
     "mcp==1.6.0",
-    "slim-mcp>=0.1.0",
+    "slim-mcp>=0.1.8",
     "click>=8.1.8",
     "llama-index>=0.12.29",
     "llama-index-llms-azure-openai>=0.3.2",
@@ -800,9 +819,6 @@ if __name__ == "__main__":
 ```python
 # src/llamaindex_time_agent/main.py
 
-# Copyright AGNTCY Contributors (https://github.com/agntcy)
-# SPDX-License-Identifier: Apache-2.0
-
 import asyncio
 import logging
 
@@ -817,6 +833,9 @@ from slim_mcp import SLIMClient
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# load .env file
+load_dotenv()
 
 async def amain(
     llm_type, llm_endpoint, llm_key, organization, namespace, mcp_server, city, config
@@ -841,7 +860,7 @@ async def amain(
 
     logger.info("Starting SLIM client")
     async with SLIMClient(
-        config,
+        [config],
         "org",
         "ns",
         "time-agent",
@@ -867,8 +886,6 @@ async def amain(
             )
 
             print(response)
-
-            await mcp_session.close()
 
 
 class DictParamType(click.ParamType):
@@ -991,7 +1008,7 @@ MCP servers without modifying the servers themselves.
 
 First, ensure you have a SLIM node running in your environment. If you haven't
 already set one up, follow the instructions provided in the previous section to
-[deploy an SLIM instance](#setting-up-the-slim-instance).
+[deploy a SLIM instance](#setting-up-the-slim-instance).
 
 ### Running the MCP Server with SSE Transport
 
@@ -1069,7 +1086,7 @@ local proxy instance:
    ```bash
    docker run -it \
      -v $(pwd)/config-proxy.yaml:/config-proxy.yaml \
-     ghcr.io/agntcy/slim/mcp-proxy:latest /slim-mcp-proxy \
+     ghcr.io/agntcy/slim-mcp-rust/mcp-proxy:latest /slim-mcp-proxy \
      --config /config-proxy.yaml \
      --svc-name slim/0 \
      --name org/mcp/proxy \
@@ -1077,7 +1094,7 @@ local proxy instance:
    ```
    This command:
    - Mounts your local configuration file into the container.
-   - Uses the official SLIM-MCP proxy image.
+   - Uses the official SLIM-MCP proxy image from the [slim-mcp-rust](https://github.com/agntcy/slim-mcp-rust) repository.
    - Sets the service name and proxy identifier.
    - Configures the connection to your SSE-based MCP server.
 
