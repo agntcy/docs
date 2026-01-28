@@ -3,7 +3,7 @@
 This document explains the SLIM session layer and the two supported session
 types. It helps you understand the two session interfaces, reliability, and security trade‑offs.
 
-The SLIM repository ships with practical, runnable [examples](https://github.com/agntcy/slim/tree/slim-v0.7.0/data-plane/python/bindings/examples) that demonstrate how to create sessions and exchange messages between applications using the Python bindings.
+The SLIM repository ships with practical, runnable examples for both [Python](https://github.com/agntcy/slim/tree/main/data-plane/bindings/python/examples) and [Go](https://github.com/agntcy/slim/tree/main/data-plane/bindings/go/examples) that demonstrate how to create sessions and exchange messages between applications. This document uses Python examples as reference.
 
 ## Point-to-Point Session
 
@@ -69,29 +69,39 @@ sequenceDiagram
 Using the SLIM Python bindings, you can create a point-to-point session as follows:
 
 ```python
-config = slim_bindings.SessionConfiguration.PointToPoint(
+# Create session configuration
+session_config = slim_bindings.SessionConfig(
+    session_type=slim_bindings.SessionType.POINT_TO_POINT,
+    enable_mls=enable_mls,
     max_retries=5,
-    timeout=datetime.timedelta(seconds=5),
-    mls_enabled=enable_mls,
+    interval=datetime.timedelta(seconds=5),
+    metadata={},
 )
-session, handle = await local_app.create_session(remote_name, config)
-await handle
+
+# Create session - returns a context with session and completion handle
+session_context = await local_app.create_session_async(session_config, remote_name)
+
+# Wait for session to be established
+await session_context.completion.wait_async()
+
+# Get the session object
+session = session_context.session
 ```
 
 Config Parameters:
 
-* `max_retries` (optional, int): Retry attempts per message if Ack missing.
-* `timeout` (optional, timedelta): Wait per attempt for an Ack before retry.
-    If `timeout` is not set, the session is best‑effort.
-* `mls_enabled` (optional, bool): Enable end‑to‑end encryption (MLS).
+* `session_type` (required, SessionType): Either `POINT_TO_POINT` or `GROUP`.
+* `enable_mls` (optional, bool): Enable end‑to‑end encryption (MLS). Default: `False`.
+* `max_retries` (optional, int): Retry attempts per message if Ack missing. If not set, the session is best‑effort.
+* `interval` (optional, timedelta): Wait per attempt for an Ack before retry.
+* `metadata` (optional, dict): Custom metadata key-value pairs for the session.
 
 Create Session Parameters:
 
-* `remote_name` (required, Name): Identifier of the remote participant
-    instance.
-* `config` (required, SessionConfiguration): The configuration object created for this session.
+* `session_config` (required, SessionConfig): The configuration object for this session.
+* `remote_name` (required, Name): Identifier of the remote participant instance.
 
-The `await handle` guarantees that once returned all the underlying message exchange
+The `await session_context.completion.wait_async()` guarantees that once returned, all the underlying message exchange
 is done and the remote is correctly connected to the session.
 
 ### Sending and Replying in a Point-to-Point Session
@@ -105,22 +115,29 @@ This example shows how to send and reply in a point-to-point session:
 ```python
 # Send a message using publish; it will reach the endpoint
 # specified at session creation
-await session.publish(b"hello")
+await session.publish_async(
+    b"hello",  # payload (bytes): message data to send
+    None,      # payload_type (str|None): content type descriptor
+    None       # metadata (dict|None): custom key-value pairs for message metadata
+)
 
 # Await reply from remote (pattern depends on your control loop)
-msg_ctx, payload = await session.get_message()
+received_msg = await session.get_message_async(
+    timeout=datetime.timedelta(seconds=30)
+)
+payload = received_msg.payload
 print(payload.decode())
 
 # Send a correlated response back (echo style)
 # The message will be sent according to the info in the session
-await session.publish(payload)
+await session.publish_async(payload, None, None)  # payload, payload_type, metadata
 ```
 
 ### Point-to-Point Example
 
-This [example](https://github.com/agntcy/slim/blob/slim-v0.7.0/data-plane/python/bindings/examples/src/slim_bindings_examples/point_to_point.py) walks through the creation of a point-to-point session. When running the point-to-point example multiple times, the session binds to different running instances, while the message stream always sticks to the same endpoint.
+This [example](https://github.com/agntcy/slim/blob/main/data-plane/bindings/python/examples/point_to_point.py) walks through the creation of a point-to-point session. When running the point-to-point example multiple times, the session binds to different running instances, while the message stream always sticks to the same endpoint.
 
-The example demonstrates how to publish messages, enable reliability, and enable MLS for end‑to‑end security. The associated [README](https://github.com/agntcy/slim/blob/slim-v0.7.0/data-plane/python/bindings/examples/src/slim_bindings_examples/README_point_to_point.md) shows more information and how to run the example using the Taskfile provided in the repository.
+The example demonstrates how to publish messages, enable reliability, and enable MLS for end‑to‑end security. Run the example using the Taskfile provided in the repository.
 
 ## Group Session
 
@@ -133,7 +150,7 @@ or delegated to a separate control service or the SLIM control plane.
 
 Below are examples using the latest Python bindings, along with explanations of
 what happens inside the session layer when a participant is added or removed
-from the channel (see [Group management](./slim-group.md)).
+from the channel (see [group management](./slim-group.md)).
 
 ### Create a Group Session
 
@@ -142,49 +159,58 @@ name and specify reliability and security settings. Here is an
 example:
 
 ```python
-config = slim_bindings.SessionConfiguration.Group(
+# Create group session configuration
+session_config = slim_bindings.SessionConfig(
+    session_type=slim_bindings.SessionType.GROUP,
+    enable_mls=enable_mls,  # Enable Messaging Layer Security for end-to-end encrypted & authenticated group communication.
     max_retries=5,  # Max per-message resend attempts upon missing ack before reporting a delivery failure.
-    timeout=datetime.timedelta(
-        seconds=5
-    ),  # Ack / delivery wait window; after this duration a retry is triggered (until max_retries).
-    mls_enabled=enable_mls,  # Enable Messaging Layer Security for end-to-end encrypted & authenticated group communication.
+    interval=datetime.timedelta(seconds=5),  # Ack / delivery wait window; after this duration a retry is triggered (until max_retries).
+    metadata={},
 )
 
-created_session, handle = await local_app.create_session(
+# Create session - returns a context with session and completion handle
+session_context = await local_app.create_session_async(
+    session_config,
     chat_channel,  # Logical group channel (Name) all participants join; acts as group/topic identifier.
-    config,  # session configuration
 )
 
-await handle
+# Wait for session to be established
+await session_context.completion.wait_async()
+
+# Get the session object
+created_session = session_context.session
 ```
 
 Config Parameters:
 
-* `max_retries` (optional, int): Retry attempts per message if Ack missing.
-* `timeout` (optional, timedelta): Wait per attempt for an Ack before retry.
-    If `timeout` is not set, the session is best‑effort.
-* `mls_enabled` (optional, bool): Enable end‑to‑end encryption (MLS).
+* `session_type` (required, SessionType): Set to `GROUP` for group sessions.
+* `enable_mls` (optional, bool): Enable end‑to‑end encryption (MLS). Default: `False`.
+* `max_retries` (optional, int): Retry attempts per message if Ack missing. If not set, the session is best‑effort.
+* `interval` (optional, timedelta): Wait per attempt for an Ack before retry.
+* `metadata` (optional, dict): Custom metadata key-value pairs for the session.
 
 Create Session Parameters:
 
-* `chat_channel` (required, Name): Identifier of the group channel that all
-    participants join.
-* `config` (required, SessionConfiguration): The configuration object created for this session.
+* `session_config` (required, SessionConfig): The configuration object for this session.
+* `chat_channel` (required, Name): Identifier of the group channel that all participants join.
 
-As in the case of point to point session, the `await handle` guarantees that once returned all the
+As in the case of point-to-point sessions, the `await session_context.completion.wait_async()` guarantees that once returned, all the
 underlying message exchange is completed.
 
 ### Sending and Replying in a Group Session
 
 In a Group, the session targets a channel: all sends are delivered to all the current
-participants. Use `publish` to send a message to all the participants in the group.
+participants. Use `publish_async` to send a message to all the participants in the group.
 
 ```python
 # Broadcast to the channel
-await session.publish(b"hello")
+await session.publish_async(b"hello", None, None)  # payload, payload_type, metadata
 
 # Handle inbound messages
-msg_ctx, data = await session.get_message()
+received_msg = await session.get_message_async(
+    timeout=datetime.timedelta(seconds=30)
+)
+data = received_msg.payload
 print("channel received:", data.decode())
 ```
 
@@ -197,9 +223,9 @@ method after creating the session.
 # After creating the session:
 for invite in invites:
     invite_name = split_id(invite)
-    await local_app.set_route(invite_name)
-    handle = await created_session.invite(invite_name)
-    await handle
+    await local_app.set_route_async(invite_name, conn_id)
+    handle = await created_session.invite_async(invite_name)
+    await handle.wait_async()
     print(f"{local} -> add {invite_name} to the group")
 ```
 
@@ -207,13 +233,13 @@ Parameters:
 
 * `invite_name` (required, Name): Identifier of the participant to add.
 
-Notice the `await local_app.set_route(invite_name)` command before the invite.
+Notice the `await local_app.set_route_async(invite_name, conn_id)` command before the invite.
 This instructs SLIM on how to forward a message with the specified name.
 This has to be done by the application for every invite.
 
-The `await handle` returns once the remote participant is correctly added to the
-group and all the state on every participant is updated. In fact,
-when a moderator wants to add a new participant (e.g., an instance of App-C) to
+After `await handle.wait_async()` returns, you are guaranteed that the remote participant has been
+correctly added to the group and all the state on every participant is updated.
+When a moderator wants to add a new participant (e.g., an instance of App-C) to
 a group session, all the following steps need to be executed (see diagram below):
 
 1. **Discovery Phase:** The moderator initiates a discovery request to find a
@@ -298,7 +324,7 @@ This example shows how to remove a participant from a group session:
 
 ```python
 # To remove a participant from the session:
-await session.remove(remove_name)
+await session.remove_async(remove_name)
 ```
 
 Parameter:
@@ -371,4 +397,4 @@ stops, all participants are removed from the group.
 
 ### Group Example
 
-This [example](https://github.com/agntcy/slim/blob/slim-v0.7.0/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py) demonstrates how to create a group session, invite participants, and (if enabled) establish an MLS group for end-to-end encryption. It also shows how to broadcast messages to all current members and handle inbound group messages. The associated [README](https://github.com/agntcy/slim/blob/slim-v0.7.0/data-plane/python/bindings/examples/src/slim_bindings_examples/README_group.md) shows more information and how to run the example using the Taskfile.
+This [example](https://github.com/agntcy/slim/blob/main/data-plane/bindings/python/examples/group.py) demonstrates how to create a group session, invite participants, and (if enabled) establish an MLS group for end-to-end encryption. It also shows how to broadcast messages to all current members and handle inbound group messages. Run the example using the Taskfile provided in the repository.
