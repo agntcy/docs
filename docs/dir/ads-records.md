@@ -13,12 +13,11 @@ The content identifier of the record is a [Content IDentifier](https://github.co
 
 ## Verifiable Names
 
-Records can include a `name` field with a domain-based identifier that enables name verification. When a record uses a verifiable name:
+Records must include a `name` field with a domain-based identifier that enables name verification. When a record uses a verifiable name:
 
 - The name must include a protocol prefix: `https://domain/path` or `http://domain/path`.
 - The domain must host a JWKS file at `<scheme>://<domain>/.well-known/jwks.json`.
-- Records signed with a key present in that JWKS file can be verified as authorized by the domain.
-- This enables Docker-style name-based references like `cisco.com/agent:v1.0.0` instead of CIDs.
+- Records signed with a private key associated with a public key present in that JWKS file can be verified as authorized by the domain.
 
 See the [Directory CLI documentation](directory-cli.md#name-verification) for details on name verification workflows.
 

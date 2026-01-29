@@ -191,7 +191,7 @@ human-readable references while maintaining security.
 To use name verification, your record must meet these requirements:
 
 - Record name must include a protocol prefix: `https://domain/path` or `http://domain/path`
-- A JWKS (JSON Web Key Set) file must be hosted at `<scheme>://<domain>/.well-known/jwks.json`
+- A [JWKS (JSON Web Key Set)](https://datatracker.ietf.org/doc/html/rfc7517) file must be hosted at `<scheme>://<domain>/.well-known/jwks.json`
 - The record must be signed with the private key corresponding to a public key present in that JWKS file
 
 ### Workflow

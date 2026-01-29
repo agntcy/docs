@@ -273,7 +273,7 @@ Retrieves records by their Content Identifier (CID) or name reference.
 ??? example
 
     ```bash
-    # Pull by CID (existing)
+    # Pull by CID
     dirctl pull baeareihdr6t7s6sr2q4zo456sza66eewqc7huzatyfgvoupaqyjw23ilvi
 
     # Pull by name (latest version)

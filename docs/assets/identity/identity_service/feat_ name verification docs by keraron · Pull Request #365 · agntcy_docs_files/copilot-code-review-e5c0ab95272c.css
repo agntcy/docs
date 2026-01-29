@@ -1,0 +1,4 @@
+.js-comment-body:has(.js-expandable-suggested-changes-button) .blob-wrapper{position:relative;max-height:300px;overflow:hidden !important}.js-comment-body:has(.js-expandable-suggested-changes-button) .blob-wrapper::after{content:"";position:absolute;bottom:0;left:0;right:0;height:80px;background:linear-gradient(to bottom, transparent, var(--bgColor-default));pointer-events:none;z-index:1;opacity:1;transition:opacity .3s ease}.js-comment-body:has(.js-expandable-suggested-changes-button) .blob-wrapper.expanded{max-height:none}.js-comment-body:has(.js-expandable-suggested-changes-button) .blob-wrapper.expanded::after{opacity:0}
+/*# sourceMappingURL=index.scss.map */
+
+/*# sourceMappingURL=copilot-code-review-ec07bdb903d8.css.map*/
