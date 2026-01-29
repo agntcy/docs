@@ -6,7 +6,7 @@ participants. Messages are sent to a shared channel where every member can read
 and write. All messages are end-to-end encrypted using the
 [MLS protocol](https://datatracker.ietf.org/doc/html/rfc9420). This tutorial is
 based on the
-[group.py](https://github.com/agntcy/slim/blob/slim-v0.7.0/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py)
+[group.py](https://github.com/agntcy/slim/blob/slim-v1.0.0/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py)
 example in the SLIM repo.
 
 ## Key Features
@@ -26,7 +26,7 @@ Every participant in a group requires a unique identity for authentication and f
 
 ### Identity
 
-Each participant must have a unique identity. This is required to set up end-to-end encryption using the MLS protocol. The identity can be a JWT or shared secret. For simplicity, this example uses a shared secret. For JWT-based identity, see the [tutorial](https://github.com/agntcy/slim/tree/slim-v0.7.0/data-plane/python/bindings/examples#running-in-kubernetes-spire--jwt) in the SLIM repository.
+Each participant must have a unique identity. This is required to set up end-to-end encryption using the MLS protocol. The identity can be a JWT or shared secret. For simplicity, this example uses a shared secret. For JWT-based identity, see the [tutorial](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/python/bindings/examples#running-in-kubernetes-spire--jwt) in the SLIM repository.
 
 The Python objects managing the identity are called `IdentityProvider` and `IdentityVerifier`. The `IdentityProvider` provides the identity, while the `IdentityVerifier` verifies it:
 
@@ -45,12 +45,12 @@ def shared_secret_identity(identity: str, secret: str):
 ```
 
 This is a helper function defined in
-[common.py](https://github.com/agntcy/slim/blob/slim-v0.7.0/data-plane/python/bindings/examples/src/slim_bindings_examples/common.py#L85)
+[common.py](https://github.com/agntcy/slim/blob/slim-v1.0.0/data-plane/python/bindings/examples/src/slim_bindings_examples/common.py#L85)
 that can be used to create a `IdentityProvider` and `IdentityVerifier` from two input strings.
 
 ### SLIM App
 
-The provider and verifier are used to create a local SLIM application that can exchange messages with other participants via the SLIM network. To create the SLIM app, use the helper function defined in [common.py](https://github.com/agntcy/slim/blob/slim-v0.7.0/data-plane/python/bindings/examples/src/slim_bindings_examples/common.py#L289):
+The provider and verifier are used to create a local SLIM application that can exchange messages with other participants via the SLIM network. To create the SLIM app, use the helper function defined in [common.py](https://github.com/agntcy/slim/blob/slim-v1.0.0/data-plane/python/bindings/examples/src/slim_bindings_examples/common.py#L289):
 
 ```python
 async def create_local_app(
@@ -195,7 +195,7 @@ In this example, we use the shared secret option.
 
 Now that you know how to set up a SLIM application, we can see how to create a group where multiple participants can exchange messages. We start by showing how to create a group session using the Python bindings.
 
-In this setting, one participant acts as moderator: it creates the group session and invites participants by sending invitation control messages. A detailed description of group sessions and the invitation process is available [here](https://github.com/agntcy/slim/blob/slim-v0.7.0/data-plane/python/bindings/SESSION.md).
+In this setting, one participant acts as moderator: it creates the group session and invites participants by sending invitation control messages. A detailed description of group sessions and the invitation process is available [here](https://github.com/agntcy/slim/blob/slim-v1.0.0/data-plane/python/bindings/SESSION.md).
 
 ### Creating the Group Session and Inviting Members
 
@@ -271,10 +271,10 @@ if chat_channel and invites:
 ```
 
 This code comes from the
-[group.py](https://github.com/agntcy/slim/blob/slim-v0.7.0/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py)
+[group.py](https://github.com/agntcy/slim/blob/slim-v1.0.0/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py)
 example. The local application is created using the helper function shown earlier.
 The channel name (the logical group topic) is produced via the
-[split_id](https://github.com/agntcy/slim/blob/slim-v0.7.0/data-plane/python/bindings/examples/src/slim_bindings_examples/common.py#L63)
+[split_id](https://github.com/agntcy/slim/blob/slim-v1.0.0/data-plane/python/bindings/examples/src/slim_bindings_examples/common.py#L63)
 helper by parsing the `remote` parameter.
 
 A new group session is created by calling `local_app.create_session(...)` with two parameters:
@@ -346,7 +346,7 @@ The moderator already holds this information and therefore reuses the existing
 
 Participants (including the moderator) then call `ctx, payload = await session.get_message()` to receive
 messages. `payload` contains the raw message bytes and `ctx` is a
-[MessageContext](https://github.com/agntcy/slim/blob/slim-v0.7.0/data-plane/python/bindings/slim_bindings/session.py)
+[MessageContext](https://github.com/agntcy/slim/blob/slim-v1.0.0/data-plane/python/bindings/slim_bindings/session.py)
 with source, destination, message type, and metadata.
 
 ### Publish Messages to the Session
@@ -414,7 +414,7 @@ only its local session is closed.
 
 Now we will show how to run a new group session and
 how to enable group communication on top of SLIM. The full code can be found in
-[group.py](https://github.com/agntcy/slim/blob/slim-v0.7.0/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py)
+[group.py](https://github.com/agntcy/slim/blob/slim-v1.0.0/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py)
 in the SLIM repo. To run the example, follow the steps listed here:
 
 #### Run SLIM
@@ -424,7 +424,7 @@ up a SLIM instance representing the SLIM network. We use the pre-built
 docker image for this purpose.
 
 First execute this command to create the SLIM configuration file. Details about
-the [configuration](https://github.com/agntcy/slim/tree/slim-v0.7.0/data-plane/config)
+the [configuration](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/config)
 can be found in the SLIM repo.
 
 ```bash
@@ -464,7 +464,7 @@ You can run the SLIM instance using Docker:
 ```bash
 docker run -it \
     -v ./config.yaml:/config.yaml -p 46357:46357 \
-    ghcr.io/agntcy/slim:0.7.0 /slim --config /config.yaml
+    ghcr.io/agntcy/slim:1.0.0 /slim --config /config.yaml
 ```
 
 If everything goes fine, you should see an output like this one:
@@ -566,7 +566,7 @@ With the controller, you do not need to set up a moderator in your application. 
 ### Run the Group Communication Example
 
 Now we will show how to set up a group using the SLIM Controller. The reference code for the
-application is still [group.py](https://github.com/agntcy/slim/blob/slim-v0.7.0/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py). To run this example, follow the steps listed here.
+application is still [group.py](https://github.com/agntcy/slim/blob/slim-v1.0.0/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py). To run this example, follow the steps listed here.
 
 #### Run the SLIM Controller
 
@@ -608,7 +608,7 @@ Start the controller with Docker:
 ```bash
 docker run -it \
     -v ./config-controller.yaml:/config.yaml -v .:/db -p 50051:50051 -p 50052:50052 \
-    ghcr.io/agntcy/slim/control-plane:0.7.0 --config /config.yaml
+    ghcr.io/agntcy/slim/control-plane:1.0.0 --config /config.yaml
 ```
 
 If everything goes fine, you should see an output like this:
@@ -669,7 +669,7 @@ This starts a SLIM node that connects to the controller:
 ```bash
 docker run -it \
     -v ./config-slim.yaml:/config.yaml -p 46357:46357 \
-    ghcr.io/agntcy/slim:0.7.0 /slim --config /config.yaml
+    ghcr.io/agntcy/slim:1.0.0 /slim --config /config.yaml
 ```
 
 If everything goes fine, you should see an output like this one:
@@ -769,7 +769,7 @@ if [ "$OS" != "linux" ] && [ "$OS" != "darwin" ]; then
 fi
 
 # Construct the download URL
-VERSION="v0.7.0"
+VERSION="v1.0.0"
 COMMIT_HASH="35c37ab"
 ARCHIVE_NAME="slimctl_slimctl-${VERSION}-SNAPSHOT-${COMMIT_HASH}_${OS}_${ARCH}.tar.gz"
 DOWNLOAD_URL="https://github.com/agntcy/slim/releases/download/slimctl-${VERSION}/${ARCHIVE_NAME}"

@@ -328,7 +328,7 @@ tls:
   key_file: "/path/to/client.key"
 ```
 
-The `server` endpoint should point to a [SLIM Control](https://github.com/agntcy/slim/tree/slim-v0.7.0/control-plane/control-plane) endpoint which is a central service managing SLIM node configurations.
+The `server` endpoint should point to a [SLIM Control](https://github.com/agntcy/slim/tree/slim-v1.0.0/control-plane/control-plane) endpoint which is a central service managing SLIM node configurations.
 
 ### Commands
 
@@ -398,7 +398,7 @@ slimctl controller route add org/default/alice/0 via connection_config.json
 slimctl controller route del org/default/alice/0 via http://localhost:46367
 ```
 
-For full reference of connection_config.json, see the [client-config-schema.json](https://github.com/agntcy/slim/blob/slim-v0.7.0/data-plane/core/config/src/grpc/schema/client-config.schema.json).
+For full reference of connection_config.json, see the [client-config-schema.json](https://github.com/agntcy/slim/blob/slim-v1.0.0/data-plane/core/config/src/grpc/schema/client-config.schema.json).
 
 ### Managing SLIM Nodes Directly
 
