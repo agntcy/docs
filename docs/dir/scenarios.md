@@ -391,16 +391,9 @@ dirctl search --version "v1.0.?"               # Find version v1.0.x (single dig
 dirctl search --name "???api"                  # Find 3-character names ending in "api"
 dirctl search --skill "Pytho?"                 # Find skills with single character variations
 
-# List wildcards ([]) - matches any character within brackets
-dirctl search --name "agent-[0-9]"             # Find agents with numeric suffixes
-dirctl search --version "v[0-9].*"             # Find versions starting with v + digit
-dirctl search --skill "[a-m]*"                 # Find skills starting with a-m
-dirctl search --locator "[hf]tt[ps]*"          # Find HTTP/HTTPS/FTP locators
-
 # Complex wildcard combinations
 dirctl search --name "api-*-service" --version "v2.*"
 dirctl search --skill "*machine*learning*"
-dirctl search --name "web-[0-9]?" --version "v?.*.?"
 ```
 
 **Available Search Flags:**
