@@ -98,10 +98,12 @@ commonly appears when installing software downloaded from GitHub because the
 application is unrecognized, unsigned, or lacks a high reputation score.
 
 ### How to Run the App ("Run Anyway")
-When the blue warning screen appears:
 
-1.  Click the **More info** link in the text of the popup.
-2.  Click the **Run anyway** button that appears at the bottom.
+To unblock an .exe file in Windows 11, right-click the file, select Properties,
+check the Unblock box under the "General" tab, and click Apply. If the option is
+missing, the file is not blocked.
+
+You can also bypass SmartScreen by clicking "More info" > "Run anyway".
 
 ### Why This Happens
 *   **Unknown Publisher/Unsigned Code**: Many independent developers on GitHub
