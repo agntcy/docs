@@ -58,13 +58,82 @@ EOF
 
 ## Store
 
-This example demonstrates the interaction with the local storage layer using the CLI client.
-The storage layer uses an OCI-compliant registry (powered by [Zot](https://github.com/project-zot/zot)) to store records as OCI
-artifacts with [content-addressable identifiers](https://github.com/multiformats/cid) (CIDs).
-When a record is pushed, it is stored as an OCI blob and the CID is calculated by converting
-the SHA256 OCI digest into a CIDv1 format using CID multihash encoding. Each record is then
-tagged with its CID in the registry, enabling direct lookup and ensuring content
-integrity through cryptographic addressing.
+This example demonstrates the interaction with the storage layer using the CLI client.
+The storage layer uses an OCI-compliant registry to store records as OCI artifacts with
+[content-addressable identifiers](https://github.com/multiformats/cid) (CIDs). When a record
+is pushed, it is stored as an OCI blob and the CID is calculated by converting the SHA256
+OCI digest into a CIDv1 format using CID multihash encoding. Each record is then tagged with
+its CID in the registry, enabling direct lookup and ensuring content integrity through
+cryptographic addressing.
+
+### Supported Registries
+
+The Directory supports multiple OCI-compatible registry backends:
+
+| Registry Type | Description |
+|---------------|-------------|
+| `zot` | [Zot](https://github.com/project-zot/zot) OCI registry (default) |
+| `ghcr` | GitHub Container Registry |
+| `dockerhub` | Docker Hub |
+
+### Registry Configuration
+
+The registry backend is configured via environment variables on the Directory server:
+
+| Environment Variable | Description | Default |
+|---------------------|-------------|---------|
+| `DIRECTORY_SERVER_STORE_OCI_TYPE` | Registry type (`zot`, `ghcr`, `dockerhub`) | `zot` |
+| `DIRECTORY_SERVER_STORE_OCI_REGISTRY_ADDRESS` | Registry address | `127.0.0.1:5000` |
+| `DIRECTORY_SERVER_STORE_OCI_REPOSITORY_NAME` | Repository name | `dir` |
+
+### Authentication Configuration
+
+Credentials for the registry are configured via environment variables:
+
+| Environment Variable | Description |
+|---------------------|-------------|
+| `DIRECTORY_SERVER_STORE_OCI_AUTH_CONFIG_USERNAME` | Username for basic authentication |
+| `DIRECTORY_SERVER_STORE_OCI_AUTH_CONFIG_PASSWORD` | Password for basic authentication |
+| `DIRECTORY_SERVER_STORE_OCI_AUTH_CONFIG_ACCESS_TOKEN` | Access token for token-based authentication |
+| `DIRECTORY_SERVER_STORE_OCI_AUTH_CONFIG_INSECURE` | Skip TLS verification (default: `true`) |
+
+### Configuration Examples
+
+**Zot (Local Development)**
+
+```bash
+export DIRECTORY_SERVER_STORE_OCI_TYPE=zot
+export DIRECTORY_SERVER_STORE_OCI_REGISTRY_ADDRESS=localhost:5000
+export DIRECTORY_SERVER_STORE_OCI_REPOSITORY_NAME=dir
+export DIRECTORY_SERVER_STORE_OCI_AUTH_CONFIG_INSECURE=true
+```
+
+**GitHub Container Registry (GHCR)**
+
+```bash
+export DIRECTORY_SERVER_STORE_OCI_TYPE=ghcr
+export DIRECTORY_SERVER_STORE_OCI_REGISTRY_ADDRESS=ghcr.io
+export DIRECTORY_SERVER_STORE_OCI_REPOSITORY_NAME=your-org/dir
+export DIRECTORY_SERVER_STORE_OCI_AUTH_CONFIG_USERNAME=your-github-username
+export DIRECTORY_SERVER_STORE_OCI_AUTH_CONFIG_PASSWORD=your-github-token
+export DIRECTORY_SERVER_STORE_OCI_AUTH_CONFIG_INSECURE=false
+```
+
+**Docker Hub**
+
+```bash
+export DIRECTORY_SERVER_STORE_OCI_TYPE=dockerhub
+export DIRECTORY_SERVER_STORE_OCI_REGISTRY_ADDRESS=docker.io
+export DIRECTORY_SERVER_STORE_OCI_REPOSITORY_NAME=your-username/dir
+export DIRECTORY_SERVER_STORE_OCI_AUTH_CONFIG_USERNAME=your-dockerhub-username
+export DIRECTORY_SERVER_STORE_OCI_AUTH_CONFIG_PASSWORD=your-dockerhub-token
+export DIRECTORY_SERVER_STORE_OCI_AUTH_CONFIG_INSECURE=false
+```
+
+### Basic Operations
+
+Once the server is configured, the CLI operations work the same regardless of the underlying
+registry backend:
 
 ```bash
 # Push the record and store its CID to a file
