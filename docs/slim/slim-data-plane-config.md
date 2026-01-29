@@ -356,7 +356,39 @@ dataplane:
         http2_keepalive: "60s"
         timeout: "10s"
         permit_without_stream: false
+      # Backoff retry strategy for reconnection attempts (controller clients only)
+      # Configures how the client retries when connection fails
+      backoff:
+        # Backoff strategy type
+        # Options: "exponential", "fixed_interval"
+        # Default: "exponential"
+        type: exponential
 
+        # Exponential backoff parameters (when type=exponential)
+        # Base delay in milliseconds for the first retry
+        # Default: 500
+        base: 500
+
+        # Multiplication factor for delay increase
+        # Default: 1
+        factor: 1
+
+        # Maximum delay between retry attempts
+        # Format: "<number>ms", "<number>s"
+        # Default: "1500ms"
+        max_delay: "1500ms"
+
+        # Whether to add random jitter to delay
+        # Helps prevent thundering herd
+        # Default: true
+        jitter: true
+
+      # OR Fixed interval backoff (when type=fixed_interval)
+      # backoff:
+      #   type: fixed_interval
+      #   # Fixed delay between retry attempts
+      #   # Default: "2000ms"
+      #   interval: "2000ms"
       # Arbitrary user-provided metadata (optional)
       metadata:
         client_type: "data-sync"
@@ -840,6 +872,87 @@ services:
               username: "${env:CONTROLLER_USER}"
               # Password from Kubernetes secret file
               password: "${file:/var/run/secrets/controller/password}"
+
+      clients:
+        - endpoint: "${env:CONTROLLER_ENDPOINT}"
+          tls:
+            ca_file: "/var/run/secrets/kubernetes.io/ca/ca.crt"
+          # Retry configuration for controller connection
+          backoff:
+            type: exponential
+            base: 500
+            factor: 1
+            max_delay: "1500ms"
+            jitter: true
+```
+
+### Backoff Retry Configuration Examples
+
+#### Exponential Backoff Strategy
+
+```yaml
+# config/exponential-backoff.yaml
+tracing:
+  log_level: debug
+
+runtime:
+  n_cores: 0
+  thread_name: "slim-data-plane"
+  drain_timeout: "10s"
+
+services:
+  slim/0:
+    dataplane:
+      servers:
+        - endpoint: "0.0.0.0:46357"
+          tls:
+            insecure: true
+      clients: []
+
+    controller:
+      clients:
+        - endpoint: "http://127.0.0.1:50052"
+          tls:
+            insecure: true
+          # Exponential backoff with jitter
+          backoff:
+            type: exponential
+            base: 200 # Start with 200ms
+            factor: 1 # Double each time
+            max_delay: "1500ms" # Cap at 1.5 seconds
+            jitter: true # Add randomness to prevent thundering herd
+```
+
+#### Fixed Interval Backoff Strategy
+
+```yaml
+# config/fixed-interval-backoff.yaml
+tracing:
+  log_level: debug
+
+runtime:
+  n_cores: 0
+  thread_name: "slim-data-plane"
+  drain_timeout: "10s"
+
+services:
+  slim/0:
+    dataplane:
+      servers:
+        - endpoint: "0.0.0.0:46357"
+          tls:
+            insecure: true
+      clients: []
+
+    controller:
+      clients:
+        - endpoint: "http://127.0.0.1:50052"
+          tls:
+            insecure: true
+          # Fixed interval retry every 2 seconds
+          backoff:
+            type: fixed_interval
+            interval: "2000ms"
 ```
 
 ### SPIFFE/SPIRE Zero Trust Configuration
