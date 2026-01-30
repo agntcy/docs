@@ -3,15 +3,21 @@
 The Directory enforces validation on all records before accepting them.
 Validation is performed using the [OASF SDK](../oasf/oasf-sdk.md), which requires an OASF schema server URL for validation.
 
-## Required Configuration
+## Configuration
 
-The Directory server requires an OASF schema URL to start. You must provide a valid OASF schema server URL for validation to work:
+The Directory server validates records using an OASF schema URL. By default, it uses `https://schema.oasf.outshift.com`, but you can configure a different OASF instance:
+
+**Using environment variables:**
 
 ```bash
-DIRECTORY_SERVER_OASF_API_VALIDATION_SCHEMA_URL=https://schema.oasf.outshift.com task server:start
+# Use default OASF instance (https://schema.oasf.outshift.com)
+task server:start
+
+# Use custom OASF instance
+DIRECTORY_SERVER_OASF_API_VALIDATION_SCHEMA_URL=https://your-custom-oasf.com task server:start
 ```
 
-The configuration can also be set via YAML file:
+**Using YAML configuration:**
 
 ```yaml
 # server.config.yml
@@ -19,6 +25,10 @@ oasf_api_validation:
   schema_url: "https://schema.oasf.outshift.com"
 listen_address: "0.0.0.0:8888"
 ```
+
+!!! note
+    
+    The server itself does not have a built-in default schema URL. Deployment tools like Helm and Taskfile set `https://schema.oasf.outshift.com` as the default. When using Docker Compose or running the server binary directly, you must explicitly set the `DIRECTORY_SERVER_OASF_API_VALIDATION_SCHEMA_URL` environment variable.
 
 ## Validation Behavior
 
