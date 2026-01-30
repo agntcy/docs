@@ -24,7 +24,7 @@ of the application logic) or serve solely as a channel moderator.
 
 This section provides the basic
 steps to follow, along with Python code snippets, for setting up a group session.
-The full code is available in the [group.py](https://github.com/agntcy/slim/blob/slim-v0.7.0/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py) example in the SLIM repository.
+The full code is available in the [group.py](https://github.com/agntcy/slim/blob/slim-v1.0.0/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py) example in the SLIM repository.
 
 ### Create the Channel
 
