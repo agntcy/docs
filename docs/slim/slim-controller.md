@@ -218,7 +218,7 @@ Task runner is recommended for Taskfile commands.
 
 The Controller can be built by running the following task:
 
-```
+```task
 # Build all Controller components
 task control-plane:build
 
@@ -237,13 +237,13 @@ task control-plane:control-plane:run
 
 Alternatively, start the Controller with the Docker image:
 
-```
+```bash
 docker run ghcr.io/agntcy/slim/control-plane:0.0.1
 ```
 
 Or use the following to also add a configuration file:
 
-```
+```bash
 docker run -v ./config.yaml:/config.yaml  ghcr.io/agntcy/slim/control-plane:0.0.1 -c /config.yaml
 ```
 
@@ -285,41 +285,71 @@ For more information, see the [slimctl](#slimctl).
 
 ## slimctl
 
-`slimctl` is the command-line interface for the SLIM controller.
+`slimctl` is a unified command-line interface for managing SLIM instances and the SLIM control plane. It provides commands for:
+
+- **Local Development** - Run standalone SLIM instances for development and testing using production configurations
+- **Route Management** - Configure message routing between services via the SLIM Control Plane
+- **Connection Monitoring** - View and manage active connections on SLIM nodes
+- **Direct Node Access** - Manage SLIM nodes directly without going through the Control Plane
+
+### Command Groups
+
+| Command | Purpose |
+| ------- | ------- |
+| `slim` | Start and manage local SLIM instances |
+| `route` | Manage routes via Control Plane |
+| `connection` | Monitor connections via Control Plane |
+| `node` | Manage and view SLIM nodes via Control Plane |
+| `node-connect` | Direct node management (bypass Control Plane) |
+| `version` | Display version information |
 
 ### Installing slimctl
 
 Slimctl is available for multiple operating systems and architectures.
 
-To install slimctl, download the appropriate release asset from GitHub or, if you are on macOS, by using Homebrew.
+#### Pre-built Binaries
 
-#### Downloading Slimctl from Github
+Download from the [GitHub releases page](https://github.com/agntcy/slim/releases):
 
-1. Go to the slimctl [GitHub releases page](https://github.com/agntcy/slim/releases).
-2. Download the asset matching your operating system and architecture -- for example, Linux, macOS, Windows.
-3. Extract the downloaded archive and then move the `slimctl` binary to a directory in your `PATH`.
+1. Download the binary for your OS and architecture
+2. Extract the archive
+3. Move `slimctl` to a directory in your `PATH`
 
-#### Installing Slimctl via Homebrew (MacOS)
+#### Homebrew (macOS)
 
 If you are using macOS, you can install slimctl via Homebrew:
 
-```
-brew tap agntcy/slim git@github.com:agntcy/slim.git
+```bash
+brew tap agntcy/slim
 brew install slimctl
 ```
 
-This automatically downloads and installs the latest version of slimctl for your system.
+#### Building from Source
+
+**Prerequisites**: Go 1.20+, Task (taskfile.dev)
+
+```bash
+# From repository root
+cd control-plane
+task control-plane:slimctl:build
+
+# Binary location: .dist/bin/slimctl
+```
 
 ### Configuring slimctl
 
 `slimctl` supports configuration through a configuration file, environment variables, or command-line flags.
 
-By default, `slimctl` looks for a configuration file at `$HOME/.slimctl/config.yaml` or in the current working directory.
+slimctl looks for Control Plane configuration at:
+
+- `$HOME/.slimctl/config.yaml`
+- `./config.yaml` (current directory)
+- Via `--config` flag
 
 An example `config.yaml`:
 
 ```yaml
-server: "127.0.0.1:50001"
+server: "127.0.0.1:46358"
 timeout: "10s"
 tls:
   insecure: false
@@ -328,41 +358,146 @@ tls:
   key_file: "/path/to/client.key"
 ```
 
-The `server` endpoint should point to a [SLIM Control](https://github.com/agntcy/slim/tree/slim-v0.7.0/control-plane/control-plane) endpoint which is a central service managing SLIM node configurations.
+The `server` endpoint should point to a [SLIM Control](https://github.com/agntcy/slim/tree/slim-v1.0.0/control-plane/control-plane) endpoint which is a central service managing SLIM node configurations.
 
 ### Commands
 
-List nodes:
+#### `slim` - Local SLIM Instances
 
-`slimctl controller node list`
+Run standalone SLIM instances for development and testing using production configurations.
 
-List connections on a SLIM instance:
+**Start with a configuration file:**
 
-`slimctl controller connection list --node-id=<slim_node_id>`
+```bash
+# Start with base configuration (insecure)
+slimctl slim start --config data-plane/config/base/server-config.yaml
 
-List routes on a SLIM instance:
+# Start with TLS configuration
+slimctl slim start --config data-plane/config/tls/server-config.yaml
+```
 
-`slimctl controller route list --node-id=<slim_node_id>`
+**Override the server endpoint:**
 
-Add a route to the SLIM instance:
+```bash
+slimctl slim start --config data-plane/config/base/server-config.yaml --endpoint 127.0.0.1:9090
+```
 
-`slimctl controller route add <organization/namespace/agentName/agentId> via <slim-node-id or path_to_config_file> --node-id=<slim_node_id>`
+**Control log level:**
 
-Delete a route from the SLIM instance:
+```bash
+RUST_LOG=debug slimctl slim start --config data-plane/config/base/server-config.yaml
+```
 
-`slimctl controller route del <organization/namespace/agentName/agentId> via <slim-node-id or path_to_config_file> --node-id=<slim_node_id>`
+**Available flags:**
 
-Print version information:
+- `--config` - Path to YAML configuration file (production SLIM format)
+- `--endpoint` - Server endpoint (sets `SLIM_ENDPOINT` environment variable)
 
-`slimctl version`
+**Configuration files:** See example configs from [data-plane/config/](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/config):
 
-Run `slimctl <command> --help` for more details on flags and usage.
+- [base](https://github.com/agntcy/slim/blob/slim-v1.0.0/data-plane/config/base) - Basic insecure configuration
+- [tls](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/config/tls) - TLS-enabled server
+- [mtls](https://github.com/agntcy/slim/blob/slim-v1.0.0/data-plane/config/mtls) - Mutual TLS authentication
+- [basic-auth](https://github.com/agntcy/slim/blob/slim-v1.0.0/data-plane/config/basic-auth) - HTTP Basic authentication
+- `jwt-auth-*` - JWT authentication ([RSA](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/config/jwt-auth-rsa), 
+    [ECDSA](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/config/jwt-auth-ecdsa), 
+    [HMAC](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/config/jwt-auth-hmac))
+- [spire](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/config/spire) - SPIFFE/SPIRE workload identity
+- [proxy](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/config/proxy) - HTTP proxy configuration
+- [telemetry](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/config/telemetry) - OpenTelemetry integration
+
+#### `route` - Route Management
+
+Manage message routes on SLIM nodes via the Control Plane.
+
+**List routes:**
+
+```bash
+slimctl route list --node-id=my-node
+```
+
+**Add a route:**
+
+```bash
+# Create connection configuration
+cat > connection_config.json <<EOF
+{
+  "endpoint": "http://127.0.0.1:46357"
+}
+EOF
+
+# Add the route
+slimctl route add org/namespace/service/0 via connection_config.json --node-id=my-node
+```
+
+**Delete a route:**
+
+```bash
+slimctl route del org/namespace/service/0 via http://localhost:46357 --node-id=my-node
+```
+
+#### `connection` - Connection Management
+
+Monitor active connections on SLIM nodes via the Control Plane.
+
+**List connections:**
+
+```bash
+slimctl connection list --node-id=my-node
+```
+
+#### `node` - Node Management
+
+Manage and view SLIM nodes via the Control Plane.
+
+**List registered nodes:**
+
+```bash
+slimctl node list
+```
+
+#### `node-connect` - Direct Node Management
+
+Connect directly to a SLIM node's control endpoint, bypassing the central Control Plane.
+
+**List routes directly on a node:**
+
+```bash
+slimctl node-connect route list --server=<node_control_endpoint>
+```
+
+**Add route directly to a node:**
+
+```bash
+slimctl node-connect route add org/namespace/service/0 via config.json --server=<node_control_endpoint>
+```
+
+#### `version` - Version Information
+
+Display version and build information:
+
+```bash
+slimctl version
+```
+
+#### Getting Help
+
+Get detailed help for any command:
+
+```bash
+slimctl --help
+slimctl slim --help
+slimctl slim start --help
+slimctl route --help
+```
 
 ### Example 1: Create, Delete Route using node-id
 
 Add route for node `slim/a` to forward messages for `org/default/alice/0` to node `slim/b`.
+
 ```bash
-slimctl controller node list
+# List available nodes
+slimctl node list
 
 Node ID: slim/b status: CONNECTED
   Connection details:
@@ -375,34 +510,35 @@ Node ID: slim/a status: CONNECTED
     MtlsRequired: false
     ExternalEndpoint: test-slim.default.svc.cluster.local:46357
 
-slimctl controller route add org/default/alice/0 via slim/b --node-id slim/a
-
+# Add route to node slim/a
+slimctl route add org/default/alice/0 via slim/b --node-id slim/a
 
 # Delete an existing route
-slimctl controller route del org/default/alice/0 via slim/b --node-id slim/a
+slimctl route del org/default/alice/0 via slim/b --node-id slim/a
 ```
 
 ### Example 2: Create, Delete Route Using `connection_config.json`
 
 ```bash
-# Add a new route
+# Create connection configuration
 cat > connection_config.json <<EOF
 {
-"endpoint": "http://127.0.0.1:46357"
+  "endpoint": "http://127.0.0.1:46357"
 }
 EOF
-slimctl controller route add org/default/alice/0 via connection_config.json
 
+# Add a new route
+slimctl route add org/default/alice/0 via connection_config.json --node-id=my-node
 
 # Delete an existing route
-slimctl controller route del org/default/alice/0 via http://localhost:46367
+slimctl route del org/default/alice/0 via http://localhost:46357 --node-id=my-node
 ```
 
-For full reference of connection_config.json, see the [client-config-schema.json](https://github.com/agntcy/slim/blob/slim-v0.7.0/data-plane/core/config/src/grpc/schema/client-config.schema.json).
+For full reference of connection_config.json, see the [client-config-schema.json](https://github.com/agntcy/slim/blob/slim-v1.0.0/data-plane/core/config/src/grpc/schema/client-config.schema.json).
 
 ### Managing SLIM Nodes Directly
 
-SLIM nodes can be configured to expose a Controller endpoint of a SLIM instance, slimctl can connect to this endpoint to manage the SLIM instance directly by using slimctl `node` sub-command. In this case, in the configuration file, the server should point to the SLIM instance endpoint.
+SLIM nodes can be configured to expose a Controller endpoint. slimctl can connect to this endpoint to manage the SLIM instance directly using the `node-connect` sub-command, bypassing the central Control Plane.
 
 To enable this, configure the node to host a server allowing the client to connect:
 
@@ -430,14 +566,26 @@ To enable this, configure the node to host a server allowing the client to conne
         clients: []
 ```
 
-List connections on a SLIM instance:
-`slimctl node connection list --server=<node_control_endpoint>`
+**List connections on a SLIM instance:**
 
-List routes on a SLIM instance:
-`slimctl node route list --server=<node_control_endpoint>`
+```bash
+slimctl node-connect connection list --server=<node_control_endpoint>
+```
 
-Add a route to the SLIM instance:
-`slimctl node route add <organization/namespace/agentName/agentId> via <config_file> --server=<node_control_endpoint>`
+**List routes on a SLIM instance:**
 
-Delete a route from the SLIM instance:
-`slimctl node route del <organization/namespace/agentName/agentId> via <host:port> --server=<node_control_endpoint>`
+```bash
+slimctl node-connect route list --server=<node_control_endpoint>
+```
+
+**Add a route to the SLIM instance:**
+
+```bash
+slimctl node-connect route add <organization/namespace/agentName/agentId> via <config_file> --server=<node_control_endpoint>
+```
+
+**Delete a route from the SLIM instance:**
+
+```bash
+slimctl node-connect route del <organization/namespace/agentName/agentId> via <host:port> --server=<node_control_endpoint>
+```
