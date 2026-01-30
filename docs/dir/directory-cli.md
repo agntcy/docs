@@ -345,6 +345,77 @@ Displays metadata about stored records using CID or name reference.
     dirctl info cisco.com/agent:v1.0.0 --output json
     ```
 
+### Import Operations
+
+Import records from external registries into DIR. Supports automated batch imports from various registry types.
+
+#### `dirctl import [flags]`
+
+Fetch and import records from external registries.
+
+**Supported Registries:**
+
+- `mcp` - Model Context Protocol registry v0.1
+
+**Configuration Options:**
+
+| Flag | Environment Variable | Description | Required | Default |
+|------|---------------------|-------------|----------|---------|
+| `--type` | - | Registry type (mcp, a2a) | Yes | - |
+| `--url` | - | Registry base URL | Yes | - |
+| `--filter` | - | Registry-specific filters (key=value, repeatable) | No | - |
+| `--limit` | - | Maximum records to import (0 = no limit) | No | 0 |
+| `--dry-run` | - | Preview without importing | No | false |
+| `--debug` | - | Enable debug output (shows MCP source and OASF record for failures) | No | false |
+| `--force` | - | Force reimport of existing records (skip deduplication) | No | false |
+| `--enrich-config` | - | Path to MCPHost configuration file (mcphost.json) | No | importer/enricher/mcphost.json |
+| `--enrich-skills-prompt` | - | Optional: path to custom skills prompt template or inline prompt | No | "" (uses default) |
+| `--enrich-domains-prompt` | - | Optional: path to custom domains prompt template or inline prompt | No | "" (uses default) |
+| `--server-addr` | DIRECTORY_CLIENT_SERVER_ADDRESS | DIR server address | No | localhost:8888 |
+
+!!! note
+
+    By default, the importer performs deduplication: it builds a cache of existing records (by name and version) and skips importing records that already exist. This prevents duplicate imports when running the import command multiple times. Use `--force` to bypass deduplication and reimport existing records. Use `--debug` to see detailed output including which records were skipped and why imports failed.
+
+??? example
+
+    ```bash
+    # Import from MCP registry
+    dirctl import --type=mcp --url=https://registry.modelcontextprotocol.io/v0.1
+
+    # Import with debug output (shows detailed diagnostics for failures)
+    dirctl import --type=mcp \
+      --url=https://registry.modelcontextprotocol.io/v0.1 \
+      --debug
+
+    # Force reimport of existing records (skips deduplication)
+    dirctl import --type=mcp \
+      --url=https://registry.modelcontextprotocol.io/v0.1 \
+      --force
+
+    # Import with time-based filter
+    dirctl import --type=mcp \
+      --url=https://registry.modelcontextprotocol.io/v0.1 \
+      --filter=updated_since=2025-08-07T13:15:04.280Z
+
+    # Combine multiple filters
+    dirctl import --type=mcp \
+      --url=https://registry.modelcontextprotocol.io/v0.1 \
+      --filter=search=github \
+      --filter=version=latest \
+      --filter=updated_since=2025-08-07T13:15:04.280Z
+
+    # Limit number of records
+    dirctl import --type=mcp \
+      --url=https://registry.modelcontextprotocol.io/v0.1 \
+      --limit=50
+
+    # Preview without importing (dry run)
+    dirctl import --type=mcp \
+      --url=https://registry.modelcontextprotocol.io/v0.1 \
+      --dry-run
+    ```
+
 ### Routing Operations
 
 The routing commands manage record announcement and discovery across the peer-to-peer network.
@@ -777,6 +848,7 @@ dirctl routing search --skill "AI" --output json | dirctl sync create --stdin
 The CLI follows a clear service-based organization:
 
 - **Storage**: Direct record management (`push`, `pull`, `delete`, `info`).
+- **Import**: Batch imports from external registries (`import`).
 - **Routing**: Network announcement and discovery (`routing publish`, `routing list`, `routing search`).
 - **Search**: General content search (`search`).
 - **Security**: Signing and verification (`sign`, `verify`).
