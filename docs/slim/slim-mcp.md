@@ -159,11 +159,12 @@ if __name__ == "__main__":
 # src/mcp_server_time/server.py
 
 """
-MCP Time Server - A server designed to handle time and timezone conversion functionalities.
-This module offers tools to retrieve the current time across various timezones and convert times between them.
+MCP Time Server - A server implementation for time and timezone conversion functionality.
+
+This module provides tools for getting current time in different timezones and
+converting times between timezones.
 """
 
-import asyncio
 import json
 import logging
 from collections.abc import Sequence
@@ -172,15 +173,15 @@ from enum import Enum
 from zoneinfo import ZoneInfo
 
 import click
+import slim_bindings
 from mcp import types
 from mcp.server.lowlevel import Server
 from mcp.shared.exceptions import McpError
 from pydantic import BaseModel
 
-from slim_mcp import SLIMServer, init_tracing
+from slim_mcp import create_local_app, run_mcp_server
+from slim_mcp.examples.click_types import ClientConfigType
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
@@ -471,47 +472,13 @@ class TimeServerApp:
             except Exception as e:
                 raise ValueError(f"Error processing mcp-server-time query: {str(e)}")
 
-    async def handle_session(self, slim_server, session):
-        """
-        Handle a single session with proper error handling and logging.
-
-        Args:
-            session: The session to handle
-            slim_server: The SLIM server instance
-        """
-        async with slim_server.new_streams(session) as streams:
-            await self.app.run(
-                streams[0],
-                streams[1],
-                self.app.create_initialization_options(),
-            )
-
-
-async def cleanup_tasks(tasks):
-    """
-    Clean up all tasks and wait for their completion.
-
-    Args:
-        tasks: Set of tasks to clean up
-    """
-    for task in tasks:
-        if not task.done():
-            task.cancel()
-
-    if tasks:
-        try:
-            await asyncio.gather(*tasks, return_exceptions=True)
-        except Exception:
-            logger.error("Error during task cleanup", exc_info=True)
-            raise
-
 
 async def serve_slim(
     local_timezone: str | None = None,
     organization: str = "org",
     namespace: str = "ns",
     mcp_server: str = "time-server",
-    config: dict = {},
+    config: slim_bindings.ClientConfig | None = None,
 ) -> None:
     """
     Main server function that initializes and runs the time server using SLIM transport.
@@ -521,42 +488,19 @@ async def serve_slim(
         organization: Organization name
         namespace: Namespace name
         mcp_server: MCP server name
-        config: Server configuration dictionary
+        config: Server configuration (ClientConfig object or None)
     """
-    await init_tracing({"log_level": "info"})
-    time_app = TimeServerApp(local_timezone)
-    tasks: set[asyncio.Task] = set()
+    # Create MCP app
+    time_app = TimeServerApp(local_timezone).app
 
-    async with SLIMServer([config], organization, namespace, mcp_server) as slim_server:
-        try:
-            async for new_session in slim_server:
-                # Copy session ID from session as it not available after the session closes.
-                session_id = new_session.id
-                logger.info(
-                    f"new session started - session_id: {session_id}, active_sessions: {len(tasks) + 1}"
-                )
-                task = asyncio.create_task(
-                    time_app.handle_session(slim_server, new_session)
-                )
-                tasks.add(task)
+    # Create SLIM app
+    server_name = slim_bindings.Name(organization, namespace, mcp_server)
+    slim_app, connection_id = await create_local_app(server_name, config)
 
-                def on_session_end(task: asyncio.Task):
-                    try:
-                        task.exception()  # Check for exceptions
-                    except Exception as e:
-                        logger.error(
-                            f"Error handling session {session_id}: {str(e)}",
-                            extra={"session_id": session_id},
-                            exc_info=True,
-                        )
-                    tasks.discard(task)
-                    logger.info(
-                        f"session ended - {session_id}, active_sessions: {len(tasks)}"
-                    )
+    logger.info(f"Starting time server: {slim_app.id()}")
 
-                task.add_done_callback(on_session_end)
-        finally:
-            await cleanup_tasks(tasks)
+    # Run the MCP server
+    await run_mcp_server(slim_app, time_app)
 
 
 def serve_sse(
@@ -601,20 +545,6 @@ def serve_sse(
     uvicorn.run(starlette_app, host="0.0.0.0", port=port)
 
 
-class DictParamType(click.ParamType):
-    name = "dict"
-
-    def convert(self, value, param, ctx):
-        import json
-
-        if isinstance(value, dict):
-            return value  # Already a dict (for default value)
-        try:
-            return json.loads(value)
-        except json.JSONDecodeError:
-            self.fail(f"{value} is not valid JSON", param, ctx)
-
-
 @click.command(context_settings={"auto_envvar_prefix": "MCP_TIME_SERVER"})
 @click.option(
     "--local-timezone", type=str, help="Override local timezone", default=None
@@ -647,13 +577,17 @@ class DictParamType(click.ParamType):
             "insecure": True,
         },
     },
-    type=DictParamType(),
+    type=ClientConfigType(),
     help="slim server configuration, used only with slim transport",
 )
 def main(local_timezone, transport, port, organization, namespace, mcp_server, config):
     """
     MCP Time Server - Time and timezone conversion functionality for MCP.
     """
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    )
 
     if transport == "slim":
         import asyncio
@@ -669,10 +603,139 @@ def main(local_timezone, transport, port, organization, namespace, mcp_server, c
 
 <br>
 
+<details>
+
+<summary><b>src/examples/click_types.py</b></summary>
+
+<br>
+
+```python
+# src/examples/click_types.py
+
+"""
+Common utilities for SLIM-MCP examples.
+
+This module provides shared utilities used across examples, including
+click parameter types for configuration parsing.
+"""
+
+import json
+
+import click
+import slim_bindings
+
+
+class ClientConfigType(click.ParamType):
+    """
+    Custom click parameter type for parsing JSON and converting to ClientConfig.
+
+    This allows click options to accept either:
+    - A dict (when used as default value)
+    - A JSON string (when provided via CLI or environment variable)
+
+    And converts them to slim_bindings.ClientConfig objects.
+
+    Example:
+        ```python
+        @click.option(
+            "--config",
+            default={
+                "endpoint": "http://127.0.0.1:46357",
+                "tls": {"insecure": True},
+            },
+            type=ClientConfigType(),
+            help="slim server configuration",
+        )
+        def main(config):
+            # config is now a slim_bindings.ClientConfig object
+            ...
+        ```
+    """
+
+    name = "client_config"
+
+    def convert(self, value, param, ctx):
+        """
+        Convert input value to ClientConfig.
+
+        Args:
+            value: Either a dict or JSON string
+            param: Click parameter
+            ctx: Click context
+
+        Returns:
+            slim_bindings.ClientConfig: Parsed configuration object
+        """
+        # Handle dict input (default value case)
+        if isinstance(value, dict):
+            json_data = value
+        # Handle string input (CLI/env var case)
+        elif isinstance(value, str):
+            try:
+                json_data = json.loads(value)
+            except json.JSONDecodeError:
+                self.fail(f"{value} is not valid JSON", param, ctx)
+        # Handle already-converted ClientConfig
+        elif isinstance(value, slim_bindings.ClientConfig):
+            return value
+        else:
+            self.fail(
+                f"Expected dict, JSON string, or ClientConfig, got {type(value)}",
+                param,
+                ctx,
+            )
+
+        # Convert dict to ClientConfig
+        if not isinstance(json_data, dict):
+            self.fail("Configuration must be a JSON object", param, ctx)
+
+        if "endpoint" not in json_data:
+            self.fail("Configuration must include 'endpoint' field", param, ctx)
+
+        # Simple case: just endpoint and insecure TLS
+        if json_data.get("tls", {}).get("insecure", False) and len(json_data) <= 2:
+            return slim_bindings.new_insecure_client_config(json_data["endpoint"])
+
+        # Otherwise, build the config manually
+        # Start with insecure config as base
+        config = slim_bindings.new_insecure_client_config(json_data["endpoint"])
+
+        # Override TLS settings if provided
+        if "tls" in json_data:
+            tls_data = json_data["tls"]
+            config.tls = slim_bindings.TlsClientConfig(
+                insecure=tls_data.get("insecure", False),
+                insecure_skip_verify=tls_data.get("insecure_skip_verify", False),
+                source=slim_bindings.TlsSource.NONE(),
+                ca_source=slim_bindings.CaSource.NONE(),
+                include_system_ca_certs_pool=True,
+                tls_version="tls1.3",
+            )
+
+        # Set optional fields
+        if "origin" in json_data:
+            config.origin = json_data["origin"]
+
+        if "server_name" in json_data:
+            config.server_name = json_data["server_name"]
+
+        if "compression" in json_data:
+            config.compression = slim_bindings.CompressionType[json_data["compression"]]
+
+        if "rate_limit" in json_data:
+            config.rate_limit = json_data["rate_limit"]
+
+        return config
+```
+
+</details>
+
+<br>
+
 The core component of the server implementation is the `serve_slim` function.
-This function establishes a connection with our SLIM instance and handles all
-incoming client sessions. It leverages the `SLIMServer` class to create a SLIM
-server instance that listens for and processes client connections.
+This function establishes a connection with our SLIM instance using the new
+`create_local_app` and `run_mcp_server` functions. It creates a SLIM application
+with the specified server name and configuration, then runs the MCP server.
 
 External clients can address this server using the SLIM name
 `org/ns/time-server`.
@@ -683,7 +746,7 @@ async def serve_slim(
     organization: str = "org",
     namespace: str = "ns",
     mcp_server: str = "time-server",
-    config: dict = {},
+    config: slim_bindings.ClientConfig | None = None,
 ) -> None:
     """
     Main server function that initializes and runs the time server using SLIM transport.
@@ -693,42 +756,19 @@ async def serve_slim(
         organization: Organization name
         namespace: Namespace name
         mcp_server: MCP server name
-        config: Server configuration dictionary
+        config: Server configuration (ClientConfig object or None)
     """
-    await init_tracing({"log_level": "info"})
-    time_app = TimeServerApp(local_timezone)
-    tasks: set[asyncio.Task] = set()
+    # Create MCP app
+    time_app = TimeServerApp(local_timezone).app
 
-    async with SLIMServer([config], organization, namespace, mcp_server) as slim_server:
-        try:
-            async for new_session in slim_server:
-                # Copy session ID from session as it not available after the session closes.
-                session_id = new_session.id
-                logger.info(
-                    f"new session started - session_id: {session_id}, active_sessions: {len(tasks) + 1}"
-                )
-                task = asyncio.create_task(
-                    time_app.handle_session(slim_server, new_session)
-                )
-                tasks.add(task)
+    # Create SLIM app
+    server_name = slim_bindings.Name(organization, namespace, mcp_server)
+    slim_app, connection_id = await create_local_app(server_name, config)
 
-                def on_session_end(task: asyncio.Task):
-                    try:
-                        task.exception()  # Check for exceptions
-                    except Exception as e:
-                        logger.error(
-                            f"Error handling session {session_id}: {str(e)}",
-                            extra={"session_id": session_id},
-                            exc_info=True,
-                        )
-                    tasks.discard(task)
-                    logger.info(
-                        f"session ended - {session_id}, active_sessions: {len(tasks)}"
-                    )
+    logger.info(f"Starting time server: {slim_app.id()}")
 
-                task.add_done_callback(on_session_end)
-        finally:
-            await cleanup_tasks(tasks)
+    # Run the MCP server
+    await run_mcp_server(slim_app, time_app)
 ```
 
 After implementing all the necessary files, your project structure looks
@@ -823,19 +863,23 @@ import asyncio
 import logging
 
 import click
+import slim_bindings
 from dotenv import load_dotenv
 from llama_index.core.agent.workflow import ReActAgent
 from llama_index.llms.azure_openai import AzureOpenAI
 from llama_index.llms.ollama import Ollama
 from llama_index.tools.mcp import McpToolSpec
+from mcp import ClientSession
 
-from slim_mcp import SLIMClient
+from slim_mcp import create_local_app, create_client_streams
+from slim_mcp.examples.click_types import ClientConfigType
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # load .env file
 load_dotenv()
+
 
 async def amain(
     llm_type, llm_endpoint, llm_key, organization, namespace, mcp_server, city, config
@@ -859,47 +903,35 @@ async def amain(
         raise Exception("LLM type must be azure or ollama")
 
     logger.info("Starting SLIM client")
-    async with SLIMClient(
-        [config],
-        "org",
-        "ns",
-        "time-agent",
-        organization,
-        namespace,
-        mcp_server,
-    ) as client1:
-        async with client1.to_mcp_session() as mcp_session:
-            logger.info("Creating MCP tool spec")
 
-            await mcp_session.initialize()
+    # Create SLIM app
+    client_name = slim_bindings.Name("org", "ns", "time-agent")
+    client_app, connection_id = await create_local_app(client_name, config)
 
-            mcp_tool_spec = McpToolSpec(
-                client=mcp_session,
-            )
+    logger.info("SLIM App created")
 
-            tools = await mcp_tool_spec.to_tool_list_async()
+    # Connect to the MCP server
+    server_name = slim_bindings.Name(organization, namespace, mcp_server)
+    read_stream, write_stream = await create_client_streams(client_app, server_name)
 
-            agent = ReActAgent(llm=llm, tools=tools)
+    async with ClientSession(read_stream, write_stream) as mcp_session:
+        logger.info("Creating MCP tool spec")
 
-            response = await agent.run(
-                user_msg=f"What is the current time in {city}?",
-            )
+        await mcp_session.initialize()
 
-            print(response)
+        mcp_tool_spec = McpToolSpec(
+            client=mcp_session,
+        )
 
+        tools = await mcp_tool_spec.to_tool_list_async()
 
-class DictParamType(click.ParamType):
-    name = "dict"
+        agent = ReActAgent(llm=llm, tools=tools)
 
-    def convert(self, value, param, ctx):
-        import json
+        response = await agent.run(
+            user_msg=f"What is the current time in {city}?",
+        )
 
-        if isinstance(value, dict):
-            return value  # Already a dict (for default value)
-        try:
-            return json.loads(value)
-        except json.JSONDecodeError:
-            self.fail(f"{value} is not valid JSON", param, ctx)
+        print(response)
 
 
 @click.command(context_settings={"auto_envvar_prefix": "TIME_AGENT"})
@@ -918,7 +950,7 @@ class DictParamType(click.ParamType):
             "insecure": True,
         },
     },
-    type=DictParamType(),
+    type=ClientConfigType(),
 )
 def main(
     llm_type,
@@ -957,11 +989,14 @@ def main(
 The key component of the agent is the `amain` function, which handles:
 
 1. LLM configuration (Azure OpenAI or Ollama).
-2. SLIM client initialization and connection to our MCP server.
-3. Tool setup and agent execution.
+2. SLIM application creation using `create_local_app` to establish the client's identity.
+3. Connection to the MCP server using `create_client_streams` to get read/write streams.
+4. MCP session initialization using `ClientSession` with the established streams.
+5. Tool setup and agent execution.
 
 The agent establishes its identity through the SLIM name `org/ns/time-agent`,
-which is used for addressing.
+and connects to the MCP server identified by the SLIM name constructed from
+the organization, namespace, and server name parameters.
 
 After implementing all the necessary files, your agent project structure should
 look like this:
