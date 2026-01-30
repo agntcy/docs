@@ -32,7 +32,7 @@ To start, generate an example Record that matches the data model schema defined 
 # Generate an example data model
 cat << EOF > record.json
 {
-    "name": "my-record",
+    "name": "https://example.com/agents/my-record",
     "version": "v1.0.0",
     "description": "insert description here",
     "schema_version": "0.7.0",
@@ -152,14 +152,29 @@ dirctl push record.json > record.cid
 # Set the CID as a variable for easier reference
 RECORD_CID=$(cat record.cid)
 
-# Pull the record
+# Pull the record by CID
 # Returns the same data as record.json
 dirctl pull $RECORD_CID
 
-# Lookup basic metadata about the record
+# Pull the record by name (if it has a verifiable name)
+# Returns the same data as record.json
+dirctl pull example.com/agents/my-record:v1.0.0
+
+# Lookup basic metadata about the record by CID
 # Returns annotations, creation timestamp and OASF schema version
 dirctl info $RECORD_CID
+
+# Lookup basic metadata by name
+dirctl info example.com/agents/my-record:v1.0.0
 ```
+
+Records with verifiable names can be referenced using Docker-style formats:
+
+- `example.com/agents/my-record` - Latest version
+- `example.com/agents/my-record:v1.0.0` - Specific version
+- `example.com/agents/my-record:v1.0.0@bafyreib...` - Hash-verified lookup
+  
+Name-based references work with `pull`, `info`, and `naming verify` commands.
 
 ## Signing and Verification
 
@@ -242,6 +257,93 @@ dirctl push record.json --sign --key cosign.key
 
 # Verify the signed record
 dirctl verify $RECORD_CID
+```
+
+## Name Verification
+
+Name verification proves that the signing key is authorized by the domain claimed in the
+record's name field. This provides cryptographic proof of domain ownership and enables
+human-readable references while maintaining security.
+
+### Requirements
+
+To use name verification, your record must meet these requirements:
+
+- Record name must include a protocol prefix: `https://domain/path` or `http://domain/path`
+- A [JWKS (JSON Web Key Set)](https://datatracker.ietf.org/doc/html/rfc7517) file must be hosted at `<scheme>://<domain>/.well-known/jwks.json`
+- The record must be signed with the private key corresponding to a public key present in that JWKS file
+
+### Workflow
+
+```bash
+# 1. Create a record with a verifiable name (already done in Build section)
+# The record.json has: "name": "https://example.com/agents/my-record"
+
+# 2. Ensure your domain hosts a JWKS file
+# Example: https://example.com/.well-known/jwks.json
+# This file should contain the public key corresponding to your signing key
+
+# 3. Push the record
+RECORD_CID=$(dirctl push record.json --output raw)
+echo "Stored with CID: $RECORD_CID"
+
+# 4. Sign the record (triggers automatic verification)
+dirctl sign $RECORD_CID --key cosign.key
+
+# 5. Verify the name authorization
+# By CID
+dirctl naming verify $RECORD_CID --output json
+
+# By name (latest version)
+dirctl naming verify example.com/agents/my-record --output json
+
+# By name with specific version
+dirctl naming verify example.com/agents/my-record:v1.0.0 --output json
+```
+
+### Verification Response
+
+When verification succeeds, you'll receive a response like:
+
+```json
+{
+  "cid": "bafyreib...",
+  "verified": true,
+  "domain": "example.com",
+  "method": "jwks",
+  "key_id": "key-1",
+  "verified_at": "2026-01-21T10:30:00Z"
+}
+```
+
+### Using Verified Names
+
+Once verified, you can use convenient name-based references instead of CIDs:
+
+```bash
+# Pull by name (latest version)
+dirctl pull example.com/agents/my-record
+
+# Pull specific version
+dirctl pull example.com/agents/my-record:v1.0.0
+
+# Pull with hash verification (fails if CID doesn't match)
+dirctl pull example.com/agents/my-record:v1.0.0@$RECORD_CID
+
+# Get info by name
+dirctl info example.com/agents/my-record:v1.0.0 --output json
+```
+
+### Version Resolution
+
+When no version is specified, commands return the most recently created record (by the
+record's `created_at` field). This allows non-semver tags like `latest`, `dev`, or `stable`:
+
+```bash
+# These all pull the most recent version
+dirctl pull example.com/agents/my-record
+dirctl pull example.com/agents/my-record:latest
+dirctl pull example.com/agents/my-record:dev
 ```
 
 ## Announce
@@ -333,6 +435,9 @@ other Directory commands like `pull`, `info`, and `verify`.
 # Basic search for records by name
 dirctl search --name "my-agent-name"
 
+# Search for records with verifiable domain-based names
+dirctl search --name "example.com/agents/my-record"
+
 # Search for records with a specific version
 dirctl search --version "v1.0.0"
 
@@ -382,6 +487,7 @@ The search functionality supports wildcard patterns for flexible matching:
 ```bash
 # Asterisk (*) wildcard - matches zero or more characters
 dirctl search --name "web*"                    # Find all web-related agents
+dirctl search --name "example.com/*"           # Find all agents from example.com domain
 dirctl search --version "v1.*"                 # Find all v1.x versions
 dirctl search --skill "audio*"                 # Find Audio-related skills
 dirctl search --locator "http*"                # Find HTTP-based locators

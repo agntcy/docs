@@ -64,8 +64,16 @@ The following example demonstrates how to store, publish, search, and retrieve a
 1. Retrieve a record
 
     ```bash
+    # Pull by CID
     dirctl pull baeareihdr6t7s6sr2q4zo456sza66eewqc7huzatyfgvoupaqyjw23ilvi
+
+    # Or pull by name (if the record has a verifiable name)
+    dirctl pull cisco.com/agent:v1.0.0
     ```
+
+!!! note "Name-based References"
+    
+    The CLI supports Docker-style name references in addition to CIDs. Records can be pulled using formats like `name`, `name:version`, or `name:version@cid` for hash-verified lookups. See [Name Verification](#name-verification) for details.
 
 ## Directory MCP Server
 
@@ -248,19 +256,56 @@ Stores records in the content-addressable store. Has the following features:
     dirctl push agent-model.json --sign --key private.key
     ```
 
-#### `dirctl pull <cid>`
+#### `dirctl pull <reference>`
 
-Retrieves records by their Content Identifier (CID).
+Retrieves records by their Content Identifier (CID) or name reference.
+
+**Supported Reference Formats:**
+
+| Format | Description |
+|--------|-------------|
+| `<cid>` | Direct lookup by CID |
+| `<name>` | Retrieves the latest version |
+| `<name>:<version>` | Retrieves the specified version |
+| `<name>@<cid>` | Hash-verified lookup (fails if resolved CID doesn't match) |
+| `<name>:<version>@<cid>` | Hash-verified lookup for a specific version |
 
 ??? example
 
     ```bash
-    # Pull record content
+    # Pull by CID
     dirctl pull baeareihdr6t7s6sr2q4zo456sza66eewqc7huzatyfgvoupaqyjw23ilvi
+
+    # Pull by name (latest version)
+    dirctl pull cisco.com/agent
+
+    # Pull by name with specific version
+    dirctl pull cisco.com/agent:v1.0.0
+
+    # Pull with hash verification
+    dirctl pull cisco.com/agent@bafyreib...
+    dirctl pull cisco.com/agent:v1.0.0@bafyreib...
 
     # Pull with signature verification
     dirctl pull <cid> --signature --public-key public.key
     ```
+
+**Hash Verification:**
+
+The `@<cid>` suffix enables hash verification. This command fails if the resolved CID doesn't match the expected digest:
+
+```bash
+# Succeeds if cisco.com/agent:v1.0.0 resolves to bafyreib...
+dirctl pull cisco.com/agent:v1.0.0@bafyreib...
+
+# Fails with error if CIDs don't match
+dirctl pull cisco.com/agent@wrong-cid
+# Error: hash verification failed: resolved CID "bafyreib..." does not match expected digest "wrong-cid"
+```
+
+**Version Resolution:**
+
+When no version is specified, commands return the most recently created record (by record's `created_at` field). This allows non-semver tags like `latest`, `dev`, or `stable`.
 
 #### `dirctl delete <cid>`
 
@@ -273,15 +318,31 @@ Removes records from storage.
     dirctl delete baeareihdr6t7s6sr2q4zo456sza66eewqc7huzatyfgvoupaqyjw23ilvi
     ```
 
-#### `dirctl info <cid>`
+#### `dirctl info <reference>`
 
-Displays metadata about stored records.
+Displays metadata about stored records using CID or name reference.
+
+**Supported Reference Formats:**
+
+| Format | Description |
+|--------|-------------|
+| `<cid>` | Direct lookup by content address |
+| `<name>` | Displays the most recently created version |
+| `<name>:<version>` | Displays the specified version |
+| `<name>@<cid>` | Hash-verified lookup |
+| `<name>:<version>@<cid>` | Hash-verified lookup for a specific version |
 
 ??? example
 
     ```bash
-    # Show record metadata
+    # Info by CID (existing)
     dirctl info baeareihdr6t7s6sr2q4zo456sza66eewqc7huzatyfgvoupaqyjw23ilvi
+
+    # Info by name (latest version)
+    dirctl info cisco.com/agent --output json
+
+    # Info by name with specific version
+    dirctl info cisco.com/agent:v1.0.0 --output json
     ```
 
 ### Routing Operations
@@ -453,9 +514,36 @@ The following flags are available:
 
 ### Security & Verification
 
+#### Name Verification
+
+Record name verification proves that the signing key is authorized by the domain claimed in the record's name field.
+
+**Requirements:**
+
+- Record name must include a protocol prefix: `https://domain/path` or `http://domain/path`
+- A JWKS file must be hosted at `<scheme>://<domain>/.well-known/jwks.json`
+- The record must be signed with the private key corresponding to a public key present in that JWKS file
+
+**Workflow:**
+
+1. Push a record with a verifiable name.
+
+    ```bash
+    dirctl push record.json --output raw
+    # Returns: bafyreib...
+    ```
+
+2. Sign the record (triggers automatic verification).
+
+    ```bash
+    dirctl sign <cid> --key private.key
+    ```
+
+3. Check verification status using [`dirctl naming verify`](./directory-cli.md#dirctl-naming-verify-reference).
+
 #### `dirctl sign <cid> [flags]`
 
-Signs records for integrity and authenticity.
+Signs records for integrity and authenticity. When signing a record with a verifiable name (e.g., `https://domain/path`), the system automatically attempts to verify domain authorization via JWKS. See [Name Verification](#name-verification) for details.
 
 ??? example
 
@@ -465,6 +553,44 @@ Signs records for integrity and authenticity.
 
     # Sign with OIDC (keyless signing)
     dirctl sign <cid> --oidc --fulcio-url https://fulcio.example.com
+    ```
+
+#### `dirctl naming verify <reference>`
+
+Verifies that a record's signing key is authorized by the domain claimed in its name field. Checks if the signing key matches a public key in the domain's JWKS file hosted at `/.well-known/jwks.json`.
+
+**Supported Reference Formats:**
+
+| Format | Description |
+|--------|-------------|
+| `<cid>` | Verify by content address |
+| `<name>` | Verify the most recently created version |
+| `<name>:<version>` | Verify a specific version |
+
+??? example
+
+    ```bash
+    # Verify by CID
+    dirctl naming verify bafyreib... --output json
+
+    # Verify by name (latest version)
+    dirctl naming verify cisco.com/agent --output json
+
+    # Verify by name with specific version
+    dirctl naming verify cisco.com/agent:v1.0.0 --output json
+    ```
+
+    Example verification response:
+
+    ```json
+    {
+    "cid": "bafyreib...",
+    "verified": true,
+    "domain": "cisco.com",
+    "method": "jwks",
+    "key_id": "key-1",
+    "verified_at": "2026-01-21T10:30:00Z"
+    }
     ```
 
 #### `dirctl verify <record> <signature> [flags]`
