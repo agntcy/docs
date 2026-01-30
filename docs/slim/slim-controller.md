@@ -358,7 +358,7 @@ tls:
   key_file: "/path/to/client.key"
 ```
 
-The `server` endpoint should point to a [SLIM Control](https://github.com/agntcy/slim/tree/slim-v0.7.0/control-plane/control-plane) endpoint which is a central service managing SLIM node configurations.
+The `server` endpoint should point to a [SLIM Control](https://github.com/agntcy/slim/tree/slim-v1.0.0/control-plane/control-plane) endpoint which is a central service managing SLIM node configurations.
 
 ### Commands
 
@@ -393,16 +393,18 @@ RUST_LOG=debug slimctl slim start --config data-plane/config/base/server-config.
 - `--config` - Path to YAML configuration file (production SLIM format)
 - `--endpoint` - Server endpoint (sets `SLIM_ENDPOINT` environment variable)
 
-**Configuration files:** Use production configs from `data-plane/config/`:
+**Configuration files:** See example configs from [data-plane/config/](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/config):
 
-- `base/server-config.yaml` - Basic insecure configuration
-- `tls/server-config.yaml` - TLS-enabled server
-- `mtls/` - Mutual TLS authentication
-- `basic-auth/` - HTTP Basic authentication
-- `jwt-auth-*/` - JWT authentication (RSA, ECDSA, HMAC)
-- `spire/` - SPIFFE/SPIRE workload identity
-- `proxy/` - HTTP proxy configuration
-- `telemetry/` - OpenTelemetry integration
+- [base](https://github.com/agntcy/slim/blob/slim-v1.0.0/data-plane/config/base) - Basic insecure configuration
+- [tls](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/config/tls) - TLS-enabled server
+- [mtls](https://github.com/agntcy/slim/blob/slim-v1.0.0/data-plane/config/mtls) - Mutual TLS authentication
+- [basic-auth](https://github.com/agntcy/slim/blob/slim-v1.0.0/data-plane/config/basic-auth) - HTTP Basic authentication
+- `jwt-auth-*` - JWT authentication ([RSA](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/config/jwt-auth-rsa), 
+    [ECDSA](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/config/jwt-auth-ecdsa), 
+    [HMAC](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/config/jwt-auth-hmac))
+- [spire](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/config/spire) - SPIFFE/SPIRE workload identity
+- [proxy](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/config/proxy) - HTTP proxy configuration
+- [telemetry](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/config/telemetry) - OpenTelemetry integration
 
 #### `route` - Route Management
 
@@ -532,7 +534,7 @@ slimctl route add org/default/alice/0 via connection_config.json --node-id=my-no
 slimctl route del org/default/alice/0 via http://localhost:46357 --node-id=my-node
 ```
 
-For full reference of connection_config.json, see the [client-config-schema.json](https://github.com/agntcy/slim/blob/slim-v0.7.0/data-plane/core/config/src/grpc/schema/client-config.schema.json).
+For full reference of connection_config.json, see the [client-config-schema.json](https://github.com/agntcy/slim/blob/slim-v1.0.0/data-plane/core/config/src/grpc/schema/client-config.schema.json).
 
 ### Managing SLIM Nodes Directly
 
