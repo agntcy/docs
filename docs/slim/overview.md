@@ -22,7 +22,7 @@ At its core, SLIM combines:
 
 SLIM enables AI agents to communicate securely whether they're running in a data
 center, in a browser, on mobile devices, or across organizational boundaries —
-all while maintaining sub-second latencies and strong security guarantees.
+all while maintaining low latencies and strong security guarantees.
 
 ## SLIM Components
 
