@@ -999,7 +999,7 @@ local proxy instance:
    ```bash
    docker run -it \
      -v $(pwd)/config-proxy.yaml:/config-proxy.yaml \
-     ghcr.io/agntcy/slim-mcp-rust/mcp-proxy:latest /slim-mcp-proxy \
+     ghcr.io/agntcy/slim-mcp-rust/mcp-proxy:0.2.1 /slim-mcp-proxy \
      --config /config-proxy.yaml \
      --svc-name slim/0 \
      --name org/mcp/proxy \
