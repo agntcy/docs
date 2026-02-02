@@ -31,8 +31,9 @@ scalable messaging infrastructure:
 
 - **[SLIM Messaging Layer](./slim-data-plane.md)**: The data plane component
   that handles message routing, delivery, and secure communication between
-  applications. It includes the session layer for encryption (using MLS
-  protocol) and the data plane for efficient message distribution across the
+  applications. It consists of two layers: the session layer that provides
+  end-to-end encryption (using the MLS protocol) and reliable message delivery,
+  and the data plane that enables efficient message distribution across the
   network.
 
 - **[SLIM Controller](./slim-controller.md)**: The control plane component that
