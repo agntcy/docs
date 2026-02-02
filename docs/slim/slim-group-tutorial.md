@@ -6,7 +6,7 @@ participants. Messages are sent to a shared channel where every member can read
 and write. All messages are end-to-end encrypted using the
 [MLS protocol](https://datatracker.ietf.org/doc/html/rfc9420). This tutorial is
 based on the
-[group.py](https://github.com/agntcy/slim/tree/main/data-plane/bindings/python/examples/group.py)
+[group.py](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/bindings/python/examples/group.py)
 example in the SLIM repo.
 
 ## Key Features
@@ -28,7 +28,7 @@ Every participant in a group requires a unique identity for authentication and f
 
 Every SLIM application requires both a unique identity and an authentication mechanism. The identity is used for end-to-end encryption via the MLS protocol, while authentication verifies the application to the SLIM network. In this tutorial, we use shared secret authentication for simplicity. For more advanced authentication methods (JWT, SPIRE), see the [SLIM documentation](./slim-authentication.md).
 
-The example code provides a `create_local_app` helper function (from [common.py](https://github.com/agntcy/slim/tree/main/data-plane/bindings/python/examples/common.py)) that simplifies the app creation and connection process.
+The example code provides a `create_local_app` helper function (from [common.py](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/bindings/python/examples/common.py)) that simplifies the app creation and connection process.
 
 The `create_local_app` function handles three main tasks:
 
@@ -77,6 +77,11 @@ async def create_local_app(config: BaseConfig) -> tuple[slim_bindings.App, int]:
         local_app = service.create_app(local_name, provider_config, verifier_config)
     elif auth_mode == AuthMode.JWT:
         print("Using JWT + JWKS authentication.")
+        # These should always be set if auth_mode is JWT
+        if not config.jwt or not config.spire_trust_bundle:
+            raise ValueError(
+                "JWT and SPIRE trust bundle are required for JWT auth mode"
+            )
         provider_config, verifier_config = jwt_identity(
             config.jwt,
             config.spire_trust_bundle,
@@ -85,8 +90,7 @@ async def create_local_app(config: BaseConfig) -> tuple[slim_bindings.App, int]:
         )
         local_app = service.create_app(local_name, provider_config, verifier_config)
     else:
-        # For testing/development: use shared secret
-        print("Warning: Falling back to shared-secret authentication. Don't use this in production!")
+        print("Using shared-secret authentication.")
         local_app = service.create_app_with_secret(local_name, config.shared_secret)
 
     # Provide feedback to user (instance numeric id).
@@ -136,13 +140,11 @@ session_config = slim_bindings.SessionConfig(
     metadata={},
 )
 
-# Create session - returns a SessionWithCompletion containing session and completion handle
-session_context = local_app.create_session(session_config, chat_channel)
+# Create session - returns a SessionContext
+session = local_app.create_session(session_config, chat_channel)
 # Wait for session to be established
-await session_context.completion.wait_async()
-created_session = session_context.session
-
-print(f"Creating new group session (moderator)... {local}")
+await session.completion.wait_async()
+created_session = session.session
 
 # Invite each provided participant
 for invite in invites:
@@ -154,10 +156,10 @@ for invite in invites:
 ```
 
 This code comes from the
-[group.py](https://github.com/agntcy/slim/tree/main/data-plane/bindings/python/examples/group.py)
+[group.py](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/bindings/python/examples/group.py)
 example.
 
-A new group session is created by calling `local_app.create_session(...)` which returns a `SessionWithCompletion`
+A new group session is created by calling `local_app.create_session(...)` which returns a `SessionContext`
 object containing both the session and a completion handle. The completion handle must be awaited to ensure
 the session is fully established.
 
@@ -366,7 +368,7 @@ only its local session is closed.
 
 Now we will show how to run a new group session and
 how to enable group communication on top of SLIM. The full code can be found in
-[group.py](https://github.com/agntcy/slim/tree/main/data-plane/bindings/python/examples/group.py)
+[group.py](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/bindings/python/examples/group.py)
 in the SLIM repo. To run the example, follow the steps listed here:
 
 #### Run SLIM
@@ -415,7 +417,7 @@ You can run the SLIM instance using Docker:
 ```bash
 docker run -it \
     -v ./config.yaml:/config.yaml -p 46357:46357 \
-    ghcr.io/agntcy/slim:latest /slim --config /config.yaml
+    ghcr.io/agntcy/slim:1.0.0 /slim --config /config.yaml
 ```
 
 If everything goes fine, you should see an output like this one:
@@ -435,7 +437,7 @@ In this example, we use two participants: `agntcy/ns/client-1` and `agntcy/ns/cl
 First, clone the SLIM repository and install the dependencies:
 
 ```bash
-git clone https://github.com/agntcy/slim.git
+git clone --branch slim-v1.0.0 https://github.com/agntcy/slim.git
 cd slim/data-plane/bindings/python
 task python:bindings:build
 task python:bindings:install-examples
@@ -518,7 +520,7 @@ With the controller, you do not need to set up a moderator in your application. 
 ### Run the Group Communication Example
 
 Now we will show how to set up a group using the SLIM Controller. The reference code for the
-application is still [group.py](https://github.com/agntcy/slim/tree/main/data-plane/bindings/python/examples/group.py). To run this example, follow the steps listed here.
+application is still [group.py](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/bindings/python/examples/group.py). To run this example, follow the steps listed here.
 
 #### Run the SLIM Controller
 
@@ -560,7 +562,7 @@ Start the controller with Docker:
 ```bash
 docker run -it \
     -v ./config-controller.yaml:/config.yaml -v .:/db -p 50051:50051 -p 50052:50052 \
-    ghcr.io/agntcy/slim/control-plane:latest --config /config.yaml
+    ghcr.io/agntcy/slim/control-plane:1.0.0 --config /config.yaml
 ```
 
 If everything goes fine, you should see an output like this:
@@ -619,7 +621,7 @@ This starts a SLIM node that connects to the controller:
 ```bash
 docker run -it \
     -v ./config-slim.yaml:/config.yaml -p 46357:46357 \
-    ghcr.io/agntcy/slim:latest /slim --config /slim.yaml
+    ghcr.io/agntcy/slim:1.0.0 /slim --config /config.yaml
 ```
 
 If everything goes fine, you should see an output like this one:
@@ -639,7 +641,6 @@ output should be similar to this:
 
 ```bash
 22026-01-28T15:40:45Z INF Registering node with ID: slim/0 svc=southbound
-no SPIFFE ID found
 2026-01-28T15:40:45Z INF Connection details: [endpoint: 192.168.65.1:46357] nodeID=slim/0 svc=southbound
 2026-01-28T15:40:45Z INF Create generic routes for node node_id=slim/0 service=RouteService
 2026-01-28T15:40:45Z INF Sending routes to registered node slim/0 node_id=slim/0
@@ -685,7 +686,7 @@ At this point all applications are waiting for a new session.
 
 Use `slimctl` (see [slim-controller](./slim-controller.md)) to send administrative commands to the controller.
 
-First, you need to run `slimctl`. To install it see the related [documentation](https://github.com/agntcy/slim/blob/main/control-plane/slimctl/installation.md)
+First, you need to run `slimctl`. To install it see the related [documentation](https://github.com/agntcy/slim/tree/slim-v1.0.0/control-plane/slimctl/README.md)
 
 To verify that `slimctl` was downloaded successfully, run the following command:
 

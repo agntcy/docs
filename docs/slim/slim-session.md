@@ -3,7 +3,7 @@
 This document explains the SLIM session layer and the two supported session
 types. It helps you understand the two session interfaces, reliability, and security trade‑offs.
 
-The SLIM repository ships with practical, runnable examples for both [Python](https://github.com/agntcy/slim/tree/main/data-plane/bindings/python/examples) and [Go](https://github.com/agntcy/slim/tree/main/data-plane/bindings/go/examples) that demonstrate how to create sessions and exchange messages between applications. This document uses Python examples as reference.
+The SLIM repository ships with practical, runnable examples for both [Python](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/bindings/python/examples) and [Go](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/bindings/go/examples) that demonstrate how to create sessions and exchange messages between applications. This document uses Python examples as reference.
 
 ## Point-to-Point Session
 
@@ -78,13 +78,14 @@ session_config = slim_bindings.SessionConfig(
     metadata={},
 )
 
-# Create session - returns a context with session and completion handle
-session_context = await local_app.create_session_async(session_config, remote_name)
+# Create session - returns a context with completion and session
+session_context = await local_app.create_session_async(
+    session_config, remote_name
+)
 
 # Wait for session to be established
 await session_context.completion.wait_async()
 
-# Get the session object
 session = session_context.session
 ```
 
@@ -125,17 +126,17 @@ await session.publish_async(
 received_msg = await session.get_message_async(
     timeout=datetime.timedelta(seconds=30)
 )
-payload = received_msg.payload
-print(payload.decode())
+reply = received_msg.payload
+print(reply.decode())
 
 # Send a correlated response back (echo style)
 # The message will be sent according to the info in the session
-await session.publish_async(payload, None, None)  # payload, payload_type, metadata
+await session.publish_async(reply, None, None)  # payload, payload_type, metadata
 ```
 
 ### Point-to-Point Example
 
-This [example](https://github.com/agntcy/slim/blob/main/data-plane/bindings/python/examples/point_to_point.py) walks through the creation of a point-to-point session. When running the point-to-point example multiple times, the session binds to different running instances, while the message stream always sticks to the same endpoint.
+This [example](https://github.com/agntcy/slim/blob/slim-v1.0.0/data-plane/bindings/python/examples/point_to_point.py) walks through the creation of a point-to-point session. When running the point-to-point example multiple times, the session binds to different running instances, while the message stream always sticks to the same endpoint.
 
 The example demonstrates how to publish messages, enable reliability, and enable MLS for end‑to‑end security. Run the example using the Taskfile provided in the repository.
 
@@ -162,23 +163,19 @@ example:
 # Create group session configuration
 session_config = slim_bindings.SessionConfig(
     session_type=slim_bindings.SessionType.GROUP,
-    enable_mls=enable_mls,  # Enable Messaging Layer Security for end-to-end encrypted & authenticated group communication.
-    max_retries=5,  # Max per-message resend attempts upon missing ack before reporting a delivery failure.
-    interval=datetime.timedelta(seconds=5),  # Ack / delivery wait window; after this duration a retry is triggered (until max_retries).
+    enable_mls=enable_mls,
+    max_retries=5,
+    interval=datetime.timedelta(seconds=5),
     metadata={},
 )
 
-# Create session - returns a context with session and completion handle
-session_context = await local_app.create_session_async(
-    session_config,
-    chat_channel,  # Logical group channel (Name) all participants join; acts as group/topic identifier.
-)
+# Create session - returns a SessionContext
+session = local_app.create_session(session_config, chat_channel)
 
 # Wait for session to be established
-await session_context.completion.wait_async()
+await session.completion.wait_async()
 
-# Get the session object
-created_session = session_context.session
+created_session = session.session
 ```
 
 Config Parameters:
@@ -194,7 +191,7 @@ Create Session Parameters:
 * `session_config` (required, SessionConfig): The configuration object for this session.
 * `chat_channel` (required, Name): Identifier of the group channel that all participants join.
 
-As in the case of point-to-point sessions, the `await session_context.completion.wait_async()` guarantees that once returned, all the
+As in the case of point-to-point sessions, the `await session.completion.wait_async()` guarantees that once returned, all the
 underlying message exchange is completed.
 
 ### Sending and Replying in a Group Session
@@ -210,8 +207,9 @@ await session.publish_async(b"hello", None, None)  # payload, payload_type, meta
 received_msg = await session.get_message_async(
     timeout=datetime.timedelta(seconds=30)
 )
-data = received_msg.payload
-print("channel received:", data.decode())
+ctx = received_msg.context
+payload = received_msg.payload
+print("channel received:", payload.decode())
 ```
 
 ### Invite a New Participant
@@ -397,4 +395,4 @@ stops, all participants are removed from the group.
 
 ### Group Example
 
-This [example](https://github.com/agntcy/slim/blob/main/data-plane/bindings/python/examples/group.py) demonstrates how to create a group session, invite participants, and (if enabled) establish an MLS group for end-to-end encryption. It also shows how to broadcast messages to all current members and handle inbound group messages. Run the example using the Taskfile provided in the repository.
+This [example](https://github.com/agntcy/slim/blob/slim-v1.0.0/data-plane/bindings/python/examples/group.py) demonstrates how to create a group session, invite participants, and (if enabled) establish an MLS group for end-to-end encryption. It also shows how to broadcast messages to all current members and handle inbound group messages. Run the example using the Taskfile provided in the repository.

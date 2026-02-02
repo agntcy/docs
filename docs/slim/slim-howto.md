@@ -21,7 +21,7 @@ installed using the provided container image, with
 #### Using Docker
 
 ```bash
-docker pull ghcr.io/agntcy/slim:v0.7.0
+docker pull ghcr.io/agntcy/slim:1.0.0
 
 cat << EOF > ./config.yaml
 tracing:
@@ -47,7 +47,7 @@ EOF
 
 docker run -it \
     -v ./config.yaml:/config.yaml -p 46357:46357 \
-    ghcr.io/agntcy/slim:v0.7.0 /slim --config /config.yaml
+    ghcr.io/agntcy/slim:1.0.0 /slim --config /config.yaml
 ```
 
 #### Using Cargo
@@ -85,11 +85,11 @@ EOF
 We also provide a Helm chart for deploying SLIM in Kubernetes environments.
 
 ```bash
-helm pull oci://ghcr.io/agntcy/slim/helm/slim --version v0.7.0
+helm pull oci://ghcr.io/agntcy/slim/helm/slim --version v1.0.0
 ```
 
 For information about how to use the Helm chart, see the
-[values.yaml](https://github.com/agntcy/slim/blob/slim-v0.7.0/charts/slim/values.yaml)
+[values.yaml](https://github.com/agntcy/slim/blob/slim-v1.0.0/charts/slim/values.yaml)
 
 ### SLIM Controller
 
@@ -100,7 +100,7 @@ provided container image or with [Helm](https://helm.sh/).
 ### Using Docker
 
 ```bash
-docker pull ghcr.io/agntcy/slim/control-plane:v0.7.0
+docker pull ghcr.io/agntcy/slim/control-plane:1.0.0
 
 cat << EOF > ./slim-control-plane.yaml
 northbound:
@@ -129,14 +129,14 @@ EOF
 docker run -it \
     -v ./slim-control-plane.yaml:/config.yaml -v .:/db \
     -p 50051:50051 -p 50052:50052                      \
-    ghcr.io/agntcy/slim/control-plane:v0.7.0           \
+    ghcr.io/agntcy/slim/control-plane:1.0.0           \
     -config /config.yaml
 ```
 
 ### Using Helm
 
 ```bash
-helm pull oci://ghcr.io/agntcy/slim/helm/slim-control-plane --version v0.7.0
+helm pull oci://ghcr.io/agntcy/slim/helm/slim-control-plane --version v1.0.0
 ```
 
 ### SLIM Bindings
@@ -154,18 +154,45 @@ pip install slim-bindings
 ```toml
 [project]
 ...
-dependencies = ["slim-bindings>=0.7.0"]
+dependencies = ["slim-bindings~=1.0"]
 ```
 
 A tutorial on how to use the bindings in an application can be found in the [messaging layer
 documentation](./slim-data-plane.md). Otherwise examples are available in the
-[SLIM Repository](https://github.com/agntcy/slim/tree/slim-v0.7.0/data-plane/python/bindings/examples/src/slim_bindings_examples).
+[SLIM Repository](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/bindings/python/examples).
+
+#### Go
+
+SLIM provides Go bindings for easy integration with Go applications. You can
+install the bindings using `go get`:
+
+```bash
+go get github.com/agntcy/slim-bindings-go@v1.0.0
+```
+
+After installing, run the setup tool to install the required native libraries:
+
+```bash
+go run github.com/agntcy/slim-bindings-go/cmd/slim-bindings-setup
+```
+
+In your `go.mod` file:
+
+```go
+require github.com/agntcy/slim-bindings-go v1.0.0
+```
+
+**Note:** The Go bindings use native libraries via CGO, so a C compiler is required.
+
+Examples are available in the [SLIM Repository](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/bindings/go/examples).
+
+
 
 ### Slimctl
 
 `slimctl` is a command-line tool for managing SLIM Nodes and Controllers. It can
 be downloaded from the [releases
-page](https://github.com/agntcy/slim/releases/tag/slimctl-v0.7.0) in the SLIM repo.
+page](https://github.com/agntcy/slim/releases/tag/slimctl-v1.0.0) in the SLIM repo.
 
 #### Installation
 
@@ -174,8 +201,9 @@ Choose the appropriate installation method for your operating system:
 === "macOS (Apple Silicon)"
 
     ```bash
-    curl -LO https://github.com/agntcy/slim/releases/download/slimctl-v0.7.0/slimctl_slimctl-v0.7.0-SNAPSHOT-35c37ab_darwin_arm64.tar.gz
-    sudo mv slimctl-darwin-arm64 /usr/local/bin/slimctl
+    curl -LO https://github.com/agntcy/slim/releases/download/slimctl-v1.0.0/slimctl_1.0.0_darwin_arm64.tar.gz
+    tar -xzf slimctl_1.0.0_darwin_arm64.tar.gz
+    sudo mv slimctl /usr/local/bin/slimctl
     sudo chmod +x /usr/local/bin/slimctl
     ```
 
@@ -191,10 +219,13 @@ Choose the appropriate installation method for your operating system:
 === "Linux (AMD64)"
 
     ```bash
-    curl -LO https://github.com/agntcy/slim/releases/download/slimctl-v0.7.0/slimctl_slimctl-v0.7.0-SNAPSHOT-35c37ab_linux_amd64.tar.gz
-    sudo mv slimctl-linux-amd64 /usr/local/bin/slimctl
+    curl -LO https://github.com/agntcy/slim/releases/download/slimctl-v1.0.0/slimctl_1.0.0_linux_amd64.tar.gz
+    tar -xzf slimctl_1.0.0_linux_amd64.tar.gz
+    sudo mv slimctl /usr/local/bin/slimctl
     sudo chmod +x /usr/local/bin/slimctl
     ```
+
+Check the [slimct documentation](https://github.com/agntcy/slim/tree/slim-v1.0.0/control-plane/slimctl/README.md) for other installation methods
 
 #### Verification
 

@@ -24,8 +24,8 @@ of the application logic) or serve solely as a channel moderator.
 
 Group creation is available in both Python and Go bindings. This section provides
 the basic steps to follow with Python code snippets for setting up a group session.
-For Go examples, see the [group example](https://github.com/agntcy/slim/tree/main/data-plane/bindings/go/examples/group/main.go).
-The full Python code is available in [group.py](https://github.com/agntcy/slim/tree/main/data-plane/bindings/python/examples/group.py).
+For Go examples, see the [group example](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/bindings/go/examples/group/main.go).
+The full Python code is available in [group.py](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/bindings/python/examples/group.py).
 
 ### Create the Channel
 
@@ -44,11 +44,11 @@ session_config = slim_bindings.SessionConfig(
     metadata={},
 )
 
-# Create session - returns a SessionWithCompletion containing session and completion handle
-session_context = local_app.create_session(session_config, chat_channel)
+# Create session - returns a tuple (SessionContext, CompletionHandle)
+session = local_app.create_session(session_config, chat_channel)
 # Wait for session to be established
-await session_context.completion.wait_async()
-created_session = session_context.session
+await session.completion.wait_async()
+created_session = session.session
 ```
 
 ### Invite Participants to the Channel
@@ -90,17 +90,13 @@ while True:
         )
         ctx = received_msg.context
         payload = received_msg.payload
+
+        # Display sender name and message
+        sender = ctx.source_name if hasattr(ctx, "source_name") else source_name
         print_formatted_text(
-            f"{ctx.source_name.components} > {payload.decode()}",
+            f"{sender} > {payload.decode()}",
             style=custom_style,
         )
-    except asyncio.CancelledError:
-        # Graceful shutdown path (ctrl-c or program exit).
-        break
-    except Exception as e:
-        # Non-cancellation error; surface and exit the loop.
-        print_formatted_text(f"-> Error receiving message: {e}")
-        break
 ```
 
 ### Send Messages on a Channel
@@ -137,17 +133,17 @@ performed in the application.
 To create the group, run:
 
 ```bash
-slimctl controller channel create moderators=agntcy/ns/client-1/9494657801285491688
+slimctl controller channel create moderators=agntcy/ns/client-1/10494544672403736104
 ```
 
 The outcome should be something similar to this:
 
 ```bash
-Received response: agntcy/ns/xyIGhc2igNGmkeBDlZ
+Received response: agntcy/ns/hDxc8CKpElJUfTTief
 ```
 
 The name in the response is the name of the new channel created, with only one participant
-added (e.g. `moderators=agntcy/ns/client-1/9494657801285491688`).
+added (e.g. `moderators=agntcy/ns/client-1/10494544672403736104`).
 
 ### Invite Participants to the Channel
 
@@ -155,16 +151,16 @@ Now that the channel is created, you can start to invite new participants. To do
 the following command:
 
 ```bash
-slimctl controller participant add -c agntcy/ns/xyIGhc2igNGmkeBDlZ agntcy/ns/client-2
+slimctl controller participant add -c agntcy/ns/hDxc8CKpElJUfTTief agntcy/ns/client-2
 ```
 
 The reply to the command should be similar to this:
 
 ```bash
-Adding participant to channel ID agntcy/ns/xyIGhc2igNGmkeBDlZ: agntcy/ns/client-2
-Participant added successfully to channel ID agntcy/ns/xyIGhc2igNGmkeBDlZ: agntcy/ns/client-2
+Adding participant to channel ID agntcy/ns/hDxc8CKpElJUfTTief: agntcy/ns/client-2
+Participant added successfully to channel ID agntcy/ns/hDxc8CKpElJUfTTief: agntcy/ns/client-2
 ```
 
 Now the channel has two participants that can start to communicate
-over the shared channel `agntcy/ns/xyIGhc2igNGmkeBDlZ`. Message reception and publishing
+over the shared channel `agntcy/ns/hDxc8CKpElJUfTTief`. Message reception and publishing
 must be done within the application in the same way as shown in the previous section.
