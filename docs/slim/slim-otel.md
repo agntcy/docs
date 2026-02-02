@@ -14,8 +14,7 @@ and flexible channel-based routing.
 
 The [SLIM exporter](https://github.com/agntcy/slim-otel/tree/main/exporter/slimexporter) operates as follows:
 
-1. Connects to a SLIM node using the configured endpoint and authenticates using
-   a shared secret
+1. Connects to a SLIM node using the configured endpoint
 2. Registers three applications with the SLIM node (one for each signal type)
    using the names specified in `exporter-names` configuration, making them
    discoverable to other SLIM participants
@@ -34,8 +33,7 @@ by other participants.
 
 The [SLIM receiver](https://github.com/agntcy/slim-otel/tree/main/receiver/slimreceiver) operates as follows:
 
-1. Connects to a SLIM node using the configured endpoint and authenticates using
-   a shared secret
+1. Connects to a SLIM node using the configured endpoint
 2. Registers as an application with the configured `receiver-name`, making it
    discoverable to other SLIM participants
 3. Listens for incoming SLIM sessions from any participant that wants to send
@@ -364,19 +362,6 @@ In one terminal, start the receiver collector:
 ./slim-otelcol/slim-otelcol --config receiver-collector-config.yaml
 ```
 
-You should see output indicating the receiver has started successfully:
-
-```
-2026-01-29T18:56:43.705+0100	info	service@v0.142.0/service.go:250	Starting slim-otelcol...
-2026-01-29T18:56:43.705+0100	info	extensions/extensions.go:40	Starting extensions...
-2026-01-29T18:56:43.705+0100	INFO	slimreceiver@v0.0.1/receiver.go:257	Starting Slim receiver
-2026-01-29T17:56:43.716630Z  INFO slim slim_service::service: 402: client connected endpoint=http://127.0.0.1:46357
-2026-01-29T18:56:43.717+0100	INFO	slimreceiver@v0.0.1/receiver.go:53	created SLIM app	{"app_name": "agntcy/otel/receiver"}
-2026-01-29T18:56:43.717+0100	INFO	slimreceiver@v0.0.1/receiver.go:275	Start to listen for new sessions
-2026-01-29T18:56:43.717+0100	info	service@v0.142.0/service.go:273	Everything is ready. Begin running and processing data.
-2026-01-29T18:56:43.717+0100	INFO	slimreceiver@v0.0.1/receiver.go:79	Listener started, waiting for incoming sessions...
-```
-
 The receiver collector will:
 
 1. Connect to the SLIM node
@@ -389,33 +374,13 @@ In another terminal, start the sender collector:
 ./slim-otelcol/slim-otelcol --config sender-collector-config.yaml
 ```
 
-You should see output showing the sender creating channels and inviting participants:
-
-```
-2026-01-29T18:57:44.029+0100	info	service@v0.142.0/service.go:250	Starting slim-otelcol...
-2026-01-29T18:57:44.037+0100	info	slimexporter@v0.0.1/exporter.go:47	connected to SLIM server	{"endpoint": "http://127.0.0.1:46357"}
-2026-01-29T18:57:44.038+0100	info	slimexporter@v0.0.1/exporter.go:59	created SLIM app	{"app_name": "agntcy/otel/exporter-traces", "signal": "traces"}
-2026-01-29T18:57:44.039+0100	info	slimexporter@v0.0.1/exporter.go:59	created SLIM app	{"app_name": "agntcy/otel/exporter-metrics", "signal": "metrics"}
-2026-01-29T18:57:44.040+0100	info	slimexporter@v0.0.1/exporter.go:59	created SLIM app	{"app_name": "agntcy/otel/exporter-logs", "signal": "logs"}
-2026-01-29T18:57:44.040+0100	INFO	slimexporter@v0.0.1/exporter.go:185	Starting Slim exporter{"signal": "traces"}
-2026-01-29T18:57:44.040+0100	INFO	slimexporter@v0.0.1/exporter.go:100	Created session for channel	{"signal": "traces", "channel": "agntcy/otel/channel-traces"}
-2026-01-29T18:57:44.069+0100	INFO	slimexporter@v0.0.1/exporter.go:123	Created session and invited participants	{"signal": "traces", "channel": "agntcy/otel/channel-traces", "participants": ["agntcy/otel/receiver"]}
-2026-01-29T18:57:44.070+0100	INFO	slimexporter@v0.0.1/exporter.go:100	Created session for channel	{"signal": "logs", "channel": "agntcy/otel/channel-logs"}
-2026-01-29T18:57:44.087+0100	INFO	slimexporter@v0.0.1/exporter.go:123	Created session and invited participants	{"signal": "logs", "channel": "agntcy/otel/channel-logs", "participants": ["agntcy/otel/receiver"]}
-2026-01-29T18:57:44.087+0100	INFO	slimexporter@v0.0.1/exporter.go:100	Created session for channel	{"signal": "metrics", "channel": "agntcy/otel/channel-metrics"}
-2026-01-29T18:57:44.104+0100	INFO	slimexporter@v0.0.1/exporter.go:123	Created session and invited participants	{"signal": "metrics", "channel": "agntcy/otel/channel-metrics", "participants": ["agntcy/otel/receiver"]}
-2026-01-29T18:57:44.069+0100	info	otlpreceiver@v0.143.0/otlp.go:120	Starting GRPC server	{"endpoint": "[::]:4317"}
-2026-01-29T18:57:44.069+0100	info	otlpreceiver@v0.143.0/otlp.go:178	Starting HTTP server	{"endpoint": "[::]:4318"}
-2026-01-29T18:57:44.104+0100	info	service@v0.142.0/service.go:273	Everything is ready. Begin running and processing data.
-```
-
 The sender collector will:
 
 1. Start listening for OTLP data on ports 4317 (gRPC) and 4318 (HTTP)
 2. Connect to the SLIM node
 3. Create the configured channels and invite participants
 
-Once the sender collector starts, you'll see the receiver collector accept the incoming sessions:
+Once the sender collector starts, you'll see the receiver collector accept the incoming sessions, one for each signal
 
 ```
 2026-01-29T18:57:44.070+0100	INFO	slimreceiver@v0.0.1/receiver.go:97	New session received
