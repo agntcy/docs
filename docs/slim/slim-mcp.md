@@ -32,10 +32,10 @@ architecture.
 In this section of the tutorial, we implement and deploy two sample
 applications:
 
-- A [LlamaIndex agent](https://github.com/agntcy/slim-mcp-python/tree/v0.1.8/slim_mcp/examples/llamaindex_time_agent)
+- A [LlamaIndex agent](https://github.com/agntcy/slim-mcp-python/tree/v0.2.0/slim_mcp/examples/llamaindex_time_agent)
 that communicates with an MCP server over SLIM to perform time queries and timezone conversions.
 - An [MCP time
-  server](https://github.com/agntcy/slim-mcp-python/tree/v0.1.8/slim_mcp/examples/mcp_server_time) 
+  server](https://github.com/agntcy/slim-mcp-python/tree/v0.2.0/slim_mcp/examples/mcp_server_time) 
   that implements SLIM as its transport protocol and processes requests from the LlamaIndex agent.
 
 ### Prerequisites
@@ -83,7 +83,7 @@ Now launch the SLIM instance using the just created configuration file:
 ```bash
 docker run -it \
     -v ./config.yaml:/config.yaml -p 46357:46357 \
-    ghcr.io/agntcy/slim:latest /slim --config /config.yaml
+    ghcr.io/agntcy/slim:1.0.0 /slim --config /config.yaml
 ```
 
 This command deploys an SLIM instance that listens on port 46357 for incoming
@@ -113,7 +113,7 @@ name = "mcp-server-time"
 version = "0.1.0"
 description = "MCP server providing tools for time queries and timezone conversions"
 requires-python = ">=3.11"
-dependencies = ["mcp==1.6.0", "slim-mcp>=0.1.8", "click>=8.1.8"]
+dependencies = ["mcp==1.6.0", "slim-mcp>=0.2.0", "click>=8.1.8"]
 
 [project.scripts]
 mcp-server-time = "mcp_server_time:main"
@@ -603,135 +603,6 @@ def main(local_timezone, transport, port, organization, namespace, mcp_server, c
 
 <br>
 
-<details>
-
-<summary><b>src/examples/click_types.py</b></summary>
-
-<br>
-
-```python
-# src/examples/click_types.py
-
-"""
-Common utilities for SLIM-MCP examples.
-
-This module provides shared utilities used across examples, including
-click parameter types for configuration parsing.
-"""
-
-import json
-
-import click
-import slim_bindings
-
-
-class ClientConfigType(click.ParamType):
-    """
-    Custom click parameter type for parsing JSON and converting to ClientConfig.
-
-    This allows click options to accept either:
-    - A dict (when used as default value)
-    - A JSON string (when provided via CLI or environment variable)
-
-    And converts them to slim_bindings.ClientConfig objects.
-
-    Example:
-        ```python
-        @click.option(
-            "--config",
-            default={
-                "endpoint": "http://127.0.0.1:46357",
-                "tls": {"insecure": True},
-            },
-            type=ClientConfigType(),
-            help="slim server configuration",
-        )
-        def main(config):
-            # config is now a slim_bindings.ClientConfig object
-            ...
-        ```
-    """
-
-    name = "client_config"
-
-    def convert(self, value, param, ctx):
-        """
-        Convert input value to ClientConfig.
-
-        Args:
-            value: Either a dict or JSON string
-            param: Click parameter
-            ctx: Click context
-
-        Returns:
-            slim_bindings.ClientConfig: Parsed configuration object
-        """
-        # Handle dict input (default value case)
-        if isinstance(value, dict):
-            json_data = value
-        # Handle string input (CLI/env var case)
-        elif isinstance(value, str):
-            try:
-                json_data = json.loads(value)
-            except json.JSONDecodeError:
-                self.fail(f"{value} is not valid JSON", param, ctx)
-        # Handle already-converted ClientConfig
-        elif isinstance(value, slim_bindings.ClientConfig):
-            return value
-        else:
-            self.fail(
-                f"Expected dict, JSON string, or ClientConfig, got {type(value)}",
-                param,
-                ctx,
-            )
-
-        # Convert dict to ClientConfig
-        if not isinstance(json_data, dict):
-            self.fail("Configuration must be a JSON object", param, ctx)
-
-        if "endpoint" not in json_data:
-            self.fail("Configuration must include 'endpoint' field", param, ctx)
-
-        # Simple case: just endpoint and insecure TLS
-        if json_data.get("tls", {}).get("insecure", False) and len(json_data) <= 2:
-            return slim_bindings.new_insecure_client_config(json_data["endpoint"])
-
-        # Otherwise, build the config manually
-        # Start with insecure config as base
-        config = slim_bindings.new_insecure_client_config(json_data["endpoint"])
-
-        # Override TLS settings if provided
-        if "tls" in json_data:
-            tls_data = json_data["tls"]
-            config.tls = slim_bindings.TlsClientConfig(
-                insecure=tls_data.get("insecure", False),
-                insecure_skip_verify=tls_data.get("insecure_skip_verify", False),
-                source=slim_bindings.TlsSource.NONE(),
-                ca_source=slim_bindings.CaSource.NONE(),
-                include_system_ca_certs_pool=True,
-                tls_version="tls1.3",
-            )
-
-        # Set optional fields
-        if "origin" in json_data:
-            config.origin = json_data["origin"]
-
-        if "server_name" in json_data:
-            config.server_name = json_data["server_name"]
-
-        if "compression" in json_data:
-            config.compression = slim_bindings.CompressionType[json_data["compression"]]
-
-        if "rate_limit" in json_data:
-            config.rate_limit = json_data["rate_limit"]
-
-        return config
-```
-
-</details>
-
-<br>
-
 The core component of the server implementation is the `serve_slim` function.
 This function establishes a connection with our SLIM instance using the new
 `create_local_app` and `run_mcp_server` functions. It creates a SLIM application
@@ -814,7 +685,7 @@ description = "A llamaindex agent using MCP server over SLIM for time queries"
 requires-python = ">=3.12"
 dependencies = [
     "mcp==1.6.0",
-    "slim-mcp>=0.1.8",
+    "slim-mcp>=0.2.0",
     "click>=8.1.8",
     "llama-index>=0.12.29",
     "llama-index-llms-azure-openai>=0.3.2",
@@ -910,28 +781,35 @@ async def amain(
 
     logger.info("SLIM App created")
 
-    # Connect to the MCP server
-    server_name = slim_bindings.Name(organization, namespace, mcp_server)
-    read_stream, write_stream = await create_client_streams(client_app, server_name)
+    # Set route to destination if we have a connection
+    destination = slim_bindings.Name(organization, namespace, mcp_server)
+    if connection_id is not None:
+        await client_app.set_route_async(destination, connection_id)
 
-    async with ClientSession(read_stream, write_stream) as mcp_session:
-        logger.info("Creating MCP tool spec")
+    logger.info("SLIM route set")
 
-        await mcp_session.initialize()
+    # Create MCP client session using standard transport pattern
+    async with create_client_streams(client_app, destination) as (read, write):
+        logger.info("Creating MCP client session")
+        async with ClientSession(read, write) as mcp_session:
+            logger.info("Creating MCP tool spec")
 
-        mcp_tool_spec = McpToolSpec(
-            client=mcp_session,
-        )
+            await mcp_session.initialize()
 
-        tools = await mcp_tool_spec.to_tool_list_async()
+            mcp_tool_spec = McpToolSpec(
+                client=mcp_session,
+            )
 
-        agent = ReActAgent(llm=llm, tools=tools)
+            tools = await mcp_tool_spec.to_tool_list_async()
+            print(tools)
 
-        response = await agent.run(
-            user_msg=f"What is the current time in {city}?",
-        )
+            agent = ReActAgent(llm=llm, tools=tools)
 
-        print(response)
+            response = await agent.run(
+                user_msg=f"What is the current time in {city}?",
+            )
+
+            print(response)
 
 
 @click.command(context_settings={"auto_envvar_prefix": "TIME_AGENT"})
