@@ -1,12 +1,5 @@
 # Getting Started with SLIM
 
-!!! info "What is SLIM?"
-    SLIM is a secure, scalable, and user-friendly communication framework that unifies state-of-the-art capabilities from all mentioned frameworks into a single implementation.
-    
-    📚 For more information, see the [detailed documentation](./overview.md).
-
----
-
 ## Installation
 
 SLIM is composed of multiple components, each with its own installation instructions. Choose the components you need based on your use case.
