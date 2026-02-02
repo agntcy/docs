@@ -51,13 +51,6 @@ The following prerequisites are required:
 * [kubectl](https://kubernetes.io/docs/tasks/tools/)
 * [Helm](https://helm.sh/docs/intro/install/)
 * [KIND](https://kind.sigs.k8s.io/docs/user/quick-start/)
-* [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
-
-Clone the SLIM repository if you haven't already:
-
-```bash
-git clone https://github.com/agntcy/slim.git && cd slim/data-plane/python/bindings/examples
-```
 
 ### Creating a KIND Cluster with a Local Image Registry
 
@@ -67,6 +60,9 @@ registry (localhost:5001) that the cluster’s container runtime can pull from:
 ```bash
 curl -L https://kind.sigs.k8s.io/examples/kind-with-registry.sh | sh
 ```
+
+!!! note "Local Registry"
+    While this tutorial doesn't use the local registry, it's available at `localhost:5001` if you need to test with custom or unpublished container images.
 
 ### Installing SPIRE
 
@@ -105,74 +101,19 @@ We rely on this object by default. If you need more granular issuance (specific 
 selectors, different trust domain, etc.), consult the [ClusterSPIFFEID
 documentation](https://github.com/spiffe/spire-controller-manager/blob/main/docs/clusterspiffeid-crd.md).
 
-### Building SLIM Images (node and examples)
-
-You can use pre-built images if available; here we build and push fresh ones to
-the local registry:
-
-```bash
-REPO_ROOT=$(git rev-parse --show-toplevel)
-pushd "${REPO_ROOT}"
-IMAGE_REPO=localhost:5001 docker bake slim && docker push localhost:5001/slim:latest
-IMAGE_REPO=localhost:5001 docker bake bindings-examples && docker push localhost:5001/bindings-examples:latest
-popd
-```
-
 ### Deploying the SLIM Node
 
 ```bash
-REPO_ROOT=$(git rev-parse --show-toplevel)
-pushd "${REPO_ROOT}/charts"
 helm install \
     --create-namespace \
     -n slim \
-    slim ./slim \
-    --set slim.image.repository=localhost:5001/slim \
-    --set slim.image.tag=latest
+    slim oci://ghcr.io/agntcy/slim/helm/slim:v1.0.0
 ```
 
 Confirm the pod is running:
 
 ```bash
 kubectl get pods -n slim
-```
-
-### Deploying Client Configuration (ConfigMap)
-
-We first provide a config for `spiffe-helper`, which retrieves SVIDs or JWTs from
-the SPIRE agent and writes them to disk. The key fields are:
-
-* `agent_address`: Path to the SPIRE agent API socket.
-* `cert_dir`: Where artifacts (cert, key, bundles, or JWTs) are written.
-* `jwt_svids`: Audience and output filename for requested JWT SVIDs.
-* `daemon_mode = true`: Run continuously to renew materials.
-
-```bash
-kubectl apply -f - <<EOF
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: spire-helper-slim-client
-  labels:
-    app.kubernetes.io/name: slim-client
-data:
-  helper.conf: |
-    agent_address =  "/run/spire/agent-sockets/api.sock"
-    cmd = ""
-    cmd_args = ""
-    cert_dir = "/svids"
-    renew_signal = ""
-    svid_file_name = "tls.crt"
-    svid_key_file_name = "tls.key"
-    svid_bundle_file_name = "svid_bundle.pem"
-    jwt_bundle_file_name = "key.jwt"
-    cert_file_mode = 0600
-    key_file_mode = 0600
-    jwt_svid_file_mode = 0600
-    jwt_bundle_file_mode = 0600
-    jwt_svids = [{jwt_audience="slim-demo", jwt_svid_file_name="jwt_svid.token"}]
-    daemon_mode = true
-EOF
 ```
 
 ### Deploying Two Distinct Clients (separate ServiceAccounts = separate SPIFFE IDs)
@@ -182,7 +123,6 @@ Each Deployment:
 * Has its own ServiceAccount (`slim-client-a`, `slim-client-b`).
 * Mounts the SPIRE agent socket from the host (in KIND, agent runs as a
   DaemonSet).
-* Runs `spiffe-helper` sidecar to continuously refresh identities.
 * Runs a placeholder `slim-client` container (sleep) you can exec into.
 
 ```bash
@@ -225,44 +165,23 @@ spec:
       serviceAccountName: slim-client-a
       securityContext: {}
       containers:
-        - name: spiffe-helper
-          image: ghcr.io/spiffe/spiffe-helper:0.10.0
-          imagePullPolicy: IfNotPresent
-          args: [ "-config", "config/helper.conf" ]
+        - name: slim-client
+          securityContext: {}
+          image: "python:3"
+          imagePullPolicy: Always
+          command: ["/bin/sh", "-c"]
+          args:
+            - "pip install 'slim-bindings[examples]' && sleep infinity"
+          resources: {}
           volumeMounts:
-            - name: config-volume
-              mountPath: /config/helper.conf
-              subPath: helper.conf
             - name: spire-agent-socket
               mountPath: /run/spire/agent-sockets
               readOnly: false
-            - name: svids-volume
-              mountPath: /svids
-              readOnly: false
-        - name: slim-client
-          securityContext: {}
-          image: "localhost:5001/bindings-examples:latest"
-          imagePullPolicy: Always
-          command: ["sleep"]
-          args: ["infinity"]
-          resources: {}
-          volumeMounts:
-            - name: svids-volume
-              mountPath: /svids
-              readOnly: false
-            - name: config-volume
-              mountPath: /config/helper.conf
-              subPath: helper.conf
       volumes:
         - name: spire-agent-socket
           hostPath:
             path: /run/spire/agent-sockets
             type: Directory
-        - name: config-volume
-          configMap:
-            name: spire-helper-slim-client
-        - name: svids-volume
-          emptyDir: {}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -286,44 +205,23 @@ spec:
       serviceAccountName: slim-client-b
       securityContext: {}
       containers:
-        - name: spiffe-helper
-          image: ghcr.io/spiffe/spiffe-helper:0.10.0
-          imagePullPolicy: IfNotPresent
-          args: [ "-config", "config/helper.conf" ]
+        - name: slim-client
+          securityContext: {}
+          image: "python:3"
+          imagePullPolicy: Always
+          command: ["/bin/sh", "-c"]
+          args:
+            - "pip install 'slim-bindings[examples]' && sleep infinity"
+          resources: {}
           volumeMounts:
-            - name: config-volume
-              mountPath: /config/helper.conf
-              subPath: helper.conf
             - name: spire-agent-socket
               mountPath: /run/spire/agent-sockets
               readOnly: false
-            - name: svids-volume
-              mountPath: /svids
-              readOnly: false
-        - name: slim-client
-          securityContext: {}
-          image: "localhost:5001/bindings-examples:latest"
-          imagePullPolicy: Always
-          command: ["sleep"]
-          args: ["infinity"]
-          resources: {}
-          volumeMounts:
-            - name: svids-volume
-              mountPath: /svids
-              readOnly: false
-            - name: config-volume
-              mountPath: /config/helper.conf
-              subPath: helper.conf
       volumes:
         - name: spire-agent-socket
           hostPath:
             path: /run/spire/agent-sockets
             type: Directory
-        - name: config-volume
-          configMap:
-            name: spire-helper-slim-client
-        - name: svids-volume
-          emptyDir: {}
 EOF
 ```
 
@@ -331,13 +229,6 @@ Check that both pods are running:
 
 ```bash
 kubectl get pods -l app.kubernetes.io/name=slim-client -o wide
-```
-
-You can inspect each pod’s SPIFFE ID with the following command:
-
-```bash
-POD_NAME=$(kubectl get pods -l app.kubernetes.io/component=client-a -o jsonpath="{.items[0].metadata.name}")
-kubectl exec -c slim-client -it ${POD_NAME} -- ls -l /svids
 ```
 
 ### Running the Point-to-Point Example (inside the cluster)
@@ -348,20 +239,14 @@ Enter the first client pod (receiver):
 kubectl exec -c slim-client -it $(kubectl get pods -l app.kubernetes.io/component=client-a -o jsonpath="{.items[0].metadata.name}") -- /bin/bash
 ```
 
-Verify the identity artifacts:
-
-```bash
-ls -l /svids
-```
-
 Run the receiver:
 
 ```bash
-/app/bin/p2p --slim '{"endpoint": "http://slim.slim:46357", "tls": {"insecure": true}}' \
-    --jwt /svids/jwt_svid.token \
-    --spire-trust-bundle /svids/key.jwt \
-    --local agntcy/example/receiver \
-    --audience slim-demo
+slim-bindings-p2p \
+    --spire-socket-path /var/run/spire/agent-sockets/spire-agent.sock   \
+    --spire-jwt-audience slim-demo                                      \
+    --slim http://slim.slim:46357                                       \
+    --local agntcy/example/receiver
 ```
 
 Open a second shell for the sender:
@@ -373,23 +258,29 @@ kubectl exec -c slim-client -it $(kubectl get pods -l app.kubernetes.io/componen
 Run the sender:
 
 ```bash
-/app/bin/p2p --slim '{"endpoint": "http://slim.slim:46357", "tls": {"insecure": true}}' \
-    --jwt /svids/jwt_svid.token \
-    --spire-trust-bundle /svids/key.jwt \
-    --audience slim-demo \
-    --local agntcy/example/sender \
-    --remote agntcy/example/receiver \
-    --enable-mls \
+slim-bindings-p2p                                                       \
+    --spire-socket-path /var/run/spire/agent-sockets/spire-agent.sock   \
+    --spire-jwt-audience slim-demo                                      \
+    --slim http://slim.slim:46357                                       \
+    --local agntcy/example/sender                                       \
+    --remote agntcy/example/receiver                                    \
+    --enable-mls                                                        \
     --message "hey there"
 ```
 
 Sample output:
 
 ```
-Agntcy/example/sender/...  Created app
-Agntcy/example/sender/...  Connected to http://slim.slim:46357
-Agntcy/example/sender/...  Sent message hey there - 1/10:
-Agntcy/example/sender/...  received (from session ...): hey there from agntcy/example/receiver/...
+2026-02-02T16:48:39.498136Z  INFO slim slim_service::service: 402: client connected endpoint=http://slim.slim:46357 conn_id=0
+Using SPIRE dynamic identity authentication.
+2026-02-02T16:48:39.498558Z  INFO ThreadId(16) slim_auth::spire: 277: Initializing spire identity manager
+2026-02-02T16:48:39.505154Z  INFO ThreadId(16) slim_auth::spire: 303: spire provider initialized successfully
+2026-02-02T16:48:39.505166Z  INFO ThreadId(16) slim_auth::spire: 277: Initializing spire identity manager
+2026-02-02T16:48:39.506694Z  INFO ThreadId(16) slim_auth::spire: 303: spire provider initialized successfully
+14976724198355450732                         Created app
+14976724198355450732                         Sent message hey there - 1/10
+14976724198355450732                         received (from session 643283326): hey there from 902113370376718484
+...
 ```
 
 At this point the two workloads are securely exchanging messages authenticated
