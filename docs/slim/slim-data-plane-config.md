@@ -4,40 +4,40 @@ This document provides comprehensive documentation for configuring the SLIM data
 
 !!! info "Schema References"
     This documentation corresponds to the JSON schemas in the SLIM repository:
-
-      - [Client Configuration Schema](https://github.com/agntcy/slim/blob/slim-v1.0.0/data-plane/core/config/src/grpc/schema/client-config.schema.json)
-      - [Server Configuration Schema](https://github.com/agntcy/slim/blob/slim-v1.0.0/data-plane/core/config/src/grpc/schema/server-config.schema.json)
+    
+    - [Client Configuration Schema](https://github.com/agntcy/slim/blob/slim-v1.0.0/data-plane/core/config/src/grpc/schema/client-config.schema.json)
+    - [Server Configuration Schema](https://github.com/agntcy/slim/blob/slim-v1.0.0/data-plane/core/config/src/grpc/schema/server-config.schema.json)
 
 ## Configuration Structure Overview
 
 The SLIM configuration file consists of three main sections:
 
 === "Tracing"
-Observability and logging configuration
-`yaml
+    Observability and logging configuration
+    ```yaml
     tracing:
       log_level: info
       opentelemetry:
         enabled: true
-    `
+    ```
 
 === "Runtime"
-Runtime behavior configuration
-`yaml
+    Runtime behavior configuration
+    ```yaml
     runtime:
       n_cores: 0
       drain_timeout: "10s"
-    `
+    ```
 
 === "Services"
-Services configuration
-`yaml
+    Services configuration
+    ```yaml
     services:
       slim/0:
         dataplane:
           servers: [...]
           clients: [...]
-    `
+    ```
 
 ## Top-Level Configuration Sections
 
@@ -157,46 +157,48 @@ TLS configuration is used throughout SLIM for securing connections. The same TLS
 - **Proxies** (`dataplane.clients[].proxy.tls`)
 
 !!! info "Reusable Configuration"
-All TLS options documented in this section can be used in any context that accepts a `tls` configuration block. The behavior adapts based on the context (server vs client).
+    All TLS options documented in this section can be used in any context that accepts a `tls` configuration block. The behavior adapts based on the context (server vs client).
 
 ### TLS Modes
 
 === "Insecure Mode (Development)"
-`yaml
+    ```yaml
     tls:
       insecure: true # Disable TLS (not recommended for production)
-    `
+    ```
 
 === "Secure Mode (Production)"
-`yaml
+    ```yaml
     tls:
       insecure: false # Default: false - requires certificates
       source:
         type: file
         cert: "./certs/cert.pem"
         key: "./certs/key.pem"
-    `
+    ```
 
 !!! warning "TLS Configuration Required"
-When `insecure: false` (the default), you **must** provide certificates via `source`. The service will fail to start without them.
+    When `insecure: false` (the default), you **must** provide certificates via `source`. The service will fail to start without them.
 
 ### Certificate Sources (`source`)
 
 The `source` field provides the certificate and private key for the TLS endpoint.
 
-!!! info "Usage Context" - **Servers**: Provides the server's identity certificate - **Clients**: Provides the client certificate for mutual TLS (mTLS)
+!!! info "Usage Context"
+    - **Servers**: Provides the server's identity certificate
+    - **Clients**: Provides the client certificate for mutual TLS (mTLS)
 
 === "File-based Certificates"
-`yaml
+    ```yaml
     tls:
       source:
         type: file
         cert: "./certs/cert.pem"
         key: "./certs/key.pem"
-    `
+    ```
 
 === "Inline PEM Certificates"
-`yaml
+    ```yaml
     tls:
       source:
         type: pem
@@ -208,10 +210,10 @@ The `source` field provides the certificate and private key for the TLS endpoint
           -----BEGIN PRIVATE KEY-----
           ...
           -----END PRIVATE KEY-----
-    `
+    ```
 
 === "SPIRE Integration"
-`yaml
+    ```yaml
     tls:
       source:
         type: spire
@@ -219,14 +221,14 @@ The `source` field provides the certificate and private key for the TLS endpoint
         jwt_audiences: ["slim", "dataplane"]
         target_spiffe_id: "spiffe://example.org/service"
         trust_domains: ["example.org"]
-    `
+    ```
 
 === "No Certificate"
-`yaml
+    ```yaml
     tls:
       source:
         type: none  # No certificate configured
-    `
+    ```
 
 ### CA Certificate Sources
 
@@ -241,15 +243,15 @@ CA sources are used for certificate verification. The field name differs based o
 Used by servers to verify client certificates when mTLS is required.
 
 === "File-based CA"
-`yaml
+    ```yaml
     tls:
       client_ca:
         type: file
         path: "./certs/ca-cert.pem"
-    `
+    ```
 
 === "Inline PEM CA"
-`yaml
+    ```yaml
     tls:
       client_ca:
         type: pem
@@ -257,38 +259,38 @@ Used by servers to verify client certificates when mTLS is required.
           -----BEGIN CERTIFICATE-----
           ...
           -----END CERTIFICATE-----
-    `
+    ```
 
 === "SPIRE Bundle"
-`yaml
+    ```yaml
     tls:
       client_ca:
         type: spire
         socket_path: "/run/spire/sockets/agent.sock"
         trust_domains: ["example.org"]
-    `
+    ```
 
 === "No Client Verification"
-`yaml
+    ```yaml
     tls:
       client_ca:
         type: none  # No client certificate verification
-    `
+    ```
 
 #### Client CA Source (`ca_source`)
 
 Used by clients to verify server certificates.
 
 === "File-based CA"
-`yaml
+    ```yaml
     tls:
       ca_source:
         type: file
         path: "./certs/ca-cert.pem"
-    `
+    ```
 
 === "Inline PEM CA"
-`yaml
+    ```yaml
     tls:
       ca_source:
         type: pem
@@ -296,23 +298,23 @@ Used by clients to verify server certificates.
           -----BEGIN CERTIFICATE-----
           ...
           -----END CERTIFICATE-----
-    `
+    ```
 
 === "SPIRE Bundle"
-`yaml
+    ```yaml
     tls:
       ca_source:
         type: spire
         socket_path: "/run/spire/sockets/agent.sock"
         trust_domains: ["example.org"]
-    `
+    ```
 
 === "No CA"
-`yaml
+    ```yaml
     tls:
       ca_source:
         type: none  # No CA configured
-    `
+    ```
 
 ### TLS Options
 
@@ -322,29 +324,35 @@ tls:
   # Options: "tls1.2", "tls1.3"
   # Default: "tls1.3"
   tls_version: "tls1.3"
-
+  
   # Include system CA certificates (CLIENT ONLY)
   # Default: true
   # Only used by clients when verifying servers
   include_system_ca_certs_pool: true
-
+  
   # Skip server name verification (CLIENT ONLY - INSECURE)
   # Default: false
   insecure_skip_verify: false
-
+  
   # Reload client CA file when modified (SERVER ONLY - NOT YET IMPLEMENTED)
   # Default: false
   # reload_client_ca_file: false
 ```
 
-!!! note "Not Yet Implemented" - `reload_client_ca_file` - Automatic reloading of client CA certificates - `reload_interval` - Automatic reloading of server certificates
+!!! note "Not Yet Implemented"
+    - `reload_client_ca_file` - Automatic reloading of client CA certificates
+    - `reload_interval` - Automatic reloading of server certificates
 
-!!! info "Context-Specific Options" - `include_system_ca_certs_pool` - Only used by clients, ignored by servers - `insecure_skip_verify` - Only used by clients, ignored by servers - `client_ca` - Only used by servers, not available for clients - `ca_source` - Used by clients and proxies, exists in server schema but unused
+!!! info "Context-Specific Options"
+    - `include_system_ca_certs_pool` - Only used by clients, ignored by servers
+    - `insecure_skip_verify` - Only used by clients, ignored by servers
+    - `client_ca` - Only used by servers, not available for clients
+    - `ca_source` - Used by clients and proxies, exists in server schema but unused
 
 ### TLS Examples by Context
 
 === "Server with mTLS"
-`yaml
+    ```yaml
     dataplane:
       servers:
         - endpoint: "0.0.0.0:46357"
@@ -360,10 +368,10 @@ tls:
               type: file
               path: "./certs/ca-cert.pem"
             tls_version: "tls1.3"
-    `
+    ```
 
 === "Client with mTLS"
-`yaml
+    ```yaml
     dataplane:
       clients:
         - endpoint: "remote-slim:46357"
@@ -380,10 +388,10 @@ tls:
               path: "./certs/ca-cert.pem"
             include_system_ca_certs_pool: true
             tls_version: "tls1.3"
-    `
+    ```
 
 === "HTTPS Proxy"
-`yaml
+    ```yaml
     dataplane:
       clients:
         - endpoint: "remote-slim:46357"
@@ -395,7 +403,7 @@ tls:
               ca_source:
                 type: file
                 path: "./certs/proxy-ca.crt"
-    `
+    ```
 
 ## Authentication Configuration
 
@@ -405,13 +413,13 @@ Authentication configuration is used throughout SLIM for securing API access. Th
 - **Clients** (`dataplane.clients[].auth`, `controller.clients[].auth`)
 
 !!! info "Reusable Configuration"
-All authentication options documented in this section can be used in any context that accepts an `auth` configuration block. The behavior adapts based on the context (server vs client).
+    All authentication options documented in this section can be used in any context that accepts an `auth` configuration block. The behavior adapts based on the context (server vs client).
 
 ### Authentication Types
 
 === "Basic Authentication"
-Username and password authentication.
-
+    Username and password authentication.
+    
     **Server (Verification):**
     ```yaml
     auth:
@@ -421,7 +429,7 @@ Username and password authentication.
       # Or use environment variables:
       # password: "${env:ADMIN_PASSWORD}"
     ```
-
+    
     **Client (Credentials):**
     ```yaml
     auth:
@@ -431,8 +439,8 @@ Username and password authentication.
     ```
 
 === "JWT - Dynamic Generation"
-Generate JWT tokens on-the-fly with signing.
-
+    Generate JWT tokens on-the-fly with signing.
+    
     **Server (Verification):**
     ```yaml
     auth:
@@ -452,7 +460,7 @@ Generate JWT tokens on-the-fly with signing.
         key:
           file: "./keys/jwt-public.pem"
     ```
-
+    
     **Client (Signing):**
     ```yaml
     auth:
@@ -473,8 +481,8 @@ Generate JWT tokens on-the-fly with signing.
     ```
 
 === "JWT - Shared Secret (HMAC)"
-Use shared secrets for JWT signing and verification.
-
+    Use shared secrets for JWT signing and verification.
+    
     **Server (Verification):**
     ```yaml
     auth:
@@ -490,7 +498,7 @@ Use shared secrets for JWT signing and verification.
           data: "my-secure-shared-secret"
           # Or: file: "/run/secrets/jwt-shared-secret"
     ```
-
+    
     **Client (Signing):**
     ```yaml
     auth:
@@ -509,21 +517,21 @@ Use shared secrets for JWT signing and verification.
     ```
 
 === "Static JWT Token (Client Only)"
-Use pre-generated JWT tokens from files.
-
+    Use pre-generated JWT tokens from files.
+    
     ```yaml
     auth:
       type: static_jwt
       file: "/run/secrets/jwt-token"
       duration: "1h"  # Cache validity before re-reading file
     ```
-
+    
     !!! info
         This authentication type is only available for clients, not servers.
 
 === "JWT - Autoresolve"
-Automatically determine encoding/decoding based on context.
-
+    Automatically determine encoding/decoding based on context.
+    
     ```yaml
     auth:
       type: jwt
@@ -535,10 +543,10 @@ Automatically determine encoding/decoding based on context.
     ```
 
 === "No Authentication"
-`yaml
+    ```yaml
     auth:
       type: none
-    `
+    ```
 
 ### JWT Key Configuration
 
@@ -553,7 +561,7 @@ JWT keys support multiple formats and algorithms.
 #### Key Formats
 
 === "PEM Format"
-`yaml
+    ```yaml
     key:
       type: encoding
       algorithm: "RS256"
@@ -565,10 +573,10 @@ JWT keys support multiple formats and algorithms.
         #   -----BEGIN PRIVATE KEY-----
         #   ...
         #   -----END PRIVATE KEY-----
-    `
+    ```
 
 === "JWK Format"
-`yaml
+    ```yaml
     key:
       type: decoding
       algorithm: "RS256"
@@ -577,10 +585,10 @@ JWT keys support multiple formats and algorithms.
         file: "./keys/public.jwk"
         # OR inline:
         # data: '{"kty":"RSA","n":"...","e":"AQAB"}'
-    `
+    ```
 
 === "JWKS Format"
-`yaml
+    ```yaml
     key:
       type: decoding
       algorithm: "RS256"
@@ -589,16 +597,20 @@ JWT keys support multiple formats and algorithms.
         file: "./keys/jwks.json"
         # OR inline:
         # data: '{"keys":[{"kty":"RSA","n":"...","e":"AQAB"}]}'
-    `
+    ```
 
-!!! tip "Shared Secret Security" - Both client and server must use the **same** shared secret - Both must use the **same** HMAC algorithm (HS256, HS384, or HS512) - Consider using environment variable substitution: `data: "${env:JWT_SECRET}"` - For production, store secrets in secure secret management systems
+!!! tip "Shared Secret Security"
+    - Both client and server must use the **same** shared secret
+    - Both must use the **same** HMAC algorithm (HS256, HS384, or HS512)
+    - Consider using environment variable substitution: `data: "${env:JWT_SECRET}"`
+    - For production, store secrets in secure secret management systems
 
 !!! info "SPIRE Authentication"
-SPIRE does not have a separate `auth` type. Instead, SPIRE provides authentication through:
-
+    SPIRE does not have a separate `auth` type. Instead, SPIRE provides authentication through:
+    
     - **TLS mutual authentication**: Use `tls.source: { type: spire }` for certificate-based authentication
     - **JWT SVIDs**: Use SPIRE-issued JWT tokens with `auth: { type: jwt }` or `auth: { type: static_jwt }`
-
+    
     See the [Native SPIRE Integration](#native-spire-integration) section for complete examples.
 
 ## Server Configuration
@@ -612,7 +624,7 @@ dataplane:
   servers:
     - # REQUIRED: Listen address
       endpoint: "0.0.0.0:46357"
-
+      
       # TLS configuration (see TLS Configuration section)
       tls:
         insecure: false
@@ -620,7 +632,7 @@ dataplane:
           type: file
           cert: "./certs/server-cert.pem"
           key: "./certs/server-key.pem"
-
+      
       # Authentication (see Authentication Configuration section)
       auth:
         type: none
@@ -631,26 +643,26 @@ dataplane:
 ```yaml
 servers:
   - endpoint: "0.0.0.0:46357"
-
+    
     # HTTP/2 configuration
     # Default: true
     http2_only: true
-
+    
     # Maximum size (in MiB) of messages
     # Default: 4
     max_frame_size: 4
-
+    
     # Connection limits
     # Default: 100
     max_concurrent_streams: 100
     # Default: null (unlimited)
     max_header_list_size: 16384 # 16 KiB
-
+    
     # Buffer sizes for gRPC server
     # Default: 1048576 (1 MiB) for both
     read_buffer_size: 1048576 # 1 MiB
     write_buffer_size: 1048576 # 1 MiB
-
+    
     # Connection keepalive settings
     keepalive:
       max_connection_idle: "3600s" # Close idle connections after 1 hour
@@ -658,7 +670,7 @@ servers:
       max_connection_age_grace: "300s" # Grace period before force close
       time: "120s" # Keepalive ping interval
       timeout: "20s" # Keepalive ping timeout
-
+    
     # Arbitrary user-provided metadata (optional)
     metadata:
       role: "ingress"
@@ -680,155 +692,15 @@ dataplane:
   clients:
     - # REQUIRED: Target endpoint
       endpoint: "http://remote-slim:46357"
-
+      
       # TLS configuration (see TLS Configuration section)
       tls:
         insecure: false
-<<<<<<< Updated upstream
-
-        # Server verification
-        ca_file: "./certs/ca-cert.pem"
-
-        # Client certificate for mTLS (optional)
-        cert_file: "./certs/client-cert.pem"
-        key_file: "./certs/client-key.pem"
-
-        # Skip server name verification (insecure)
-        # Default: false
-        insecure_skip_verify: false
-
-        # TLS version
-        tls_version: "tls1.3"
-
-      # Optional origin for client requests
-      origin: "https://my-client.example.com"
-
-      # Compression type (not yet implemented)
-      # compression: "gzip"
-
-      # Connection timeouts (0s means no timeout)
-      # Default: 0s for both
-      connect_timeout: "10s"
-      request_timeout: "30s"
-
-      # Buffer configuration
-      buffer_size: 8192
-
-      # Custom headers
-      headers:
-        x-client-id: "slim-instance-01"
-        x-environment: "production"
-
-      # Rate limiting
-      # Format: "<requests>/<duration_in_seconds>"
-      rate_limit: "100/60" # 100 requests per minute
-
-      # HTTP Proxy configuration (optional)
-      proxy:
-        # Proxy server URL
-        url: "http://proxy.example.com:8080"
-
-        # Proxy authentication (optional)
-        username: "proxy-user"
-        password: "${env:PROXY_PASSWORD}"
-
-        # TLS configuration for HTTPS proxies
-        tls:
-          insecure: false
-          ca_file: "./certs/proxy-ca.crt"
-
-        # Additional headers for proxy requests
-        headers:
-          x-proxy-client: "slim-dataplane"
-          user-agent: "slim/1.0"
-
-      # Connection keepalive
-      keepalive:
-        tcp_keepalive: "60s"
-        http2_keepalive: "60s"
-        timeout: "10s"
-        permit_without_stream: false
-      # Backoff retry strategy for reconnection attempts (controller clients only)
-      # Configures how the client retries when connection fails
-      backoff:
-        # Backoff strategy type
-        # Options: "exponential", "fixed_interval"
-        # Default: "exponential"
-        type: exponential
-
-        # Exponential backoff parameters (when type=exponential)
-        # Base delay in milliseconds for the first retry
-        # Default: 500
-        base: 500
-
-        # Multiplication factor for delay increase
-        # Default: 1
-        factor: 1
-
-        # Maximum delay between retry attempts
-        # Format: "<number>ms", "<number>s"
-        # Default: "1500ms"
-        max_delay: "1500ms"
-
-        # Whether to add random jitter to delay
-        # Helps prevent thundering herd
-        # Default: true
-        jitter: true
-
-      # OR Fixed interval backoff (when type=fixed_interval)
-      # backoff:
-      #   type: fixed_interval
-      #   # Fixed delay between retry attempts
-      #   # Default: "2000ms"
-      #   interval: "2000ms"
-      # Arbitrary user-provided metadata (optional)
-      metadata:
-        client_type: "data-sync"
-        priority: "high"
-        region: "us-west-2"
-```
-
-### Client Authentication
-
-#### HTTP Proxy Configuration
-
-```yaml
-dataplane:
-  clients:
-    - endpoint: "remote-slim:46357"
-      # HTTP proxy for corporate environments
-      proxy:
-        url: "http://corporate-proxy.company.com:8080"
-        username: "proxy-user"
-        password: "${env:PROXY_PASSWORD}"
-        headers:
-          x-department: "engineering"
-          x-cost-center: "12345"
-
-      # HTTPS proxy with TLS verification
-    - endpoint: "external-service:443"
-      proxy:
-        url: "https://secure-proxy.company.com:8443"
-        tls:
-          insecure: false
-          ca_file: "/etc/ssl/certs/corporate-ca.crt"
-        username: "${env:PROXY_USER}"
-        password: "${env:PROXY_PASS}"
-```
-
-#### Basic Authentication
-
-```yaml
-dataplane:
-  clients:
-    - endpoint: "remote-slim:46357"
-=======
         ca_source:
           type: file
           path: "./certs/ca-cert.pem"
-
+      
       # Authentication (see Authentication Configuration section)
->>>>>>> Stashed changes
       auth:
         type: none
 ```
@@ -838,27 +710,27 @@ dataplane:
 ```yaml
 clients:
   - endpoint: "http://remote-slim:46357"
-
+    
     # Optional TLS SNI server name override
     # Default: null (uses host from endpoint/origin)
     server_name: "service.example.com"
-
+    
     # Optional origin for client requests
     origin: "https://my-client.example.com"
-
+    
     # Connection timeouts (0s means no timeout)
     # Default: 0s for both
     connect_timeout: "10s"
     request_timeout: "30s"
-
+    
     # Buffer configuration
     buffer_size: 8192
-
+    
     # Custom headers
     headers:
       x-client-id: "slim-instance-01"
       x-environment: "production"
-
+    
     # Rate limiting
     # Format: "<requests>/<duration_in_seconds>"
     rate_limit: "100/60" # 100 requests per minute
@@ -869,7 +741,7 @@ clients:
 Proxy configuration supports both HTTP and HTTPS proxies with optional authentication.
 
 === "HTTP Proxy"
-`yaml
+    ```yaml
     dataplane:
       clients:
         - endpoint: "remote-slim:46357"
@@ -879,10 +751,10 @@ Proxy configuration supports both HTTP and HTTPS proxies with optional authentic
             password: "${env:PROXY_PASSWORD}"
             headers:
               x-proxy-client: "slim-dataplane"
-    `
+    ```
 
 === "HTTPS Proxy"
-`yaml
+    ```yaml
     dataplane:
       clients:
         - endpoint: "remote-slim:46357"
@@ -899,7 +771,7 @@ Proxy configuration supports both HTTP and HTTPS proxies with optional authentic
                 path: "./certs/proxy-ca.crt"
             headers:
               x-department: "engineering"
-    `
+    ```
 
 ### Connection Keepalive
 
@@ -916,7 +788,7 @@ clients:
 ### Backoff Configuration
 
 === "Exponential Backoff"
-`yaml
+    ```yaml
     dataplane:
       clients:
         - endpoint: "remote-slim:46357"
@@ -927,10 +799,10 @@ clients:
             jitter: true # Add random variation (default: true)
             max_delay: "10s" # Maximum delay between retries (default: "1s")
             max_attempts: 10 # Maximum number of retry attempts (default: unlimited)
-    `
+    ```
 
 === "Fixed Interval Backoff"
-`yaml
+    ```yaml
     dataplane:
       clients:
         - endpoint: "remote-slim:46357"
@@ -938,10 +810,10 @@ clients:
             type: fixed_interval
             interval: "2s" # Wait 2 seconds between each retry (default: "1s")
             max_attempts: 5 # Maximum number of retry attempts (default: unlimited)
-    `
+    ```
 
 !!! info "Default Backoff"
-Default: exponential with base=100ms, factor=1, jitter=true, max_delay=1s, unlimited attempts
+    Default: exponential with base=100ms, factor=1, jitter=true, max_delay=1s, unlimited attempts
 
 ## Native SPIRE Integration
 
@@ -965,13 +837,13 @@ dataplane:
           target_spiffe_id: "spiffe://example.org/dataplane"
           # Optional trust domains override
           trust_domains: ["example.org", "partner.org"]
-
+        
         # Verify client certificates using SPIRE bundle
         client_ca:
           type: spire
           socket_path: "/run/spire/sockets/agent.sock"
           trust_domains: ["example.org"]
-
+      
       auth:
         type: jwt
         claims:
@@ -999,19 +871,24 @@ dataplane:
           jwt_audiences: ["slim"]
           target_spiffe_id: "spiffe://example.org/remote-service"
           trust_domains: ["example.org"]
-
+        
         # Verify server using SPIRE bundle
         ca_source:
           type: spire
           socket_path: "/run/spire/sockets/agent.sock"
           trust_domains: ["example.org"]
-
+      
       # Optional: Add SPIFFE ID to headers
       headers:
         x-spiffe-id: "${env:SPIFFE_ID}"
 ```
 
-!!! info "SPIRE Configuration Notes" - **Automatic rotation**: SPIRE automatically rotates certificates - **Socket path**: If not specified, uses `SPIFFE_ENDPOINT_SOCKET` environment variable - **Trust domains**: When not specified, SLIM derives from the current SVID - **JWT audiences**: Used when requesting JWT SVIDs from SPIRE - **Zero-trust**: SPIRE provides cryptographic workload identity without long-lived secrets
+!!! info "SPIRE Configuration Notes"
+    - **Automatic rotation**: SPIRE automatically rotates certificates
+    - **Socket path**: If not specified, uses `SPIFFE_ENDPOINT_SOCKET` environment variable
+    - **Trust domains**: When not specified, SLIM derives from the current SVID
+    - **JWT audiences**: Used when requesting JWT SVIDs from SPIRE
+    - **Zero-trust**: SPIRE provides cryptographic workload identity without long-lived secrets
 
 ## Reference: JWT Algorithms
 
@@ -1019,49 +896,51 @@ dataplane:
 
 These algorithms use a shared secret for both signing and verification:
 
-| Algorithm | Description           | Key Size |
-| --------- | --------------------- | -------- |
-| `HS256`   | HMAC using SHA-256 ⭐ | Any      |
-| `HS384`   | HMAC using SHA-384    | Any      |
-| `HS512`   | HMAC using SHA-512    | Any      |
+| Algorithm | Description | Key Size |
+|-----------|-------------|----------|
+| `HS256` | HMAC using SHA-256 ⭐ | Any |
+| `HS384` | HMAC using SHA-384 | Any |
+| `HS512` | HMAC using SHA-512 | Any |
 
 !!! tip "Use Case"
-When both client and server can securely share a secret. The same secret is used for signing (client) and verification (server).
+    When both client and server can securely share a secret. The same secret is used for signing (client) and verification (server).
 
 ### Asymmetric Algorithms (RSA - Public/Private Key)
 
-| Algorithm | Description                   | Key Size   |
-| --------- | ----------------------------- | ---------- |
-| `RS256`   | RSA signature with SHA-256 ⭐ | 2048+ bits |
-| `RS384`   | RSA signature with SHA-384    | 2048+ bits |
-| `RS512`   | RSA signature with SHA-512    | 2048+ bits |
+| Algorithm | Description | Key Size |
+|-----------|-------------|----------|
+| `RS256` | RSA signature with SHA-256 ⭐ | 2048+ bits |
+| `RS384` | RSA signature with SHA-384 | 2048+ bits |
+| `RS512` | RSA signature with SHA-512 | 2048+ bits |
 
 !!! tip "Use Case"
-When you want to avoid sharing secrets. Client signs with private key, server verifies with public key.
+    When you want to avoid sharing secrets. Client signs with private key, server verifies with public key.
 
 ### Asymmetric Algorithms (RSA-PSS)
 
-| Algorithm | Description                    | Key Size   |
-| --------- | ------------------------------ | ---------- |
-| `PS256`   | RSA-PSS signature with SHA-256 | 2048+ bits |
-| `PS384`   | RSA-PSS signature with SHA-384 | 2048+ bits |
-| `PS512`   | RSA-PSS signature with SHA-512 | 2048+ bits |
+| Algorithm | Description | Key Size |
+|-----------|-------------|----------|
+| `PS256` | RSA-PSS signature with SHA-256 | 2048+ bits |
+| `PS384` | RSA-PSS signature with SHA-384 | 2048+ bits |
+| `PS512` | RSA-PSS signature with SHA-512 | 2048+ bits |
 
 ### Asymmetric Algorithms (ECDSA - Public/Private Key)
 
-| Algorithm | Description                      | Curve |
-| --------- | -------------------------------- | ----- |
-| `ES256`   | ECDSA using P-256 and SHA-256 ⭐ | P-256 |
-| `ES384`   | ECDSA using P-384 and SHA-384    | P-384 |
+| Algorithm | Description | Curve |
+|-----------|-------------|-------|
+| `ES256` | ECDSA using P-256 and SHA-256 ⭐ | P-256 |
+| `ES384` | ECDSA using P-384 and SHA-384 | P-384 |
 
 !!! tip "Use Case"
-Smaller keys than RSA with similar security. Client signs with private key, server verifies with public key. Recommended for modern systems.
+    Smaller keys than RSA with similar security. Client signs with private key, server verifies with public key. Recommended for modern systems.
 
 ### EdDSA
 
-| Algorithm | Description                |
-| --------- | -------------------------- |
-| `EdDSA`   | EdDSA signature algorithms |
+| Algorithm | Description |
+|-----------|-------------|
+| `EdDSA` | EdDSA signature algorithms |
+
+
 
 ## Configuration Value Substitution
 
@@ -1113,7 +992,7 @@ services:
 ### Substitution Examples
 
 === "Kubernetes Secrets"
-`yaml
+    ```yaml
     # Perfect for Kubernetes deployments with mounted secrets
     services:
       slim/0:
@@ -1133,10 +1012,10 @@ services:
                   format: pem
                   key:
                     file: "/var/run/secrets/jwt/public.key"
-    `
+    ```
 
 === "Docker Secrets"
-`yaml
+    ```yaml
     # For Docker Swarm or Compose with secrets
     services:
       slim/0:
@@ -1148,16 +1027,16 @@ services:
                 username: "${env:AUTH_USERNAME}"
                 # Docker secret mounted as file
                 password: "${file:/run/secrets/db_password}"
-    `
+    ```
 
 === "Environment Variables"
-```yaml
-tracing:
-log_level: "${env:LOG_LEVEL}"
+    ```yaml
+    tracing:
+      log_level: "${env:LOG_LEVEL}"
       opentelemetry:
         service_name: "${env:SERVICE_NAME}"
-environment: "${env:ENVIRONMENT}"
-
+        environment: "${env:ENVIRONMENT}"
+    
     services:
       slim/0:
         node_id: "${env:POD_NAME}"
@@ -1166,7 +1045,13 @@ environment: "${env:ENVIRONMENT}"
             - endpoint: "0.0.0.0:${env:DATAPLANE_PORT}"
     ```
 
-!!! warning "Substitution Rules" 1. **Exact Replacement**: The entire value must be a substitution expression - ✅ Valid: `password: "${env:PASSWORD}"` - ❌ Invalid: `password: "prefix-${env:PASSWORD}-suffix"` 2. **Error Handling**: If substitution fails, configuration loading will fail 3. **File Content**: Reads entire file content as string, including newlines 4. **Security**: File paths are relative to working directory or absolute
+!!! warning "Substitution Rules"
+    1. **Exact Replacement**: The entire value must be a substitution expression
+        - ✅ Valid: `password: "${env:PASSWORD}"`
+        - ❌ Invalid: `password: "prefix-${env:PASSWORD}-suffix"`
+    2. **Error Handling**: If substitution fails, configuration loading will fail
+    3. **File Content**: Reads entire file content as string, including newlines
+    4. **Security**: File paths are relative to working directory or absolute
 
 ## Duration Format
 
@@ -1185,12 +1070,13 @@ connect_timeout: "1m30s"
 ```
 
 **Examples:**
-
 - `"10s"` - 10 seconds
-- `"5m"` - 5 minutes
+- `"5m"` - 5 minutes  
 - `"1h30m"` - 1 hour 30 minutes
 - `"2d"` - 2 days
 - `"100ms"` - 100 milliseconds
+
+
 
 ## Complete Configuration Examples
 
@@ -1425,97 +1311,9 @@ services:
               cert: "/var/run/secrets/kubernetes.io/tls/tls.crt"
               key: "/var/run/secrets/kubernetes.io/tls/tls.key"
           auth:
-<<<<<<< Updated upstream
-            basic:
-              username: "${env:CONTROLLER_USER}"
-              # Password from Kubernetes secret file
-              password: "${file:/var/run/secrets/controller/password}"
-
-      clients:
-        - endpoint: "${env:CONTROLLER_ENDPOINT}"
-          tls:
-            ca_file: "/var/run/secrets/kubernetes.io/ca/ca.crt"
-          # Retry configuration for controller connection
-          backoff:
-            type: exponential
-            base: 500
-            factor: 1
-            max_delay: "1500ms"
-            jitter: true
-```
-
-### Backoff Retry Configuration Examples
-
-#### Exponential Backoff Strategy
-
-```yaml
-# config/exponential-backoff.yaml
-tracing:
-  log_level: debug
-
-runtime:
-  n_cores: 0
-  thread_name: "slim-data-plane"
-  drain_timeout: "10s"
-
-services:
-  slim/0:
-    dataplane:
-      servers:
-        - endpoint: "0.0.0.0:46357"
-          tls:
-            insecure: true
-      clients: []
-
-    controller:
-      clients:
-        - endpoint: "http://127.0.0.1:50052"
-          tls:
-            insecure: true
-          # Exponential backoff with jitter
-          backoff:
-            type: exponential
-            base: 200 # Start with 200ms
-            factor: 1 # Double each time
-            max_delay: "1500ms" # Cap at 1.5 seconds
-            jitter: true # Add randomness to prevent thundering herd
-```
-
-#### Fixed Interval Backoff Strategy
-
-```yaml
-# config/fixed-interval-backoff.yaml
-tracing:
-  log_level: debug
-
-runtime:
-  n_cores: 0
-  thread_name: "slim-data-plane"
-  drain_timeout: "10s"
-
-services:
-  slim/0:
-    dataplane:
-      servers:
-        - endpoint: "0.0.0.0:46357"
-          tls:
-            insecure: true
-      clients: []
-
-    controller:
-      clients:
-        - endpoint: "http://127.0.0.1:50052"
-          tls:
-            insecure: true
-          # Fixed interval retry every 2 seconds
-          backoff:
-            type: fixed_interval
-            interval: "2000ms"
-=======
             type: basic
             username: "${env:CONTROLLER_USER}"
             password: "${file:/var/run/secrets/controller/password}"
->>>>>>> Stashed changes
 ```
 
 ### Native SPIRE Zero Trust Configuration
@@ -1537,28 +1335,28 @@ runtime:
 services:
   slim/0:
     node_id: "${env:SPIFFE_ID}"
-
+    
     dataplane:
       servers:
         - endpoint: "0.0.0.0:${env:DATAPLANE_PORT}"
           tls:
             insecure: false
-
+            
             # Automatically rotated certificates from SPIRE
             source:
               type: spire
               socket_path: "/run/spire/sockets/agent.sock"
               jwt_audiences: ["slim", "dataplane"]
               trust_domains: ["${env:SPIFFE_TRUST_DOMAIN}"]
-
+            
             # Client verification using SPIRE bundle
             client_ca:
               type: spire
               socket_path: "/run/spire/sockets/agent.sock"
               trust_domains: ["${env:SPIFFE_TRUST_DOMAIN}"]
-
+            
             tls_version: "tls1.3"
-
+          
           auth:
             type: jwt
             claims:
@@ -1574,7 +1372,7 @@ services:
               format: jwks
               key:
                 file: "/run/spire/jwt-bundle.json"
-
+          
           keepalive:
             max_connection_idle: "600s"
             time: "60s"
@@ -1584,26 +1382,26 @@ services:
         - endpoint: "${env:PEER_ENDPOINT}"
           tls:
             insecure: false
-
+            
             source:
               type: spire
               socket_path: "/run/spire/sockets/agent.sock"
               target_spiffe_id: "${env:PEER_SPIFFE_ID}"
               jwt_audiences: ["slim"]
               trust_domains: ["${env:SPIFFE_TRUST_DOMAIN}"]
-
+            
             ca_source:
               type: spire
               socket_path: "/run/spire/sockets/agent.sock"
               trust_domains: ["${env:SPIFFE_TRUST_DOMAIN}"]
-
+          
           headers:
             x-spiffe-id: "${env:SPIFFE_ID}"
             x-trust-domain: "${env:SPIFFE_TRUST_DOMAIN}"
-
+          
           connect_timeout: "10s"
           request_timeout: "30s"
-
+          
           backoff:
             type: exponential
             base: 100
@@ -1611,7 +1409,7 @@ services:
             jitter: true
             max_delay: "5s"
             max_attempts: 5
-
+          
           auth:
             type: jwt
             claims:
@@ -1639,7 +1437,7 @@ services:
               type: spire
               socket_path: "/run/spire/sockets/agent.sock"
               trust_domains: ["${env:SPIFFE_TRUST_DOMAIN}"]
-
+          
           auth:
             type: jwt
             claims:
@@ -1658,68 +1456,67 @@ services:
 
 ### Server Configuration Options
 
-| Field                           | Type       | Required | Default    | Description               | Required When                               |
-| ------------------------------- | ---------- | -------- | ---------- | ------------------------- | ------------------------------------------- |
-| `endpoint`                      | string     | ✅       | -          | Listen address            | Always                                      |
-| `tls.insecure`                  | boolean    | ❌       | `false`    | Disable TLS               | -                                           |
-| `tls.source`                    | TlsSource  | ⚠️       | `none`     | Server certificate source | Required when `tls.insecure=false`          |
-| `tls.client_ca`                 | CaSource   | ❌       | `none`     | Client CA for mTLS        | Optional (enables client cert verification) |
-| `tls.tls_version`               | string     | ❌       | `"tls1.3"` | TLS protocol version      | -                                           |
-| `http2_only`                    | boolean    | ❌       | `true`     | HTTP/2 only mode          | -                                           |
-| `max_frame_size`                | integer    | ❌       | `4`        | Max message size (MiB)    | -                                           |
-| `max_concurrent_streams`        | integer    | ❌       | `100`      | Max concurrent streams    | -                                           |
-| `read_buffer_size`              | integer    | ❌       | `1048576`  | Read buffer (bytes)       | -                                           |
-| `write_buffer_size`             | integer    | ❌       | `1048576`  | Write buffer (bytes)      | -                                           |
-| `keepalive.max_connection_idle` | duration   | ❌       | `"1h"`     | Idle timeout              | -                                           |
-| `keepalive.max_connection_age`  | duration   | ❌       | `"2h"`     | Max connection age        | -                                           |
-| `keepalive.time`                | duration   | ❌       | `"2m"`     | Keepalive interval        | -                                           |
-| `keepalive.timeout`             | duration   | ❌       | `"20s"`    | Keepalive timeout         | -                                           |
-| `auth`                          | AuthConfig | ❌       | `none`     | Authentication config     | -                                           |
-| `metadata`                      | object     | ❌       | `null`     | User metadata             | -                                           |
+| Field | Type | Required | Default | Description | Required When |
+|-------|------|----------|---------|-------------|---------------|
+| `endpoint` | string | ✅ | - | Listen address | Always |
+| `tls.insecure` | boolean | ❌ | `false` | Disable TLS | - |
+| `tls.source` | TlsSource | ⚠️ | `none` | Server certificate source | Required when `tls.insecure=false` |
+| `tls.client_ca` | CaSource | ❌ | `none` | Client CA for mTLS | Optional (enables client cert verification) |
+| `tls.tls_version` | string | ❌ | `"tls1.3"` | TLS protocol version | - |
+| `http2_only` | boolean | ❌ | `true` | HTTP/2 only mode | - |
+| `max_frame_size` | integer | ❌ | `4` | Max message size (MiB) | - |
+| `max_concurrent_streams` | integer | ❌ | `100` | Max concurrent streams | - |
+| `read_buffer_size` | integer | ❌ | `1048576` | Read buffer (bytes) | - |
+| `write_buffer_size` | integer | ❌ | `1048576` | Write buffer (bytes) | - |
+| `keepalive.max_connection_idle` | duration | ❌ | `"1h"` | Idle timeout | - |
+| `keepalive.max_connection_age` | duration | ❌ | `"2h"` | Max connection age | - |
+| `keepalive.time` | duration | ❌ | `"2m"` | Keepalive interval | - |
+| `keepalive.timeout` | duration | ❌ | `"20s"` | Keepalive timeout | - |
+| `auth` | AuthConfig | ❌ | `none` | Authentication config | - |
+| `metadata` | object | ❌ | `null` | User metadata | - |
 
 ### Client Configuration Options
 
-| Field                              | Type            | Required | Default     | Description              | Required When                      |
-| ---------------------------------- | --------------- | -------- | ----------- | ------------------------ | ---------------------------------- |
-| `endpoint`                         | string          | ✅       | -           | Target endpoint          | Always                             |
-| `origin`                           | string          | ❌       | `null`      | Origin override          | -                                  |
-| `server_name`                      | string          | ❌       | `null`      | SNI override             | -                                  |
-| `tls.insecure`                     | boolean         | ❌       | `false`     | Disable TLS              | -                                  |
-| `tls.insecure_skip_verify`         | boolean         | ❌       | `false`     | Skip server verification | -                                  |
-| `tls.source`                       | TlsSource       | ❌       | `none`      | Client certificate       | Optional (for mTLS)                |
-| `tls.ca_source`                    | CaSource        | ❌       | `none`      | Server CA verification   | Optional (for server verification) |
-| `tls.tls_version`                  | string          | ❌       | `"tls1.3"`  | TLS protocol version     | -                                  |
-| `tls.include_system_ca_certs_pool` | boolean         | ❌       | `true`      | Include system CAs       | -                                  |
-| `connect_timeout`                  | duration        | ❌       | `"0s"`      | Connection timeout       | -                                  |
-| `request_timeout`                  | duration        | ❌       | `"0s"`      | Request timeout          | -                                  |
-| `buffer_size`                      | integer         | ❌       | `null`      | Read buffer size         | -                                  |
-| `headers`                          | map             | ❌       | `{}`        | Custom headers           | -                                  |
-| `rate_limit`                       | string          | ❌       | `null`      | Rate limiting            | -                                  |
-| `keepalive`                        | KeepaliveConfig | ❌       | `null`      | Keepalive settings       | -                                  |
-| `proxy`                            | ProxyConfig     | ❌       | -           | HTTP proxy config        | -                                  |
-| `auth`                             | AuthConfig      | ❌       | `none`      | Authentication config    | -                                  |
-| `backoff`                          | BackoffConfig   | ❌       | exponential | Retry backoff            | -                                  |
-| `metadata`                         | object          | ❌       | `null`      | User metadata            | -                                  |
+| Field | Type | Required | Default | Description | Required When |
+|-------|------|----------|---------|-------------|---------------|
+| `endpoint` | string | ✅ | - | Target endpoint | Always |
+| `origin` | string | ❌ | `null` | Origin override | - |
+| `server_name` | string | ❌ | `null` | SNI override | - |
+| `tls.insecure` | boolean | ❌ | `false` | Disable TLS | - |
+| `tls.insecure_skip_verify` | boolean | ❌ | `false` | Skip server verification | - |
+| `tls.source` | TlsSource | ❌ | `none` | Client certificate | Optional (for mTLS) |
+| `tls.ca_source` | CaSource | ❌ | `none` | Server CA verification | Optional (for server verification) |
+| `tls.tls_version` | string | ❌ | `"tls1.3"` | TLS protocol version | - |
+| `tls.include_system_ca_certs_pool` | boolean | ❌ | `true` | Include system CAs | - |
+| `connect_timeout` | duration | ❌ | `"0s"` | Connection timeout | - |
+| `request_timeout` | duration | ❌ | `"0s"` | Request timeout | - |
+| `buffer_size` | integer | ❌ | `null` | Read buffer size | - |
+| `headers` | map | ❌ | `{}` | Custom headers | - |
+| `rate_limit` | string | ❌ | `null` | Rate limiting | - |
+| `keepalive` | KeepaliveConfig | ❌ | `null` | Keepalive settings | - |
+| `proxy` | ProxyConfig | ❌ | - | HTTP proxy config | - |
+| `auth` | AuthConfig | ❌ | `none` | Authentication config | - |
+| `backoff` | BackoffConfig | ❌ | exponential | Retry backoff | - |
+| `metadata` | object | ❌ | `null` | User metadata | - |
 
 ### Authentication Types
 
-| Type         | Server | Client | Description                 | Required Fields                                              |
-| ------------ | ------ | ------ | --------------------------- | ------------------------------------------------------------ |
-| `basic`      | ✅     | ✅     | Username/password           | `username`, `password`                                       |
-| `jwt`        | ✅     | ✅     | Dynamic JWT generation      | `key` (with `algorithm`, `format`, `key.file` or `key.data`) |
-| `static_jwt` | ❌     | ✅     | Pre-generated JWT from file | `file`                                                       |
-| `none`       | ✅     | ✅     | No authentication           | None                                                         |
+| Type | Server | Client | Description | Required Fields |
+|------|--------|--------|-------------|-----------------|
+| `basic` | ✅ | ✅ | Username/password | `username`, `password` |
+| `jwt` | ✅ | ✅ | Dynamic JWT generation | `key` (with `algorithm`, `format`, `key.file` or `key.data`) |
+| `static_jwt` | ❌ | ✅ | Pre-generated JWT from file | `file` |
+| `none` | ✅ | ✅ | No authentication | None |
 
 !!! note "SPIRE Authentication"
-SPIRE is not a separate authentication type. SPIRE provides authentication through:
-
+    SPIRE is not a separate authentication type. SPIRE provides authentication through:
+    
     1. **TLS Layer**: Mutual TLS authentication using SPIRE-issued X.509 certificates (`tls.source: { type: spire }`)
     2. **JWT Layer**: JWT SVIDs from SPIRE used with `jwt` or `static_jwt` authentication types
-
+    
     SPIRE configuration is done in the `tls` section, not the `auth` section. See [TLS Configuration](#tls-configuration) and [Native SPIRE Integration](#native-spire-integration).
 
 **JWT Key Requirements:**
-
 - `key.type` - Required: `encoding`, `decoding`, or `autoresolve`
 - `key.algorithm` - Required when `type` is `encoding` or `decoding`
 - `key.format` - Required when `type` is `encoding` or `decoding` (values: `pem`, `jwk`, `jwks`)
@@ -1727,15 +1524,14 @@ SPIRE is not a separate authentication type. SPIRE provides authentication throu
 
 ### TLS Source Types
 
-| Type    | Required Fields | Optional Fields                                                     | Description                    |
-| ------- | --------------- | ------------------------------------------------------------------- | ------------------------------ |
-| `file`  | `cert`, `key`   | -                                                                   | Load certificates from files   |
-| `pem`   | `cert`, `key`   | -                                                                   | Inline PEM certificate data    |
-| `spire` | -               | `socket_path`, `jwt_audiences`, `target_spiffe_id`, `trust_domains` | SPIRE Workload API integration |
-| `none`  | -               | -                                                                   | No TLS source configured       |
+| Type | Required Fields | Optional Fields | Description |
+|------|-----------------|-----------------|-------------|
+| `file` | `cert`, `key` | - | Load certificates from files |
+| `pem` | `cert`, `key` | - | Inline PEM certificate data |
+| `spire` | - | `socket_path`, `jwt_audiences`, `target_spiffe_id`, `trust_domains` | SPIRE Workload API integration |
+| `none` | - | - | No TLS source configured |
 
 **SPIRE Field Details:**
-
 - `socket_path` - Optional (defaults to `SPIFFE_ENDPOINT_SOCKET` env var)
 - `jwt_audiences` - Optional (defaults to `["slim"]`)
 - `target_spiffe_id` - Optional (for requesting specific SPIFFE ID)
@@ -1743,15 +1539,14 @@ SPIRE is not a separate authentication type. SPIRE provides authentication throu
 
 ### CA Source Types
 
-| Type    | Required Fields | Optional Fields                                                     | Description                    |
-| ------- | --------------- | ------------------------------------------------------------------- | ------------------------------ |
-| `file`  | `path`          | -                                                                   | Load CA certificates from file |
-| `pem`   | `data`          | -                                                                   | Inline PEM CA certificate data |
-| `spire` | -               | `socket_path`, `jwt_audiences`, `target_spiffe_id`, `trust_domains` | SPIRE trust bundle             |
-| `none`  | -               | -                                                                   | No CA source configured        |
+| Type | Required Fields | Optional Fields | Description |
+|------|-----------------|-----------------|-------------|
+| `file` | `path` | - | Load CA certificates from file |
+| `pem` | `data` | - | Inline PEM CA certificate data |
+| `spire` | - | `socket_path`, `jwt_audiences`, `target_spiffe_id`, `trust_domains` | SPIRE trust bundle |
+| `none` | - | - | No CA source configured |
 
 **SPIRE Field Details:**
-
 - `socket_path` - Optional (defaults to `SPIFFE_ENDPOINT_SOCKET` env var)
 - `jwt_audiences` - Optional (defaults to `["slim"]`)
 - `target_spiffe_id` - Optional (for requesting specific SPIFFE ID)
