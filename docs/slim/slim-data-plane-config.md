@@ -3,10 +3,10 @@
 This document provides comprehensive documentation for configuring the SLIM data plane. The configuration is written in YAML format and defines how the data plane runtime, services, authentication, and observability components operate.
 
 !!! info "Schema References"
-This documentation corresponds to the JSON schemas in the SLIM repository:
+    This documentation corresponds to the JSON schemas in the SLIM repository:
 
-    - [Client Configuration Schema](https://github.com/agntcy/slim/blob/slim-v1.0.0/data-plane/core/config/src/grpc/schema/client-config.schema.json)
-    - [Server Configuration Schema](https://github.com/agntcy/slim/blob/slim-v1.0.0/data-plane/core/config/src/grpc/schema/server-config.schema.json)
+      - [Client Configuration Schema](https://github.com/agntcy/slim/blob/slim-v1.0.0/data-plane/core/config/src/grpc/schema/client-config.schema.json)
+      - [Server Configuration Schema](https://github.com/agntcy/slim/blob/slim-v1.0.0/data-plane/core/config/src/grpc/schema/server-config.schema.json)
 
 ## Configuration Structure Overview
 

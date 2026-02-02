@@ -1,202 +1,288 @@
 # Getting Started with SLIM
 
-SLIM is a secure, scalable, and user-friendly communication framework that
-unifies state-of-the-art capabilities from all mentioned frameworks into a
-single implementation.
+!!! info "What is SLIM?"
+    SLIM is a secure, scalable, and user-friendly communication framework that unifies state-of-the-art capabilities from all mentioned frameworks into a single implementation.
+    
+    📚 For more information, see the [detailed documentation](./overview.md).
 
-For more information on SLIM, see the [detailed
-documentation](./overview.md).
+---
 
 ## Installation
 
-SLIM is composed of multiple components, each with its own installation
-instructions. Below are the main components and how to install them.
+SLIM is composed of multiple components, each with its own installation instructions. Choose the components you need based on your use case.
 
-### SLIM Node
+---
 
-The SLIM Node is the core component that handles messaging operations. It can be
-installed using the provided container image, with
-[cargo](https://github.com/rust-lang/cargo) or with [Helm](https://helm.sh/).
+### :material-server: SLIM Node
 
-#### Using Docker
+The SLIM Node is the core component that handles messaging operations.
 
-```bash
-docker pull ghcr.io/agntcy/slim:1.0.0
+!!! tip "Installation Methods"
+    You can install the SLIM Node using Docker, Cargo, Helm, or the CLI binary. Choose the method that best fits your infrastructure.
 
-cat << EOF > ./config.yaml
-tracing:
-  log_level: info
-  display_thread_names: true
-  display_thread_ids: true
+=== "Docker"
 
-runtime:
-  n_cores: 0
-  thread_name: "slim-data-plane"
-  drain_timeout: 10s
+    Pull the SLIM container image and run it with a configuration file:
 
-services:
-  slim/0:
-    dataplane:
-      servers:
-        - endpoint: "0.0.0.0:46357"
-          tls:
-            insecure: true
+    ```bash
+    docker pull ghcr.io/agntcy/slim:1.0.0
+    ```
 
-      clients: []
-EOF
+    Create a configuration file:
 
-docker run -it \
-    -v ./config.yaml:/config.yaml -p 46357:46357 \
-    ghcr.io/agntcy/slim:1.0.0 /slim --config /config.yaml
-```
+    ```yaml
+    # config.yaml
+    tracing:
+      log_level: info
+      display_thread_names: true
+      display_thread_ids: true
 
-#### Using Cargo
+    runtime:
+      n_cores: 0
+      thread_name: "slim-data-plane"
+      drain_timeout: 10s
 
-```bash
-cargo install agntcy-slim
+    services:
+      slim/0:
+        dataplane:
+          servers:
+            - endpoint: "0.0.0.0:46357"
+              tls:
+                insecure: true
 
-cat << EOF > ./config.yaml
-tracing:
-  log_level: info
-  display_thread_names: true
-  display_thread_ids: true
+          clients: []
+    ```
 
-runtime:
-  n_cores: 0
-  thread_name: "slim-data-plane"
-  drain_timeout: 10s
+    Run the container:
 
-services:
-  slim/0:
-    dataplane:
-      servers:
-        - endpoint: "0.0.0.0:46357"
-          tls:
-            insecure: true
+    ```bash
+    docker run -it \
+        -v ./config.yaml:/config.yaml -p 46357:46357 \
+        ghcr.io/agntcy/slim:1.0.0 /slim --config /config.yaml
+    ```
 
-      clients: []
-EOF
+=== "Cargo"
 
-~/.cargo/bin/slim --config ./config.yaml
-```
+    Install SLIM using Rust's package manager:
 
-#### Using Helm
+    ```bash
+    cargo install agntcy-slim
+    ```
 
-We also provide a Helm chart for deploying SLIM in Kubernetes environments.
+    Create a configuration file:
 
-```bash
-helm pull oci://ghcr.io/agntcy/slim/helm/slim --version v1.0.0
-```
+    ```yaml
+    # config.yaml
+    tracing:
+      log_level: info
+      display_thread_names: true
+      display_thread_ids: true
 
-For information about how to use the Helm chart, see the
-[values.yaml](https://github.com/agntcy/slim/blob/slim-v1.0.0/charts/slim/values.yaml)
+    runtime:
+      n_cores: 0
+      thread_name: "slim-data-plane"
+      drain_timeout: 10s
 
-### SLIM Controller
+    services:
+      slim/0:
+        dataplane:
+          servers:
+            - endpoint: "0.0.0.0:46357"
+              tls:
+                insecure: true
 
-The SLIM Controller is responsible for managing SLIM Nodes and providing a
-user-friendly interface for configuration. It can be installed using the
-provided container image or with [Helm](https://helm.sh/).
+          clients: []
+    ```
 
-### Using Docker
+    Run SLIM:
 
-```bash
-docker pull ghcr.io/agntcy/slim/control-plane:1.0.0
+    ```bash
+    ~/.cargo/bin/slim --config ./config.yaml
+    ```
 
-cat << EOF > ./slim-control-plane.yaml
-northbound:
-  httpHost: 0.0.0.0
-  httpPort: 50051
-  logging:
-    level: INFO
+=== "Helm"
 
-southbound:
-  httpHost: 0.0.0.0
-  httpPort: 50052
-  logging:
-    level: INFO
+    For Kubernetes deployments, use the official Helm chart:
 
-reconciler:
-  maxRequeues: 15
-  maxNumOfParallelReconciles: 1000
+    ```bash
+    helm pull oci://ghcr.io/agntcy/slim/helm/slim --version v1.0.0
+    ```
 
-logging:
-  level: INFO
+    !!! note "Configuration"
+        For detailed configuration options, see the [values.yaml](https://github.com/agntcy/slim/blob/slim-v1.0.0/charts/slim/values.yaml) in the repository.
 
-database:
-  filePath: /db/controlplane.db
-EOF
+=== "CLI Binary"
 
-docker run -it \
-    -v ./slim-control-plane.yaml:/config.yaml -v .:/db \
-    -p 50051:50051 -p 50052:50052                      \
-    ghcr.io/agntcy/slim/control-plane:1.0.0           \
-    -config /config.yaml
-```
+    For local development and testing, use the `slimctl` binary.
 
-### Using Helm
+    !!! info "Installation"
+        Install the slimctl binary following the [instructions below](#slimctl).
 
-```bash
-helm pull oci://ghcr.io/agntcy/slim/helm/slim-control-plane --version v1.0.0
-```
+    === "Default Configuration"
 
-### SLIM Bindings
+        Run with default settings:
 
-#### Python
+        ```bash
+        slimctl slim start
+        ```
 
-SLIM provides Python bindings for easy integration with Python applications. You
-can install the bindings using pip, or you can include them into your app's
-pyproject.toml:
+    === "Custom Configuration"
 
-```bash
-pip install slim-bindings
-```
+        Create a configuration file:
 
-```toml
-[project]
-...
-dependencies = ["slim-bindings~=1.0"]
-```
+        ```yaml
+        # config.yaml
+        tracing:
+          log_level: info
+          display_thread_names: true
+          display_thread_ids: true
 
-A tutorial on how to use the bindings in an application can be found in the [messaging layer
-documentation](./slim-data-plane.md). Otherwise examples are available in the
-[SLIM Repository](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/bindings/python/examples).
+        runtime:
+          n_cores: 0
+          thread_name: "slim-data-plane"
+          drain_timeout: 10s
 
-#### Go
+        services:
+          slim/0:
+            dataplane:
+              servers:
+                - endpoint: "0.0.0.0:46357"
+                  tls:
+                    insecure: true
 
-SLIM provides Go bindings for easy integration with Go applications. You can
-install the bindings using `go get`:
+              clients: []
+        ```
 
-```bash
-go get github.com/agntcy/slim-bindings-go@v1.0.0
-```
+        Start SLIM with the configuration:
 
-After installing, run the setup tool to install the required native libraries:
-
-```bash
-go run github.com/agntcy/slim-bindings-go/cmd/slim-bindings-setup
-```
-
-In your `go.mod` file:
-
-```go
-require github.com/agntcy/slim-bindings-go v1.0.0
-```
-
-**Note:** The Go bindings use native libraries via CGO, so a C compiler is required.
-
-Examples are available in the [SLIM Repository](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/bindings/go/examples).
+        ```bash
+        slimctl slim start --config ./config.yaml
+        ```
 
 
+!!! tip "Advanced Usage"
+    For more configuration options, see the [SLIM Configuration reference](./slim-data-plane-config.md)
 
-### Slimctl
+---
 
-`slimctl` is a command-line tool for managing SLIM Nodes and Controllers. It can
-be downloaded from the [releases
-page](https://github.com/agntcy/slim/releases/tag/slimctl-v1.0.0) in the SLIM repo.
+### :material-console: SLIM Controller
+
+The SLIM Controller manages SLIM Nodes and provides a user-friendly interface for configuration.
+
+=== "Docker"
+
+    Pull the controller image:
+
+    ```bash
+    docker pull ghcr.io/agntcy/slim/control-plane:1.0.0
+    ```
+
+    Create a configuration file:
+
+    ```yaml
+    # slim-control-plane.yaml
+    northbound:
+      httpHost: 0.0.0.0
+      httpPort: 50051
+      logging:
+        level: INFO
+
+    southbound:
+      httpHost: 0.0.0.0
+      httpPort: 50052
+      logging:
+        level: INFO
+
+    reconciler:
+      maxRequeues: 15
+      maxNumOfParallelReconciles: 1000
+
+    logging:
+      level: INFO
+
+    database:
+      filePath: /db/controlplane.db
+    ```
+
+    Run the controller:
+
+    ```bash
+    docker run -it \
+        -v ./slim-control-plane.yaml:/config.yaml -v .:/db \
+        -p 50051:50051 -p 50052:50052                      \
+        ghcr.io/agntcy/slim/control-plane:1.0.0           \
+        -config /config.yaml
+    ```
+
+=== "Helm"
+
+    For Kubernetes deployments:
+
+    ```bash
+    helm pull oci://ghcr.io/agntcy/slim/helm/slim-control-plane --version v1.0.0
+    ```
+
+---
+
+### :material-code-braces: SLIM Bindings
+
+Language bindings allow you to integrate SLIM with your applications.
+
+=== "Python"
+
+    Install using pip:
+
+    ```bash
+    pip install slim-bindings
+    ```
+
+    Or add to your `pyproject.toml`:
+
+    ```toml
+    [project]
+    # ...
+    dependencies = ["slim-bindings~=1.0"]
+    ```
+
+    !!! example "Learn More"
+        - 📖 [Messaging Layer Tutorial](./slim-data-plane.md)
+        - 💻 [Python Examples](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/bindings/python/examples)
+
+=== "Go"
+
+    Install the Go bindings:
+
+    ```bash
+    go get github.com/agntcy/slim-bindings-go@v1.0.0
+    ```
+
+    Run the setup tool to install native libraries:
+
+    ```bash
+    go run github.com/agntcy/slim-bindings-go/cmd/slim-bindings-setup
+    ```
+
+    Add to your `go.mod`:
+
+    ```go
+    require github.com/agntcy/slim-bindings-go v1.0.0
+    ```
+
+    !!! warning "C Compiler Required"
+        The Go bindings use native libraries via [CGO](https://pkg.go.dev/cmd/cgo), so you'll need a C compiler installed on your system.
+
+    !!! example "Examples"
+        Check out the [Go examples](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/bindings/go/examples) in the repository.
+
+---
+
+### :material-hammer-wrench: Slimctl
+
+`slimctl` is a command-line tool for managing SLIM Nodes and Controllers.
 
 #### Installation
 
-Choose the appropriate installation method for your operating system:
+Choose your platform:
 
 === "macOS (Apple Silicon)"
 
@@ -207,14 +293,23 @@ Choose the appropriate installation method for your operating system:
     sudo chmod +x /usr/local/bin/slimctl
     ```
 
-    !!! note "macOS Security"
-        You may need to allow the binary to run if it's blocked by Gatekeeper:
+    !!! warning "macOS Security"
+        You may need to allow the binary to run if blocked by Gatekeeper:
 
         ```bash
         sudo xattr -rd com.apple.quarantine /usr/local/bin/slimctl
         ```
 
-        Alternatively, you can go to **System Settings > Privacy & Security** and allow the application to run when prompted.
+        Alternatively, go to **System Settings > Privacy & Security** and allow the application when prompted.
+
+=== "macOS (Intel)"
+
+    ```bash
+    curl -LO https://github.com/agntcy/slim/releases/download/slimctl-v1.0.0/slimctl_1.0.0_darwin_amd64.tar.gz
+    tar -xzf slimctl_1.0.0_darwin_amd64.tar.gz
+    sudo mv slimctl /usr/local/bin/slimctl
+    sudo chmod +x /usr/local/bin/slimctl
+    ```
 
 === "Linux (AMD64)"
 
@@ -225,59 +320,94 @@ Choose the appropriate installation method for your operating system:
     sudo chmod +x /usr/local/bin/slimctl
     ```
 
-Check the [slimct documentation](https://github.com/agntcy/slim/tree/slim-v1.0.0/control-plane/slimctl/README.md) for other installation methods
+=== "Windows (AMD64)"
+
+    Download and extract the Windows binary:
+
+    ```powershell
+    # Using PowerShell
+    Invoke-WebRequest -Uri "https://github.com/agntcy/slim/releases/download/slimctl-v1.0.0/slimctl_1.0.0_windows_amd64.zip" -OutFile "slimctl.zip"
+    Expand-Archive -Path "slimctl.zip" -DestinationPath "."
+    
+    # Move to a directory in your PATH (e.g., C:\Program Files\slimctl\)
+    # Or add the current directory to your PATH
+    ```
+
+    Alternatively, download directly from the [releases page](https://github.com/agntcy/slim/releases/download/slimctl-v1.0.0/slimctl_1.0.0_windows_amd64.zip).
+
+!!! tip "Other Installation Methods"
+    Check the [slimctl documentation](https://github.com/agntcy/slim/tree/slim-v1.0.0/control-plane/slimctl/README.md) for additional installation methods.
 
 #### Verification
 
-After installation, verify that `slimctl` is working correctly:
+Verify the installation:
 
 ```bash
 slimctl help
 ```
 
-This should display the help information and available commands for `slimctl`.
+This should display help information and available commands.
 
-## Build the code
+---
 
-To build the project and work with the code, you need the following installed
-components in your system:
+## :material-wrench: Building from Source
 
-### Taskfile
+To build SLIM from source, you'll need the following tools installed.
 
-Taskfile is required to run all the build operations. Follow the [installation
-instructions](https://taskfile.dev/installation/) in the Taskfile documentation
-to find the best installation method for your system.
+### Prerequisites
 
-<details>
-  <summary>with brew</summary>
+#### Taskfile
 
-```bash
-brew install go-task
-```
+Taskfile is required for running build operations.
 
-</details>
-<details>
-  <summary>with curl</summary>
+=== "Homebrew"
 
-```bash
-sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
-```
+    ```bash
+    brew install go-task
+    ```
 
-</details>
+=== "curl"
 
-For more information, see [Taskfile](https://taskfile.dev/).
+    ```bash
+    sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
+    ```
 
-### Rust
+=== "Other Methods"
 
-The data-plane components are implemented in Rust. Install with rustup:
+    See the [Taskfile installation guide](https://taskfile.dev/installation/) for more options.
+
+#### Rust
+
+The data-plane components are written in Rust:
 
 ```bash
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
-For more information, see [Rust](https://rustup.rs/).
+!!! info
+    Learn more at [rustup.rs](https://rustup.rs/)
 
-### Go
+#### Go
 
-The control-plane components are implemented in Go. Follow the installation
-instructions in the Go website.
+The control-plane components are written in Go. Follow the [official installation guide](https://go.dev/doc/install).
+
+---
+
+## :material-rocket: Next Steps
+
+!!! success "Ready to Go!"
+    You've installed SLIM! Here's what to do next:
+
+    1. :material-book-open-page-variant: Read the [messaging layer documentation](./slim-data-plane.md)
+    2. :material-code-tags: Explore the [example applications](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/bindings/)
+    3. :material-cog: Learn about [configuration options](./overview.md)
+    4. :material-forum: Join the community and ask questions
+
+---
+
+## :material-help-circle: Need Help?
+
+!!! question "Getting Stuck?"
+    - 📖 Check the [detailed documentation](./overview.md)
+    - 💬 Ask questions in our community forums
+    - 🐛 Report issues on [GitHub](https://github.com/agntcy/slim)
