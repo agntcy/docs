@@ -1,6 +1,6 @@
 # Overview
 
-SLIM is a secure, scalable, and developer-friendly messaging framework that
+Secure Low-Latency Interactive Messaging (SLIM) is a secure, scalable, and developer-friendly messaging framework that
 provides the transport layer for agent communication protocols like A2A. While
 A2A defines *what* agents say (message formats, task semantics, coordination
 patterns), SLIM defines *how* these messages are securely delivered across
@@ -29,14 +29,14 @@ all while maintaining low latencies and strong security guarantees.
 SLIM is composed of two main components that work together to provide secure,
 scalable messaging infrastructure:
 
-- **[SLIM Messaging Layer](./slim-data-plane.md)**: The data plane component
+- [SLIM Messaging Layer](./slim-data-plane.md): The data plane component
   that handles message routing, delivery, and secure communication between
   applications. It consists of two layers: the session layer that provides
   end-to-end encryption (using the MLS protocol) and reliable message delivery,
   and the data plane that enables efficient message distribution across the
   network.
 
-- **[SLIM Controller](./slim-controller.md)**: The control plane component that
+- [SLIM Controller](./slim-controller.md): The control plane component that
   manages SLIM node configurations, monitors the network, and provides a unified
   interface for administering the messaging infrastructure. It enables
   centralized management of routes, connections, and node deployments.
@@ -98,17 +98,23 @@ graph TB
 
 SLIM's architecture enables efficient distribution of components:
 
-**Pure Data Plane**: The `slim` binary and Docker images are distributed as pure
+### Pure Data Plane
+
+The `slim` binary and Docker images are distributed as pure
 data-plane artifacts. Since SLIM routing nodes only forward messages and don't
 participate in application sessions, they don't need the session layer. This
 keeps the infrastructure lightweight, fast, and simple to deploy.
 
-**Language Bindings**: Libraries (Python, Go, etc.) include both the data plane
-client **and** the session layer on top. Applications use these bindings to get
+### Language Bindings
+
+Libraries (Python, Go, etc.) include both the data plane
+client and the session layer on top. Applications use these bindings to get
 the full stack: secure, reliable, encrypted communication with automatic session
 management.
 
-**Separation of Concerns**: You can run a global network of SLIM routing nodes
+### Separation of Concerns
+
+You can run a global network of SLIM routing nodes
 without any application logic, while your agents use the rich, full-featured
 language bindings for their communication needs. The control plane manages the
 routing infrastructure independently, ensuring the network operates efficiently.

@@ -4,14 +4,11 @@
 
 SLIM is composed of multiple components, each with its own installation instructions. Choose the components you need based on your use case.
 
----
-
-### :material-server: SLIM Node
+### SLIM Node
 
 The SLIM Node is the core component that handles messaging operations.
 
-!!! tip "Installation Methods"
-    You can install the SLIM Node using Docker, Cargo, Helm, or the CLI binary. Choose the method that best fits your infrastructure.
+You can install the SLIM Node using Docker, Cargo, Helm, or the CLI binary. Choose the method that best fits your infrastructure.
 
 === "Docker"
 
@@ -107,9 +104,8 @@ The SLIM Node is the core component that handles messaging operations.
 === "CLI Binary"
 
     For local development and testing, use the `slimctl` binary.
-
-    !!! info "Installation"
-        Install the slimctl binary following the [instructions below](#slimctl).
+    
+    Install the `slimctl` binary following the [instructions below](#slimctl).
 
     === "Default Configuration"
 
@@ -152,13 +148,9 @@ The SLIM Node is the core component that handles messaging operations.
         slimctl slim start --config ./config.yaml
         ```
 
+For more configuration options, see the [SLIM Configuration reference](./slim-data-plane-config.md).
 
-!!! tip "Advanced Usage"
-    For more configuration options, see the [SLIM Configuration reference](./slim-data-plane-config.md)
-
----
-
-### :material-console: SLIM Controller
+### SLIM Controller
 
 The SLIM Controller manages SLIM Nodes and provides a user-friendly interface for configuration.
 
@@ -215,9 +207,7 @@ The SLIM Controller manages SLIM Nodes and provides a user-friendly interface fo
     helm pull oci://ghcr.io/agntcy/slim/helm/slim-control-plane --version v1.0.0
     ```
 
----
-
-### :material-code-braces: SLIM Bindings
+### SLIM Bindings
 
 Language bindings allow you to integrate SLIM with your applications.
 
@@ -237,9 +227,7 @@ Language bindings allow you to integrate SLIM with your applications.
     dependencies = ["slim-bindings~=1.0"]
     ```
 
-    !!! example "Learn More"
-        - 📖 [Messaging Layer Tutorial](./slim-data-plane.md)
-        - 💻 [Python Examples](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/bindings/python/examples)
+    For more information on the SLIM bindings, see the [Messaging Layer Tutorial](./slim-data-plane.md) and the [Python Examples](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/bindings/python/examples).
 
 === "Go"
 
@@ -264,12 +252,9 @@ Language bindings allow you to integrate SLIM with your applications.
     !!! warning "C Compiler Required"
         The Go bindings use native libraries via [CGO](https://pkg.go.dev/cmd/cgo), so you'll need a C compiler installed on your system.
 
-    !!! example "Examples"
-        Check out the [Go examples](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/bindings/go/examples) in the repository.
+    For more information on the Go bindings, see the [Go Examples](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/bindings/go/examples).
 
----
-
-### :material-hammer-wrench: Slimctl
+### Slimctl
 
 `slimctl` is a command-line tool for managing SLIM Nodes and Controllers.
 
@@ -328,8 +313,7 @@ Choose your platform:
 
     Alternatively, download directly from the [releases page](https://github.com/agntcy/slim/releases/download/slimctl-v1.0.0/slimctl_1.0.0_windows_amd64.zip).
 
-!!! tip "Other Installation Methods"
-    Check the [slimctl documentation](https://github.com/agntcy/slim/tree/slim-v1.0.0/control-plane/slimctl/README.md) for additional installation methods.
+Check the [slimctl documentation](https://github.com/agntcy/slim/tree/slim-v1.0.0/control-plane/slimctl/README.md) for additional installation methods.
 
 #### Verification
 
@@ -341,66 +325,23 @@ slimctl help
 
 This should display help information and available commands.
 
----
+## Building from Source
 
-## :material-wrench: Building from Source
+You can build SLIM from source. You'll need the following tools installed:
 
-To build SLIM from source, you'll need the following tools installed.
+- [Taskfile](https://taskfile.dev/)
+- [Rust](https://rustup.rs/)
+- [Go](https://go.dev/doc/install)
 
-### Prerequisites
+## Next Steps
 
-#### Taskfile
+You've installed SLIM! Here's what to do next:
 
-Taskfile is required for running build operations.
+1. Read the [messaging layer documentation](./slim-data-plane.md)
+2. Explore the [example applications](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/bindings/)
+3. Learn about [configuration options](./overview.md)
+4. Join us on [Slack](https://join.slack.com/t/agntcy/shared_invite/zt-3hb4p7bo0-5H2otGjxGt9OQ1g5jzK_GQ)
 
-=== "Homebrew"
+## Need Help?
 
-    ```bash
-    brew install go-task
-    ```
-
-=== "curl"
-
-    ```bash
-    sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
-    ```
-
-=== "Other Methods"
-
-    See the [Taskfile installation guide](https://taskfile.dev/installation/) for more options.
-
-#### Rust
-
-The data-plane components are written in Rust:
-
-```bash
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-```
-
-!!! info
-    Learn more at [rustup.rs](https://rustup.rs/)
-
-#### Go
-
-The control-plane components are written in Go. Follow the [official installation guide](https://go.dev/doc/install).
-
----
-
-## :material-rocket: Next Steps
-
-!!! success "Ready to Go!"
-    You've installed SLIM! Here's what to do next:
-
-    1. :material-book-open-page-variant: Read the [messaging layer documentation](./slim-data-plane.md)
-    2. :material-code-tags: Explore the [example applications](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/bindings/)
-    3. :material-cog: Learn about [configuration options](./overview.md)
-    4. :material-forum: Join the community and ask questions
-
----
-
-## :material-help-circle: Need Help?
-
-!!! question "Getting Stuck?"
-    - 📖 Check the [detailed documentation](./overview.md)
-    - 💬 Ask questions in our community forums
-    - 🐛 Report issues on [GitHub](https://github.com/agntcy/slim)
+If you get stuck, check the [detailed documentation](./overview.md), ask questions in our [community forums](https://join.slack.com/t/agntcy/shared_invite/zt-3hb4p7bo0-5H2otGjxGt9OQ1g5jzK_GQ), or report issues on [GitHub](https://github.com/agntcy/slim).

@@ -32,9 +32,9 @@ The example code provides a `create_local_app` helper function (from [common.py]
 
 The `create_local_app` function handles three main tasks:
 
-1. **Initialize the Global Service**: Sets up the SLIM runtime and global service instance
-2. **Create Authentication**: Determines the authentication mode (SPIRE, JWT, or shared secret) based on configuration
-3. **Connect to SLIM Server**: Establishes connection to the SLIM network
+1. Initialize the Global Service: Sets up the SLIM runtime and global service instance
+2. Create Authentication: Determines the authentication mode (SPIRE, JWT, or shared secret) based on configuration
+3. Connect to SLIM Server: Establishes connection to the SLIM network
 
 Here's how the function works:
 
@@ -102,12 +102,21 @@ async def create_local_app(config: BaseConfig) -> tuple[slim_bindings.App, int]:
     return local_app, conn_id
 ```
 
-**Key Authentication Options:**
+### Key Authentication Options
 
-- **SPIRE (Recommended for production)**: Uses the SPIRE Workload API for dynamic identity. Requires a running SPIRE agent. See [SLIM documentation](./slim-authentication.md) for setup details.
-- **JWT/JWKS (Production)**: Uses static JWT files with JWKS for verification. Suitable for environments with an existing JWT infrastructure.
-- **Shared Secret (Development only)**: Simple symmetric key authentication.
+The following key authentication options are available:
 
+#### SPIRE (Recommended for production)
+  
+Uses the SPIRE Workload API for dynamic identity. Requires a running SPIRE agent. See [SLIM documentation](./slim-authentication.md) for setup details.
+
+#### JWT/JWKS (Production)
+  
+Uses static JWT files with JWKS for verification. Suitable for environments with an existing JWT infrastructure.
+
+#### Shared Secret (Development only)
+  
+Simple symmetric key authentication.
 
 ## Group Communication Using the Python Bindings
 
@@ -165,11 +174,11 @@ the session is fully established.
 
 Key configuration parameters for `SessionConfig`:
 
-- `session_type`: Set to `SessionType.GROUP` for group/multicast sessions
-- `enable_mls`: Set to `True` to enable MLS for end-to-end encryption
-- `max_retries`: Maximum number of retransmission attempts (upon missing ack) before notifying the application of delivery failure
-- `interval`: Duration to wait for an acknowledgment; if the ack is not received in time, a retry is triggered. If omitted / None, the session is unreliable (no retry/ack flow)
-- `metadata`: Optional key-value pairs for session metadata
+- `session_type`: Set to `SessionType.GROUP` for group/multicast sessions.
+- `enable_mls`: Set to `True` to enable MLS for end-to-end encryption.
+- `max_retries`: Maximum number of retransmission attempts (upon missing ack) before notifying the application of delivery failure.
+- `interval`: Duration to wait for an acknowledgment; if the ack is not received in time, a retry is triggered. If omitted / None, the session is unreliable (no retry/ack flow).
+- `metadata`: Optional key-value pairs for session metadata.
 
 After session creation, the moderator invites participants via `created_session.invite_async(invite_name)`.
 Each invite call returns a completion handle that should be awaited to ensure the invitation completes.
@@ -348,16 +357,18 @@ fans out to all participants.
 
 The `keyboard_loop` function provides different interfaces depending on whether the application is a moderator or a regular participant:
 
-- **Moderators** (who created the session) have additional commands:
+- Moderators (who created the session) have additional commands:
+
   - `invite NAME` - Dynamically invite a new participant to the group using the `handle_invite()` helper
   - `remove NAME` - Remove a participant from the group using the `handle_remove()` helper
   - `exit` or `quit` - Delete the session, which notifies all participants
 
-- **Regular participants** can:
+- Regular participants can:
+
   - Type messages to broadcast to the group
   - `exit` or `quit` - Leave the group (local session only)
 
-When a user types 'exit' or 'quit' as a moderator, the application calls `local_app.delete_session_async()`
+When a user types `exit` or `quit` as a moderator, the application calls `local_app.delete_session_async()`
 which returns a completion handle that must be awaited to ensure proper session cleanup before
 terminating the loop. When the moderator closes the session,
 all other participants are automatically notified, causing their receive loops to terminate
@@ -640,7 +651,7 @@ On the Controller side, you can see that the new node registers with the control
 output should be similar to this:
 
 ```bash
-22026-01-28T15:40:45Z INF Registering node with ID: slim/0 svc=southbound
+2026-01-28T15:40:45Z INF Registering node with ID: slim/0 svc=southbound
 2026-01-28T15:40:45Z INF Connection details: [endpoint: 192.168.65.1:46357] nodeID=slim/0 svc=southbound
 2026-01-28T15:40:45Z INF Create generic routes for node node_id=slim/0 service=RouteService
 2026-01-28T15:40:45Z INF Sending routes to registered node slim/0 node_id=slim/0
@@ -705,10 +716,10 @@ slimctl controller channel create moderators=agntcy/ns/client-1/1049454467240373
 ```
 
 The full name of the application can be taken from the output in the console. The value
-`10494544672403736104 ` is the actual id of the `client-1` application returned by
+`10494544672403736104` is the actual ID of the `client-1` application returned by
 SLIM and is visible in the logs. In your case, this value will be different.
 
-Expected response from `slimctl`:
+The expected response from `slimctl` is:
 
 ```bash
 Received response: agntcy/ns/hDxc8CKpElJUfTTief

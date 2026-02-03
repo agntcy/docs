@@ -385,7 +385,7 @@ class TimeServerApp:
             return [
                 types.Tool(
                     name=TimeTools.GET_CURRENT_TIME.value,
-                    description="Get current time in a specific timezones",
+                    description="Get current time in a specific timezone",
                     inputSchema={
                         "type": "object",
                         "properties": {

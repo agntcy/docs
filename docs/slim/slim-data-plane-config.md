@@ -2,11 +2,10 @@
 
 This document provides comprehensive documentation for configuring the SLIM data plane. The configuration is written in YAML format and defines how the data plane runtime, services, authentication, and observability components operate.
 
-!!! info "Schema References"
-    This documentation corresponds to the JSON schemas in the SLIM repository:
+This documentation corresponds to the JSON schemas in the SLIM repository:
     
-    - [Client Configuration Schema](https://github.com/agntcy/slim/blob/slim-v1.0.0/data-plane/core/config/src/grpc/schema/client-config.schema.json)
-    - [Server Configuration Schema](https://github.com/agntcy/slim/blob/slim-v1.0.0/data-plane/core/config/src/grpc/schema/server-config.schema.json)
+- [Client Configuration Schema](https://github.com/agntcy/slim/blob/slim-v1.0.0/data-plane/core/config/src/grpc/schema/client-config.schema.json)
+- [Server Configuration Schema](https://github.com/agntcy/slim/blob/slim-v1.0.0/data-plane/core/config/src/grpc/schema/server-config.schema.json)
 
 ## Configuration Structure Overview
 
@@ -152,12 +151,12 @@ services:
 
 TLS configuration is used throughout SLIM for securing connections. The same TLS configuration structure applies to:
 
-- **Servers** (`dataplane.servers[].tls`, `controller.servers[].tls`)
-- **Clients** (`dataplane.clients[].tls`, `controller.clients[].tls`)
-- **Proxies** (`dataplane.clients[].proxy.tls`)
+- Servers (`dataplane.servers[].tls`, `controller.servers[].tls`)
+- Clients (`dataplane.clients[].tls`, `controller.clients[].tls`)
+- Proxies (`dataplane.clients[].proxy.tls`)
 
-!!! info "Reusable Configuration"
-    All TLS options documented in this section can be used in any context that accepts a `tls` configuration block. The behavior adapts based on the context (server vs client).
+
+All TLS options documented in this section can be used in any context that accepts a `tls` configuration block. The behavior adapts based on the context (server vs client).
 
 ### TLS Modes
 
@@ -178,15 +177,16 @@ TLS configuration is used throughout SLIM for securing connections. The same TLS
     ```
 
 !!! warning "TLS Configuration Required"
-    When `insecure: false` (the default), you **must** provide certificates via `source`. The service will fail to start without them.
+    When `insecure: false` (the default), you must provide certificates via `source`. The service does not start without them.
 
 ### Certificate Sources (`source`)
 
 The `source` field provides the certificate and private key for the TLS endpoint.
 
-!!! info "Usage Context"
-    - **Servers**: Provides the server's identity certificate
-    - **Clients**: Provides the client certificate for mutual TLS (mTLS)
+Certificate source usage varies by component type:
+
+- Servers provide the server's identity certificate
+- Clients provide the client certificate for mutual TLS (mTLS)
 
 === "File-based Certificates"
     ```yaml
@@ -234,9 +234,9 @@ The `source` field provides the certificate and private key for the TLS endpoint
 
 CA sources are used for certificate verification. The field name differs based on context:
 
-- **Servers**: Use `client_ca` to verify client certificates (for mTLS)
-- **Clients**: Use `ca_source` to verify server certificates
-- **Proxies**: Use `ca_source` to verify proxy server certificates
+- Servers use `client_ca` to verify client certificates (for mTLS)
+- Clients use `ca_source` to verify server certificates
+- Proxies use `ca_source` to verify proxy server certificates
 
 #### Server Client CA (`client_ca`)
 
@@ -339,15 +339,12 @@ tls:
   # reload_client_ca_file: false
 ```
 
-!!! note "Not Yet Implemented"
-    - `reload_client_ca_file` - Automatic reloading of client CA certificates
-    - `reload_interval` - Automatic reloading of server certificates
+The following options are context-specific:
 
-!!! info "Context-Specific Options"
-    - `include_system_ca_certs_pool` - Only used by clients, ignored by servers
-    - `insecure_skip_verify` - Only used by clients, ignored by servers
-    - `client_ca` - Only used by servers, not available for clients
-    - `ca_source` - Used by clients and proxies, exists in server schema but unused
+- `include_system_ca_certs_pool` - Only used by clients, ignored by servers
+- `insecure_skip_verify` - Only used by clients, ignored by servers
+- `client_ca` - Only used by servers, not available for clients
+- `ca_source` - Used by clients and proxies, exists in server schema but unused
 
 ### TLS Examples by Context
 
@@ -409,11 +406,10 @@ tls:
 
 Authentication configuration is used throughout SLIM for securing API access. The same authentication structure applies to:
 
-- **Servers** (`dataplane.servers[].auth`, `controller.servers[].auth`)
-- **Clients** (`dataplane.clients[].auth`, `controller.clients[].auth`)
+- Servers (`dataplane.servers[].auth`, `controller.servers[].auth`)
+- Clients (`dataplane.clients[].auth`, `controller.clients[].auth`)
 
-!!! info "Reusable Configuration"
-    All authentication options documented in this section can be used in any context that accepts an `auth` configuration block. The behavior adapts based on the context (server vs client).
+All authentication options documented in this section can be used in any context that accepts an `auth` configuration block. The behavior adapts based on the context (server vs client).
 
 ### Authentication Types
 
@@ -526,8 +522,8 @@ Authentication configuration is used throughout SLIM for securing API access. Th
       duration: "1h"  # Cache validity before re-reading file
     ```
     
-    !!! info
-        This authentication type is only available for clients, not servers.
+    !!! note
+        Static JWT authentication is only available for clients.
 
 === "JWT - Autoresolve"
     Automatically determine encoding/decoding based on context.
@@ -554,9 +550,11 @@ JWT keys support multiple formats and algorithms.
 
 #### Key Types
 
-- **`encoding`** - For signing JWTs (typically client-side)
-- **`decoding`** - For verifying JWTs (typically server-side)
-- **`autoresolve`** - Automatically determine based on context
+The following key types are supported:
+
+- `encoding` for signing JWTs (typically client-side)
+- `decoding` for verifying JWTs (typically server-side)
+- `autoresolve` automatically determine based on context
 
 #### Key Formats
 
@@ -605,17 +603,18 @@ JWT keys support multiple formats and algorithms.
     - Consider using environment variable substitution: `data: "${env:JWT_SECRET}"`
     - For production, store secrets in secure secret management systems
 
-!!! info "SPIRE Authentication"
-    SPIRE does not have a separate `auth` type. Instead, SPIRE provides authentication through:
-    
-    - **TLS mutual authentication**: Use `tls.source: { type: spire }` for certificate-based authentication
-    - **JWT SVIDs**: Use SPIRE-issued JWT tokens with `auth: { type: jwt }` or `auth: { type: static_jwt }`
-    
-    See the [Native SPIRE Integration](#native-spire-integration) section for complete examples.
+#### SPIRE Authentication
+
+SPIRE does not have a separate `auth` type. Instead, SPIRE provides authentication through the following mechanisms:
+
+- TLS mutual authentication using `tls.source: { type: spire }` for certificate-based authentication
+- JWT SVIDs using `auth: { type: jwt }` or `auth: { type: static_jwt }` with SPIRE-issued JWT tokens
+
+See the [Native SPIRE Integration](#native-spire-integration) section for complete examples.
 
 ## Server Configuration
 
-Servers define endpoints that the SLIM instance will listen on for incoming connections.
+Servers define endpoints that the SLIM instance listens on for incoming connections.
 
 ### Server Endpoint Configuration
 
@@ -698,7 +697,7 @@ servers:
 
 ## Client Configuration
 
-Clients define outbound connections that the SLIM instance will establish to other services.
+Clients define outbound connections that the SLIM instance establishes to other services.
 
 ### Client Endpoint Configuration
 
@@ -913,18 +912,19 @@ dataplane:
         x-spiffe-id: "${env:SPIFFE_ID}"
 ```
 
-!!! info "SPIRE Configuration Notes"
-    - **Automatic rotation**: SPIRE automatically rotates certificates
-    - **Socket path**: If not specified, uses `SPIFFE_ENDPOINT_SOCKET` environment variable
-    - **Trust domains**: When not specified, SLIM derives from the current SVID
-    - **JWT audiences**: Used when requesting JWT SVIDs from SPIRE
-    - **Zero-trust**: SPIRE provides cryptographic workload identity without long-lived secrets
+When configuring SPIRE, keep the following in mind:
+
+- Automatic rotation: SPIRE automatically rotates certificates.
+- Socket path: If not specified, uses `SPIFFE_ENDPOINT_SOCKET` environment variable.
+- Trust domains: When not specified, SLIM derives from the current SVID.
+- JWT audiences: Used when requesting JWT SVIDs from SPIRE.
+- Zero-trust: SPIRE provides cryptographic workload identity without long-lived secrets.
 
 ## Reference: JWT Algorithms
 
 ### Symmetric Algorithms (HMAC - Shared Secret)
 
-These algorithms use a shared secret for both signing and verification:
+These algorithms use a shared secret for both signing and verification. Recommended use case is when both client and server can securely share a secret. The same secret is used for signing (client) and verification (server).
 
 | Algorithm | Description | Key Size |
 |-----------|-------------|----------|
@@ -932,19 +932,15 @@ These algorithms use a shared secret for both signing and verification:
 | `HS384` | HMAC using SHA-384 | Any |
 | `HS512` | HMAC using SHA-512 | Any |
 
-!!! tip "Use Case"
-    When both client and server can securely share a secret. The same secret is used for signing (client) and verification (server).
-
 ### Asymmetric Algorithms (RSA - Public/Private Key)
+
+The recommended use case is when client and server have different secrets. Client signs with private key, server verifies with public key.
 
 | Algorithm | Description | Key Size |
 |-----------|-------------|----------|
 | `RS256` | RSA signature with SHA-256 ⭐ | 2048+ bits |
 | `RS384` | RSA signature with SHA-384 | 2048+ bits |
 | `RS512` | RSA signature with SHA-512 | 2048+ bits |
-
-!!! tip "Use Case"
-    When you want to avoid sharing secrets. Client signs with private key, server verifies with public key.
 
 ### Asymmetric Algorithms (RSA-PSS)
 
@@ -956,21 +952,18 @@ These algorithms use a shared secret for both signing and verification:
 
 ### Asymmetric Algorithms (ECDSA - Public/Private Key)
 
+The recommended use case is when client and server have different secrets. Client signs with private key, server verifies with public key.
+
 | Algorithm | Description | Curve |
 |-----------|-------------|-------|
 | `ES256` | ECDSA using P-256 and SHA-256 ⭐ | P-256 |
 | `ES384` | ECDSA using P-384 and SHA-384 | P-384 |
-
-!!! tip "Use Case"
-    Smaller keys than RSA with similar security. Client signs with private key, server verifies with public key. Recommended for modern systems.
 
 ### EdDSA
 
 | Algorithm | Description |
 |-----------|-------------|
 | `EdDSA` | EdDSA signature algorithms |
-
-
 
 ## Configuration Value Substitution
 
@@ -1075,13 +1068,14 @@ services:
             - endpoint: "0.0.0.0:${env:DATAPLANE_PORT}"
     ```
 
-!!! warning "Substitution Rules"
-    1. **Exact Replacement**: The entire value must be a substitution expression
-        - ✅ Valid: `password: "${env:PASSWORD}"`
-        - ❌ Invalid: `password: "prefix-${env:PASSWORD}-suffix"`
-    2. **Error Handling**: If substitution fails, configuration loading will fail
-    3. **File Content**: Reads entire file content as string, including newlines
-    4. **Security**: File paths are relative to working directory or absolute
+The following rules apply to substitution:
+
+* Exact Replacement: The entire value must be a substitution expression.
+    - Valid: `password: "${env:PASSWORD}"`
+    - Invalid: `password: "prefix-${env:PASSWORD}-suffix"`
+* Error Handling: If substitution fails, configuration loading will fail.
+* File Content: Reads entire file content as string, including newlines.
+* Security: File paths are relative to working directory or absolute.
 
 ## Duration Format
 
@@ -1100,13 +1094,12 @@ connect_timeout: "1m30s"
 ```
 
 **Examples:**
+
 - `"10s"` - 10 seconds
 - `"5m"` - 5 minutes  
 - `"1h30m"` - 1 hour 30 minutes
 - `"2d"` - 2 days
 - `"100ms"` - 100 milliseconds
-
-
 
 ## Complete Configuration Examples
 
@@ -1486,15 +1479,13 @@ services:
 
 ### Endpoint Configuration
 
-The `endpoint` field can be configured as either a network address or a unix socket:
+The `endpoint` field can be configured as either a network address or a Unix socket:
 
-- **Network address**: Standard TCP address for gRPC/HTTP/2 connections (e.g., `0.0.0.0:8080`, `example.com:443`)
-- **Unix socket**: Local socket file path prefixed with `unix://` (e.g., `unix:///var/run/slim.sock`)
+- Network address: standard TCP address for gRPC/HTTP/2 connections (e.g., `0.0.0.0:8080`, `example.com:443`)
+- Unix socket: local socket file path prefixed with `unix://` (e.g., `unix:///var/run/slim.sock`)
 
 !!! warning "Unix Socket Limitations"
-    When using unix sockets, TLS and other transport-related options (such as `tls`, `keepalive`, `proxy`) are **not supported** and will be ignored. Unix sockets provide local inter-process communication without network transport.
-
-
+    When using Unix sockets, TLS and other transport-related options (such as `tls`, `keepalive`, `proxy`) are not supported and will be ignored. Unix sockets provide local inter-process communication without network transport.
 
 ### Server Configuration Options
 
@@ -1550,15 +1541,13 @@ The `endpoint` field can be configured as either a network address or a unix soc
 | `static_jwt` | ❌ | ✅ | Pre-generated JWT from file | `file` |
 | `none` | ✅ | ✅ | No authentication | None |
 
-!!! note "SPIRE Authentication"
-    SPIRE is not a separate authentication type. SPIRE provides authentication through:
-    
-    1. **TLS Layer**: Mutual TLS authentication using SPIRE-issued X.509 certificates (`tls.source: { type: spire }`)
-    2. **JWT Layer**: JWT SVIDs from SPIRE used with `jwt` or `static_jwt` authentication types
-    
-    SPIRE configuration is done in the `tls` section, not the `auth` section. See [TLS Configuration](#tls-configuration) and [Native SPIRE Integration](#native-spire-integration).
+!!! note
+    SPIRE is not a separate authentication type. Instead, SPIRE provides authentication through the TLS layer and the JWT layer.
+
+    SPIRE configuration is done in the `tls` section, not the `auth` section. See [TLS Configuration](#tls-configuration) and [Native SPIRE Integration](#native-spire-integration) for more information.
 
 **JWT Key Requirements:**
+
 - `key.type` - Required: `encoding`, `decoding`, or `autoresolve`
 - `key.algorithm` - Required when `type` is `encoding` or `decoding`
 - `key.format` - Required when `type` is `encoding` or `decoding` (values: `pem`, `jwk`, `jwks`)
@@ -1574,6 +1563,7 @@ The `endpoint` field can be configured as either a network address or a unix soc
 | `none` | - | - | No TLS source configured |
 
 **SPIRE Field Details:**
+
 - `socket_path` - Optional (defaults to `SPIFFE_ENDPOINT_SOCKET` env var)
 - `jwt_audiences` - Optional (defaults to `["slim"]`)
 - `target_spiffe_id` - Optional (for requesting specific SPIFFE ID)
@@ -1589,6 +1579,7 @@ The `endpoint` field can be configured as either a network address or a unix soc
 | `none` | - | - | No CA source configured |
 
 **SPIRE Field Details:**
+
 - `socket_path` - Optional (defaults to `SPIFFE_ENDPOINT_SOCKET` env var)
 - `jwt_audiences` - Optional (defaults to `["slim"]`)
 - `target_spiffe_id` - Optional (for requesting specific SPIFFE ID)

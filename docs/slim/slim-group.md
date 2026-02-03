@@ -24,7 +24,9 @@ of the application logic) or serve solely as a channel moderator.
 
 Group creation is available in both Python and Go bindings. This section provides
 the basic steps to follow with Python code snippets for setting up a group session.
+
 For Go examples, see the [group example](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/bindings/go/examples/group/main.go).
+
 The full Python code is available in [group.py](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/bindings/python/examples/group.py).
 
 ### Create the Channel
