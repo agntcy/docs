@@ -619,6 +619,8 @@ Servers define endpoints that the SLIM instance will listen on for incoming conn
 
 ### Server Endpoint Configuration
 
+#### Network Address
+
 ```yaml
 dataplane:
   servers:
@@ -636,6 +638,19 @@ dataplane:
       # Authentication (see Authentication Configuration section)
       auth:
         type: none
+```
+
+#### Unix Socket
+
+```yaml
+dataplane:
+  servers:
+    - # REQUIRED: Unix socket path
+      endpoint: "unix:///var/run/slim/dataplane.sock"
+      
+      # TLS must be set to insecure for unix sockets
+      tls:
+        insecure: true
 ```
 
 ### Server Connection Settings
@@ -687,6 +702,8 @@ Clients define outbound connections that the SLIM instance will establish to oth
 
 ### Client Endpoint Configuration
 
+#### Network Address
+
 ```yaml
 dataplane:
   clients:
@@ -703,6 +720,19 @@ dataplane:
       # Authentication (see Authentication Configuration section)
       auth:
         type: none
+```
+
+#### Unix Socket
+
+```yaml
+dataplane:
+  clients:
+    - # REQUIRED: Unix socket path
+      endpoint: "unix:///var/run/slim/remote-node.sock"
+      
+      # TLS must be set to insecure for unix sockets
+      tls:
+        insecure: true
 ```
 
 ### Client Connection Settings
@@ -1454,11 +1484,23 @@ services:
 
 ## Configuration Reference Tables
 
+### Endpoint Configuration
+
+The `endpoint` field can be configured as either a network address or a unix socket:
+
+- **Network address**: Standard TCP address for gRPC/HTTP/2 connections (e.g., `0.0.0.0:8080`, `example.com:443`)
+- **Unix socket**: Local socket file path prefixed with `unix://` (e.g., `unix:///var/run/slim.sock`)
+
+!!! warning "Unix Socket Limitations"
+    When using unix sockets, TLS and other transport-related options (such as `tls`, `keepalive`, `proxy`) are **not supported** and will be ignored. Unix sockets provide local inter-process communication without network transport.
+
+
+
 ### Server Configuration Options
 
 | Field | Type | Required | Default | Description | Required When |
 |-------|------|----------|---------|-------------|---------------|
-| `endpoint` | string | ✅ | - | Listen address | Always |
+| `endpoint` | string | ✅ | - | Listen address (network or unix socket) | Always |
 | `tls.insecure` | boolean | ❌ | `false` | Disable TLS | - |
 | `tls.source` | TlsSource | ⚠️ | `none` | Server certificate source | Required when `tls.insecure=false` |
 | `tls.client_ca` | CaSource | ❌ | `none` | Client CA for mTLS | Optional (enables client cert verification) |
@@ -1479,7 +1521,7 @@ services:
 
 | Field | Type | Required | Default | Description | Required When |
 |-------|------|----------|---------|-------------|---------------|
-| `endpoint` | string | ✅ | - | Target endpoint | Always |
+| `endpoint` | string | ✅ | - | Target endpoint (network or unix socket) | Always |
 | `origin` | string | ❌ | `null` | Origin override | - |
 | `server_name` | string | ❌ | `null` | SNI override | - |
 | `tls.insecure` | boolean | ❌ | `false` | Disable TLS | - |
