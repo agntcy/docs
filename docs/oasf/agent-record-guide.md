@@ -112,7 +112,7 @@ Below is an example of an agent record for a tourist scheduling coordinator.
   "modules": [
   ],
   "locators": [
-    {"type": "source_code", "url": "https://github.com/agntcy/agentic-apps/tree/main/tourist_scheduling_system"}
+    {"type": "source_code", "urls": ["https://github.com/agntcy/agentic-apps/tree/main/tourist_scheduling_system"]}
   ]
 } 
 ```
