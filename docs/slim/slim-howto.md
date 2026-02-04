@@ -325,13 +325,66 @@ slimctl help
 
 This should display help information and available commands.
 
-## Building from Source
+## :material-hammer: Building from Source
 
-You can build SLIM from source. You'll need the following tools installed:
+To build SLIM from source, you'll need to install the required development tools and clone the repository.
 
-- [Taskfile](https://taskfile.dev/)
-- [Rust](https://rustup.rs/)
-- [Go](https://go.dev/doc/install)
+### Prerequisites
+
+Install the following tools on your system:
+
+=== "Taskfile"
+
+    Task is required for running build operations.
+
+    **macOS/Linux (Homebrew)**
+    ```bash
+    brew install go-task
+    ```
+
+    **Linux (curl)**
+    ```bash
+    sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
+    ```
+
+    See the [Taskfile installation guide](https://taskfile.dev/installation/) for more options.
+
+=== "Rust"
+
+    The data plane components are written in Rust.
+
+    ```bash
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+    ```
+
+    Visit [rustup.rs](https://rustup.rs/) for more information.
+
+=== "Go"
+
+    The control plane components are written in Go.
+
+    Follow the [official Go installation guide](https://go.dev/doc/install) for your platform.
+
+### Building SLIM
+
+Once all prerequisites are installed, clone the repository and build the components:
+
+```bash
+# Clone the SLIM repository
+git clone https://github.com/agntcy/slim
+cd slim
+
+# Build the data plane (Rust)
+task data-plane:build
+
+# Build the control plane (Go)
+task control-plane:build
+
+# Build both components
+task build
+```
+
+For more information about the build system and development workflow, see the [SLIM repository](https://github.com/agntcy/slim).
 
 ## Next Steps
 
@@ -339,7 +392,7 @@ You've installed SLIM! Here's what to do next:
 
 1. Read the [messaging layer documentation](./slim-data-plane.md)
 2. Explore the [example applications](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/bindings/)
-3. Learn about [configuration options](./overview.md)
+3. Learn about [configuration options](./slim-data-plane-config.md)
 4. Join us on [Slack](https://join.slack.com/t/agntcy/shared_invite/zt-3hb4p7bo0-5H2otGjxGt9OQ1g5jzK_GQ)
 
 ## Need Help?
