@@ -325,45 +325,17 @@ slimctl help
 
 This should display help information and available commands.
 
-## :material-hammer: Building from Source
+## Building from Source
 
-To build SLIM from source, you'll need to install the required development tools and clone the repository.
+You can build SLIM from source.
 
 ### Prerequisites
 
 Install the following tools on your system:
 
-=== "Taskfile"
-
-    Task is required for running build operations.
-
-    **macOS/Linux (Homebrew)**
-    ```bash
-    brew install go-task
-    ```
-
-    **Linux (curl)**
-    ```bash
-    sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
-    ```
-
-    See the [Taskfile installation guide](https://taskfile.dev/installation/) for more options.
-
-=== "Rust"
-
-    The data plane components are written in Rust.
-
-    ```bash
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-    ```
-
-    Visit [rustup.rs](https://rustup.rs/) for more information.
-
-=== "Go"
-
-    The control plane components are written in Go.
-
-    Follow the [official Go installation guide](https://go.dev/doc/install) for your platform.
+- [Taskfile](https://taskfile.dev/)
+- [Rust](https://rustup.rs/)
+- [Go](https://go.dev/doc/install)
 
 ### Building SLIM
 
@@ -384,7 +356,7 @@ task control-plane:build
 task build
 ```
 
-For more information about the build system and development workflow, see the [SLIM repository](https://github.com/agntcy/slim).
+For more information on the build system and development workflow, see the [SLIM repository](https://github.com/agntcy/slim).
 
 ## Next Steps
 
