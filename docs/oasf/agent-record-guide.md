@@ -98,7 +98,7 @@ Below is an example of an agent record for a tourist scheduling coordinator.
   "name": "Tourist Scheduling Coordinator",
   "description": "Central scheduling coordinator that matches tourists with tour guides…",
   "version": "2.0.0",
-  "schema_version": "0.8.0",
+  "schema_version": "1.0.0-rc.1",
   "authors": ["AGNTCY <example@agntcy.org>"],
   "created_at": "2025-01-01T00:00:00Z",
   "domains": [
@@ -112,7 +112,7 @@ Below is an example of an agent record for a tourist scheduling coordinator.
   "modules": [
   ],
   "locators": [
-    {"type": "source_code", "url": "https://github.com/agntcy/agentic-apps/tree/main/tourist_scheduling_system"}
+    {"type": "source_code", "urls": ["https://github.com/agntcy/agentic-apps/tree/main/tourist_scheduling_system"]}
   ]
 } 
 ```

@@ -580,7 +580,7 @@ The import feature extends Directory's synchronization capabilities beyond DIR-t
 
 Three methods are available: 
 
-- **Basic translation** uses [OASF-SDK basic translation](https://github.com/agntcy/oasf-sdk/blob/main/pkg/translator/translation.go#L393) with rule-based mapping and assigns default skills (`technology/software_engineering/apis_integration`) and domains (`agent_orchestration/agent_coordination`, `multi_modal/any_to_any`). This method is fast and deterministic with no additional infrastructure required.
+- **Basic translation** uses [OASF-SDK basic translation](../oasf/translation.md) with rule-based mapping. This method is fast and deterministic but produces a record without any skills or domains, requiring manual or LLM-based enrichment after the initial translation.
 - **Local LLM enrichment** runs LLM locally for intelligent skill and domain mapping, requiring local LLM runtime.
 - **Remote LLM enrichment** uses external LLM services for skill and domain mapping, requiring API credentials. Both LLM methods require [MCPHost environment setup](https://github.com/mark3labs/mcphost?tab=readme-ov-file#environment-setup).
 

@@ -37,7 +37,7 @@ The Directory server uses API-based validation against the configured OASF schem
 - **Validation Method**: HTTP requests to the OASF schema server API.
 - **Errors vs Warnings**: Only errors cause validation to fail. Warnings are returned but do not affect the validation result.
 - **Schema Version Detection**: The schema version is automatically detected from each record's `schema_version` field.
-- **Supported Versions**: The OASF SDK decoder supports specific schema versions (currently: 0.3.1, 0.7.0, and 0.8.0). Records using unsupported versions are not validated.
+- **Supported Versions**: The OASF SDK decoder supports specific schema versions (currently: 0.7.0, 0.8.0, and 1.0.0). Records using unsupported versions are not validated.
 - **Unknown Classes**: Classes (such as modules, skills, and domains) not defined in the OASF schema are rejected with an error. Records must only use classes that are defined in the configured OASF schema instance.
 
 ## OASF Instance Configurations

@@ -76,8 +76,7 @@ taxonomy. This architecture enables:
     1. Skill matching results: Evaluates capability requirements.
     2. Server location information: Determines optimal data sources.
 
-ADS uses libp2p [Kad-DHT](https://docs.libp2p.io/concepts/discovery-routing/kaddht/)
-for server and content discovery.
+ADS uses [libp2p Kad-DH](https://github.com/libp2p/specs/tree/master/kad-dht) for server and content discovery.
 
 ## Distributed Object Storage
 

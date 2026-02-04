@@ -167,7 +167,7 @@ For more configuration options, see the [Validation](validation.md) documentatio
 
 Now that you have the Directory services running, you can start using the Directory CLI to create and store your first agent record. See the [Directory CLI Reference](directory-cli.md) for more information.
 
-For detailed use cases, see the [Features and Usage Scenarios](scenarios.md) documentation, includng:
+For detailed use cases, see the [Features and Usage Scenarios](scenarios.md) documentation, including:
 
 - [Building Records](scenarios.md#build)
 - [Storing Records](scenarios.md#store)

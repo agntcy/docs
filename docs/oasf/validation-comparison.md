@@ -55,7 +55,7 @@ This table compares validation outcomes between the OASF API validator and JSON 
 | 36. Locators Duplicate Types             | Multiple locators with same type                                      | ERROR (`attribute_locators_duplicate_type`)              | FAIL        | Both catch duplicate types in locators array; JSON Schema uses `uniqueItems: true`                                 |
 
 <a id="note-1"></a>
-<sup>1</sup> When using oasf-sdk, any schema version that is not explicitly supported by the decoder (currently: 0.3.1, 0.7.0, and 0.8.0) will result in a failure, regardless of whether the API validator returns an error or warning. The SDK uses a switch statement that only handles specific versions, and any non-supported version will return an error: `unsupported OASF version: <version>`.
+<sup>1</sup> When using the OASF SDK, any schema version that is not explicitly supported by the decoder (currently: 0.7.0, 0.8.0, and 1.0.0) results in a failure, regardless of whether the API validator returns an error or warning. The SDK uses a switch statement that only handles specific versions, and any non-supported version returns an error: `unsupported OASF version: <version>`.
 
 ## Summary by Category
 
