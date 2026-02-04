@@ -260,9 +260,13 @@ Optional Settings:
 
 - `exporter-names`: Names for each signal type exporter that identify this
   collector instance in SLIM channels.
+
+    For each signal type, the following options can be set:
+
     - `metrics`: Name for the metrics exporter (default: `agntcy/otel/exporter-metrics`).
     - `traces`: Name for the traces exporter (default: `agntcy/otel/exporter-traces`).
     - `logs`: Name for the logs exporter (default: `agntcy/otel/exporter-logs`).
+
 - `channels`: Array of channel configurations (default: `[]`). When empty, the
   exporter operates in passive mode, only listening for invitations.
 
