@@ -56,7 +56,7 @@ You can install the SLIM Node using Docker, Cargo, Helm, or the CLI binary. Choo
     Install SLIM using Rust's package manager:
 
     ```bash
-    cargo install agntcy-slim
+    RUSTFLAGS="--cfg mls_build_async" cargo install agntcy-slim
     ```
 
     Create a configuration file:
