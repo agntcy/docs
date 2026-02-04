@@ -2,11 +2,13 @@ nav:
   - Overview: overview.md
   - Getting Started: getting-started.md
   - Architecture: architecture.md
+  - Components:
+    - Runtime Discovery: runtime.md
+    - Event Streaming: events.md
   - Records: ads-records.md
   - Validation: validation.md
   - Trust Model: trust-model.md
   - Features and Usage: scenarios.md
-  - Event Streaming: events.md
   - CLI Reference: directory-cli.md
   - GUI Application: directory-gui.md
   - SDK Reference: directory-sdk.md
