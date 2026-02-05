@@ -1,6 +1,6 @@
 # Runtime Discovery
 
-Runtime Discovery is a system that watches container runtimes (Docker, Kubernetes) for workloads and provide a gRPC API for querying them.
+Runtime Discovery is a system that watches container runtimes (Docker, Kubernetes) for workloads and provides a gRPC API for querying them.
 
 ## Architecture
 
@@ -41,7 +41,7 @@ The discovery component is responsible for:
 
 - Resolving workload metadata using configurable resolvers:
 
-    - A2A resolver: Extracts A2A agent card from workloads with `org.agntcy/type: a2a` label.
+    - A2A resolver: Extracts A2A agent card from workloads with `org.agntcy/agent-type: a2a` label.
     - OASF resolver: Resolves OASF records from Directory for workloads with `org.agntcy/agent-record` label.
     - Extensible architecture allows adding more resolvers in the future.
 
