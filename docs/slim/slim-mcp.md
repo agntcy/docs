@@ -7,14 +7,16 @@ an existing MCP server:
 
 1. **Using SLIM as an MCP Custom Transport Protocol**: MCP is designed to support
    multiple transport protocols, with SLIM now available as one of these options.
-   To implement SLIM as a custom transport, you can install the SLIM-MCP package
+   To implement SLIM as a custom transport, you can install the
+   [slim-mcp](https://github.com/agntcy/slim-mcp-python) Python package
    through pip and integrate it directly into your application. This approach is
    ideal for new systems where you control both client and server components,
    providing native SLIM support for efficient MCP message transport.
 
 2. **Using SLIM with a Proxy Server**: If you have an existing MCP server running
    that uses SSE (Server-Sent Events) for transport, you can integrate SLIM by
-   deploying a proxy server. This proxy handles translation between SLIM clients
+   deploying the [SLIM-MCP proxy](https://github.com/agntcy/slim-mcp-rust),
+   written in Rust for high performance. This proxy handles translation between SLIM clients
    and your SSE-based MCP server, allowing SLIM clients to connect seamlessly
    without requiring modifications to your existing server, making it an
    effective solution for established systems.
@@ -30,10 +32,11 @@ architecture.
 In this section of the tutorial, we implement and deploy two sample
 applications:
 
-- A [LlamaIndex agent](https://github.com/agntcy/slim/tree/slim-v0.7.0/data-plane/python/integrations/slim-mcp/slim_mcp/examples/llamaindex_time_agent)
+- A [LlamaIndex agent](https://github.com/agntcy/slim-mcp-python/tree/v0.2.0/slim_mcp/examples/llamaindex_time_agent)
 that communicates with an MCP server over SLIM to perform time queries and timezone conversions.
 - An [MCP time
-  server](https://github.com/agntcy/slim/tree/slim-v0.7.0/data-plane/python/integrations/slim-mcp/slim_mcp/examples/mcp_server_time) that implements SLIM as its transport protocol and processes requests from the LlamaIndex agent.
+  server](https://github.com/agntcy/slim-mcp-python/tree/v0.2.0/slim_mcp/examples/mcp_server_time) 
+  that implements SLIM as its transport protocol and processes requests from the LlamaIndex agent.
 
 ### Prerequisites
 
@@ -44,7 +47,7 @@ that communicates with an MCP server over SLIM to perform time queries and timez
 
 ### Setting Up the SLIM Instance
 
-Since the client and server communicate using SLIM, we first need to deploy
+Since client and server communicate using SLIM, we first need to deploy
 a SLIM instance. We are using a pre-built Docker image for this purpose.
 
 First, execute the following command to create a configuration file for SLIM:
@@ -52,7 +55,7 @@ First, execute the following command to create a configuration file for SLIM:
 ```bash
 cat << EOF > ./config.yaml
 tracing:
-  log_level: debug
+  log_level: info
   display_thread_names: true
   display_thread_ids: true
 
@@ -71,10 +74,7 @@ services:
 
       clients: []
     controller:
-      servers:
-        - endpoint: "0.0.0.0:46358"
-          tls:
-            insecure: true
+      servers: []
 EOF
 ```
 
@@ -83,7 +83,7 @@ Now launch the SLIM instance using the just created configuration file:
 ```bash
 docker run -it \
     -v ./config.yaml:/config.yaml -p 46357:46357 \
-    ghcr.io/agntcy/slim:latest /slim --config /config.yaml
+    ghcr.io/agntcy/slim:1.0.0 /slim --config /config.yaml
 ```
 
 This command deploys an SLIM instance that listens on port 46357 for incoming
@@ -112,8 +112,8 @@ dependencies:
 name = "mcp-server-time"
 version = "0.1.0"
 description = "MCP server providing tools for time queries and timezone conversions"
-requires-python = ">=3.10"
-dependencies = ["mcp==1.6.0", "slim-mcp>=0.1.0", "click>=8.1.8"]
+requires-python = ">=3.11"
+dependencies = ["mcp==1.6.0", "slim-mcp>=0.2.0", "click>=8.1.8"]
 
 [project.scripts]
 mcp-server-time = "mcp_server_time:main"
@@ -159,11 +159,12 @@ if __name__ == "__main__":
 # src/mcp_server_time/server.py
 
 """
-MCP Time Server - A server designed to handle time and timezone conversion functionalities.
-This module offers tools to retrieve the current time across various timezones and convert times between them.
+MCP Time Server - A server implementation for time and timezone conversion functionality.
+
+This module provides tools for getting current time in different timezones and
+converting times between timezones.
 """
 
-import asyncio
 import json
 import logging
 from collections.abc import Sequence
@@ -172,15 +173,15 @@ from enum import Enum
 from zoneinfo import ZoneInfo
 
 import click
+import slim_bindings
 from mcp import types
 from mcp.server.lowlevel import Server
 from mcp.shared.exceptions import McpError
 from pydantic import BaseModel
 
-from slim_mcp import SLIMServer, init_tracing
+from slim_mcp import create_local_app, run_mcp_server
+from slim_mcp.examples.click_types import ClientConfigType
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
@@ -384,7 +385,7 @@ class TimeServerApp:
             return [
                 types.Tool(
                     name=TimeTools.GET_CURRENT_TIME.value,
-                    description="Get current time in a specific timezones",
+                    description="Get current time in a specific timezone",
                     inputSchema={
                         "type": "object",
                         "properties": {
@@ -471,62 +472,13 @@ class TimeServerApp:
             except Exception as e:
                 raise ValueError(f"Error processing mcp-server-time query: {str(e)}")
 
-    async def handle_session(self, session, slim_server, tasks):
-        """
-        Handle a single session with proper error handling and logging.
-
-        Args:
-            session: The session to handle
-            slim_server: The SLIM server instance
-            tasks: Set of active tasks
-        """
-        try:
-            async with slim_server.new_streams(session) as streams:
-                logger.info(
-                    f"new session started - session_id: {session.id}, active_sessions: {len(tasks)}"
-                )
-                await self.app.run(
-                    streams[0],
-                    streams[1],
-                    self.app.create_initialization_options(),
-                )
-                logger.info(
-                    f"session {session.id} ended - active_sessions: {len(tasks)}"
-                )
-        except Exception:
-            logger.error(
-                f"Error handling session {session.id}",
-                extra={"session_id": session.id},
-                exc_info=True,
-            )
-            raise
-
-
-async def cleanup_tasks(tasks):
-    """
-    Clean up all tasks and wait for their completion.
-
-    Args:
-        tasks: Set of tasks to clean up
-    """
-    for task in tasks:
-        if not task.done():
-            task.cancel()
-
-    if tasks:
-        try:
-            await asyncio.gather(*tasks, return_exceptions=True)
-        except Exception:
-            logger.error("Error during task cleanup", exc_info=True)
-            raise
-
 
 async def serve_slim(
     local_timezone: str | None = None,
     organization: str = "org",
     namespace: str = "ns",
     mcp_server: str = "time-server",
-    config: dict = {},
+    config: slim_bindings.ClientConfig | None = None,
 ) -> None:
     """
     Main server function that initializes and runs the time server using SLIM transport.
@@ -536,25 +488,19 @@ async def serve_slim(
         organization: Organization name
         namespace: Namespace name
         mcp_server: MCP server name
-        config: Server configuration dictionary
+        config: Server configuration (ClientConfig object or None)
     """
-    await init_tracing({"log_level": "info"})
-    time_app = TimeServerApp(local_timezone)
-    tasks: set[asyncio.Task] = set()
+    # Create MCP app
+    time_app = TimeServerApp(local_timezone).app
 
-    async with SLIMServer(config, organization, namespace, mcp_server) as slim_server:
-        try:
-            async for new_session in slim_server:
-                task = asyncio.create_task(
-                    time_app.handle_session(new_session, slim_server, tasks)
-                )
-                tasks.add(task)
-        except Exception:
-            logger.error("Error in session handler", exc_info=True)
-            raise
-        finally:
-            await cleanup_tasks(tasks)
-            logger.info("Server stopped")
+    # Create SLIM app
+    server_name = slim_bindings.Name(organization, namespace, mcp_server)
+    slim_app, connection_id = await create_local_app(server_name, config)
+
+    logger.info(f"Starting time server: {slim_app.id()}")
+
+    # Run the MCP server
+    await run_mcp_server(slim_app, time_app)
 
 
 def serve_sse(
@@ -599,20 +545,6 @@ def serve_sse(
     uvicorn.run(starlette_app, host="0.0.0.0", port=port)
 
 
-class DictParamType(click.ParamType):
-    name = "dict"
-
-    def convert(self, value, param, ctx):
-        import json
-
-        if isinstance(value, dict):
-            return value  # Already a dict (for default value)
-        try:
-            return json.loads(value)
-        except json.JSONDecodeError:
-            self.fail(f"{value} is not valid JSON", param, ctx)
-
-
 @click.command(context_settings={"auto_envvar_prefix": "MCP_TIME_SERVER"})
 @click.option(
     "--local-timezone", type=str, help="Override local timezone", default=None
@@ -645,13 +577,17 @@ class DictParamType(click.ParamType):
             "insecure": True,
         },
     },
-    type=DictParamType(),
+    type=ClientConfigType(),
     help="slim server configuration, used only with slim transport",
 )
 def main(local_timezone, transport, port, organization, namespace, mcp_server, config):
     """
     MCP Time Server - Time and timezone conversion functionality for MCP.
     """
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    )
 
     if transport == "slim":
         import asyncio
@@ -668,9 +604,9 @@ def main(local_timezone, transport, port, organization, namespace, mcp_server, c
 <br>
 
 The core component of the server implementation is the `serve_slim` function.
-This function establishes a connection with our SLIM instance and handles all
-incoming client sessions. It leverages the `SLIMServer` class to create a SLIM
-server instance that listens for and processes client connections.
+This function establishes a connection with our SLIM instance using the new
+`create_local_app` and `run_mcp_server` functions. It creates a SLIM application
+with the specified server name and configuration, then runs the MCP server.
 
 External clients can address this server using the SLIM name
 `org/ns/time-server`.
@@ -681,7 +617,7 @@ async def serve_slim(
     organization: str = "org",
     namespace: str = "ns",
     mcp_server: str = "time-server",
-    config: dict = {},
+    config: slim_bindings.ClientConfig | None = None,
 ) -> None:
     """
     Main server function that initializes and runs the time server using SLIM transport.
@@ -691,25 +627,19 @@ async def serve_slim(
         organization: Organization name
         namespace: Namespace name
         mcp_server: MCP server name
-        config: Server configuration dictionary
+        config: Server configuration (ClientConfig object or None)
     """
-    await init_tracing({"log_level": "info"})
-    time_app = TimeServerApp(local_timezone)
-    tasks: set[asyncio.Task] = set()
+    # Create MCP app
+    time_app = TimeServerApp(local_timezone).app
 
-    async with SLIMServer(config, organization, namespace, mcp_server) as slim_server:
-        try:
-            async for new_session in slim_server:
-                task = asyncio.create_task(
-                    time_app.handle_session(new_session, slim_server, tasks)
-                )
-                tasks.add(task)
-        except Exception:
-            logger.error("Error in session handler", exc_info=True)
-            raise
-        finally:
-            await cleanup_tasks(tasks)
-            logger.info("Server stopped")
+    # Create SLIM app
+    server_name = slim_bindings.Name(organization, namespace, mcp_server)
+    slim_app, connection_id = await create_local_app(server_name, config)
+
+    logger.info(f"Starting time server: {slim_app.id()}")
+
+    # Run the MCP server
+    await run_mcp_server(slim_app, time_app)
 ```
 
 After implementing all the necessary files, your project structure looks
@@ -755,7 +685,7 @@ description = "A llamaindex agent using MCP server over SLIM for time queries"
 requires-python = ">=3.12"
 dependencies = [
     "mcp==1.6.0",
-    "slim-mcp>=0.1.0",
+    "slim-mcp>=0.2.0",
     "click>=8.1.8",
     "llama-index>=0.12.29",
     "llama-index-llms-azure-openai>=0.3.2",
@@ -800,23 +730,27 @@ if __name__ == "__main__":
 ```python
 # src/llamaindex_time_agent/main.py
 
-# Copyright AGNTCY Contributors (https://github.com/agntcy)
-# SPDX-License-Identifier: Apache-2.0
-
 import asyncio
 import logging
 
 import click
+import slim_bindings
 from dotenv import load_dotenv
 from llama_index.core.agent.workflow import ReActAgent
 from llama_index.llms.azure_openai import AzureOpenAI
 from llama_index.llms.ollama import Ollama
 from llama_index.tools.mcp import McpToolSpec
+from mcp import ClientSession
 
-from slim_mcp import SLIMClient
+from slim_mcp import create_local_app, create_client_streams
+from slim_mcp.examples.click_types import ClientConfigType
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# load .env file
+load_dotenv()
+
 
 async def amain(
     llm_type, llm_endpoint, llm_key, organization, namespace, mcp_server, city, config
@@ -840,16 +774,24 @@ async def amain(
         raise Exception("LLM type must be azure or ollama")
 
     logger.info("Starting SLIM client")
-    async with SLIMClient(
-        config,
-        "org",
-        "ns",
-        "time-agent",
-        organization,
-        namespace,
-        mcp_server,
-    ) as client1:
-        async with client1.to_mcp_session() as mcp_session:
+
+    # Create SLIM app
+    client_name = slim_bindings.Name("org", "ns", "time-agent")
+    client_app, connection_id = await create_local_app(client_name, config)
+
+    logger.info("SLIM App created")
+
+    # Set route to destination if we have a connection
+    destination = slim_bindings.Name(organization, namespace, mcp_server)
+    if connection_id is not None:
+        await client_app.set_route_async(destination, connection_id)
+
+    logger.info("SLIM route set")
+
+    # Create MCP client session using standard transport pattern
+    async with create_client_streams(client_app, destination) as (read, write):
+        logger.info("Creating MCP client session")
+        async with ClientSession(read, write) as mcp_session:
             logger.info("Creating MCP tool spec")
 
             await mcp_session.initialize()
@@ -859,6 +801,7 @@ async def amain(
             )
 
             tools = await mcp_tool_spec.to_tool_list_async()
+            print(tools)
 
             agent = ReActAgent(llm=llm, tools=tools)
 
@@ -867,22 +810,6 @@ async def amain(
             )
 
             print(response)
-
-            await mcp_session.close()
-
-
-class DictParamType(click.ParamType):
-    name = "dict"
-
-    def convert(self, value, param, ctx):
-        import json
-
-        if isinstance(value, dict):
-            return value  # Already a dict (for default value)
-        try:
-            return json.loads(value)
-        except json.JSONDecodeError:
-            self.fail(f"{value} is not valid JSON", param, ctx)
 
 
 @click.command(context_settings={"auto_envvar_prefix": "TIME_AGENT"})
@@ -901,7 +828,7 @@ class DictParamType(click.ParamType):
             "insecure": True,
         },
     },
-    type=DictParamType(),
+    type=ClientConfigType(),
 )
 def main(
     llm_type,
@@ -940,11 +867,14 @@ def main(
 The key component of the agent is the `amain` function, which handles:
 
 1. LLM configuration (Azure OpenAI or Ollama).
-2. SLIM client initialization and connection to our MCP server.
-3. Tool setup and agent execution.
+2. SLIM application creation using `create_local_app` to establish the client's identity.
+3. Connection to the MCP server using `create_client_streams` to get read/write streams.
+4. MCP session initialization using `ClientSession` with the established streams.
+5. Tool setup and agent execution.
 
 The agent establishes its identity through the SLIM name `org/ns/time-agent`,
-which is used for addressing.
+and connects to the MCP server identified by the SLIM name constructed from
+the organization, namespace, and server name parameters.
 
 After implementing all the necessary files, your agent project structure should
 look like this:
@@ -991,7 +921,7 @@ MCP servers without modifying the servers themselves.
 
 First, ensure you have a SLIM node running in your environment. If you haven't
 already set one up, follow the instructions provided in the previous section to
-[deploy an SLIM instance](#setting-up-the-slim-instance).
+[deploy a SLIM instance](#setting-up-the-slim-instance).
 
 ### Running the MCP Server with SSE Transport
 
@@ -1069,7 +999,7 @@ local proxy instance:
    ```bash
    docker run -it \
      -v $(pwd)/config-proxy.yaml:/config-proxy.yaml \
-     ghcr.io/agntcy/slim/mcp-proxy:latest /slim-mcp-proxy \
+     ghcr.io/agntcy/slim-mcp-rust/mcp-proxy:0.2.1 /slim-mcp-proxy \
      --config /config-proxy.yaml \
      --svc-name slim/0 \
      --name org/mcp/proxy \
@@ -1077,7 +1007,7 @@ local proxy instance:
    ```
    This command:
    - Mounts your local configuration file into the container.
-   - Uses the official SLIM-MCP proxy image.
+   - Uses the official SLIM-MCP proxy image from the [slim-mcp-rust](https://github.com/agntcy/slim-mcp-rust) repository.
    - Sets the service name and proxy identifier.
    - Configures the connection to your SSE-based MCP server.
 

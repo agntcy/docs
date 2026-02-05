@@ -10,21 +10,24 @@ This guide provides all the information you need to create and manage groups wit
 SLIM network. A full tutorial with examples is available in
 [Group Communication Tutorial](./slim-group-tutorial.md).
 
-## Creating Groups with the Python Bindings
+## Creating Groups with SLIM Bindings
 
-This section shows how to use the SLIM Python bindings to create a group.
+This section shows how to use the SLIM bindings to create a group.
 This requires a [group session](./slim-session.md#group-session). A group
 session is a channel shared among multiple participants and used to
 send messages to everyone. When a new participant wants to join the channel,
 they must be invited by the channel creator.
 
-The channel creator can be part of a Python application and can either
+The channel creator can be part of the application and can either
 actively participate in the communication process (possibly implementing some
 of the application logic) or serve solely as a channel moderator.
 
-This section provides the basic
-steps to follow, along with Python code snippets, for setting up a group session.
-The full code is available in the [group.py](https://github.com/agntcy/slim/blob/slim-v0.7.0/data-plane/python/bindings/examples/src/slim_bindings_examples/group.py) example in the SLIM repository.
+Group creation is available in both Python and Go bindings. This section provides
+the basic steps to follow with Python code snippets for setting up a group session.
+
+For Go examples, see the [group example](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/bindings/go/examples/group/main.go).
+
+The full Python code is available in [group.py](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/bindings/python/examples/group.py).
 
 ### Create the Channel
 
@@ -34,20 +37,20 @@ In a group session, communication between participants can be encrypted
 end-to-end, enabling MLS.
 
 ```python
-config = slim_bindings.SessionConfiguration.Group(
+# Create group session configuration
+session_config = slim_bindings.SessionConfig(
+    session_type=slim_bindings.SessionType.GROUP,
+    enable_mls=enable_mls,  # Enable Messaging Layer Security for end-to-end encrypted & authenticated group communication.
     max_retries=5,  # Max per-message resend attempts upon missing ack before reporting a delivery failure.
-    timeout=datetime.timedelta(
-        seconds=5
-    ),  # Ack / delivery wait window; after this duration a retry is triggered (until max_retries).
-    mls_enabled=enable_mls,  # Enable Messaging Layer Security for end-to-end encrypted & authenticated group communication.
+    interval=datetime.timedelta(seconds=5),  # Ack / delivery wait window; after this duration a retry is triggered (until max_retries).
+    metadata={},
 )
 
-created_session, handle = await local_app.create_session(
-    chat_channel,  # Logical group channel (Name) all participants join; acts as group/topic identifier.
-    config,  # session configuration
-)
-
-await handle # await for the session to be created
+# Create session - returns a tuple (SessionContext, CompletionHandle)
+session = local_app.create_session(session_config, chat_channel)
+# Wait for session to be established
+await session.completion.wait_async()
+created_session = session.session
 ```
 
 ### Invite Participants to the Channel
@@ -59,9 +62,9 @@ you can add them later, even after communication has started.
 ```python
 for invite in invites:
     invite_name = split_id(invite)
-    await local_app.set_route(invite_name)
-    handle = await created_session.invite(invite_name) # invite participant
-    await handle   # awit for the invite to be finished
+    await local_app.set_route_async(invite_name, conn_id)
+    handle = await created_session.invite_async(invite_name) # invite participant
+    await handle.wait_async()   # await for the invite to be finished
     print(f"{local} -> add {invite_name} to the group")
 ```
 
@@ -74,7 +77,7 @@ and `listen_for_session` returns the metadata for the newly created session.
 
 ```python
 print_formatted_text("Waiting for session...", style=custom_style)
-session = await local_app.listen_for_session()
+session = await local_app.listen_for_session_async(None)  # timeout: datetime.timedelta | None = wait indefinitely
 ```
 
 When a new session is available, the participant can start listening for messages:
@@ -83,20 +86,19 @@ When a new session is available, the participant can start listening for message
 while True:
     try:
         # Await next inbound message from the group session.
-        # The returned parameters are a message context and the raw payload bytes.
-        # Check session.py for details on MessageContext contents.
-        ctx, payload = await session.get_message()
+        # Returns a ReceivedMessage object with context and payload.
+        received_msg = await session.get_message_async(
+            timeout=datetime.timedelta(seconds=30)
+        )
+        ctx = received_msg.context
+        payload = received_msg.payload
+
+        # Display sender name and message
+        sender = ctx.source_name if hasattr(ctx, "source_name") else source_name
         print_formatted_text(
-            f"{ctx.source_name} > {payload.decode()}",
+            f"{sender} > {payload.decode()}",
             style=custom_style,
         )
-    except asyncio.CancelledError:
-        # Graceful shutdown path (ctrl-c or program exit).
-        break
-    except Exception as e:
-        # Non-cancellation error; surface and exit the loop.
-        print_formatted_text(f"-> Error receiving message: {e}")
-        break
 ```
 
 ### Send Messages on a Channel
@@ -106,7 +108,11 @@ Each participant can also send messages at any time to the new session, and each
 ```python
 # Send message to the channel_name specified when creating the session.
 # As the session is group, all participants will receive it.
-await shared_session_container[0].publish(user_input.encode())
+await shared_session_container[0].publish_async(
+    user_input.encode(),  # payload: bytes
+    None,  # payload_type: str | None
+    None   # metadata: dict[str, str] | None
+)
 ```
 
 ## Creating Groups with the SLIM Controller
@@ -129,17 +135,17 @@ performed in the application.
 To create the group, run:
 
 ```bash
-./slimctl controller channel create moderators=agntcy/ns/client-1/9494657801285491688
+slimctl controller channel create moderators=agntcy/ns/client-1/10494544672403736104
 ```
 
 The outcome should be something similar to this:
 
 ```bash
-Received response: agntcy/ns/xyIGhc2igNGmkeBDlZ
+Received response: agntcy/ns/hDxc8CKpElJUfTTief
 ```
 
 The name in the response is the name of the new channel created, with only one participant
-added (e.g. `moderators=agntcy/ns/client-1/9494657801285491688`).
+added (e.g. `moderators=agntcy/ns/client-1/10494544672403736104`).
 
 ### Invite Participants to the Channel
 
@@ -147,16 +153,16 @@ Now that the channel is created, you can start to invite new participants. To do
 the following command:
 
 ```bash
-./slimctl controller participant add -c agntcy/ns/xyIGhc2igNGmkeBDlZ agntcy/ns/client-2
+slimctl controller participant add -c agntcy/ns/hDxc8CKpElJUfTTief agntcy/ns/client-2
 ```
 
 The reply to the command should be similar to this:
 
 ```bash
-Adding participant to channel ID agntcy/ns/xyIGhc2igNGmkeBDlZ: agntcy/ns/client-2
-Participant added successfully to channel ID agntcy/ns/xyIGhc2igNGmkeBDlZ: agntcy/ns/client-2
+Adding participant to channel ID agntcy/ns/hDxc8CKpElJUfTTief: agntcy/ns/client-2
+Participant added successfully to channel ID agntcy/ns/hDxc8CKpElJUfTTief: agntcy/ns/client-2
 ```
 
 Now the channel has two participants that can start to communicate
-over the shared channel `agntcy/ns/xyIGhc2igNGmkeBDlZ`. Message reception and publishing
+over the shared channel `agntcy/ns/hDxc8CKpElJUfTTief`. Message reception and publishing
 must be done within the application in the same way as shown in the previous section.
