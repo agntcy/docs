@@ -66,8 +66,8 @@ All artifacts are tagged using the [Semantic Versioning](https://semver.org/) an
 All container images are distributed via [GitHub Packages](https://github.com/orgs/agntcy/packages?repo_name=dir).
 
 ```bash
-docker pull ghcr.io/agntcy/dir-ctl:v0.3.0
-docker pull ghcr.io/agntcy/dir-apiserver:v0.3.0
+docker pull ghcr.io/agntcy/dir-ctl:v1.0.0
+docker pull ghcr.io/agntcy/dir-apiserver:v1.0.0
 ```
 
 ### Helm charts
@@ -75,7 +75,7 @@ docker pull ghcr.io/agntcy/dir-apiserver:v0.3.0
 All helm charts are distributed as OCI artifacts via [GitHub Packages](https://github.com/agntcy/dir/pkgs/container/dir%2Fhelm-charts%2Fdir).
 
 ```bash
-helm pull oci://ghcr.io/agntcy/dir/helm-charts/dir --version v0.3.0
+helm pull oci://ghcr.io/agntcy/dir/helm-charts/dir --version v1.0.0
 ```
 
 ### Binaries
@@ -90,6 +90,10 @@ Check [CLI References](directory-cli.md) for detailed installation instructions.
 - [**Golang**](directory-sdk.md#golang-sdk)
 - [**Python**](directory-sdk.md#python-sdk)
 - [**Javascript**](directory-sdk.md#javascript-sdk)
+
+## Directory MCP Server
+
+The Directory services are also accessible through the Directory MCP Server. It provides a standardized interface for AI assistants and tools to interact with the Directory system and work with OASF agent records. See the [Directory CLI Reference](directory-cli.md#directory-mcp-server) for more information.
 
 ## Deployment
 
@@ -113,14 +117,14 @@ DIRECTORY_SERVER_OASF_API_VALIDATION_SCHEMA_URL=https://schema.oasf.outshift.com
 This deploys Directory services into an existing Kubernetes cluster.
 
 ```bash
-helm pull oci://ghcr.io/agntcy/dir/helm-charts/dir --version v0.3.0
-helm upgrade --install dir oci://ghcr.io/agntcy/dir/helm-charts/dir --version v0.3.0
+helm pull oci://ghcr.io/agntcy/dir/helm-charts/dir --version v1.0.0
+helm upgrade --install dir oci://ghcr.io/agntcy/dir/helm-charts/dir --version v1.0.0
 ```
 
 Alternatively, you can configure the OASF schema URL explicitly:
 
 ```bash
-helm upgrade --install dir oci://ghcr.io/agntcy/dir/helm-charts/dir --version v0.3.0 \
+helm upgrade --install dir oci://ghcr.io/agntcy/dir/helm-charts/dir --version v1.0.0 \
   --set apiserver.config.oasf_api_validation.schema_url=https://schema.oasf.outshift.com
 ```
 
@@ -136,7 +140,7 @@ apiserver:
 Then deploy:
 
 ```bash
-helm upgrade --install dir oci://ghcr.io/agntcy/dir/helm-charts/dir --version v0.3.0 -f values.yaml
+helm upgrade --install dir oci://ghcr.io/agntcy/dir/helm-charts/dir --version v1.0.0 -f values.yaml
 ```
 
 For more configuration options, see the [Validation](validation.md) documentation.
@@ -174,7 +178,3 @@ For detailed use cases, see the [Features and Usage Scenarios](scenarios.md) doc
 - [Signing and Verifying Records](scenarios.md#signing-and-verification)
 - [Discovering Records](scenarios.md#discover)
 - [Searching Records](scenarios.md#search)
-
-## Directory MCP Server
-
-The Directory services are also accessible through the Directory MCP Server. It provides a standardized interface for AI assistants and tools to interact with the Directory system and work with OASF agent records. See the [Directory CLI Reference](directory-cli.md#directory-mcp-server) for more information.

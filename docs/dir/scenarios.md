@@ -1,7 +1,7 @@
 # Features and Usage Scenarios
 
 This document defines a basic overview of main Directory features, components, and usage
-scenarios. All code snippets below are tested against the Directory `v0.3.0` release.
+scenarios. All code snippets below are tested against the Directory `v1.0.0` release.
 
 !!! note
     Although the following example is shown for a CLI-based usage scenario, the same
