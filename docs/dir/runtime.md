@@ -51,7 +51,7 @@ The discovery component is responsible for:
 The storage backend can be used to expose discovered workloads to other components (e.g., clients/servers) without coupling them directly and to reduce attack surface.
 
 In non-Kubernetes environments, [etcd](https://etcd.io/) is recommended as the storage backend for better portability.
-In Kubernetes environments, CRDs can be used for a more native experience to ensure clients can access workloads via the Kubernetes API.
+In Kubernetes environments, CRDs can be used for a more native experience to ensure clients can query workloads via both gRPC and the Kubernetes API.
 
 ```mermaid
 flowchart LR
