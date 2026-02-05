@@ -104,4 +104,4 @@ Before creating a release, ensure that:
 
 [Copyright Notice and License](./LICENSE.md)
 
-Copyright AGNTCY Contributors (https://github.com/agentcy)
+Copyright AGNTCY Contributors (https://github.com/agntcy)
