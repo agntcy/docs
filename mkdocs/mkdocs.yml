@@ -54,6 +54,19 @@ plugins:
     redirect_maps:
       'how-to-guides/identity-quickstart/index.md': 'identity/identity-quickstart.md'
       'how-to-guides/agent-directory/index.md': 'dir/getting-started.md'
+      'messaging/slim-core.md': 'slim/overview.md'
+      'messaging/slim-a2a.md': 'slim/slim-a2a.md'
+      'messaging/slim-authentication.md': 'slim/slim-authentication.md'
+      'messaging/slim-controller.md': 'slim/slim-controller.md'
+      'messaging/slim-data-plane-config.md': 'slim/slim-data-plane-config.md'
+      'messaging/slim-data-plane.md': 'slim/slim-data-plane.md'
+      'messaging/slim-group-tutorial.md': 'slim/slim-group-tutorial.md'
+      'messaging/slim-group.md': 'slim/slim-group.md'
+      'messaging/slim-howto.md': 'slim/slim-howto.md'
+      'messaging/slim-mcp.md': 'slim/slim-mcp.md'
+      'messaging/slim-rpc.md': 'slim/slim-rpc.md'
+      'messaging/slim-session.md': 'slim/slim-session.md'
+      'messaging/slim-slimrpc-compiler.md': 'slim/slim-slimrpc-compiler.md'
   awesome-pages:
     filename: ".index"
     collapse_single_pages: true
