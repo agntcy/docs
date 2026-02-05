@@ -12,7 +12,7 @@ and flexible channel-based routing.
 
 ### SLIM Exporter
 
-The [SLIM exporter](https://github.com/agntcy/slim-otel/tree/main/exporter/slimexporter) operates as follows:
+The [SLIM exporter](https://github.com/agntcy/slim-otel/tree/v0.1.0/exporter/slimexporter) operates as follows:
 
 1. Connects to a SLIM node using the configured endpoint.
 2. Registers three applications with the SLIM node (one for each signal type)
@@ -31,7 +31,7 @@ by other participants.
 
 ### SLIM Receiver
 
-The [SLIM receiver](https://github.com/agntcy/slim-otel/tree/main/receiver/slimreceiver) operates as follows:
+The [SLIM receiver](https://github.com/agntcy/slim-otel/tree/v0.1.0/receiver/slimreceiver) operates as follows:
 
 1. Connects to a SLIM node using the configured endpoint.
 2. Registers as an application with the configured `receiver-name`, making it
@@ -89,7 +89,7 @@ Launch the SLIM node using Docker:
 ```bash
 docker run -it \
     -v ./slim-test-config.yaml:/config.yaml -p 46357:46357 \
-    ghcr.io/agntcy/slim:latest /slim --config /config.yaml
+    ghcr.io/agntcy/slim:1.0.0 /slim --config /config.yaml
 ```
 
 The SLIM instance will listen on port 46357 for incoming connections, serving as
@@ -101,7 +101,7 @@ The repository provides all the components and configuration needed to build a
 custom OpenTelemetry Collector that includes the SLIM exporter and receiver. To build it:
 
 ```bash
-git clone https://github.com/agntcy/slim-otel.git
+git clone --branch v0.1.0 https://github.com/agntcy/slim-otel.git
 cd slim-otel
 task collector:build
 ```
@@ -121,7 +121,7 @@ dist:
   name: slim-otelcol
   description: Basic OTel Collector distribution for Developers
   output_path: ./slim-otelcol
-  otelcol_version: 0.143.0
+  otelcol_version: 0.144.0
 
 replaces:
   - github.com/agntcy/slim/otel => ..
@@ -131,15 +131,17 @@ replaces:
 
 exporters:
   - gomod: github.com/agntcy/slim/otel/slimexporter v0.0.1
-  - gomod: go.opentelemetry.io/collector/exporter/debugexporter v0.143.0
-  - gomod: go.opentelemetry.io/collector/exporter/otlpexporter v0.143.0
+  - gomod:
+      go.opentelemetry.io/collector/exporter/debugexporter v0.144.0
+  - gomod:
+      go.opentelemetry.io/collector/exporter/otlpexporter v0.144.0
 
 processors:
-  - gomod: go.opentelemetry.io/collector/processor/batchprocessor v0.143.0
+  - gomod: go.opentelemetry.io/collector/processor/batchprocessor v0.144.0
 
 receivers:
   - gomod: github.com/agntcy/slim/otel/slimreceiver v0.0.1
-  - gomod: go.opentelemetry.io/collector/receiver/otlpreceiver v0.143.0
+  - gomod: go.opentelemetry.io/collector/receiver/otlpreceiver v0.144.0
 
 providers:
   - gomod: go.opentelemetry.io/collector/confmap/provider/envprovider v1.48.0
