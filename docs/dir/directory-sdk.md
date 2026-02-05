@@ -104,7 +104,7 @@ client = Client(config)
 
     Python SDK requires Directory CLI (dirctl) only to perform signing operations. If you don't need signing, you can use the SDK without dirctl.
 
-### Golang SDK
+## Go SDK
 
 Documentation for the Go SDK can be found at [GitHub](https://github.com/agntcy/dir/tree/main/client).
 

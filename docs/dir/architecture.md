@@ -14,6 +14,10 @@ The architecture of the Agent Directory Service (ADS) is designed to support a s
 
 - **Clients**: Tools that allow developers to interact with the ADS, publish agent records, and search for agents based on some criteria.
 
+- **Runtime Discovery**: Components that watch container runtimes (Docker, Kubernetes) for workloads and provide a gRPC API for querying them. Enables dynamic discovery of agents running in containerized environments, with support for resolving A2A agent cards and OASF records from discovered workloads.
+
+- **Event Streaming**: Real-time notification system that publishes Directory events to message brokers, enabling subscribers to react to record changes, discoveries, and other Directory operations.
+
 - **Security and Trust Mechanisms**: Features that ensure the integrity and authenticity of directory records and nodes, including cryptographic signing, verification of claims, secure communication protocols, and access controls.
 
 ## Principles
