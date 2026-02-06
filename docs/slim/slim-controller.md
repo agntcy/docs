@@ -320,7 +320,7 @@ Download from the [GitHub releases page](https://github.com/agntcy/slim/releases
 If you are using macOS, you can install slimctl via Homebrew:
 
 ```bash
-brew tap agntcy/slim
+brew tap agntcy/slim https://github.com/agntcy/slim.git
 brew install slimctl
 ```
 
