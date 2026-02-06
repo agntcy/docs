@@ -1,7 +1,7 @@
 # Features and Usage Scenarios
 
 This document defines a basic overview of main Directory features, components, and usage
-scenarios. All code snippets below are tested against the Directory `v1.0.0` release.
+scenarios. All code snippets below are tested against the Directory `v1.0.0-rc.3` release.
 
 !!! note
     Although the following example is shown for a CLI-based usage scenario, the same
@@ -35,7 +35,7 @@ cat << EOF > record.json
     "name": "https://example.com/agents/my-record",
     "version": "v1.0.0",
     "description": "insert description here",
-    "schema_version": "0.7.0",
+    "schema_version": "1.0.0",
     "skills": [
         {
             "id": 201,
