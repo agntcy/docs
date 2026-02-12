@@ -49,7 +49,7 @@ cat << EOF > record.json
     "locators": [
         {
             "type": "source_code",
-            "url": "https://github.com/agntcy/oasf/blob/main/record"
+            "urls": [ "https://github.com/agntcy/oasf/blob/main/record" ]
         }
     ]
 }
