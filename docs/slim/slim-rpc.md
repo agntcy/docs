@@ -24,7 +24,7 @@ documentation](./slim-slimrpc-compiler.md).
 In SLIMRPC, each service and its individual RPC handlers are assigned a SLIM
 name, facilitating efficient message routing and processing. Consider the
 [example
-protobuf](https://github.com/agntcy/slim/blob/slim-v0.6.0/data-plane/python/integrations/slimrpc/slimrpc/examples/simple/example.proto)
+protobuf](https://github.com/agntcy/slim/blob/slim-bindings-v1.1.0/data-plane/bindings/python/examples/slimrpc/simple/example.proto)
 definition, which defines four distinct services:
 
 ```proto
@@ -94,8 +94,8 @@ standard gRPC.
 ## Example
 
 This section provides a detailed walkthrough of a basic SLIMRPC client-server
-interaction, leveraging the simple example provided in
-[example](https://github.com/agntcy/slim/tree/slim-v0.6.0/data-plane/python/integrations/slimrpc/slimrpc/examples/simple)
+interaction in python, leveraging the simple example provided in
+[example](https://github.com/agntcy/slim/blob/slim-bindings-v1.1.0/data-plane/bindings/python/examples/slimrpc/simple)
 folder.
 
 ### Generated Code
@@ -118,32 +118,90 @@ RPC defined in example.proto, allowing clients to initiate calls to the server.
 ```python
 class TestStub:
     """Client stub for Test."""
+
     def __init__(self, channel):
         """Constructor.
 
         Args:
-            channel: A slimrpc.Channel.
+            channel: A slim_bindings.Channel.
         """
-        self.ExampleUnaryUnary = channel.unary_unary(
-            "/example_service.Test/ExampleUnaryUnary",
-            request_serializer=pb2.ExampleRequest.SerializeToString,
-            response_deserializer=pb2.ExampleResponse.FromString,
+        self._channel = channel
+
+    async def ExampleUnaryUnary(self, request: pb2.ExampleRequest, timeout: Optional[timedelta] = None, metadata: Optional[dict[str, str]] = None) -> pb2.ExampleResponse:
+        """Call ExampleUnaryUnary method."""
+        response_bytes = await self._channel.call_unary_async(
+            "example_service.Test",
+            "ExampleUnaryUnary",
+            pb2.ExampleRequest.SerializeToString(request),
+            timeout,
+            metadata,
         )
-        self.ExampleUnaryStream = channel.unary_stream(
-            "/example_service.Test/ExampleUnaryStream",
-            request_serializer=pb2.ExampleRequest.SerializeToString,
-            response_deserializer=pb2.ExampleResponse.FromString,
+        return pb2.ExampleResponse.FromString(response_bytes)
+
+    async def ExampleUnaryStream(self, request: pb2.ExampleRequest, timeout: Optional[timedelta] = None, metadata: Optional[dict[str, str]] = None):
+        """Call ExampleUnaryStream method."""
+        response_stream = await self._channel.call_unary_stream_async(
+            "example_service.Test",
+            "ExampleUnaryStream",
+            pb2.ExampleRequest.SerializeToString(request),
+            timeout,
+            metadata,
         )
-        self.ExampleStreamUnary = channel.stream_unary(
-            "/example_service.Test/ExampleStreamUnary",
-            request_serializer=pb2.ExampleRequest.SerializeToString,
-            response_deserializer=pb2.ExampleResponse.FromString,
+        while True:
+            stream_msg = await response_stream.next_async()
+            if stream_msg.is_end():
+                break
+            if stream_msg.is_error():
+                raise stream_msg[0]
+            if stream_msg.is_data():
+                yield pb2.ExampleResponse.FromString(stream_msg[0])
+
+    async def ExampleStreamUnary(self, request_iterator, timeout: Optional[timedelta] = None, metadata: Optional[dict[str, str]] = None) -> pb2.ExampleResponse:
+        """Call ExampleStreamUnary method."""
+        request_stream = self._channel.call_stream_unary(
+            "example_service.Test",
+            "ExampleStreamUnary",
+            timeout,
+            metadata,
         )
-        self.ExampleStreamStream = channel.stream_stream(
-            "/example_service.Test/ExampleStreamStream",
-            request_serializer=pb2.ExampleRequest.SerializeToString,
-            response_deserializer=pb2.ExampleResponse.FromString,
+        async for request in request_iterator:
+            await request_stream.send_async(pb2.ExampleRequest.SerializeToString(request))
+        response_bytes = await request_stream.finalize_async()
+        return pb2.ExampleResponse.FromString(response_bytes)
+
+    async def ExampleStreamStream(self, request_iterator, timeout: Optional[timedelta] = None, metadata: Optional[dict[str, str]] = None):
+        """Call ExampleStreamStream method."""
+        bidi_stream = self._channel.call_stream_stream(
+            "example_service.Test",
+            "ExampleStreamStream",
+            timeout,
+            metadata,
         )
+        
+        async def send_requests():
+            async for request in request_iterator:
+                await bidi_stream.send_async(pb2.ExampleRequest.SerializeToString(request))
+            await bidi_stream.close_send_async()
+        
+        async def receive_responses():
+            while True:
+                stream_msg = await bidi_stream.recv_async()
+                if stream_msg.is_end():
+                    break
+                if stream_msg.is_error():
+                    raise stream_msg[0]
+                if stream_msg.is_data():
+                    yield pb2.ExampleResponse.FromString(stream_msg[0])
+        
+        # Start sending in background
+        import asyncio
+        send_task = asyncio.create_task(send_requests())
+        
+        try:
+            async for response in receive_responses():
+                yield response
+        finally:
+            await send_task
 ```
 
 _Server Servicer (TestServicer)_: The TestServicer class defines the server-side
@@ -151,27 +209,30 @@ interface. Developers implement this class to provide the actual logic
 for each RPC method.
 
 ```python
-class TestServicer():
+class TestServicer:
     """Server servicer for Test. Implement this class to provide your service logic."""
 
     def ExampleUnaryUnary(self, request, context):
         """Method for ExampleUnaryUnary. Implement your service logic here."""
-        raise slimrpc_rpc.SRPCResponseError(
+        raise slim_bindings.SRPCResponseError(
             code=code__pb2.UNIMPLEMENTED, message="Method not implemented!"
         )
+
     def ExampleUnaryStream(self, request, context):
         """Method for ExampleUnaryStream. Implement your service logic here."""
-        raise slimrpc_rpc.SRPCResponseError(
+        raise slim_bindings.SRPCResponseError(
             code=code__pb2.UNIMPLEMENTED, message="Method not implemented!"
         )
+
     def ExampleStreamUnary(self, request_iterator, context):
         """Method for ExampleStreamUnary. Implement your service logic here."""
-        raise slimrpc_rpc.SRPCResponseError(
+        raise slim_bindings.SRPCResponseError(
             code=code__pb2.UNIMPLEMENTED, message="Method not implemented!"
         )
+
     def ExampleStreamStream(self, request_iterator, context):
         """Method for ExampleStreamStream. Implement your service logic here."""
-        raise slimrpc_rpc.SRPCResponseError(
+        raise slim_bindings.SRPCResponseError(
             code=code__pb2.UNIMPLEMENTED, message="Method not implemented!"
         )
 ```
@@ -182,97 +243,93 @@ It maps RPC method names to their corresponding handlers and specifies the
 request deserialization and response serialization routines.
 
 ```python
-def add_TestServicer_to_server(servicer, server: slimrpc.Server):
-    rpc_method_handlers = {
-        "ExampleUnaryUnary": slimrpc.unary_unary_rpc_method_handler(
-            behaviour=servicer.ExampleUnaryUnary,
-            request_deserializer=pb2.ExampleRequest.FromString,
-            response_serializer=pb2.ExampleResponse.SerializeToString,
-        ),
-        "ExampleUnaryStream": slimrpc.unary_stream_rpc_method_handler(
-            behaviour=servicer.ExampleUnaryStream,
-            request_deserializer=pb2.ExampleRequest.FromString,
-            response_serializer=pb2.ExampleResponse.SerializeToString,
-        ),
-        "ExampleStreamUnary": slimrpc.stream_unary_rpc_method_handler(
-            behaviour=servicer.ExampleStreamUnary,
-            request_deserializer=pb2.ExampleRequest.FromString,
-            response_serializer=pb2.ExampleResponse.SerializeToString,
-        ),
-        "ExampleStreamStream": slimrpc.stream_stream_rpc_method_handler(
-            behaviour=servicer.ExampleStreamStream,
-            request_deserializer=pb2.ExampleRequest.FromString,
-            response_serializer=pb2.ExampleResponse.SerializeToString,
-        ),
-
-    }
-
-    server.register_method_handlers(
-        "example_service.Test",
-        rpc_method_handlers,
+def add_TestServicer_to_server(servicer, server: slim_bindings.Server):
+    server.register_unary_unary(
+        service_name="example_service.Test",
+        method_name="ExampleUnaryUnary",
+        handler=_TestServicer_ExampleUnaryUnary_Handler(servicer),
+    )
+    server.register_unary_stream(
+        service_name="example_service.Test",
+        method_name="ExampleUnaryStream",
+        handler=_TestServicer_ExampleUnaryStream_Handler(servicer),
+    )
+    server.register_stream_unary(
+        service_name="example_service.Test",
+        method_name="ExampleStreamUnary",
+        handler=_TestServicer_ExampleStreamUnary_Handler(servicer),
+    )
+    server.register_stream_stream(
+        service_name="example_service.Test",
+        method_name="ExampleStreamStream",
+        handler=_TestServicer_ExampleStreamStream_Handler(servicer),
     )
 ```
 
 ### Server implementation
 
 The server-side logic is defined in
-[server.py](https://github.com/agntcy/slim/blob/slim-v0.6.0/data-plane/python/integrations/slimrpc/slimrpc/examples/simple/server.py).
+[server.py](https://github.com/agntcy/slim/blob/slim-bindings-v1.1.0/data-plane/bindings/python/examples/slimrpc/simple/server.py).
 Similar to standard gRPC implementations, the core service functionality is
 provided by the TestService class, which inherits from TestServicer (as
 introduced in the previous section). This class contains the concrete
 implementations for each of the defined RPC methods.
 
 The SLIM-specific code and configuration is handled within the amain()
-asynchronous function. This function utilizes the create_server helper to
-instantiate an SLIMRPC server:
+asynchronous function:
 
 ```python
-def create_server(
-    local: str,
-    slim: dict,
-    enable_opentelemetry: bool = False,
-    shared_secret: str = "",
-) -> Server:
-    """
-    Create a new SLIMRPC server instance.
-    """
-    server = Server(
-        local=local,
-        slim=slim,
-        enable_opentelemetry=enable_opentelemetry,
-        shared_secret=shared_secret,
-    )
-
-    return server
-
-
 async def amain() -> None:
-    server = create_server(
-        local="agntcy/grpc/server",
-        slim={
-            "endpoint": "http://localhost:46357",
-            "tls": {
-                "insecure": True,
-            },
-        },
-        enable_opentelemetry=False,
-        shared_secret="my_shared_secret",
+    slim_bindings.uniffi_set_event_loop(asyncio.get_running_loop())
+
+    # Initialize service
+    tracing_config = slim_bindings.new_tracing_config()
+    runtime_config = slim_bindings.new_runtime_config()
+    service_config = slim_bindings.new_service_config()
+
+    tracing_config.log_level = "info"
+
+    slim_bindings.initialize_with_configs(
+        tracing_config=tracing_config,
+        runtime_config=runtime_config,
+        service_config=[service_config],
     )
 
-    # Create RPCs
-    add_TestServicer_to_server(
-        TestService(),
-        server,
+    service = slim_bindings.get_global_service()
+
+    # Create local name
+    local_name = slim_bindings.Name("agntcy", "grpc", "server")
+
+    # Connect to SLIM
+    client_config = slim_bindings.new_insecure_client_config("http://localhost:46357")
+    conn_id = await service.connect_async(client_config)
+
+    # Create app with shared secret
+    local_app = service.create_app_with_secret(
+        local_name, "my_shared_secret_for_testing_purposes_only"
     )
 
-    await server.run()
+    # Subscribe to local name
+    await local_app.subscribe_async(local_name, conn_id)
+
+    # Create server
+    server = slim_bindings.Server.new_with_connection(local_app, local_name, conn_id)
+
+    # Add servicer
+    add_TestServicer_to_server(TestService(), server)
+
+    # Run server
+    await server.serve_async()
 ```
 
-A new server application is created using the `create_server` function. The
-local parameter, set to "agntcy/grpc/server", assigns a SLIM name to this server
-application.
+The server setup begins by setting the event loop for the SLIM bindings with
+`uniffi_set_event_loop()`, which is required for proper async operation. The
+service is then initialized with tracing, runtime, and service configurations.
+The log level is set to "info" for appropriate logging verbosity.
 
-This name is then used to construct the full SLIMRPC names for each method:
+A local SLIM name is created using `slim_bindings.Name("agntcy", "grpc",
+"server")`. This name is used to construct the full SLIMRPC names for each
+method:
 
 ```
 agntcy/grpc/server-example_service.Test-ExampleUnaryUnary
@@ -281,70 +338,118 @@ agntcy/grpc/server-example_service.Test-ExampleStreamUnary
 agntcy/grpc/server-example_service.Test-ExampleStreamStream
 ```
 
-Additionally, the `slim` dictionary configures the server to connect to a SLIM
-node running at `http://localhost:46357`. The tls setting `insecure: True`
-disables TLS for simplicity in this example. The `shared_secret` parameter is
-used for initializing the Message Layer Security (MLS) protocol. Note that using
-a hardcoded shared_secret like "my_shared_secret" is not recommended, please
-refer to [the documentation for proper MLS
-configuration](./slim-group.md).
+The server connects to a SLIM node running at `http://localhost:46357` using an
+insecure client configuration (TLS disabled for simplicity in this example). A
+local app is created with a shared secret for initializing the Message Layer
+Security (MLS) protocol.
 
-Finally, the add_TestServicer_to_server function is called to register the
-implemented TestService with the SLIMRPC server, making its RPC methods
-available.
+After subscribing to the local name on the connection, a SLIMRPC server is
+created with `slim_bindings.Server.new_with_connection()`. The
+`add_TestServicer_to_server()` function is then called to register the
+implemented `TestService` with the server, making its RPC methods available:
 
 ```python
-    # Create RPCs
-    add_TestServicer_to_server(
-        TestService(),
-        server,
-    )
+    # Add servicer
+    add_TestServicer_to_server(TestService(), server)
 ```
+
+Finally, the server starts serving requests with `await server.serve_async()`,
+which runs indefinitely until interrupted.
 
 ### Client implementation
 
 The client-side implementation, found in
-[client.py](https://github.com/agntcy/slim/blob/slim-v0.6.0/data-plane/python/integrations/slimrpc/slimrpc/examples/simple/client.py),
-largely mirrors the structure of a standard gRPC client. The primary distinction
-and SLIM-specific aspect lies in the creation of the SLIMRPC channel:
+[client.py](https://github.com/agntcy/slim/blob/slim-bindings-v1.1.0/data-plane/bindings/python/examples/slimrpc/simple/client.py),
+largely mirrors the structure of a standard gRPC client. The client
+initialization follows the same pattern as the server:
 
 ```python
-    channel_factory = slimrpc.ChannelFactory(
-        slim_app_config=slimrpc.SLIMAppConfig(
-            identity="agntcy/grpc/client",
-            slim_client_config={
-                "endpoint": "http://localhost:46357",
-                "tls": {
-                    "insecure": True,
-                },
-            },
-            enable_opentelemetry=False,
-            shared_secret="my_shared_secret",
-        ),
+async def amain() -> None:
+    # Initialize service
+    tracing_config = slim_bindings.new_tracing_config()
+    runtime_config = slim_bindings.new_runtime_config()
+    service_config = slim_bindings.new_service_config()
+
+    tracing_config.log_level = "info"
+
+    slim_bindings.initialize_with_configs(
+        tracing_config=tracing_config,
+        runtime_config=runtime_config,
+        service_config=[service_config],
     )
 
-    channel = channel_factory.new_channel(remote="agntcy/grpc/server")
+    service = slim_bindings.get_global_service()
 
-    # Stubs
+    # Create local and remote names
+    local_name = slim_bindings.Name("agntcy", "grpc", "client")
+    remote_name = slim_bindings.Name("agntcy", "grpc", "server")
+
+    # Connect to SLIM
+    client_config = slim_bindings.new_insecure_client_config("http://localhost:46357")
+    conn_id = await service.connect_async(client_config)
+
+    # Create app with shared secret
+    local_app = service.create_app_with_secret(
+        local_name, "my_shared_secret_for_testing_purposes_only"
+    )
+
+    # Subscribe to local name
+    await local_app.subscribe_async(local_name, conn_id)
+
+    # Create channel
+    channel = slim_bindings.Channel.new_with_connection(local_app, remote_name, conn_id)
+
+    # Create stubs
     stubs = TestStub(channel)
 ```
 
-As opposite to the server, the client application only register its local name
-`agntcy/grpc/client` in the SLIM network. This is done through the `identity`
-parameter in the `SLIMAppConfig` class. This name will be then used by the
-server to send back the response to the client.
+The client initialization is very similar to the server setup. After initializing
+the service with configurations, the client creates both a local name
+(`agntcy/grpc/client`) and a remote name (`agntcy/grpc/server`). The local name
+identifies the client in the SLIM network and is used by the server to send back
+responses.
 
-Also, like in the case of the server application, the `slim` dictionary
-specifies the SLIM node endpoint (`http://localhost:46357`) and TLS settings,
-consistent with the server's configuration, while `shared_secret` is used to
-initialize MLS.
+Like the server, the client connects to the SLIM node at
+`http://localhost:46357` using an insecure client configuration, creates an app
+with a shared secret for MLS initialization, and subscribes to its local name.
 
-The remote parameter, set to `agntcy/grpc/server`, explicitly identifies the
-SLIM name of the target server application. This allows the SLIMRPC channel to
-correctly route messages to the appropriate server endpoint within the SLIM
-network. Since both client and server use the same protobuf definition, the
-client can invoke specific services and methods with type safety and
-consistency.
+The key distinction from the server is the channel creation. The client uses
+`slim_bindings.Channel.new_with_connection()` with the remote name
+(`agntcy/grpc/server`) to establish a channel to the target server. This channel
+is then used to create the `TestStub`, which provides type-safe access to all
+the RPC methods defined in the protobuf.
+
+Once the stub is created, the client can invoke RPC methods using async/await
+syntax:
+
+```python
+    # Unary-Unary call
+    request = ExampleRequest(example_integer=1, example_string="hello")
+    response = await stubs.ExampleUnaryUnary(request, timeout=timedelta(seconds=2))
+
+    # Unary-Stream call
+    async for resp in stubs.ExampleUnaryStream(request, timeout=timedelta(seconds=2)):
+        logger.info(f"Stream Response: {resp}")
+
+    # Stream-Unary call
+    async def stream_requests() -> AsyncGenerator[ExampleRequest, None]:
+        for i in range(10):
+            yield ExampleRequest(example_integer=i, example_string=f"Request {i}")
+
+    response = await stubs.ExampleStreamUnary(
+        stream_requests(), timeout=timedelta(seconds=2)
+    )
+
+    # Stream-Stream call
+    async for resp in stubs.ExampleStreamStream(
+        stream_requests(), timeout=timedelta(seconds=2)
+    ):
+        logger.info(f"Stream Stream Response: {resp}")
+```
+
+All RPC calls support timeout parameters and use Python's async/await patterns.
+Streaming requests are provided as async generators, and streaming responses are
+consumed using `async for` loops.
 
 ## SLIMRPC under the Hood
 
@@ -353,19 +458,25 @@ SLIM. From a developer's perspective, using SLIMRPC or gRPC is almost identical.
 Application developers do not need to manage endpoint names or connectivity
 details, as these aspects are handled automatically by SLIMRPC and SLIM.
 
-All RPC services underneath utilize a sticky point-to-point session. The SLIM
+All RPC services underneath utilize a point-to-point session. The SLIM
 session creation is implemented in inside SLIMRPC in
-[channel.py](https://github.com/agntcy/slim/blob/slim-v0.6.0/data-plane/python/integrations/slimrpc/slimrpc/channel.py):
+[channel.py](https://github.com/agntcy/slim/blob/slim-bindings-v1.1.0/data-plane/bindings/rust/src/slimrpc/channel.rs#L657-L670):
 
-```python
-        # Create a session
-        session = await self.local_app.create_session(
-            slim_bindings.SessionConfiguration.FireAndForget(
-                max_retries=10,
-                timeout=datetime.timedelta(seconds=1),
-                sticky=True,
-            )
-        )
+```rust
+let slim_config = slim_session::session_config::SessionConfig {
+    session_type: ProtoSessionType::PointToPoint,
+    mls_enabled: true,
+    max_retries: Some(10),
+    interval: Some(Duration::from_secs(1)),
+    initiator: true,
+    metadata: ctx.metadata(),
+};
+
+// Create session to the method-specific subscription name
+let (session_ctx, completion) = app
+    .create_session(slim_config, method_subscription_name.clone(), None)
+    .await
+    .map_err(|e| Status::unavailable(format!("Failed to create session: {}", e)))?;
 ```
 
 This session used by SLIMRPC is also reliable. For each message, the sender
@@ -374,7 +485,7 @@ waits for an acknowledgment (ACK) packet for 1 second
 message will be re-sent up to 10 times (`max_retries=10`) before notifying the
 application of a communication error.
 
-Since the session is sticky, all messages in a streaming communication will be
+All messages in a streaming communication will be
 forwarded to the same application instance. Let's illustrate this with an
 example using the client and server applications described above.
 
