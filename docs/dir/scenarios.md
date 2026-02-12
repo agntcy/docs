@@ -25,8 +25,8 @@ This example demonstrates how to define a Record using provided tooling to prepa
 publication.
 
 To start, generate an example Record that matches the data model schema defined in
-[OASF Record specification](https://schema.oasf.outshift.com/0.7.0/objects/record) using the
-[OASF Record Sample generator](https://schema.oasf.outshift.com/sample/0.7.0/objects/record).
+[OASF Record specification](https://schema.oasf.outshift.com/objects/record) using the
+[OASF Record Sample generator](https://schema.oasf.outshift.com/sample/objects/record).
 
 ```bash
 # Generate an example data model

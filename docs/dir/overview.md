@@ -20,7 +20,7 @@ Directory also leverages the [CSIT](../csit/csit.md) for continuous system
 integration and testing across different versions, environments, and features.
 
 Each directory record must include skills from a defined taxonomy, as specified
-in the [Taxonomy of AI Agent Skills](https://schema.oasf.outshift.com/0.7.0/main_skills) from the [OASF](../oasf/open-agentic-schema-framework.md).
+in the [Taxonomy of AI Agent Skills](https://schema.oasf.outshift.com/skill_categories) from the [OASF](../oasf/open-agentic-schema-framework.md).
 While all record data is modeled using the [OASF](../oasf/open-agentic-schema-framework.md), only skills are
 leveraged for content routing in the distributed network of directory servers.
 The ADS specification is under active development and is published as an
