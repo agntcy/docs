@@ -26,12 +26,12 @@ You can install the Slim RPC Compiler either by downloading pre-built binaries o
 
 === "Pre-built Binaries (Python)"
 
-    Download the pre-built binary for your platform from the [latest release](https://github.com/agntcy/slim/releases/tag/protoc-slimrpc-plugin-v1.0.0):
+    Download the pre-built binary for your platform from the [latest release](https://github.com/agntcy/slim/releases/tag/protoc-slimrpc-plugin-v1.0.2):
 
     === "Linux (x86_64)"
 
         ```bash
-        curl -LO https://github.com/agntcy/slim/releases/download/protoc-slimrpc-plugin-v1.0.0/protoc-gen-slimrpc-python-linux-x86_64.tar.gz
+        curl -LO https://github.com/agntcy/slim/releases/download/protoc-slimrpc-plugin-v1.0.2/protoc-gen-slimrpc-python-linux-x86_64.tar.gz
         tar -xzf protoc-gen-slimrpc-python-linux-x86_64.tar.gz
         chmod +x protoc-gen-slimrpc-python
         sudo mv protoc-gen-slimrpc-python /usr/local/bin/
@@ -40,7 +40,7 @@ You can install the Slim RPC Compiler either by downloading pre-built binaries o
     === "Linux (ARM64)"
 
         ```bash
-        curl -LO https://github.com/agntcy/slim/releases/download/protoc-slimrpc-plugin-v1.0.0/protoc-gen-slimrpc-python-linux-arm64.tar.gz
+        curl -LO https://github.com/agntcy/slim/releases/download/protoc-slimrpc-plugin-v1.0.2/protoc-gen-slimrpc-python-linux-arm64.tar.gz
         tar -xzf protoc-gen-slimrpc-python-linux-arm64.tar.gz
         chmod +x protoc-gen-slimrpc-python
         sudo mv protoc-gen-slimrpc-python /usr/local/bin/
@@ -49,7 +49,7 @@ You can install the Slim RPC Compiler either by downloading pre-built binaries o
     === "macOS (ARM64)"
 
         ```bash
-        curl -LO https://github.com/agntcy/slim/releases/download/protoc-slimrpc-plugin-v1.0.0/protoc-gen-slimrpc-python-macos-arm64.tar.gz
+        curl -LO https://github.com/agntcy/slim/releases/download/protoc-slimrpc-plugin-v1.0.2/protoc-gen-slimrpc-python-macos-arm64.tar.gz
         tar -xzf protoc-gen-slimrpc-python-macos-arm64.tar.gz
         chmod +x protoc-gen-slimrpc-python
         sudo mv protoc-gen-slimrpc-python /usr/local/bin/
@@ -58,7 +58,7 @@ You can install the Slim RPC Compiler either by downloading pre-built binaries o
     === "macOS (x86_64)"
 
         ```bash
-        curl -LO https://github.com/agntcy/slim/releases/download/protoc-slimrpc-plugin-v1.0.0/protoc-gen-slimrpc-python-macos-x86_64.tar.gz
+        curl -LO https://github.com/agntcy/slim/releases/download/protoc-slimrpc-plugin-v1.0.2/protoc-gen-slimrpc-python-macos-x86_64.tar.gz
         tar -xzf protoc-gen-slimrpc-python-macos-x86_64.tar.gz
         chmod +x protoc-gen-slimrpc-python
         sudo mv protoc-gen-slimrpc-python /usr/local/bin/
@@ -67,7 +67,7 @@ You can install the Slim RPC Compiler either by downloading pre-built binaries o
     === "Windows (x86_64)"
 
         ```powershell
-        Invoke-WebRequest -Uri "https://github.com/agntcy/slim/releases/download/protoc-slimrpc-plugin-v1.0.0/protoc-gen-slimrpc-python-windows-x86_64.zip" -OutFile "protoc-gen-slimrpc-python-windows-x86_64.zip"
+        Invoke-WebRequest -Uri "https://github.com/agntcy/slim/releases/download/protoc-slimrpc-plugin-v1.0.2/protoc-gen-slimrpc-python-windows-x86_64.zip" -OutFile "protoc-gen-slimrpc-python-windows-x86_64.zip"
         Expand-Archive -Path protoc-gen-slimrpc-python-windows-x86_64.zip -DestinationPath .
         # Add the binary to your PATH or move it to a directory in your PATH
         ```
@@ -75,19 +75,19 @@ You can install the Slim RPC Compiler either by downloading pre-built binaries o
     === "Windows (ARM64)"
 
         ```powershell
-        Invoke-WebRequest -Uri "https://github.com/agntcy/slim/releases/download/protoc-slimrpc-plugin-v1.0.0/protoc-gen-slimrpc-python-windows-arm64.zip" -OutFile "protoc-gen-slimrpc-python-windows-arm64.zip"
+        Invoke-WebRequest -Uri "https://github.com/agntcy/slim/releases/download/protoc-slimrpc-plugin-v1.0.2/protoc-gen-slimrpc-python-windows-arm64.zip" -OutFile "protoc-gen-slimrpc-python-windows-arm64.zip"
         Expand-Archive -Path protoc-gen-slimrpc-python-windows-arm64.zip -DestinationPath .
         # Add the binary to your PATH or move it to a directory in your PATH
         ```
 
 === "Pre-built Binaries (Go)"
 
-    Download the pre-built binary for your platform from the [latest release](https://github.com/agntcy/slim/releases/tag/protoc-slimrpc-plugin-v1.0.0):
+    Download the pre-built binary for your platform from the [latest release](https://github.com/agntcy/slim/releases/tag/protoc-slimrpc-plugin-v1.0.2):
 
     === "Linux (x86_64)"
 
         ```bash
-        curl -LO https://github.com/agntcy/slim/releases/download/protoc-slimrpc-plugin-v1.0.0/protoc-gen-slimrpc-go-linux-x86_64.tar.gz
+        curl -LO https://github.com/agntcy/slim/releases/download/protoc-slimrpc-plugin-v1.0.2/protoc-gen-slimrpc-go-linux-x86_64.tar.gz
         tar -xzf protoc-gen-slimrpc-go-linux-x86_64.tar.gz
         chmod +x protoc-gen-slimrpc-go
         sudo mv protoc-gen-slimrpc-go /usr/local/bin/
@@ -96,7 +96,7 @@ You can install the Slim RPC Compiler either by downloading pre-built binaries o
     === "Linux (ARM64)"
 
         ```bash
-        curl -LO https://github.com/agntcy/slim/releases/download/protoc-slimrpc-plugin-v1.0.0/protoc-gen-slimrpc-go-linux-arm64.tar.gz
+        curl -LO https://github.com/agntcy/slim/releases/download/protoc-slimrpc-plugin-v1.0.2/protoc-gen-slimrpc-go-linux-arm64.tar.gz
         tar -xzf protoc-gen-slimrpc-go-linux-arm64.tar.gz
         chmod +x protoc-gen-slimrpc-go
         sudo mv protoc-gen-slimrpc-go /usr/local/bin/
@@ -105,7 +105,7 @@ You can install the Slim RPC Compiler either by downloading pre-built binaries o
     === "macOS (ARM64)"
 
         ```bash
-        curl -LO https://github.com/agntcy/slim/releases/download/protoc-slimrpc-plugin-v1.0.0/protoc-gen-slimrpc-go-macos-arm64.tar.gz
+        curl -LO https://github.com/agntcy/slim/releases/download/protoc-slimrpc-plugin-v1.0.2/protoc-gen-slimrpc-go-macos-arm64.tar.gz
         tar -xzf protoc-gen-slimrpc-go-macos-arm64.tar.gz
         chmod +x protoc-gen-slimrpc-go
         sudo mv protoc-gen-slimrpc-go /usr/local/bin/
@@ -114,7 +114,7 @@ You can install the Slim RPC Compiler either by downloading pre-built binaries o
     === "macOS (x86_64)"
 
         ```bash
-        curl -LO https://github.com/agntcy/slim/releases/download/protoc-slimrpc-plugin-v1.0.0/protoc-gen-slimrpc-go-macos-x86_64.tar.gz
+        curl -LO https://github.com/agntcy/slim/releases/download/protoc-slimrpc-plugin-v1.0.2/protoc-gen-slimrpc-go-macos-x86_64.tar.gz
         tar -xzf protoc-gen-slimrpc-go-macos-x86_64.tar.gz
         chmod +x protoc-gen-slimrpc-go
         sudo mv protoc-gen-slimrpc-go /usr/local/bin/
@@ -123,7 +123,7 @@ You can install the Slim RPC Compiler either by downloading pre-built binaries o
     === "Windows (x86_64)"
 
         ```powershell
-        Invoke-WebRequest -Uri "https://github.com/agntcy/slim/releases/download/protoc-slimrpc-plugin-v1.0.0/protoc-gen-slimrpc-go-windows-x86_64.zip" -OutFile "protoc-gen-slimrpc-go-windows-x86_64.zip"
+        Invoke-WebRequest -Uri "https://github.com/agntcy/slim/releases/download/protoc-slimrpc-plugin-v1.0.2/protoc-gen-slimrpc-go-windows-x86_64.zip" -OutFile "protoc-gen-slimrpc-go-windows-x86_64.zip"
         Expand-Archive -Path protoc-gen-slimrpc-go-windows-x86_64.zip -DestinationPath .
         # Add the binary to your PATH or move it to a directory in your PATH
         ```
@@ -131,7 +131,7 @@ You can install the Slim RPC Compiler either by downloading pre-built binaries o
     === "Windows (ARM64)"
 
         ```powershell
-        Invoke-WebRequest -Uri "https://github.com/agntcy/slim/releases/download/protoc-slimrpc-plugin-v1.0.0/protoc-gen-slimrpc-go-windows-arm64.zip" -OutFile "protoc-gen-slimrpc-go-windows-arm64.zip"
+        Invoke-WebRequest -Uri "https://github.com/agntcy/slim/releases/download/protoc-slimrpc-plugin-v1.0.2/protoc-gen-slimrpc-go-windows-arm64.zip" -OutFile "protoc-gen-slimrpc-go-windows-arm64.zip"
         Expand-Archive -Path protoc-gen-slimrpc-go-windows-arm64.zip -DestinationPath .
         # Add the binary to your PATH or move it to a directory in your PATH
         ```
@@ -176,7 +176,7 @@ message ExampleResponse {
 ```
 
 If using golang, you might need to specify your go package as well
-as shown in [the simple example.](https://github.com/agntcy/slim/blob/slim-bindings-v1.1.0/data-plane/bindings/go/examples/slimrpc/simple/example.proto)
+as shown in [the simple example.](https://github.com/agntcy/slim/blob/slim-bindings-v1.1.1/data-plane/bindings/go/examples/slimrpc/simple/example.proto)
 
 ### Using with buf (Recommended)
 
@@ -320,8 +320,8 @@ protoc \
 
 Complete working examples are available in the repository:
 
-- **Python**: [bindings/python/examples/slimrpc/simple](https://github.com/agntcy/slim/tree/slim-bindings-v1.1.0/data-plane/bindings/python/examples/slimrpc/simple)
-- **Go**: [bindings/go/examples/slimrpc/simple](https://github.com/agntcy/slim/tree/slim-bindings-v1.1.0/data-plane/bindings/go/examples/slimrpc/simple)
+- **Python**: [bindings/python/examples/slimrpc/simple](https://github.com/agntcy/slim/tree/slim-bindings-v1.1.1/data-plane/bindings/python/examples/slimrpc/simple)
+- **Go**: [bindings/go/examples/slimrpc/simple](https://github.com/agntcy/slim/tree/slim-bindings-v1.1.1/data-plane/bindings/go/examples/slimrpc/simple)
 
 Both examples demonstrate all four RPC patterns with comprehensive client and server implementations.
 
