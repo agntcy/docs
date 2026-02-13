@@ -7,5 +7,6 @@ nav:
   - Observability and Evaluation: obs-and-eval
   - CSIT: csit
   - Getting Started: coffee-agntcy
+  - Gateway Pattern: gateway-pattern
   - Glossary: glossary.md
   - How to Contribute: contributing.md
