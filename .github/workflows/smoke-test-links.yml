@@ -1,0 +1,62 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 Cisco and/or its affiliates.
+# SPDX-License-Identifier: Apache-2.0
+#
+# Smoke test: build docs and run the full link check (no PR logic).
+# Use this to verify the link-check pipeline without opening a PR.
+#
+# How to run:
+#   - Push to branch "test-links" (e.g. git push origin main:test-links)
+#   - Or: Actions → "Smoke test links" → Run workflow
+
+name: Smoke test links
+
+on:
+  push:
+    branches: [test-links]
+  workflow_dispatch:
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: 'recursive'
+
+      - name: Setup Golang
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23.1'
+
+      - name: Setup Taskfile
+        shell: bash
+        run: |
+          sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
+
+      - name: Setup UV
+        shell: bash
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      - name: Update GITHUB_PATH
+        shell: bash
+        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Build docs
+        shell: bash
+        run: task build
+
+      - name: Check links
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: |
+            --no-progress
+            --include-fragments
+            --config lychee.toml
+            --root-dir $PWD/.build/site
+            --exclude-all-private
+            --remap 'https://docs\.agntcy\.org/(.*)/ file://'$PWD'/.build/site/$1/index.html'
+            .build/site/
+          fail: true
