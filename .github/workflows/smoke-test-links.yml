@@ -12,7 +12,7 @@ name: Smoke test links
 
 on:
   push:
-    branches: [test-links]
+    branches: [test-links, lychee-fix]
   workflow_dispatch:
 
 jobs:
