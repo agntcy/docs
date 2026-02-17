@@ -48,11 +48,18 @@ jobs:
         shell: bash
         run: echo "$HOME/.local/bin" >> $GITHUB_PATH
 
+      - name: Remember PR head
+        if: github.event_name == 'pull_request'
+        id: pr_head
+        run: echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+
       - name: Check out base branch
         if: github.event_name == 'pull_request'
         run: |
-          git fetch origin ${{ github.event.pull_request.base.ref }}
-          git checkout ${{ github.event.pull_request.base.ref }}
+          # Use base repo so fork PRs get the correct base branch (main/master), not the fork's
+          git remote add upstream https://github.com/${{ github.repository }}.git 2>/dev/null || true
+          git fetch upstream ${{ github.event.pull_request.base.ref }}
+          git checkout FETCH_HEAD
 
       - name: Build docs (base branch)
         if: github.event_name == 'pull_request'
@@ -73,6 +80,7 @@ jobs:
             --remap 'https://docs\.agntcy\.org/(.*)/ file://'$PWD'/.build/site/$1/index.html'
             .build/site/
           output: ./links-main.txt
+          failIfEmpty: false
 
       - name: Stash untracked files
         if: github.event_name == 'pull_request'
@@ -80,7 +88,7 @@ jobs:
 
       - name: Check out feature branch
         if: github.event_name == 'pull_request'
-        run: git checkout ${{ github.head_ref }}
+        run: git checkout ${{ steps.pr_head.outputs.sha }}
 
       - name: Apply stashed changes
         if: github.event_name == 'pull_request'
