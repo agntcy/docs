@@ -2,9 +2,9 @@
 
 SLIM A2A is a native integration of A2A built on top of SLIM. It utilizes SLIMRPC (SLIM Remote Procedure Call) and the SLIMRPC compiler to compile A2A protobuf file and generate the necessary code to enable A2A functionality on SLIM.
 
-## What is SLIMRPC and SLIMRPC compiler
+## What are SLIMRPC and the SLIMRPC Compiler?
 
-SLIMRPC is a framework that enables Protocol Buffers (protobuf) Remote Procedure Calls (RPC) over SLIM. This is similar to gRPC, which uses HTTP/2 as its transport layer for protobuf-based RPC. More information can be found [here](./slim-rpc.md)
+SLIMRPC is a framework that enables Protocol Buffers (protobuf) Remote Procedure Calls (RPC) over SLIM. This is similar to gRPC, which uses HTTP/2 as its transport layer for protobuf-based RPC. For more information, see the [SLIMRPC documentation](./slim-rpc.md).
 
 To compile a protobuf file and generate the clients and service stub you can use the [SLIMRPC compiler](./slim-slimrpc-compiler.md). This works in a similar way to the protoc compiler.
 
@@ -12,13 +12,13 @@ For SLIM A2A we compiled the [a2a.proto](https://github.com/a2aproject/A2A/blob/
 
 ## How to use SLIMA2A
 
-Using SLIMA2A is very similar to using the standard A2A implementation. As a reference example here we use the [echo agent](https://github.com/agntcy/slim-a2a-python/tree/main/examples/echo_agent) available in the SLIM A2A Python repository. In the following sections, we highlight and explain the key differences between the standard and SLIM A2A implementations.
+Using SLIM A2A is very similar to using the standard A2A implementation. As a reference example here we use the [echo agent](https://github.com/agntcy/slim-a2a-python/tree/main/examples/echo_agent) available in the SLIM A2A Python repository. In the following sections, we highlight and explain the key differences between the standard and SLIM A2A implementations.
 
 ### Server Implementation
 
-SLIMA2A provides two approaches for setting up an A2A server: a quick start method using helper functions, and an advanced method for more control.
+SLIM A2A provides two approaches for setting up an A2A server: a quick start method using helper functions, and an advanced method for more control.
 
-#### Quick Start (Recommended)
+#### Quick Start
 
 The quick start approach uses the `setup_slim_client` helper function to simplify SLIM initialization:
 
@@ -58,7 +58,7 @@ add_A2AServiceServicer_to_server(servicer, server)
 await server.serve_async()
 ```
 
-#### Advanced Setup (Manual Configuration)
+#### Advanced Setup
 
 ??? note "Advanced Setup - Click to expand"
 
@@ -126,17 +126,17 @@ await server.serve_async()
 
     Key differences from the standard A2A implementation:
     
-    1. **SLIM Bindings Initialization**: Set up the event loop and initialize `slim_bindings` with tracing and runtime configurations.
-    2. **SLIM Name Creation**: Create a `slim_bindings.Name` object with namespace, group, and name components.
-    3. **Connection Setup**: Connect to the SLIM server and create an app with a shared secret for MLS (Message Layer Security).
-    4. **Server Creation**: Use `slim_bindings.Server.new_with_connection()` instead of a standard HTTP server.
-    5. **Service Registration**: Register the servicer using `add_A2AServiceServicer_to_server()` from the generated SLIMRPC code.
+    * **SLIM Bindings Initialization**: Set up the event loop and initialize `slim_bindings` with tracing and runtime configurations.
+    * **SLIM Name Creation**: Create a `slim_bindings.Name` object with namespace, group, and name components.
+    * **Connection Setup**: Connect to the SLIM server and create an app with a shared secret for MLS (Message Layer Security).
+    * **Server Creation**: Use `slim_bindings.Server.new_with_connection()` instead of a standard HTTP server.
+    * **Service Registration**: Register the servicer using `add_A2AServiceServicer_to_server()` from the generated SLIMRPC code.
 
 ### Client Implementation
 
-Similar to the server, SLIMA2A provides both quick start and advanced client setup options.
+Similar to the server, SLIM A2A provides both quick start and advanced client setup options.
 
-#### Quick Start (Recommended)
+#### Quick Start
 
 ```python
 import asyncio
@@ -184,9 +184,11 @@ async for event in client.send_message(request=request):
                 print(part.root.text)
 ```
 
-#### Advanced Setup (Manual Configuration)
+#### Advanced Setup 
 
 ??? note "Advanced Setup - Click to expand"
+
+    For more control over the SLIM configuration, you can manually initialize all components:
 
     ```python
     import asyncio
@@ -261,33 +263,33 @@ async for event in client.send_message(request=request):
 
     Key differences from the standard A2A client:
     
-    1. **Channel Factory**: Use `slimrpc_channel_factory` instead of manually creating channels, which handles the SLIM connection details.
-    2. **Transport Registration**: Register the `SRPCTransport` as the "slimrpc" transport in the client factory.
-    3. **Agent Card Configuration**: Specify "slimrpc" as the transport protocol in the agent card.
-    4. **Supported Transports**: Add "slimrpc" to the list of supported transports alongside "JSONRPC".
+    * **Channel Factory**: Use `slimrpc_channel_factory` instead of manually creating channels, which handles the SLIM connection details.
+    * **Transport Registration**: Register the `SRPCTransport` as the "slimrpc" transport in the client factory.
+    * **Agent Card Configuration**: Specify "slimrpc" as the transport protocol in the agent card.
+    * **Supported Transports**: Add "slimrpc" to the list of supported transports alongside "JSONRPC".
 
 ### Helper Functions
 
 The `slima2a` package provides convenient helper functions to simplify SLIM setup:
 
-- **`setup_slim_client(namespace, group, name, slim_url="http://localhost:46357", secret="...", log_level="info")`** - Complete SLIM client setup in one call. Returns `(service, local_app, local_name, conn_id)`.
-- **`initialize_slim_service(log_level="info")`** - Initialize SLIM service with default configuration.
-- **`connect_and_subscribe(service, local_name, slim_url="http://localhost:46357", secret="...")`** - Connect to SLIM server and subscribe to a local name.
-- **`slimrpc_channel_factory(local_app, conn_id)`** - Creates a channel factory function for use with A2A client configuration.
+- `setup_slim_client(namespace, group, name, slim_url="http://localhost:46357", secret="...", log_level="info")`: Complete SLIM client setup in one call. Returns `(service, local_app, local_name, conn_id)`.
+- `initialize_slim_service(log_level="info")`: Initialize SLIM service with default configuration.
+- `connect_and_subscribe(service, local_name, slim_url="http://localhost:46357", secret="...")`: Connect to SLIM server and subscribe to a local name.
+- `slimrpc_channel_factory(local_app, conn_id)`: Creates a channel factory function for use with A2A client configuration.
 
 ## Configuration Parameters
 
 ### SLIM Connection
 
-- **`namespace`**: The namespace component of the SLIM name (e.g., "agntcy")
-- **`group`**: The group component of the SLIM name (e.g., "demo")
-- **`name`**: The name component of the SLIM name (e.g., "echo_agent")
-- **`slim_url`**: The endpoint URL for the SLIM server (default: "http://localhost:46357")
-- **`shared_secret`**: A secret string used for MLS (Message Layer Security). Must be at least 32 characters.
+- `namespace`: The namespace component of the SLIM name (e.g., `agntcy`).
+- `group`: The group component of the SLIM name (e.g., `demo`).
+- `name`: The name component of the SLIM name (e.g., `echo_agent`).
+- `slim_url`: The endpoint URL for the SLIM server (default: `http://localhost:46357`).
+- `shared_secret`: A secret string used for MLS (Message Layer Security). Must be at least 32 characters.
 
 ### Logging
 
-Set the log level through `tracing_config.log_level` with values like "info", "debug", "warn", or "error".
+Set the log level through `tracing_config.log_level` with values like `info`, `debug`, `warn`, or `error`.
 
 ## Running the Example
 

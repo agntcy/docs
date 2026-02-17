@@ -14,15 +14,15 @@ RPC services using the SLIMRPC framework.
 
 The Slim RPC Compiler has the following features:
 
-- Generates type-safe client stubs and server handlers for slimrpc services
+- Generates type-safe client stubs and server handlers for SLIMRPC services.
 - Supports all gRPC streaming patterns: unary-unary, unary-stream, stream-unary,
-  and stream-stream
-- Compatible with both `protoc` and `buf` build systems (buf recommended)
-- Automatic import resolution for Protocol Buffer dependencies
+  and stream-stream.
+- Compatible with both `protoc` and `buf` build systems (buf recommended).
+- Automatic import resolution for Protocol Buffer dependencies.
 
 ## Installation
 
-You can install the Slim RPC Compiler either by downloading pre-built binaries or building from source using Cargo.
+You can install the SLIMRPC compiler either by downloading pre-built binaries or building from source using Cargo.
 
 === "Pre-built Binaries (Python)"
 
@@ -175,17 +175,17 @@ message ExampleResponse {
 }
 ```
 
-If using golang, you might need to specify your go package as well
-as shown in [the simple example.](https://github.com/agntcy/slim/blob/slim-bindings-v1.1.1/data-plane/bindings/go/examples/slimrpc/simple/example.proto)
+If using Go, you might need to specify your Go package as well
+as shown in [the simple example](https://github.com/agntcy/slim/blob/slim-bindings-v1.1.1/data-plane/bindings/go/examples/slimrpc/simple/example.proto).
 
-### Using with buf (Recommended)
+### Using with Buf (Recommended)
 
 #### Prerequisites
 
 - `buf` CLI [installed](https://buf.build/docs/cli/installation/)
 - The appropriate `protoc-gen-slimrpc-python` or `protoc-gen-slimrpc-go` binary in your PATH, or specify the full path in the `buf.gen.yaml` file
 
-#### Create buf.gen.yaml
+#### Create `buf.gen.yaml`
 
 Create a `buf.gen.yaml` file in your project root:
 
@@ -257,7 +257,7 @@ plugins:
     out: generated
 ```
 
-### Using with protoc
+### Using with Protocol Buffer Compiler
 
 #### Prerequisites
 
@@ -303,8 +303,8 @@ Make sure you have:
 
 #### With Custom Types Import (Python)
 
-You can specify a custom import for the types module. This allows to import the
-types from an external package.
+You can specify a custom import for the types module. This allows you to import
+the types from an external package.
 
 For instance, if you don't want to generate the types and you want to import
 them from `a2a.grpc.a2a_pb2`, you can do:

@@ -19,10 +19,10 @@ We are an open source collective committed to build the Internet of Agents to be
 
 Based on advanced protocols, frameworks, and components, the goal of IoA software infrastructure is to enable and simplify the creation of multi-agent applications through the following steps:
 
-1. **DISCOVER**: Find and evaluate the best agents for the job.
-1. **COMPOSE**: Connect agents into effective workflows across any framework or vendor.
-1. **DEPLOY**: Run multi-agent systems at scale, securely.
-1. **EVALUATE**: Monitor performance and improve efficiency and efficacy over time.
+1. **Discover**: Find and evaluate the best agents for the job.
+1. **Compose**: Connect agents into effective workflows across any framework or vendor.
+1. **Deploy**: Run multi-agent systems at scale, securely.
+1. **Evaluate**: Monitor performance and improve efficiency and efficacy over time.
 
 ## Technical Objectives
 

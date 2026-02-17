@@ -494,8 +494,8 @@ Application developers do not need to manage endpoint names or connectivity
 details, as these aspects are handled automatically by SLIMRPC and SLIM.
 
 All RPC services underneath utilize a point-to-point session. The SLIM
-session creation is implemented in inside SLIMRPC in
-[channel.py](https://github.com/agntcy/slim/blob/slim-bindings-v1.1.1/data-plane/bindings/rust/src/slimrpc/channel.rs#L657-L670):
+session creation is implemented inside SLIMRPC in
+[channel.rs](https://github.com/agntcy/slim/blob/slim-bindings-v1.1.1/data-plane/bindings/rust/src/slimrpc/channel.rs#L657-L670):
 
 ```rust
 let slim_config = slim_session::session_config::SessionConfig {
@@ -514,7 +514,7 @@ let (session_ctx, completion) = app
     .map_err(|e| Status::unavailable(format!("Failed to create session: {}", e)))?;
 ```
 
-This session used by SLIMRPC is also reliable. For each message, the sender
+The session used by SLIMRPC is also reliable. For each message, the sender
 waits for an acknowledgment (ACK) packet for 1 second
 (`timeout=datetime.timedelta(seconds=1)`). If no acknowledgment is received, the
 message will be re-sent up to 10 times (`max_retries=10`) before notifying the
@@ -537,8 +537,8 @@ services will be:
 - `agntcy/grpc/server-example_service.Test-ExampleStreamUnary/instance-1`
 - `agntcy/grpc/server-example_service.Test-ExampleStreamUnary/instance-2`
 
-Now, if a new client wants to use the Stream-Unary service it needs to knows
-only the general name
+Now, if a new client wants to use the Stream-Unary service it only needs to know
+the general name
 `agntcy/grpc/server-example_service.Test-ExampleStreamUnary`. SLIMRPC will
 leverage SLIM's capabilities to first discover one of the available services,
 and then SLIMRPC will use its full, specific name to consistently communicate
