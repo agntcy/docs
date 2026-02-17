@@ -73,7 +73,6 @@ jobs:
         with:
           args: |
             --dump
-            --include-fragments
             --config lychee.toml
             --root-dir $PWD/.build/site
             --exclude-all-private
@@ -107,7 +106,6 @@ jobs:
         with:
           args: |
             --no-progress
-            --include-fragments
             --config lychee.toml
             --root-dir $PWD/.build/site
             --exclude-all-private
