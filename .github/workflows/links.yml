@@ -50,5 +50,5 @@ jobs:
         uses: lycheeverse/lychee-action@v2
         with:
           args: '--config lychee.toml .build/site'
-          fail: false
+          fail: true
 

@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: Copyright (c) 2026 Cisco and/or its affiliates.
 # SPDX-License-Identifier: Apache-2.0
 
-name: PR Links
+name: Check links in diffs
 
 on:
   pull_request:
@@ -10,10 +10,20 @@ on:
   workflow_dispatch:
 
 jobs:
-  linkChecker:
+  check-links:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Clone repository (PR)
+        if: github.event_name == 'pull_request'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          submodules: 'recursive'
+
+      - name: Clone repository (manual)
+        if: github.event_name == 'workflow_dispatch'
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -38,16 +48,58 @@ jobs:
         shell: bash
         run: echo "$HOME/.local/bin" >> $GITHUB_PATH
 
-      - name: Build docs
-        shell: bash
+      - name: Check out base branch
+        if: github.event_name == 'pull_request'
         run: |
-          task build
+          git fetch origin ${{ github.event.pull_request.base.ref }}
+          git checkout ${{ github.event.pull_request.base.ref }}
 
-      - name: Check links in PR changes
+      - name: Build docs (base branch)
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: task build
+
+      - name: Dump all links from base branch
+        if: github.event_name == 'pull_request'
+        id: dump_links
         uses: lycheeverse/lychee-action@v2
         with:
-          # Remap live URLs to build directory because the links are potentially not live yet
           args: |
+            --dump
+            --include-fragments
+            --config lychee.toml
+            --root-dir $PWD/.build/site
+            --exclude-all-private
+            --remap 'https://docs\.agntcy\.org/(.*)/ file://'$PWD'/.build/site/$1/index.html'
+            .build/site/
+          output: ./links-main.txt
+
+      - name: Stash untracked files
+        if: github.event_name == 'pull_request'
+        run: git stash push --include-untracked
+
+      - name: Check out feature branch
+        if: github.event_name == 'pull_request'
+        run: git checkout ${{ github.head_ref }}
+
+      - name: Apply stashed changes
+        if: github.event_name == 'pull_request'
+        run: git stash pop || true
+
+      - name: Build docs (feature branch)
+        shell: bash
+        run: task build
+
+      - name: Append base-branch links to .lycheeignore
+        if: github.event_name == 'pull_request'
+        run: cat links-main.txt >> .lycheeignore
+
+      - name: Check links
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: |
+            --no-progress
+            --include-fragments
             --config lychee.toml
             --root-dir $PWD/.build/site
             --exclude-all-private
@@ -57,7 +109,7 @@ jobs:
           output: lychee/out.md
 
       - name: Comment Broken Links
-        if: failure()
+        if: failure() && github.event_name == 'pull_request'
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           path: lychee/out.md
@@ -65,8 +117,7 @@ jobs:
       - name: Suggestions
         if: failure()
         run: |
-          echo -e "\nPlease review the links reported in the 'Check links in PR changes' step above."
+          echo -e "\nPlease review the links reported in the Check links step above."
           echo -e "If a link is valid but fails due to a CAPTCHA challenge, IP blocking, login requirements, etc.,"
-          echo -e "consider adding such links to lychee.toml exclude list to bypass future checks.\n"
+          echo -e "consider adding such links to .lycheeignore or lychee.toml exclude list to bypass future checks.\n"
           exit 1
-
