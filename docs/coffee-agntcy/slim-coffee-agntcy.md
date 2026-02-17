@@ -7,7 +7,7 @@ CoffeeAGNTCY works with both NATS and [SLIM](../slim/overview.md) transports and
 - **NATS**: Default for publisher/subscriber patterns.
 - **SLIM**: Default for group communication patterns.
 
-You can find the transport configuration [here](https://github.com/agntcy/coffeeAgntcy/blob/main/coffeeAGNTCY/coffee_agents/lungo/config/config.py#L9-L10).
+You can find the transport configuration [here](https://github.com/agntcy/coffeeAgntcy/blob/main/coffeeAGNTCY/coffee_agents/lungo/config/config.py).
 
 The **AGNTCY App SDK** abstracts the underlying SLIM protocol behind a unified factory API. This allows developers to instantiate SLIM-based A2A (agent-to-agent) clients and servers without dealing directly with low-level transport details. Learn more about the App SDK [here](https://github.com/agntcy/app-sdk).
 
