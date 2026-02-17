@@ -48,60 +48,43 @@ jobs:
         shell: bash
         run: echo "$HOME/.local/bin" >> $GITHUB_PATH
 
-      - name: Remember PR head
-        if: github.event_name == 'pull_request'
-        id: pr_head
-        run: echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+      - name: Build docs
+        shell: bash
+        run: task build
 
-      - name: Check out base branch
+      - name: Fetch base branch
         if: github.event_name == 'pull_request'
         run: |
-          # Use base repo so fork PRs get the correct base branch (main/master), not the fork's
           git remote add upstream https://github.com/${{ github.repository }}.git 2>/dev/null || true
           git fetch upstream ${{ github.event.pull_request.base.ref }}
-          git checkout FETCH_HEAD
 
-      - name: Build docs (base branch)
-        if: github.event_name == 'pull_request'
-        shell: bash
-        run: task build
-
-      - name: Dump all links from base branch
-        if: github.event_name == 'pull_request'
-        id: dump_links
-        uses: lycheeverse/lychee-action@v2
-        with:
-          args: |
-            --dump
-            --config lychee.toml
-            --root-dir $PWD/.build/site
-            --exclude-all-private
-            --remap 'https://docs\.agntcy\.org/(.*)/ file://'$PWD'/.build/site/$1/index.html'
-            .build/site/
-          output: ./links-main.txt
-          failIfEmpty: false
-
-      - name: Stash untracked files
-        if: github.event_name == 'pull_request'
-        run: git stash push --include-untracked
-
-      - name: Check out feature branch
-        if: github.event_name == 'pull_request'
-        run: git checkout ${{ steps.pr_head.outputs.sha }}
-
-      - name: Apply stashed changes
-        if: github.event_name == 'pull_request'
-        run: git stash pop || true
-
-      - name: Build docs (feature branch)
-        shell: bash
-        run: task build
-
-      - name: Append base-branch links to .lycheeignore
-        if: github.event_name == 'pull_request'
-        run: cat links-main.txt >> .lycheeignore
+      - name: Get paths to check
+        id: get_paths
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "paths=.build/site" >> $GITHUB_OUTPUT
+            echo "has_paths=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          BASE=$(git merge-base FETCH_HEAD HEAD)
+          changed=$(git diff --name-only $BASE...HEAD -- docs/)
+          paths=""
+          for f in $changed; do
+            [ -z "$f" ] && continue
+            if [ "$f" = "docs/index.md" ]; then
+              paths="$paths .build/site/index.html"
+            else
+              path="${f#docs/}"
+              path="${path%.md}"
+              paths="$paths .build/site/${path}/"
+            fi
+          done
+          paths=$(echo $paths)
+          echo "paths=$paths" >> $GITHUB_OUTPUT
+          [ -n "$paths" ] && echo "has_paths=true" >> $GITHUB_OUTPUT || echo "has_paths=false" >> $GITHUB_OUTPUT
 
       - name: Check links
+        if: steps.get_paths.outputs.has_paths == 'true'
         uses: lycheeverse/lychee-action@v2
         with:
           args: |
@@ -110,7 +93,7 @@ jobs:
             --root-dir $PWD/.build/site
             --exclude-all-private
             --remap 'https://docs\.agntcy\.org/(.*)/ file://'$PWD'/.build/site/$1/index.html'
-            .build/site/
+            ${{ steps.get_paths.outputs.paths }}
           fail: true
           output: lychee/out.md
 
@@ -125,5 +108,5 @@ jobs:
         run: |
           echo -e "\nPlease review the links reported in the Check links step above."
           echo -e "If a link is valid but fails due to a CAPTCHA challenge, IP blocking, login requirements, etc.,"
-          echo -e "consider adding such links to .lycheeignore or lychee.toml exclude list to bypass future checks.\n"
+          echo -e "consider adding such links to lychee.toml exclude list to bypass future checks.\n"
           exit 1
