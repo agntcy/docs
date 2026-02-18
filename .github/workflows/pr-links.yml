@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: Copyright (c) 2026 Cisco and/or its affiliates.
 # SPDX-License-Identifier: Apache-2.0
 
-name: PR Links
+name: Check links in diffs
 
 on:
   pull_request:
@@ -10,10 +10,20 @@ on:
   workflow_dispatch:
 
 jobs:
-  linkChecker:
+  check-links:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Clone repository (PR)
+        if: github.event_name == 'pull_request'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          submodules: 'recursive'
+
+      - name: Clone repository (manual)
+        if: github.event_name == 'workflow_dispatch'
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -40,24 +50,55 @@ jobs:
 
       - name: Build docs
         shell: bash
-        run: |
-          task build
+        run: task build
 
-      - name: Check links in PR changes
+      - name: Fetch base branch
+        if: github.event_name == 'pull_request'
+        run: |
+          git remote add upstream https://github.com/${{ github.repository }}.git 2>/dev/null || true
+          git fetch upstream ${{ github.event.pull_request.base.ref }}
+
+      - name: Get paths to check
+        id: get_paths
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "paths=.build/site" >> $GITHUB_OUTPUT
+            echo "has_paths=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          BASE=$(git merge-base FETCH_HEAD HEAD)
+          changed=$(git diff --name-only $BASE...HEAD -- docs/)
+          paths=""
+          for f in $changed; do
+            [ -z "$f" ] && continue
+            if [ "$f" = "docs/index.md" ]; then
+              paths="$paths .build/site/index.html"
+            else
+              path="${f#docs/}"
+              path="${path%.md}"
+              paths="$paths .build/site/${path}/"
+            fi
+          done
+          paths=$(echo $paths)
+          echo "paths=$paths" >> $GITHUB_OUTPUT
+          [ -n "$paths" ] && echo "has_paths=true" >> $GITHUB_OUTPUT || echo "has_paths=false" >> $GITHUB_OUTPUT
+
+      - name: Check links
+        if: steps.get_paths.outputs.has_paths == 'true'
         uses: lycheeverse/lychee-action@v2
         with:
-          # Remap live URLs to build directory because the links are potentially not live yet
           args: |
+            --no-progress
             --config lychee.toml
             --root-dir $PWD/.build/site
             --exclude-all-private
             --remap 'https://docs\.agntcy\.org/(.*)/ file://'$PWD'/.build/site/$1/index.html'
-            .build/site/
+            ${{ steps.get_paths.outputs.paths }}
           fail: true
           output: lychee/out.md
 
       - name: Comment Broken Links
-        if: failure()
+        if: failure() && github.event_name == 'pull_request'
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           path: lychee/out.md
@@ -65,8 +106,7 @@ jobs:
       - name: Suggestions
         if: failure()
         run: |
-          echo -e "\nPlease review the links reported in the 'Check links in PR changes' step above."
+          echo -e "\nPlease review the links reported in the Check links step above."
           echo -e "If a link is valid but fails due to a CAPTCHA challenge, IP blocking, login requirements, etc.,"
           echo -e "consider adding such links to lychee.toml exclude list to bypass future checks.\n"
           exit 1
-
