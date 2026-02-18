@@ -62,12 +62,6 @@ an extension to the schema.
 An OASF instance with schema extensions can be hosted, allowing you to use your
 own schema server for record validation.
 
-Alternatively, records can be extended by adding arbitrary JSON objects to the
-`modules` list, using module names that do not conflict with existing OASF
-modules.
-However, this approach is the least recommended, as validation will be skipped
-for these modules if the record is validated against the standard OASF schema.
-
 ## Useful Links
 
 A convenient way to browse and use the OASF schema is through the
