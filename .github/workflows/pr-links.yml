@@ -71,6 +71,8 @@ jobs:
           paths=""
           for f in $changed; do
             [ -z "$f" ] && continue
+            # Skip non-.md files (e.g. awesome-pages .index); lychee cannot parse them
+            case "$f" in *.md) ;; *) continue ;; esac
             if [ "$f" = "docs/index.md" ]; then
               paths="$paths .build/site/index.html"
             else
@@ -82,6 +84,12 @@ jobs:
           paths=$(echo $paths)
           echo "paths=$paths" >> $GITHUB_OUTPUT
           [ -n "$paths" ] && echo "has_paths=true" >> $GITHUB_OUTPUT || echo "has_paths=false" >> $GITHUB_OUTPUT
+
+      - name: Remove paths lychee cannot parse
+        if: steps.get_paths.outputs.has_paths == 'true'
+        run: |
+          find .build/site -name '.index' -type f -delete
+          find .build/site -depth -name '.index' -type d -exec rm -rf {} \;
 
       - name: Check links
         if: steps.get_paths.outputs.has_paths == 'true'
