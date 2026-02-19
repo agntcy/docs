@@ -54,8 +54,9 @@ exclude = [
     '.*assets/dir-gui\.mov',
 ]
 
-# Exclude paths (glob patterns relative to the input)
-exclude_path = ['overrides']
+# Exclude paths (regex patterns relative to the input)
+# Skip MkDocs awesome-pages .index files/dirs that lychee cannot parse
+exclude_path = ['overrides', '\\.index(/|$)']
 
 # Enable link caching for faster subsequent runs
 cache = true
