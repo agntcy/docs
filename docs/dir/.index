@@ -9,10 +9,10 @@ nav:
   - Validation: validation.md
   - Trust Model: trust-model.md
   - Features and Usage: scenarios.md
-  - Directory Sandbox:
-    - Overview: directory-sandbox.md
+  - Directory Testbed:
+    - Overview: directory-testbed.md
+    - Testbed Deployment: directory-testbed-deployment.md
     - Public Staging Environment: directory-public-staging.md
-    - Deployment: directory-sandbox-deployment.md
   - CLI Reference: directory-cli.md
   - GUI Application: directory-gui.md
   - SDK Reference: directory-sdk.md

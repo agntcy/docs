@@ -1,12 +1,17 @@
 # Directory Public Staging Environment
 
-This is a public staging environment for development and testing. Keep in mind the following:
+This page describes the Directory public staging environment and how to connect your organization to it. You establish trust by federating your SPIRE server with the Directory SPIRE server using one of two supported bundle endpoint profiles: `https_web` (used by the testbed and recommended for most cases) or `https_spiffe` (SPIFFE mutual TLS).
 
-* There are no SLA or data persistence guarantees.
-* This environment is not for production use.
-* This environment is ideal for prototyping, integration, and exploration.
+!!! note
+    The public staging environment is for development and testing. Keep in mind the following:
+
+    - There are no SLA or data persistence guarantees.
+    - This environment is not for production use.
+    - This environment is ideal for prototyping, integration, and exploration.
 
 ## Architecture Overview
+
+The following diagram shows how your application, the Directory network, and other federation members connect via the Directory API and SPIRE federation.
 
 ```mermaid
 flowchart LR
@@ -31,6 +36,8 @@ flowchart LR
 
 ## Available Endpoints
 
+Use the following endpoints to reach the public staging Directory API, SPIRE federation, and status dashboard.
+
 | Service              | URL                                   | Purpose                                     |
 | -------------------- | ------------------------------------- | ------------------------------------------- |
 | Directory API    | `https://api.directory.agntcy.org`    | Main API for agent discovery and management |
@@ -45,6 +52,8 @@ For the testbed production deployment the following endpoints are available:
 - `prod.oidc-discovery.spire.ads.outshift.io` (for OIDC discovery)
 
 ## Quick Start Guide
+
+This section walks you through preparing your environment, configuring the client, and completing federation so you can use the public staging Directory.
 
 ### Prerequisites
 
@@ -171,10 +180,28 @@ To interact with the Directory, you need to establish a trusted federation betwe
 
 ### Step 1: Prepare Your Federation Request
 
-Create a file with your SPIRE server details using the template below:
+Create a federation file with your SPIRE server details. The Directory supports two bundle endpoint profiles; choose the one that matches your environment.
+
+**Option A: https_web profile** (recommended for testbed and most deployments)
+
+Federation over standard HTTPS using CA-signed certificates. No bootstrap bundle exchange is required. The testbed uses this profile.
 
 ```yaml
-# onboarding/your-org.com.yaml
+# onboarding/federation/your-org.com.yaml
+className: dir-spire
+trustDomain: your-org.com
+bundleEndpointURL: https://spire.your-org.com
+bundleEndpointProfile:
+  type: https_web
+```
+
+**Option B: https_spiffe profile**
+
+Federation over SPIFFE mutual TLS using X.509-SVIDs. Requires a one-time bootstrap bundle exchange with the Directory and SSL passthrough on your ingress.
+
+```yaml
+# onboarding/federation/your-org.com.yaml
+className: dir-spire
 trustDomain: your-org.com
 bundleEndpointURL: https://spire.your-org.com
 bundleEndpointProfile:
@@ -194,39 +221,46 @@ trustDomainBundle: |-
   }
 ```
 
-!!! tip
-    To get your trust bundle:
+!!! note
+    Organizations must establish their own secure procedures for exchanging bootstrap bundles with federation partners. The bundle exchange mechanism (email, file transfer, version control, etc.) should align with organizational security policies.
 
-    ```bash
-    # Export your SPIRE server trust bundle
-    spire-server bundle show -format spiffe > your-trust-bundle.json
-    ```
+To get your trust bundle (for `https_spiffe` or for sharing with the Directory):
+
+```bash
+# Export your SPIRE server trust bundle
+spire-server bundle show -format spiffe > your-trust-bundle.json
+```
 
 ### Step 2: Submit Federation Request
 
-1. Fork the [AGNTCY Directory repository](https://github.com/agntcy/dir)
+Submit your federation configuration to the Directory by adding a file to the [dir-staging](https://github.com/agntcy/dir-staging) repository and opening a pull request:
 
-2. Create your federation file:
+1. Fork and clone the dir-staging repository:
 
-      ```bash
-      git clone https://github.com/your-username/dir.git
-      cd dir/deployment/onboarding/
-      cp spire.template.yaml your-org.com.yaml
-      # Edit your-org.com.yaml with your details
-      ```
+   ```bash
+   git clone https://github.com/your-username/dir-staging.git
+   cd dir-staging
+   ```
 
-3. Submit a Pull Request:
+2. Add your federation file under `onboarding/federation/` using the same structure as in Step 1. Name the file after your trust domain (e.g. `your-org.com.yaml`):
 
-      - Title: `federation(<Trust Domain>): add [Your Organization]`.
-      - Description: Brief description of your organization and use case.
-      - Files: Include your completed federation configuration.
+   ```bash
+   # Create or edit your federation file
+   # Path: onboarding/federation/your-org.com.yaml
+   ```
+
+   For `https_web` (testbed / recommended): include `className`, `trustDomain`, `bundleEndpointURL`, and `bundleEndpointProfile.type: https_web`.  
+   For `https_spiffe`: also include `endpointSPIFFEID` and `trustDomainBundle` in the same file.
+
+3. Submit a pull request to the upstream [agntcy/dir-staging](https://github.com/agntcy/dir-staging) repo:
+
+   - Title: `federation(<Trust Domain>): add [Your Organization]`
+   - Description: Brief description of your organization and use case.
+   - Files: Your new or updated file under `onboarding/federation/`.
 
 ### Step 3: Configure Your SPIRE Server
 
-Add the Directory SPIRE server as a federation peer in your SPIRE server configuration
-by obtaining the [Directory trust bundle](https://github.com/agntcy/dir-staging/tree/feat/deploy/onboarding).
-
-Save the trust bundle to the specified path.
+Add the Directory SPIRE server as a federation peer in your SPIRE server configuration. Obtain the Directory trust bundle from the [dir-staging onboarding resources](https://github.com/agntcy/dir-staging/tree/main/onboarding) (or from the Directory team after your federation request is approved) and configure it in your SPIRE server per your deployment method.
 
 ### Step 4: Verify Federation
 
@@ -234,7 +268,7 @@ Save the trust bundle to the specified path.
 # Check federation status
 spire-server federation list
 
-# Should show federated trust domain
+# Should show the federated trust domain
 spire-server federation show --trustDomain dir.agntcy.org
 ```
 
