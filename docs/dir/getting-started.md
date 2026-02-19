@@ -66,8 +66,8 @@ All artifacts are tagged using the [Semantic Versioning](https://semver.org/) an
 All container images are distributed via [GitHub Packages](https://github.com/orgs/agntcy/packages?repo_name=dir).
 
 ```bash
-docker pull ghcr.io/agntcy/dir-ctl:v1.0.0-rc.3
-docker pull ghcr.io/agntcy/dir-apiserver:v1.0.0-rc.3
+docker pull ghcr.io/agntcy/dir-ctl:v1.0.0
+docker pull ghcr.io/agntcy/dir-apiserver:v1.0.0
 ```
 
 ### Helm charts
@@ -75,7 +75,7 @@ docker pull ghcr.io/agntcy/dir-apiserver:v1.0.0-rc.3
 All helm charts are distributed as OCI artifacts via [GitHub Packages](https://github.com/agntcy/dir/pkgs/container/dir%2Fhelm-charts%2Fdir).
 
 ```bash
-helm pull oci://ghcr.io/agntcy/dir/helm-charts/dir --version v1.0.0-rc.3
+helm pull oci://ghcr.io/agntcy/dir/helm-charts/dir --version v1.0.0
 ```
 
 ### Binaries
@@ -116,14 +116,14 @@ DIRECTORY_SERVER_OASF_API_VALIDATION_SCHEMA_URL=https://schema.oasf.outshift.com
 This deploys Directory services into an existing Kubernetes cluster.
 
 ```bash
-helm pull oci://ghcr.io/agntcy/dir/helm-charts/dir --version v1.0.0-rc.3
-helm upgrade --install dir oci://ghcr.io/agntcy/dir/helm-charts/dir --version v1.0.0-rc.3
+helm pull oci://ghcr.io/agntcy/dir/helm-charts/dir --version v1.0.0
+helm upgrade --install dir oci://ghcr.io/agntcy/dir/helm-charts/dir --version v1.0.0
 ```
 
 Alternatively, you can configure the OASF schema URL explicitly:
 
 ```bash
-helm upgrade --install dir oci://ghcr.io/agntcy/dir/helm-charts/dir --version v1.0.0-rc.3 \
+helm upgrade --install dir oci://ghcr.io/agntcy/dir/helm-charts/dir --version v1.0.0 \
   --set apiserver.config.oasf_api_validation.schema_url=https://schema.oasf.outshift.com
 ```
 
@@ -139,7 +139,7 @@ apiserver:
 Then deploy:
 
 ```bash
-helm upgrade --install dir oci://ghcr.io/agntcy/dir/helm-charts/dir --version v1.0.0-rc.3 -f values.yaml
+helm upgrade --install dir oci://ghcr.io/agntcy/dir/helm-charts/dir --version v1.0.0 -f values.yaml
 ```
 
 For more configuration options, see the [Validation](validation.md) documentation.
