@@ -1,6 +1,11 @@
 nav:
   - Overview: overview.md
   - Getting Started: getting-started.md
+  - Deployment:
+    - Production Deployment: deployment.md
+    - Connect to the Public Directory: federation.md
+    - Federation Profiles: federation-profiles.md
+    - Federation Profile Configuration: federation-profile-configuration.md
   - Architecture: architecture.md
   - Components:
     - Runtime Discovery: runtime.md
