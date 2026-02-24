@@ -1,11 +1,13 @@
 nav:
   - Overview: overview.md
   - Getting Started: getting-started.md
-  - Deployment:
-    - Production Deployment: deployment.md
+  - Features and Usage Scenarios: scenarios.md
+  - Production Deployment: prod-deployment.md
+  - Federation:
     - Connect to the Public Directory: federation.md
-    - Federation Profiles: federation-profiles.md
-    - Federation Profile Configuration: federation-profile-configuration.md
+    - Profiles: federation-profiles.md
+    - Profile Configuration: federation-profile-configuration.md
+    - Best Practices and Troubleshooting: federation-troubleshooting.md
   - Architecture: architecture.md
   - Components:
     - Runtime Discovery: runtime.md
@@ -13,7 +15,6 @@ nav:
   - Records: ads-records.md
   - Validation: validation.md
   - Trust Model: trust-model.md
-  - Features and Usage: scenarios.md
   - CLI Reference: directory-cli.md
   - GUI Application: directory-gui.md
   - SDK Reference: directory-sdk.md

@@ -1,8 +1,6 @@
 # Federation Profile Configuration
 
-This document provides implementation details for the [https_web](federation-profiles.md#profile-1-https_web) and [https_spiffe](federation-profiles.md#profile-2-https_spiffe) federation bundle profiles. For profile comparison and selection guidance, see [Federation Bundle Profiles](federation-profiles.md).
-
----
+This document provides implementation details for the `https_web` and `https_spiffe` federation bundle profiles. For profile comparison and selection guidance, see [Federation Bundle Profiles](federation-profiles.md).
 
 ## Side-by-Side Configuration
 
@@ -133,8 +131,6 @@ kubectl get certificate -n dir-spire spire-server-federation-cert
 # Expected: READY=True
 ```
 
----
-
 ### https_spiffe Configuration
 
 **Prerequisites:**
@@ -153,7 +149,7 @@ kubectl get deployment -n ingress-nginx ingress-nginx-controller -o yaml | \
 kubectl rollout status -n ingress-nginx deployment/ingress-nginx-controller
 
 # Exchange bootstrap bundles with federation partners
-# See "Bootstrap Bundle Exchange Process" section for detailed procedures
+# See [Bootstrap Bundle Exchange Process](federation-profiles.md#bootstrap-bundle-exchange-process-https_spiffe) for detailed procedures
 
 # Optional: Configure DNS (can use IP addresses)
 # Create A record: spire.example.com → <ingress-external-ip>

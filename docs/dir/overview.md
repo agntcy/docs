@@ -139,6 +139,6 @@ sequenceDiagram
 
 Ready to get started? Choose your path:
 
-- **Connect to the public Directory** — Use the existing network at `prod.api.ads.outshift.io` to discover and publish agents. See [Connect to the Public Directory](federation.md).
-- **Run a local instance** — Deploy Directory with SPIRE in a Kind cluster for development and testing. See [Getting Started](getting-started.md).
-- **Deploy for production** — Run your own Directory instance on AWS EKS and optionally federate with the network. See [Production Deployment](deployment.md).
+- Run a local instance: deploy Directory with SPIRE in a Kind cluster for development and testing. See [Getting Started](getting-started.md).
+- Connect to the public Directory: use the existing network at `prod.api.ads.outshift.io` to discover and publish agents. See [Connect to the Public Directory](federation.md).
+- Deploy for production: run your own Directory instance on AWS EKS and optionally federate with the network. See [Production Deployment](prod-deployment.md).

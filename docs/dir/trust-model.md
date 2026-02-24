@@ -283,8 +283,6 @@ task test:spire
 task test:spire:cleanup
 ```
 
----
-
 For more details, see:
 
 - [Federation Setup](federation.md) - Connect to the public Directory network

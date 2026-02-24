@@ -19,7 +19,6 @@ Design goals:
 - **Portability:** Swap storage by implementing a small provider contract.
 - **Consistency:** Uniform response envelopes (metadata + data + pagination cursor).
 
----
 ## Metrics Computation Engine (MCE)
 
 The Metrics Computation Engine computes **derived** metrics at multiple aggregation levels:

@@ -11,8 +11,6 @@ This guide documents production deployment of Directory on AWS EKS. For local de
     - Does not need to be a real DNS domain (but can be)
     - Will be visible to federation partners
 
----
-
 ## Overview
 
 Production deployment uses:
@@ -22,8 +20,6 @@ Production deployment uses:
 - **Identity:** SPIFFE/SPIRE for zero-trust authentication
 - **Storage:** Zot OCI Registry with persistent volumes
 - **GitOps:** ArgoCD for deployment management
-
----
 
 ## Architecture
 
@@ -42,8 +38,6 @@ flowchart TB
   NGINX --> Zot
   Dir --> Admin
 ```
-
----
 
 ## Prerequisites
 
@@ -69,8 +63,6 @@ flowchart TB
 - **Storage Class** – `ebs-sc-encrypted` for production
 - **Vault** – For credential storage
 
----
-
 ## Local vs Production
 
 | Feature | Local (Kind) | Production (EKS) |
@@ -83,8 +75,6 @@ flowchart TB
 | **Ingress** | NodePort, port-forward | Ingress + TLS |
 | **Rate Limits** | 50 RPS | 500+ RPS |
 | **Trust Domain** | example.org (local only) | your-domain.com |
-
----
 
 ## Key Production Features
 
@@ -131,8 +121,6 @@ tls:
 
 **NGINX Ingress Controller** must have `--enable-ssl-passthrough=true`.
 
----
-
 ## DNS Hostnames
 
 Create DNS records for your domain. Example with `your-domain.com`:
@@ -143,8 +131,6 @@ Create DNS records for your domain. Example with `your-domain.com`:
 | **Zot Registry** | zot.your-domain.com |
 | **SPIRE Federation** | spire.your-domain.com |
 | **SPIRE OIDC** | oidc-discovery.spire.your-domain.com |
-
----
 
 ## Verification
 
@@ -172,8 +158,6 @@ kubectl logs -n <your-dir-namespace> -l app.kubernetes.io/name=apiserver | \
 kubectl get pods -n <your-dir-admin-namespace> --sort-by=.metadata.creationTimestamp | tail -10
 ```
 
----
-
 ## Troubleshooting
 
 ### "certificate contains no URI SAN"
@@ -195,8 +179,6 @@ ConfigMaps are mounted at pod creation. Restart the deployment:
 ```bash
 kubectl rollout restart deployment/<your-apiserver-deployment> -n <your-dir-namespace>
 ```
-
----
 
 ## Reference
 
