@@ -10,8 +10,6 @@ Assumptions:
 - Let's Encrypt production issuer with cert-manager is deployed in your cluster (`letsencrypt-prod` or equivalent).
 - NGINX (or compatible) Ingress controller is available.
 
----
-
 ## Prerequisites
 
 - Kubernetes cluster with an Ingress controller.
