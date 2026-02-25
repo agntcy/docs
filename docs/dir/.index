@@ -4,9 +4,8 @@ nav:
   - Features and Usage Scenarios: scenarios.md
   - Production Deployment: prod-deployment.md
   - Federation:
-    - Connect to the Public Directory: federation.md
+    - Running a Federated Directory Instance: partner-prod-federation.md
     - Profiles: federation-profiles.md
-    - Profile Configuration: federation-profile-configuration.md
     - Best Practices and Troubleshooting: federation-troubleshooting.md
   - Architecture: architecture.md
   - Components:
