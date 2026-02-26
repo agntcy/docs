@@ -34,10 +34,10 @@ jobs:
         with:
           go-version: '1.23.1'
 
-      - name: Setup Taskfile
-        shell: bash
-        run: |
-          sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
+      - name: Setup Task
+        uses: arduino/setup-task@v2
+        with:
+          version: '3.48.0'
 
       - name: Setup UV
         shell: bash
@@ -104,12 +104,6 @@ jobs:
             ${{ steps.get_paths.outputs.paths }}
           fail: true
           output: lychee/out.md
-
-      - name: Comment Broken Links
-        if: failure() && github.event_name == 'pull_request'
-        uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          path: lychee/out.md
 
       - name: Suggestions
         if: failure()
