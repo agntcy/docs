@@ -876,4 +876,4 @@ Use the following commands to get help with the CLI:
     dirctl routing search --help
     ```
 
-For more advanced usage, troubleshooting, and development workflows, see the [AGNTCY documentation](https://docs.agntcy.org/dir/).
+For more advanced usage, troubleshooting, and development workflows, see the [AGNTCY documentation](https://docs.agntcy.org/dir/overview/).
