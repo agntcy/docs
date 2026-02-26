@@ -171,7 +171,6 @@ Using the Directory MCP Server, you can access the following tools:
 - `agntcy_dir_push_record` - Pushes an OASF agent record to a Directory server.
 - `agntcy_dir_pull_record` - Pulls an OASF agent record from the local Directory node by its CID (Content Identifier).
 - `agntcy_dir_search_local` - Searches for agent records on the local directory node using structured query filters.
-- `agntcy_dir_verify_name` - Verifies that a record's name is owned by the domain it claims (by CID or name; optional version). Checks that the record was signed with a key published in the domain's well-known JWKS file.
 
 For a full list of tools and usage examples, see the [Directory MCP Server documentation](https://github.com/agntcy/dir/blob/main/mcp/README.md).
 
