@@ -290,25 +290,6 @@ Assumptions:
 
     Once your PR is merged, prod fetches your bundle from `https://spire.partner.io` and accepts X.509-SVIDs from `partner.io` workloads. Dir-to-dir federation (sync, API calls between instances) now works between your Directory and prod.
 
-## Architecture
-
-```mermaid
-flowchart LR
-  subgraph Your_App[Your Application]
-    Client[Directory Client SDK]
-    Agent[SPIRE Agent]
-  end
-
-  subgraph Dir_Network[Directory Network]
-    API[Directory API Service]
-    SPIRE[SPIRE Server Federation]
-  end
-
-  Client <--> API
-  Agent <--> SPIRE
-  SPIRE <--> API
-```
-
 ## Use Cases
 
 See [Features and Usage Scenarios](scenarios.md) for sample applications and workflows.

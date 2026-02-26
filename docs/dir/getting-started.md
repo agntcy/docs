@@ -292,7 +292,7 @@ The Agent Directory Service can be deployed using Helm or GitOps / Argo CD. Helm
     See [dir-staging](https://github.com/agntcy/dir-staging) for full configuration and customization options.
 
     !!! important "Trust domain"
-        This Quick Start uses `example.org` for local testing only. To federate with the public Directory network, you need a unique trust domain. See [Production Deployment](prod-deployment.md) and [Connect to the Public Directory](federation.md).
+        This Quick Start uses `example.org` for local testing only. To federate with the public Directory network, you need a unique trust domain. See [Production Deployment](prod-deployment.md) and [Running a Federated Directory Instance](partner-prod-federation.md).
 
 ## Deployment
 
@@ -330,37 +330,6 @@ Directory API services can be deployed either using the Taskfile, Docker Compose
     docker compose up -d
     ```
 
-=== "Helm"
-
-    Deploy Directory services into an existing Kubernetes cluster:
-
-    ```bash
-    helm pull oci://ghcr.io/agntcy/dir/helm-charts/dir --version v1.0.0
-    helm upgrade --install dir oci://ghcr.io/agntcy/dir/helm-charts/dir --version v1.0.0
-    ```
-
-    Alternatively, you can configure the OASF schema URL explicitly:
-
-    ```bash
-    helm upgrade --install dir oci://ghcr.io/agntcy/dir/helm-charts/dir --version v1.0.0 \
-      --set apiserver.config.oasf_api_validation.schema_url=https://schema.oasf.outshift.com
-    ```
-
-    Or create a `values.yaml` file:
-
-    ```yaml
-    apiserver:
-      config:
-        oasf_api_validation:
-          schema_url: "https://schema.oasf.outshift.com"
-    ```
-
-    Then deploy:
-
-    ```bash
-    helm upgrade --install dir oci://ghcr.io/agntcy/dir/helm-charts/dir --version v1.0.0 -f values.yaml
-    ```
-
 For more configuration options, see [Validation](validation.md).
 
 ## Directory MCP Server
@@ -369,6 +338,6 @@ The Directory services are also accessible through the Directory MCP Server. It 
 
 ## Next Steps
 
-- Connect to the public Directory: federate with the public Directory network at `prod.api.ads.outshift.io` to discover and publish agents. See [Connect to the Public Directory](federation.md).
+- Connect to the public Directory: federate with the public Directory network at `prod.api.ads.outshift.io` to discover and publish agents. See [Running a Federated Directory Instance](partner-prod-federation.md).
 - Use the [Directory CLI](directory-cli.md) to create and query records.
 - Explore [Features and Usage Scenarios](scenarios.md): build, store, sign, discover, search.

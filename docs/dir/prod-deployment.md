@@ -1,6 +1,6 @@
 # Production Deployment
 
-This guide documents production deployment of Directory on AWS EKS. For local development and testing with Kind, see [Getting Started](getting-started.md). For connecting to the public Directory network or federating your instance, see [Connect to the Public Directory](federation.md).
+This guide documents production deployment of Directory on AWS EKS. For local development and testing with Kind, see [Getting Started](getting-started.md). For connecting to the public Directory network or federating your instance, see [Running a Federated Directory Instance](partner-prod-federation.md).
 
 !!! important "Trust Domain Selection"
     Choose your **trust domain** carefully before deployment—it cannot be changed later. A trust domain is a permanent identifier for your SPIRE deployment (e.g., `acme.com`, `engineering.acme.com`).
@@ -182,6 +182,6 @@ kubectl rollout restart deployment/<your-apiserver-deployment> -n <your-dir-name
 
 ## Reference
 
-- **[dir-staging](https://github.com/agntcy/dir-staging)** – Example deployment with ArgoCD and SPIRE (uses `prod.*.ads.outshift.io` for the public Directory)
-- **[Connect to the Public Directory](federation.md)** – Federation setup for connecting to the public network
-- **[Federation Profiles](federation-profiles.md)** – Profile comparison and configuration
+- [dir-staging](https://github.com/agntcy/dir-staging) – Example deployment with ArgoCD and SPIRE (uses `prod.*.ads.outshift.io` for the public Directory)
+- [Running a Federated Directory Instance](partner-prod-federation.md) – Federation setup for connecting to the public network
+- [Federation Profiles](federation-profiles.md) – Profile comparison and configuration

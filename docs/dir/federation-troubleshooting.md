@@ -1,6 +1,6 @@
 # Federation Best Practices and Troubleshooting
 
-This page covers operational best practices and troubleshooting for Directory federation. It applies to both [https_web and https_spiffe](federation-profiles.md#profile-comparison) profiles. For profile selection and configuration details, see [Federation Bundle Profiles](federation-profiles.md) and [Federation Profile Configuration](federation-profile-configuration.md).
+This page covers operational best practices and troubleshooting for Directory federation. It applies to both [https_web and https_spiffe](federation-profiles.md#profile-comparison) profiles. For profile selection and configuration details, see [Federation Bundle Profiles](federation-profiles.md).
 
 ## Operational Best Practices
 
@@ -136,7 +136,7 @@ curl https://prod.spire.ads.outshift.io/
 
 **Root Cause:** NGINX serving default certificate instead of cert-manager issued certificate.
 
-**Resolution:** Ensure `tlsSecret` is set under `spire-server.ingress` in your Helm values (see [Federation Profile Configuration](federation-profile-configuration.md#https_web-configuration) for full context):
+**Resolution:** Ensure `tlsSecret` is set under `spire-server.ingress` in your Helm values:
 
 ```yaml
 # Under spire-server.ingress in values
