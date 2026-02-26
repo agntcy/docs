@@ -76,17 +76,7 @@ The Directory supports multiple OCI-compatible registry backends:
 | `ghcr` | GitHub Container Registry |
 | `dockerhub` | Docker Hub |
 
-#### Synchronization Requirements for Non-Zot Registries
-
-Synchronization between non-Zot registries (GHCR, DockerHub) requires the following:
-
-- PostgreSQL as the database backend
-- The reconciler component enabled
-- The regsync task enabled (`RECONCILER_REGSYNC_ENABLED=true`)
-
-The reconciler uses [regsync](https://github.com/regclient/regclient) to handle cross-registry synchronization when either the local or remote registry is not Zot.
-
-### Registry Configuration
+#### Registry Configuration
 
 The registry backend is configured via environment variables on the Directory server:
 
@@ -526,12 +516,12 @@ remote Directory instances and your local node. This feature supports distribute
 ecosystems by allowing you to replicate content from multiple remote directories, creating
 local mirrors for offline access, backup, and cross-network collaboration.
 
-**How Sync Works**: Directory leverages [Zot](https://zotregistry.dev/), a cloud-native OCI
-registry, as the underlying synchronization engine. When you create a sync operation, the
-system dynamically configures Zot's sync extension to pull content from remote registries.
-Objects are stored as OCI artifacts (manifests, blobs, and tags), enabling container-native
-synchronization with automatic polling, retry mechanisms, and secure credential exchange
-between Directory nodes.
+**How Sync Works**: Directory uses [regsync](https://github.com/regclient/regclient/tree/main/cmd/regsync)
+(from regclient) as the synchronization engine for all registry types. When you create a sync
+operation, the reconciler generates a regsync configuration and runs `regsync once` to pull
+content from remote registries. Objects are stored as OCI artifacts (manifests, blobs, and
+tags), enabling container-native synchronization with secure credential exchange between
+Directory nodes.
 
 This example demonstrates how to synchronize records between remote directories and your
 local instance.
@@ -539,7 +529,7 @@ local instance.
 ### Basic Sync Operations
 
 ```bash
-# Create a sync operation to start periodic poll from remote (sync all records)
+# Create a sync operation (reconciler will run sync and pull all records from remote)
 dirctl sync create https://remote-directory.example.com:8888
 
 # Sync specific records by CID
@@ -552,7 +542,7 @@ dirctl sync list
 # Check the status of a specific sync operation
 dirctl sync status <sync-id>
 
-# Delete a sync operation to stop periodic poll from remote
+# Mark a sync for deletion (reconciler will process and remove it)
 dirctl sync delete <sync-id>
 ```
 
