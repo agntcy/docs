@@ -75,6 +75,10 @@ The following example demonstrates how to store, publish, search, and retrieve a
     
     The CLI supports Docker-style name references in addition to CIDs. Records can be pulled using formats like `name`, `name:version`, or `name:version@cid` for hash-verified lookups. See [Name Verification](#name-verification) for details.
 
+!!! note "Authentication for federation"
+    
+    When accessing Directory federation nodes, authenticate first with `dirctl auth login`. See [Authentication](#authentication) for details.
+
 ## Directory MCP Server
 
 The Directory MCP Server provides a standardized interface for AI assistants and tools to interact with the AGNTCY Agent Directory and work with OASF agent records.
@@ -372,6 +376,12 @@ Fetch and import records from external registries.
 | `--enrich-config` | - | Path to MCPHost configuration file (mcphost.json) | No | importer/enricher/mcphost.json |
 | `--enrich-skills-prompt` | - | Optional: path to custom skills prompt template or inline prompt | No | "" (uses default) |
 | `--enrich-domains-prompt` | - | Optional: path to custom domains prompt template or inline prompt | No | "" (uses default) |
+| `--enrich-rate-limit` | - | Maximum LLM API requests per minute (to avoid rate limit errors) | No | 10 |
+| `--sign` | - | Sign records after pushing (uses OIDC by default) | No | false |
+| `--key` | - | Path to private key file for signing (requires `--sign`) | No | - |
+| `--oidc-token` | - | OIDC token for non-interactive signing (requires `--sign`) | No | - |
+| `--fulcio-url` | - | Sigstore Fulcio URL (requires `--sign`) | No | https://fulcio.sigstore.dev |
+| `--rekor-url` | - | Sigstore Rekor URL (requires `--sign`) | No | https://rekor.sigstore.dev |
 | `--server-addr` | DIRECTORY_CLIENT_SERVER_ADDRESS | DIR server address | No | localhost:8888 |
 
 !!! note
@@ -415,7 +425,134 @@ Fetch and import records from external registries.
     dirctl import --type=mcp \
       --url=https://registry.modelcontextprotocol.io/v0.1 \
       --dry-run
+
+    # Import and sign records with OIDC (opens browser for authentication)
+    dirctl import --type=mcp \
+      --url=https://registry.modelcontextprotocol.io/v0.1 \
+      --sign
+
+    # Import and sign records with a private key
+    dirctl import --type=mcp \
+      --url=https://registry.modelcontextprotocol.io/v0.1 \
+      --sign \
+      --key=/path/to/cosign.key
+
+    # Import with rate limiting for LLM API calls
+    dirctl import --type=mcp \
+      --url=https://registry.modelcontextprotocol.io/v0.1 \
+      --enrich-rate-limit=5
     ```
+
+**MCP Registry Filters:**
+
+For the Model Context Protocol registry, available filters include:
+
+- `search` - Filter by server name (substring match)
+- `version` - Filter by version ('latest' for latest version, or an exact version like '1.2.3')
+- `updated_since` - Filter by updated time (RFC3339 datetime format, e.g., '2025-08-07T13:15:04.280Z')
+
+See the [MCP Registry API docs](https://registry.modelcontextprotocol.io/docs#/operations/list-servers#Query-Parameters) for the complete list of supported filters.
+
+#### LLM-based Enrichment (Mandatory)
+
+**Enrichment is mandatory** — the import command automatically enriches MCP server records using LLM models to map them to appropriate OASF skills and domains. Records from the oasf-sdk translator are incomplete and require enrichment to be valid. This is powered by [mcphost](https://github.com/mark3labs/mcphost), which provides a Model Context Protocol (MCP) host that can run AI models with tool-calling capabilities.
+
+**Requirements:**
+
+- `dirctl` binary (includes the built-in MCP server with `agntcy_oasf_get_schema_skills` and `agntcy_oasf_get_schema_domains` tools)
+- An LLM model with tool-calling support (GPT-4o, Claude, or compatible Ollama models)
+- The `mcphost.json` configuration file must include the `dir-mcp-server` entry that runs `dirctl mcp serve`. This MCP server provides the schema tools needed for enrichment.
+
+**How it works:**
+
+1. The enricher starts an MCP server using `dirctl mcp serve`
+2. The LLM uses the `agntcy_oasf_get_schema_skills` tool to browse available OASF skills
+3. The LLM uses the `agntcy_oasf_get_schema_domains` tool to browse available OASF domains
+4. Based on the MCP server description and capabilities, the LLM selects appropriate skills and domains
+5. Selected skills and domains replace the defaults in the imported records
+
+**Setting up mcphost:**
+
+Edit a configuration file (default: `importer/enricher/mcphost.json`):
+
+```json
+{
+  "mcpServers": {
+    "dir-mcp-server": {
+      "command": "dirctl",
+      "args": ["mcp", "serve"],
+      "env": {
+        "OASF_API_VALIDATION_SCHEMA_URL": "https://schema.oasf.outshift.com"
+      }
+    }
+  },
+  "model": "azure:gpt-4o",
+  "max-tokens": 4096,
+  "max-steps": 20
+}
+```
+
+**Recommended LLM providers:**
+
+- `azure:gpt-4o` - Azure OpenAI GPT-4o (recommended for speed and accuracy)
+- `ollama:qwen3:8b` - Local Qwen3 via Ollama
+
+**Environment variables for LLM providers:**
+
+- Azure OpenAI: `AZURE_OPENAI_API_KEY`, `AZURE_OPENAI_ENDPOINT`, `AZURE_OPENAI_DEPLOYMENT`
+
+**Customizing Enrichment Prompts:**
+
+The enricher uses separate default prompt templates for skills and domains. You can customize these prompts for specific use cases:
+
+- **Skills**: Use default (omit `--enrich-skills-prompt`), or `--enrich-skills-prompt=/path/to/custom-skills-prompt.md`, or `--enrich-skills-prompt="Your custom prompt text..."`
+- **Domains**: Use default (omit `--enrich-domains-prompt`), or `--enrich-domains-prompt=/path/to/custom-domains-prompt.md`, or `--enrich-domains-prompt="Your custom prompt text..."`
+
+The default prompt templates are available at `importer/enricher/enricher.skills.prompt.md` and `importer/enricher/enricher.domains.prompt.md`.
+
+??? example "Import with custom enrichment"
+
+    ```bash
+    # Import with custom mcphost configuration
+    dirctl import --type=mcp \
+      --url=https://registry.modelcontextprotocol.io/v0.1 \
+      --enrich-config=/path/to/custom-mcphost.json
+
+    # Import with custom prompt templates
+    dirctl import --type=mcp \
+      --url=https://registry.modelcontextprotocol.io/v0.1 \
+      --enrich-skills-prompt=/path/to/custom-skills-prompt.md \
+      --enrich-domains-prompt=/path/to/custom-domains-prompt.md \
+      --debug
+    ```
+
+#### Signing Records During Import
+
+Records can be signed during import using the `--sign` flag. Signing options work the same as the standalone `dirctl sign` command (see [Security & Verification](#security-verification)).
+
+```bash
+# Sign with OIDC (opens browser)
+dirctl import --type=mcp --url=https://registry.modelcontextprotocol.io/v0.1 --sign
+
+# Sign with a private key
+dirctl import --type=mcp --url=https://registry.modelcontextprotocol.io/v0.1 --sign --key=/path/to/cosign.key
+```
+
+#### Rate Limiting for LLM API Calls
+
+When importing large batches of records, the enrichment process makes LLM API calls for each record. To avoid hitting rate limits from LLM providers, use the `--enrich-rate-limit` flag:
+
+```bash
+# Import with reduced rate limit (5 requests per minute)
+dirctl import --type=mcp \
+  --url=https://registry.modelcontextprotocol.io/v0.1 \
+  --enrich-rate-limit=5
+
+# Import with higher rate limit for providers with generous limits
+dirctl import --type=mcp \
+  --url=https://registry.modelcontextprotocol.io/v0.1 \
+  --enrich-rate-limit=30
+```
 
 ### Routing Operations
 
@@ -676,6 +813,32 @@ Verifies record signatures.
     dirctl verify record.json signature.sig --key public.key
     ```
 
+#### `dirctl validate [<file>] [flags]`
+
+Validates OASF record JSON from a file or stdin against the OASF schema. The JSON can be provided as a file path or piped from stdin (e.g., from `dirctl pull`). A schema URL must be provided via `--url` for API-based validation.
+
+| Flag | Description |
+|------|-------------|
+| `--url <url>` | OASF schema URL for API-based validation (required) |
+
+??? example
+
+    ```bash
+    # Validate a file with API-based validation
+    dirctl validate record.json --url https://schema.oasf.outshift.com
+
+    # Validate JSON piped from stdin
+    cat record.json | dirctl validate --url https://schema.oasf.outshift.com
+
+    # Validate a record pulled from directory
+    dirctl pull <cid> --output json | dirctl validate --url https://schema.oasf.outshift.com
+
+    # Validate all records (using shell scripting)
+    for cid in $(dirctl search --output jsonl | jq -r '.record_cid'); do
+      dirctl pull "$cid" | dirctl validate --url https://schema.oasf.outshift.com
+    done
+    ```
+
 ### Synchronization
 
 #### `dirctl sync create <url>`
@@ -721,6 +884,117 @@ Removes synchronization.
     # Delete a sync
     dirctl sync delete abc123-def456-ghi789
     ```
+
+## Authentication
+
+Authentication is required when accessing Directory federation nodes. The CLI supports multiple authentication modes, with GitHub OAuth recommended for interactive use.
+
+| Command | Description |
+|---------|-------------|
+| `dirctl auth login` | Authenticate with GitHub |
+| `dirctl auth logout` | Clear cached authentication credentials |
+| `dirctl auth status` | Show current authentication status |
+
+### GitHub OAuth Authentication
+
+GitHub OAuth (Device Flow) enables secure, interactive authentication for accessing federation nodes.
+
+#### `dirctl auth login`
+
+Authenticate with GitHub using the OAuth 2.0 Device Flow. No prerequisites.
+
+```bash
+# Start login (shows a code and link)
+dirctl auth login
+```
+
+What happens:
+
+1. The CLI displays a short-lived **code** (e.g. `9190-173C`) and the URL **https://github.com/login/device**
+2. You open that URL (on this machine or any device), enter the code, and authorize the application
+3. After you authorize, the CLI receives a token and caches it at `~/.config/dirctl/auth-token.json`
+4. Subsequent commands automatically use the cached token (no `--auth-mode` flag needed)
+
+```bash
+# Force re-login even if already authenticated
+dirctl auth login --force
+
+# Show code and URL only (do not open browser automatically)
+dirctl auth login --no-browser
+```
+
+!!! note "Custom OAuth App (optional)"
+    To use your own GitHub OAuth App instead of the default, create an OAuth App in [GitHub Developer Settings](https://github.com/settings/developers) with Device Flow support and set `DIRECTORY_CLIENT_GITHUB_CLIENT_ID` (and optionally `DIRECTORY_CLIENT_GITHUB_CLIENT_SECRET`). For normal use, leave these unset.
+
+#### `dirctl auth status`
+
+Check your current authentication status.
+
+```bash
+# Show authentication status
+dirctl auth status
+
+# Validate token with GitHub API
+dirctl auth status --validate
+```
+
+Example output:
+
+```
+Status: Authenticated
+  User: your-username
+  Organizations: agntcy, your-org
+  Cached at: 2025-12-22T10:30:00Z
+  Token: Valid ✓
+  Estimated expiry: 2025-12-22T18:30:00Z
+  Cache file: /Users/you/.config/dirctl/auth-token.json
+```
+
+#### `dirctl auth logout`
+
+Clear cached authentication credentials.
+
+```bash
+dirctl auth logout
+```
+
+#### Using Authenticated Commands
+
+Once authenticated via `dirctl auth login`, your cached credentials are automatically detected and used:
+
+```bash
+# Push to federation (auto-detects and uses cached GitHub credentials)
+dirctl push my-agent.json
+
+# Search federation nodes (auto-detects authentication)
+dirctl --server-addr=federation.agntcy.org:443 search --skill "natural_language_processing"
+
+# Pull from federation (auto-detects authentication)
+dirctl pull baeareihdr6t7s6sr2q4zo456sza66eewqc7huzatyfgvoupaqyjw23ilvi
+```
+
+**Authentication mode behavior:**
+
+- **No `--auth-mode` flag (default)**: Auto-detects authentication in this order: SPIFFE (if available in Kubernetes/SPIRE environment), cached GitHub credentials (if `dirctl auth login` was run), then insecure (for local development).
+- **Explicit `--auth-mode=github`**: Forces GitHub authentication (e.g. to bypass SPIFFE in a SPIRE environment).
+- **Other modes**: Use `--auth-mode=x509`, `--auth-mode=jwt`, or `--auth-mode=tls` for specific authentication methods.
+
+```bash
+# Force GitHub auth even if SPIFFE is available
+dirctl --auth-mode=github push my-agent.json
+```
+
+### Other Authentication Modes
+
+| Mode | Description | Use Case |
+|------|-------------|----------|
+| `github` | GitHub OAuth (explicit) | Force GitHub auth, bypass SPIFFE auto-detect |
+| `x509` | SPIFFE X.509 certificates | Kubernetes workloads with SPIRE |
+| `jwt` | SPIFFE JWT tokens | Service-to-service authentication |
+| `token` | SPIFFE token file | Pre-provisioned credentials |
+| `tls` | mTLS with certificates | Custom PKI environments |
+| `insecure` / `none` | No auth, skip auto-detect | Testing, local development |
+| (empty) | Auto-detect: SPIFFE → cached GitHub → insecure | Default behavior (recommended) |
 
 ## Configuration
 
@@ -844,15 +1118,82 @@ dirctl routing search --skill "AI" --output json | dirctl sync create --stdin
 # syncing only the specific CIDs that matched your search criteria
 ```
 
+### Import Workflow
+
+Import records from external registries (e.g. MCP registry) with optional signing and rate limiting:
+
+```bash
+# 1. Preview import with dry run
+dirctl import --type=mcp \
+  --url=https://registry.modelcontextprotocol.io/v0.1 \
+  --limit=10 \
+  --dry-run
+
+# 2. Perform actual import with debug output
+dirctl import --type=mcp \
+  --url=https://registry.modelcontextprotocol.io/v0.1 \
+  --filter=updated_since=2025-08-07T13:15:04.280Z \
+  --debug
+
+# 3. Force reimport to update existing records
+dirctl import --type=mcp \
+  --url=https://registry.modelcontextprotocol.io/v0.1 \
+  --limit=10 \
+  --force
+
+# 4. Import with signing enabled
+dirctl import --type=mcp \
+  --url=https://registry.modelcontextprotocol.io/v0.1 \
+  --limit=5 \
+  --sign
+
+# 5. Import with rate limiting for LLM API calls
+dirctl import --type=mcp \
+  --url=https://registry.modelcontextprotocol.io/v0.1 \
+  --enrich-rate-limit=5 \
+  --debug
+
+# 6. Search imported records
+dirctl search --query "module=runtime/mcp"
+```
+
+### Event Streaming Workflow
+
+Listen to directory events and process them (e.g. filter by type or labels):
+
+```bash
+# Listen to all events (human-readable)
+dirctl events listen
+
+# Stream events as JSONL for processing
+dirctl events listen --output jsonl | jq -c .
+
+# Filter and process specific event types
+dirctl events listen --types RECORD_PUSHED --output jsonl | \
+  jq -c 'select(.type == "EVENT_TYPE_RECORD_PUSHED")' | \
+  while read event; do
+    CID=$(echo "$event" | jq -r '.resource_id')
+    echo "New record pushed: $CID"
+  done
+
+# Monitor events with label filters
+dirctl events listen --labels /skills/AI --output jsonl | \
+  jq -c '.resource_id' >> ai-records.log
+
+# Extract just resource IDs from events
+dirctl events listen --output raw | tee event-cids.txt
+```
+
 ## Command Organization
 
 The CLI follows a clear service-based organization:
 
+- **Auth**: GitHub OAuth authentication (`auth login`, `auth logout`, `auth status`).
 - **Storage**: Direct record management (`push`, `pull`, `delete`, `info`).
 - **Import**: Batch imports from external registries (`import`).
 - **Routing**: Network announcement and discovery (`routing publish`, `routing list`, `routing search`).
 - **Search**: General content search (`search`).
-- **Security**: Signing and verification (`sign`, `verify`).
+- **Security**: Signing, verification, and validation (`sign`, `verify`, `validate`, `naming verify`).
 - **Sync**: Peer synchronization (`sync`).
 
 Each command group provides focused functionality with consistent flag patterns and clear separation of concerns.

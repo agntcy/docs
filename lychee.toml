@@ -38,6 +38,7 @@ exclude = [
     'otel-collector',
     'slim\.slim',
     'schema\.oasf\.agntcy\.org',
+    'schema\.oasf\.outshift\.com',
     'api\.agent-identity\.outshift\.com',
     'token\.actions\.githubusercontent\.com',
     'github\.com/example/',
@@ -49,6 +50,18 @@ exclude = [
 
     # GitHub Actions Artifacts (may expire or require login)
     'https://github\.com/agntcy/dir/actions/runs/.*',
+
+    # GitHub pages that redirect or require auth in CI
+    'https://github\.com/settings/developers',
+    'https://github\.com/login/device',
+    'https://github\.com/.*/edit/',
+
+    # MCP Registry (API docs; hash routes or bot blocking in CI)
+    'https://registry\.modelcontextprotocol\.io',
+
+    # Sigstore endpoints (may rate-limit or vary in CI)
+    'fulcio\.sigstore\.dev',
+    'rekor\.sigstore\.dev',
 
     # Video file path (structure differs in build vs source)
     '.*assets/dir-gui\.mov',
