@@ -76,17 +76,7 @@ The Directory supports multiple OCI-compatible registry backends:
 | `ghcr` | GitHub Container Registry |
 | `dockerhub` | Docker Hub |
 
-#### Synchronization Requirements for Non-Zot Registries
-
-Synchronization between non-Zot registries (GHCR, DockerHub) requires the following:
-
-- PostgreSQL as the database backend
-- The reconciler component enabled
-- The regsync task enabled (`RECONCILER_REGSYNC_ENABLED=true`)
-
-The reconciler uses [regsync](https://github.com/regclient/regclient) to handle cross-registry synchronization when either the local or remote registry is not Zot.
-
-### Registry Configuration
+#### Registry Configuration
 
 The registry backend is configured via environment variables on the Directory server:
 
