@@ -1,6 +1,12 @@
 nav:
   - Overview: overview.md
   - Getting Started: getting-started.md
+  - Features and Usage Scenarios: scenarios.md
+  - Production Deployment: prod-deployment.md
+  - Federation:
+    - Running a Federated Directory Instance: partner-prod-federation.md
+    - Profiles: federation-profiles.md
+    - Best Practices and Troubleshooting: federation-troubleshooting.md
   - Architecture: architecture.md
   - Components:
     - Runtime Discovery: runtime.md
@@ -8,7 +14,6 @@ nav:
   - Records: ads-records.md
   - Validation: validation.md
   - Trust Model: trust-model.md
-  - Features and Usage: scenarios.md
   - CLI Reference: directory-cli.md
   - GUI Application: directory-gui.md
   - SDK Reference: directory-sdk.md

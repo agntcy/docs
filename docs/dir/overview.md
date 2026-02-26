@@ -134,3 +134,11 @@ sequenceDiagram
     User->>ServerA: Download record 1
     User->>ServerB: Download record 2
 ```
+
+## Next Steps
+
+Ready to get started? Choose your path:
+
+- Run a local instance: deploy Directory with SPIRE in a Kind cluster for development and testing. See [Getting Started](getting-started.md).
+- Connect to the public Directory: use the existing network at `prod.api.ads.outshift.io` to discover and publish agents. See [Running a Federated Directory Instance](partner-prod-federation.md).
+- Deploy for production: run your own Directory instance on AWS EKS and optionally federate with the network. See [Production Deployment](prod-deployment.md).
