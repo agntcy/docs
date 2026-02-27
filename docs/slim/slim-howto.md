@@ -254,6 +254,49 @@ Language bindings allow you to integrate SLIM with your applications.
 
     For more information on the Go bindings, see the [Go Examples](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/bindings/go/examples).
 
+=== "Kotlin"
+
+    Add the Kotlin bindings to your Gradle project:
+
+    === "Maven Central"
+
+        Add to your `build.gradle.kts`:
+
+        ```kotlin
+        dependencies {
+            implementation("io.agntcy.slim:slim-bindings-kotlin:1.2.0")
+        }
+        ```
+
+        `mavenCentral()` is the default repository in Gradle, so no additional repository configuration is needed.
+
+    === "GitHub Packages"
+
+        Add the GitHub Packages repository and dependency to your `build.gradle.kts`:
+
+        ```kotlin
+        repositories {
+            maven {
+                url = uri("https://maven.pkg.github.com/agntcy/slim")
+                credentials {
+                    username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_ACTOR")
+                    password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
+                }
+            }
+        }
+        dependencies {
+            implementation("io.agntcy.slim:slim-bindings-kotlin:1.2.0")
+        }
+        ```
+
+        !!! note "GitHub Token Required"
+            To use GitHub Packages, you need a personal access token with `read:packages` scope. Set `GITHUB_ACTOR` (your username) and `GITHUB_TOKEN` (your token) as environment variables, or use `gpr.user` and `gpr.key` in `gradle.properties`.
+
+    !!! note "JDK 17+ Required"
+        The Kotlin bindings use [JNA](https://github.com/java-native-access/jna) for native library loading and require JDK 17 or higher.
+
+    For more information on the Kotlin bindings, see the [Kotlin Examples](https://github.com/agntcy/slim/tree/slim-v1.2.0/data-plane/bindings/kotlin/examples).
+
 ### Slimctl
 
 `slimctl` is a command-line tool for managing SLIM Nodes and Controllers.
