@@ -264,7 +264,7 @@ Language bindings allow you to integrate SLIM with your applications.
 
         ```kotlin
         dependencies {
-            implementation("io.agntcy.slim:slim-bindings:1.0.0")
+            implementation("io.agntcy.slim:slim-bindings-kotlin:1.2.0")
         }
         ```
 
@@ -285,7 +285,7 @@ Language bindings allow you to integrate SLIM with your applications.
             }
         }
         dependencies {
-            implementation("io.agntcy.slim:slim-bindings:1.0.0")
+            implementation("io.agntcy.slim:slim-bindings-kotlin:1.2.0")
         }
         ```
 
@@ -295,7 +295,7 @@ Language bindings allow you to integrate SLIM with your applications.
     !!! note "JDK 17+ Required"
         The Kotlin bindings use [JNA](https://github.com/java-native-access/jna) for native library loading and require JDK 17 or higher.
 
-    For more information on the Kotlin bindings, see the [Kotlin Examples](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/bindings/kotlin/examples).
+    For more information on the Kotlin bindings, see the [Kotlin Examples](https://github.com/agntcy/slim/tree/slim-v1.2.0/data-plane/bindings/kotlin/examples).
 
 ### Slimctl
 
