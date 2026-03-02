@@ -294,14 +294,18 @@ For more information, see the [slimctl](#slimctl).
 
 ### Command Groups
 
-| Command | Purpose |
-| ------- | ------- |
-| `slim` | Start and manage local SLIM instances |
-| `route` | Manage routes via Control Plane |
-| `connection` | Monitor connections via Control Plane |
-| `node` | Manage and view SLIM nodes via Control Plane |
-| `node-connect` | Direct node management (bypass Control Plane) |
-| `version` | Display version information |
+```bash
+slimctl --help
+Usage: slimctl [OPTIONS] <COMMAND>
+
+Commands:
+  version     Print version information
+  config      Manage slimctl configuration
+  node        Commands to interact with SLIM nodes directly
+  controller  Commands to interact with the SLIM Control Plane
+  slim        Commands for managing a local SLIM instance
+  help        Print this message or the help of the given subcommand(s)
+```
 
 ### Installing slimctl
 
@@ -376,11 +380,14 @@ slimctl slim start --config data-plane/config/base/server-config.yaml
 slimctl slim start --config data-plane/config/tls/server-config.yaml
 ```
 
-**Override the server endpoint:**
+**Quick start just specifying a custom listeing endpoint:**
 
 ```bash
-slimctl slim start --config data-plane/config/base/server-config.yaml --endpoint 127.0.0.1:9090
+slimctl slim start --endpoint 127.0.0.1:12345
 ```
+
+!!! note
+    The server will start without TLS when using this command.
 
 **Control log level:**
 
@@ -388,10 +395,14 @@ slimctl slim start --config data-plane/config/base/server-config.yaml --endpoint
 RUST_LOG=debug slimctl slim start --config data-plane/config/base/server-config.yaml
 ```
 
+The log level can also be set directly in the configuration file via the `tracing.log_level` field.
+See [data-plane/config/base/server-config.yaml](https://github.com/agntcy/slim/blob/slim-v1.0.0/data-plane/config/base/server-config.yaml)
+for an example.
+
 **Available flags:**
 
 - `--config` - Path to YAML configuration file (production SLIM format)
-- `--endpoint` - Server endpoint (sets `SLIM_ENDPOINT` environment variable)
+- `--endpoint` - Server endpoint (sets `SLIMCTL_SLIM_ENDPOINT` environment variable)
 
 **Configuration files:** See example configs from [data-plane/config/](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/config):
 
@@ -413,7 +424,7 @@ Manage message routes on SLIM nodes via the Control Plane.
 **List routes:**
 
 ```bash
-slimctl route list --node-id=my-node
+slimctl controller route list --node-id=my-node
 ```
 
 **Add a route:**
@@ -427,13 +438,13 @@ cat > connection_config.json <<EOF
 EOF
 
 # Add the route
-slimctl route add org/namespace/service/0 via connection_config.json --node-id=my-node
+slimctl controller route add org/namespace/service via connection_config.json --node-id=my-node
 ```
 
 **Delete a route:**
 
 ```bash
-slimctl route del org/namespace/service/0 via http://localhost:46357 --node-id=my-node
+slimctl controller route del org/namespace/service/0 via http://localhost:46357 --node-id=my-node
 ```
 
 #### `connection` - Connection Management
@@ -443,7 +454,7 @@ Monitor active connections on SLIM nodes via the Control Plane.
 **List connections:**
 
 ```bash
-slimctl connection list --node-id=my-node
+slimctl controller connection list --node-id=my-node
 ```
 
 #### `node` - Node Management
@@ -453,23 +464,23 @@ Manage and view SLIM nodes via the Control Plane.
 **List registered nodes:**
 
 ```bash
-slimctl node list
+slimctl controller node list
 ```
 
-#### `node-connect` - Direct Node Management
+#### `node` - Direct Node Management
 
 Connect directly to a SLIM node's control endpoint, bypassing the central Control Plane.
 
 **List routes directly on a node:**
 
 ```bash
-slimctl node-connect route list --server=<node_control_endpoint>
+slimctl node route list --server=<node_control_endpoint>
 ```
 
 **Add route directly to a node:**
 
 ```bash
-slimctl node-connect route add org/namespace/service/0 via config.json --server=<node_control_endpoint>
+slimctl node route add org/namespace/service/0 via config.json --server=<node_control_endpoint>
 ```
 
 #### `version` - Version Information
@@ -497,8 +508,8 @@ Add route for node `slim/a` to forward messages for `org/default/alice/0` to nod
 
 ```bash
 # List available nodes
-slimctl node list
-
+slimctl controller node list
+2 node(s) found
 Node ID: slim/b status: CONNECTED
   Connection details:
   - Endpoint: 127.0.0.1:46457
@@ -511,10 +522,10 @@ Node ID: slim/a status: CONNECTED
     ExternalEndpoint: test-slim.default.svc.cluster.local:46357
 
 # Add route to node slim/a
-slimctl route add org/default/alice/0 via slim/b --node-id slim/a
+slimctl controller route add org/default/alice/0 via slim/b --node-id slim/a
 
 # Delete an existing route
-slimctl route del org/default/alice/0 via slim/b --node-id slim/a
+slimctl controller route del org/default/alice/0 via slim/b --node-id slim/a
 ```
 
 ### Example 2: Create, Delete Route Using `connection_config.json`
@@ -528,17 +539,17 @@ cat > connection_config.json <<EOF
 EOF
 
 # Add a new route
-slimctl route add org/default/alice/0 via connection_config.json --node-id=my-node
+slimctl controller route add org/default/alice/0 via connection_config.json --node-id=my-node
 
 # Delete an existing route
-slimctl route del org/default/alice/0 via http://localhost:46357 --node-id=my-node
+slimctl controller route del org/default/alice/0 via http://localhost:46357 --node-id=my-node
 ```
 
 For full reference of connection_config.json, see the [client-config-schema.json](https://github.com/agntcy/slim/blob/slim-v1.0.0/data-plane/core/config/src/grpc/schema/client-config.schema.json).
 
 ### Managing SLIM Nodes Directly
 
-SLIM nodes can be configured to expose a Controller endpoint. slimctl can connect to this endpoint to manage the SLIM instance directly using the `node-connect` sub-command, bypassing the central Control Plane.
+SLIM nodes can be configured to expose a Controller endpoint. slimctl can connect to this endpoint to manage the SLIM instance directly using the `node` sub-command, bypassing the central Control Plane.
 
 To enable this, configure the node to host a server allowing the client to connect:
 
@@ -569,23 +580,23 @@ To enable this, configure the node to host a server allowing the client to conne
 **List connections on a SLIM instance:**
 
 ```bash
-slimctl node-connect connection list --server=<node_control_endpoint>
+slimctl node connection list --server=<node_control_endpoint>
 ```
 
 **List routes on a SLIM instance:**
 
 ```bash
-slimctl node-connect route list --server=<node_control_endpoint>
+slimctl node route list --server=<node_control_endpoint>
 ```
 
 **Add a route to the SLIM instance:**
 
 ```bash
-slimctl node-connect route add <organization/namespace/agentName/agentId> via <config_file> --server=<node_control_endpoint>
+slimctl node route add <organization/namespace/agentName/agentId> via <config_file> --server=<node_control_endpoint>
 ```
 
 **Delete a route from the SLIM instance:**
 
 ```bash
-slimctl node-connect route del <organization/namespace/agentName/agentId> via <host:port> --server=<node_control_endpoint>
+slimctl node route del <organization/namespace/agentName/agentId> via <host:port> --server=<node_control_endpoint>
 ```
