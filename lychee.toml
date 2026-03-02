@@ -46,6 +46,8 @@ exclude = [
     # Sites that timeout from GitHub Actions IPs
     'w3\.org',
     'gnu\.org',
+    'helm\.sh',
+    'kind\.sigs\.k8s\.io',
 
     # GitHub Actions Artifacts (may expire or require login)
     'https://github\.com/agntcy/dir/actions/runs/.*',
@@ -56,7 +58,8 @@ exclude = [
 
 # Exclude paths (regex patterns relative to the input)
 # Skip MkDocs awesome-pages .index files/dirs that lychee cannot parse
-exclude_path = ['overrides', '\\.index(/|$)']
+# Skip 404.html: root-relative links need a base URL lychee cannot resolve for local files
+exclude_path = ['overrides', '\\.index(/|$)', '404\\.html']
 
 # Enable link caching for faster subsequent runs
 cache = true
@@ -65,8 +68,8 @@ cache = true
 # Set to "info" or "debug" for more verbose output
 # Omit or set to false for minimal output
 
-# Maximum number of retries per link
-max_retries = 2
+# Maximum number of retries per link (helps with transient HTTP/2 errors to GitHub)
+max_retries = 3
 
 # HTTP method to use for checking links
 method = "get"

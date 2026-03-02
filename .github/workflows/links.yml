@@ -26,10 +26,10 @@ jobs:
         with:
           go-version: '1.23.1'
 
-      - name: Setup Taskfile
-        shell: bash
-        run: |
-          sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
+      - name: Setup Task
+        uses: arduino/setup-task@v2
+        with:
+          version: '3.48.0'
 
       - name: Setup UV
         shell: bash
