@@ -380,7 +380,7 @@ slimctl slim start --config data-plane/config/base/server-config.yaml
 slimctl slim start --config data-plane/config/tls/server-config.yaml
 ```
 
-**Quick start just specifying a custom listeing endpoint:**
+**Quick start just specifying a custom listening endpoint:**
 
 ```bash
 slimctl slim start --endpoint 127.0.0.1:12345
