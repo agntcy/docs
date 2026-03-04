@@ -59,7 +59,7 @@ exclude = [
 # Exclude paths (regex patterns relative to the input)
 # Skip MkDocs awesome-pages .index files/dirs that lychee cannot parse
 # Skip 404.html: root-relative links need a base URL lychee cannot resolve for local files
-exclude_path = ['overrides', '\\.index(/|$)', '404\\.html']
+exclude_path = ['overrides', '\\.index(/|$)', '(^|/)404\\.html$']
 
 # Enable link caching for faster subsequent runs
 cache = true
