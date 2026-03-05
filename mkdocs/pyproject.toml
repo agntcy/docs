@@ -21,6 +21,7 @@ dependencies = [
     "agntcy-acp==1.1.2",
     "agntcy-iomapper==0.2.2",
     "nltk>=3.9.3",  # CVE-2025-14009: zip slip / RCE in downloader
+    "pillow>=12.1.1",  # CVE-2025-48379, CVE-2026-25990
     "beautifulsoup4>=4.13.3",
     "mkdocs-swagger-ui-tag==0.7.1",
     "mkdocs-include-markdown-plugin>=7.2.0",

@@ -93,7 +93,7 @@ jobs:
 
       - name: Check links
         if: steps.get_paths.outputs.has_paths == 'true'
-        uses: lycheeverse/lychee-action@v2
+        uses: lycheeverse/lychee-action@v2.0.2  # CVE-2024-48908: pin >=2.0.2
         with:
           args: |
             --no-progress
