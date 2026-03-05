@@ -18,8 +18,9 @@ dependencies = [
     "mkdocstrings-python==1.16.10",
     "griffe-pydantic==1.1.4",
     "griffe==1.7.2",
-    "agntcy-acp==1.1.2",
+    "agntcy-acp>=1.5.2",  # 1.5.x allows langgraph 0.4+ so we can use langgraph-checkpoint>=3.0
     "agntcy-iomapper==0.2.2",
+    "langgraph-checkpoint>=3.0.0",  # JsonPlusSerializer RCE in "json" mode
     "llama-index>=0.12.38",  # JSONReader DoS (uncontrolled recursion) fixed in 0.12.38
     "nltk>=3.9.3",  # CVE-2025-14009: zip slip / RCE in downloader
     "pillow>=12.1.1",  # CVE-2025-48379, CVE-2026-25990
