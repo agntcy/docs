@@ -23,6 +23,7 @@ The documentation sources are written in Markdown.
 
 To build the documentation locally, you need to install the following dependencies:
 
+- Python 3.10 or later
 - [Taskfile](https://taskfile.dev/)
 - [Uv](https://docs.astral.sh/uv/getting-started/installation/)
 - [Golang](https://go.dev/doc/devel/release#go1.24.0)

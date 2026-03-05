@@ -3,7 +3,7 @@ name = "agntcy-docs"
 version = "0.1.0"
 description = "Agntcy documentation"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = [
     "mkdocs-material==9.6.12",
     "mkdocs-exclude==1.0.2",
@@ -20,6 +20,7 @@ dependencies = [
     "griffe==1.7.2",
     "agntcy-acp==1.1.2",
     "agntcy-iomapper==0.2.2",
+    "nltk>=3.9.3",  # CVE-2025-14009: zip slip / RCE in downloader
     "beautifulsoup4>=4.13.3",
     "mkdocs-swagger-ui-tag==0.7.1",
     "mkdocs-include-markdown-plugin>=7.2.0",
