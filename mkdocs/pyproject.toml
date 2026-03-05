@@ -24,6 +24,7 @@ dependencies = [
     "llama-index>=0.12.38",  # JSONReader DoS (uncontrolled recursion) fixed in 0.12.38
     "llama-index-core>=0.12.38,<0.13",  # pin to 0.12.x so resolver does not pick 0.13.0 on Python 3.12.4+
     "nltk>=3.9.3",  # CVE-2025-14009: zip slip / RCE in downloader
+    "orjson>=3.11.6",  # CVE-2025-67221: recursion limit for deeply nested JSON
     "pillow>=12.1.1",  # CVE-2025-48379, CVE-2026-25990
     "beautifulsoup4>=4.13.3",
     "mkdocs-swagger-ui-tag==0.7.1",
