@@ -3,11 +3,12 @@ nav:
  - Getting Started with SLIM:
     - Getting Started: slim-howto.md
     - Configuration Reference: slim-data-plane-config.md
+ - SLIM Controller: slim-controller.md
+ - SLIM Controller Reference: slim-controller-reference.md
  - SLIM Messaging Layer:
      - Overview: slim-data-plane.md
      - SLIM Sessions: slim-session.md
      - SLIM Authentication: slim-authentication.md
- - SLIM Controller: slim-controller.md
  - SLIM Groups:
     - Group Creation and Management: slim-group.md
     - Group Communication Tutorial: slim-group-tutorial.md

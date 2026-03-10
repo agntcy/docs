@@ -334,7 +334,7 @@ For more configuration options, see [Validation](validation.md).
 
 ## Directory MCP Server
 
-The Directory services are also accessible through the Directory MCP Server. It provides a standardized interface for AI assistants and tools to interact with the Directory system and work with OASF agent records. See the [Directory CLI Reference](directory-cli.md#directory-mcp-server) for more information.
+The Directory services are also accessible through the Directory MCP Server. It provides a standardized interface for AI assistants and tools to interact with the Directory system and work with OASF agent records. See the [MCP Server documentation](directory-mcp.md) for more information.
 
 ## Next Steps
 
