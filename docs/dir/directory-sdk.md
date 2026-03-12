@@ -4,11 +4,11 @@ The Directory SDK provides comprehensive libraries and tools for interacting wit
 
 ## JavaScript SDK
 
-Documentation for the JavaScript SDK can be found on [GitHub](https://github.com/agntcy/dir/tree/main/sdk/dir-js). The SDK supports both JavaScript and TypeScript applications.
+Documentation for the JavaScript SDK can be found on [GitHub](https://github.com/agntcy/dir/tree/main/sdk/dir-js). The SDK supports both JavaScript and TypeScript applications. The package is published on [npm](https://www.npmjs.com/package/agntcy-dir).
 
 !!! note
 
-    The SDK is intended for use in Node.js applications and will not work in Web applications.
+    The SDK is intended for use in Node.js applications and does not work in web applications.
 
 ### Installation
 
@@ -106,7 +106,7 @@ client = Client(config)
 
 ## Go SDK
 
-Documentation for the Go SDK can be found at [GitHub](https://github.com/agntcy/dir/tree/main/client).
+Documentation for the Go SDK can be found at [GitHub](https://github.com/agntcy/dir/tree/main/client). The package is available on [pkg.go.dev](https://pkg.go.dev/github.com/agntcy/dir/client).
 
 ### Installation
 
