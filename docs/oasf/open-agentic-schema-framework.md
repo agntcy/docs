@@ -13,7 +13,7 @@ consistent definition and discovery of agent capabilities across distributed
 systems.
 
 OASF is highly inspired from
-[OCSF (Open Cybersecurity Schema Framework)](https://ocsf.io/) in terms of data
+[OCSF (Open Cybersecurity Schema Framework)](https://ocsf.io/) not only in terms of data
 modeling philosophy but also in terms of implementation.
 The server is a derivative work of OCSF schema server and the schema update
 workflows reproduce those developed by OCSF.
