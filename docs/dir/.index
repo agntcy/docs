@@ -20,4 +20,5 @@ nav:
   - Components:
     - Runtime Discovery: runtime.md
     - Event Streaming: events.md
+    - Records and Validation: records-validation.md
   - Trust Model: trust-model.md
