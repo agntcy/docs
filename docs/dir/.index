@@ -11,8 +11,7 @@ nav:
   - Components:
     - Runtime Discovery: runtime.md
     - Event Streaming: events.md
-  - Records: ads-records.md
-  - Validation: validation.md
+    - Records and Validation: records-validation.md
   - Trust Model: trust-model.md
   - CLI Reference: directory-cli.md
   - GUI Application: directory-gui.md

@@ -95,6 +95,7 @@ jobs:
         if: steps.get_paths.outputs.has_paths == 'true'
         uses: lycheeverse/lychee-action@v2.0.2  # CVE-2024-48908: pin >=2.0.2
         with:
+          lycheeVersion: "v0.22.0"  # v0.16.x (action default) does not support --root-dir; added in v0.18
           args: |
             --no-progress
             --config lychee.toml
