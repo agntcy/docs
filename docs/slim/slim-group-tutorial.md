@@ -535,7 +535,7 @@ application is still [group.py](https://github.com/agntcy/slim/tree/slim-v1.0.0/
 
 #### Run the SLIM Controller
 
-First, start the SLIM Controller. Full details are in the [Controller](./slim-controller.md) documentation; here we reproduce the minimal setup. Create a configuration file:
+First, start the SLIM Controller. Full details are in the [SLIM Controller](./slim-controller.md) documentation; here we reproduce the minimal setup. Create a configuration file:
 
 ```bash
 cat << EOF > ./config-controller.yaml
@@ -695,7 +695,7 @@ At this point all applications are waiting for a new session.
 
 #### Manage the Group with slimctl
 
-Use `slimctl` (see [slim-controller](./slim-controller.md)) to send administrative commands to the controller.
+Use `slimctl` (see [SLIM Controller](./slim-controller.md)) to send administrative commands to the controller.
 
 First, you need to run `slimctl`. To install it see the related [documentation](https://github.com/agntcy/slim/tree/slim-v1.0.0/control-plane/slimctl/README.md)
 
