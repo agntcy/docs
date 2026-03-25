@@ -119,6 +119,14 @@ export DIRECTORY_SERVER_STORE_OCI_AUTH_CONFIG_PASSWORD=your-github-token
 export DIRECTORY_SERVER_STORE_OCI_AUTH_CONFIG_INSECURE=false
 ```
 
+!!! warning
+    GHCR does not support record deletion via the OCI API. Attempting to
+    delete a record when using GHCR will return an error.
+    To manage packages hosted on GHCR, use the GitHub UI, REST API, or
+    GraphQL API instead. See
+    [Deleting and restoring a package](https://docs.github.com/en/packages/learn-github-packages/deleting-and-restoring-a-package)
+    for details.
+
 **Docker Hub**
 
 ```bash
