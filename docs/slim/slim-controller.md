@@ -148,7 +148,7 @@ tls:
   key_file: "/path/to/client.key"
 ```
 
-The `server` endpoint should point to a [SLIM Control](https://github.com/agntcy/slim/tree/slim-v1.0.0/control-plane/control-plane) endpoint which is a central service managing SLIM node configurations.
+The `server` endpoint should point to a [SLIM Control](https://github.com/agntcy/slim/tree/slim-v1.1.0/control-plane/control-plane) endpoint which is a central service managing SLIM node configurations.
 
 ### Managing SLIM Nodes Directly
 

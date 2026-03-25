@@ -95,11 +95,11 @@ You can install the SLIM Node using Docker, Cargo, Helm, or the CLI binary. Choo
     For Kubernetes deployments, use the official Helm chart:
 
     ```bash
-    helm pull oci://ghcr.io/agntcy/slim/helm/slim --version v1.0.0
+    helm pull oci://ghcr.io/agntcy/slim/helm/slim --version v1.1.0
     ```
 
     !!! note "Configuration"
-        For detailed configuration options, see the [values.yaml](https://github.com/agntcy/slim/blob/slim-v1.0.0/charts/slim/values.yaml) in the repository.
+        For detailed configuration options, see the [values.yaml](https://github.com/agntcy/slim/blob/slim-v1.1.0/charts/slim/values.yaml) in the repository.
 
 === "CLI Binary"
 
@@ -204,7 +204,7 @@ The SLIM Controller manages SLIM Nodes and provides a user-friendly interface fo
     For Kubernetes deployments:
 
     ```bash
-    helm pull oci://ghcr.io/agntcy/slim/helm/slim-control-plane --version v1.0.0
+    helm pull oci://ghcr.io/agntcy/slim/helm/slim-control-plane --version v1.1.0
     ```
 
 ### SLIM Bindings
@@ -227,14 +227,14 @@ Language bindings allow you to integrate SLIM with your applications.
     dependencies = ["slim-bindings~=1.0"]
     ```
 
-    For more information on the SLIM bindings, see the [Messaging Layer Tutorial](./slim-data-plane.md) and the [Python Examples](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/bindings/python/examples).
+    For more information on the SLIM bindings, see the [Messaging Layer Tutorial](./slim-data-plane.md) and the [Python Examples](https://github.com/agntcy/slim/tree/slim-v1.1.0/data-plane/bindings/python/examples).
 
 === "Go"
 
     Install the Go bindings:
 
     ```bash
-    go get github.com/agntcy/slim-bindings-go@v1.0.0
+    go get github.com/agntcy/slim-bindings-go@v1.1.0
     ```
 
     Run the setup tool to install native libraries:
@@ -246,13 +246,13 @@ Language bindings allow you to integrate SLIM with your applications.
     Add to your `go.mod`:
 
     ```go
-    require github.com/agntcy/slim-bindings-go v1.0.0
+    require github.com/agntcy/slim-bindings-go v1.2.0
     ```
 
     !!! warning "C Compiler Required"
         The Go bindings use native libraries via [CGO](https://pkg.go.dev/cmd/cgo), so you'll need a C compiler installed on your system.
 
-    For more information on the Go bindings, see the [Go Examples](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/bindings/go/examples).
+    For more information on the Go bindings, see the [Go Examples](https://github.com/agntcy/slim/tree/slim-v1.1.0/data-plane/bindings/go/examples).
 
 === "Kotlin"
 
@@ -308,7 +308,7 @@ Choose your platform:
 === "macOS (Apple Silicon)"
 
     ```bash
-    curl -LO https://github.com/agntcy/slim/releases/download/slimctl-v1.0.0/slimctl_1.0.0_darwin_arm64.tar.gz
+    curl -LO https://github.com/agntcy/slim/releases/download/slimctl-v1.2.0/slimctl_1.2.0_darwin_arm64.tar.gz
     tar -xzf slimctl_1.0.0_darwin_arm64.tar.gz
     sudo mv slimctl /usr/local/bin/slimctl
     sudo chmod +x /usr/local/bin/slimctl
@@ -326,7 +326,7 @@ Choose your platform:
 === "macOS (Intel)"
 
     ```bash
-    curl -LO https://github.com/agntcy/slim/releases/download/slimctl-v1.0.0/slimctl_1.0.0_darwin_amd64.tar.gz
+    curl -LO https://github.com/agntcy/slim/releases/download/slimctl-v1.2.0/slimctl_1.2.0_darwin_amd64.tar.gz
     tar -xzf slimctl_1.0.0_darwin_amd64.tar.gz
     sudo mv slimctl /usr/local/bin/slimctl
     sudo chmod +x /usr/local/bin/slimctl
@@ -335,7 +335,7 @@ Choose your platform:
 === "Linux (AMD64)"
 
     ```bash
-    curl -LO https://github.com/agntcy/slim/releases/download/slimctl-v1.0.0/slimctl_1.0.0_linux_amd64.tar.gz
+    curl -LO https://github.com/agntcy/slim/releases/download/slimctl-v1.2.0/slimctl_1.2.0_linux_amd64.tar.gz
     tar -xzf slimctl_1.0.0_linux_amd64.tar.gz
     sudo mv slimctl /usr/local/bin/slimctl
     sudo chmod +x /usr/local/bin/slimctl
@@ -347,16 +347,16 @@ Choose your platform:
 
     ```powershell
     # Using PowerShell
-    Invoke-WebRequest -Uri "https://github.com/agntcy/slim/releases/download/slimctl-v1.0.0/slimctl_1.0.0_windows_amd64.zip" -OutFile "slimctl.zip"
+    Invoke-WebRequest -Uri "https://github.com/agntcy/slim/releases/download/slimctl-v1.2.0/slimctl_1.2.0_windows_amd64.zip" -OutFile "slimctl.zip"
     Expand-Archive -Path "slimctl.zip" -DestinationPath "."
     
     # Move to a directory in your PATH (e.g., C:\Program Files\slimctl\)
     # Or add the current directory to your PATH
     ```
 
-    Alternatively, download directly from the [releases page](https://github.com/agntcy/slim/releases/download/slimctl-v1.0.0/slimctl_1.0.0_windows_amd64.zip).
+    Alternatively, download directly from the [releases page](https://github.com/agntcy/slim/releases/download/slimctl-v1.2.0/slimctl_1.2.0_windows_amd64.zip).
 
-Check the [slimctl documentation](https://github.com/agntcy/slim/tree/slim-v1.0.0/control-plane/slimctl/README.md) for additional installation methods.
+Check the [slimctl documentation](https://github.com/agntcy/slim/tree/slim-v1.1.0/control-plane/slimctl/README.md) for additional installation methods.
 
 #### Verification
 
@@ -406,7 +406,7 @@ For more information on the build system and development workflow, see the [SLIM
 You've installed SLIM! Here's what to do next:
 
 1. Read the [messaging layer documentation](./slim-data-plane.md)
-2. Explore the [example applications](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/bindings/)
+2. Explore the [example applications](https://github.com/agntcy/slim/tree/slim-v1.1.0/data-plane/bindings/)
 3. Learn about [configuration options](./slim-data-plane-config.md)
 4. Join us on [Slack](https://join.slack.com/t/agntcy/shared_invite/zt-3hb4p7bo0-5H2otGjxGt9OQ1g5jzK_GQ)
 
