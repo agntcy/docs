@@ -309,7 +309,7 @@ Choose your platform:
 
     ```bash
     curl -LO https://github.com/agntcy/slim/releases/download/slimctl-v1.2.0/slimctl_1.2.0_darwin_arm64.tar.gz
-    tar -xzf slimctl_1.0.0_darwin_arm64.tar.gz
+    tar -xzf slimctl_1.2.0_darwin_arm64.tar.gz
     sudo mv slimctl /usr/local/bin/slimctl
     sudo chmod +x /usr/local/bin/slimctl
     ```
@@ -327,7 +327,7 @@ Choose your platform:
 
     ```bash
     curl -LO https://github.com/agntcy/slim/releases/download/slimctl-v1.2.0/slimctl_1.2.0_darwin_amd64.tar.gz
-    tar -xzf slimctl_1.0.0_darwin_amd64.tar.gz
+    tar -xzf slimctl_1.2.0_darwin_amd64.tar.gz
     sudo mv slimctl /usr/local/bin/slimctl
     sudo chmod +x /usr/local/bin/slimctl
     ```
@@ -336,7 +336,7 @@ Choose your platform:
 
     ```bash
     curl -LO https://github.com/agntcy/slim/releases/download/slimctl-v1.2.0/slimctl_1.2.0_linux_amd64.tar.gz
-    tar -xzf slimctl_1.0.0_linux_amd64.tar.gz
+    tar -xzf slimctl_1.2.0_linux_amd64.tar.gz
     sudo mv slimctl /usr/local/bin/slimctl
     sudo chmod +x /usr/local/bin/slimctl
     ```
