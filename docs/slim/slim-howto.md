@@ -341,22 +341,46 @@ Choose your platform:
     sudo chmod +x /usr/local/bin/slimctl
     ```
 
+=== "Linux (ARM64)"
+
+    ```bash
+    curl -LO https://github.com/agntcy/slim/releases/download/slimctl-v1.2.0/slimctl_1.2.0_linux_arm64.tar.gz
+    tar -xzf slimctl_1.2.0_linux_arm64.tar.gz
+    sudo mv slimctl /usr/local/bin/slimctl
+    sudo chmod +x /usr/local/bin/slimctl
+    ```
+
 === "Windows (AMD64)"
 
     Download and extract the Windows binary:
 
     ```powershell
     # Using PowerShell
-    Invoke-WebRequest -Uri "https://github.com/agntcy/slim/releases/download/slimctl-v1.2.0/slimctl_1.2.0_windows_amd64.zip" -OutFile "slimctl.zip"
+    Invoke-WebRequest -Uri "https://github.com/agntcy/slim/releases/download/slimctl-v1.2.0/slimctl-windows-amd64.zip" -OutFile "slimctl.zip"
     Expand-Archive -Path "slimctl.zip" -DestinationPath "."
     
     # Move to a directory in your PATH (e.g., C:\Program Files\slimctl\)
     # Or add the current directory to your PATH
     ```
 
-    Alternatively, download directly from the [releases page](https://github.com/agntcy/slim/releases/download/slimctl-v1.2.0/slimctl_1.2.0_windows_amd64.zip).
+    Alternatively, download directly from the [releases page](https://github.com/agntcy/slim/releases/download/slimctl-v1.2.0/slimctl-windows-amd64.zip).
 
-Check the [slimctl documentation](https://github.com/agntcy/slim/tree/slim-v1.1.0/control-plane/slimctl/README.md) for additional installation methods.
+=== "Windows (ARM64)"
+
+    Download and extract the Windows binary:
+
+    ```powershell
+    # Using PowerShell
+    Invoke-WebRequest -Uri "https://github.com/agntcy/slim/releases/download/slimctl-v1.2.0/slimctl-windows-arm64.zip" -OutFile "slimctl.zip"
+    Expand-Archive -Path "slimctl.zip" -DestinationPath "."
+    
+    # Move to a directory in your PATH (e.g., C:\Program Files\slimctl\)
+    # Or add the current directory to your PATH
+    ```
+
+    Alternatively, download directly from the [releases page](https://github.com/agntcy/slim/releases/download/slimctl-v1.2.0/slimctl-windows-arm64.zip).
+
+Check the [slimctl documentation](./slim-controller.md) for additional installation methods.
 
 #### Verification
 

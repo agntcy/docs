@@ -697,7 +697,7 @@ At this point all applications are waiting for a new session.
 
 Use `slimctl` (see [SLIM Controller](./slim-controller.md)) to send administrative commands to the controller.
 
-First, you need to run `slimctl`. To install it see the related [documentation](https://github.com/agntcy/slim/tree/slim-v1.1.0/control-plane/slimctl/README.md)
+First, you need to run `slimctl`. To install it see the [slimctl documentation](./slim-controller.md#installing-slimctl).
 
 To verify that `slimctl` was downloaded successfully, run the following command:
 
