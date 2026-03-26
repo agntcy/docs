@@ -6,7 +6,7 @@ participants. Messages are sent to a shared channel where every member can read
 and write. All messages are end-to-end encrypted using the
 [MLS protocol](https://datatracker.ietf.org/doc/html/rfc9420). This tutorial is
 based on the
-[group.py](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/bindings/python/examples/group.py)
+[group.py](https://github.com/agntcy/slim/tree/slim-v1.1.0/data-plane/bindings/python/examples/group.py)
 example in the SLIM repo.
 
 ## Key Features
@@ -28,7 +28,7 @@ Every participant in a group requires a unique identity for authentication and f
 
 Every SLIM application requires both a unique identity and an authentication mechanism. The identity is used for end-to-end encryption via the MLS protocol, while authentication verifies the application to the SLIM network. In this tutorial, we use shared secret authentication for simplicity. For more advanced authentication methods (JWT, SPIRE), see the [SLIM documentation](./slim-authentication.md).
 
-The example code provides a `create_local_app` helper function (from [common.py](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/bindings/python/examples/common.py)) that simplifies the app creation and connection process.
+The example code provides a `create_local_app` helper function (from [common.py](https://github.com/agntcy/slim/tree/slim-v1.1.0/data-plane/bindings/python/examples/common.py)) that simplifies the app creation and connection process.
 
 The `create_local_app` function handles three main tasks:
 
@@ -165,7 +165,7 @@ for invite in invites:
 ```
 
 This code comes from the
-[group.py](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/bindings/python/examples/group.py)
+[group.py](https://github.com/agntcy/slim/tree/slim-v1.1.0/data-plane/bindings/python/examples/group.py)
 example.
 
 A new group session is created by calling `local_app.create_session(...)` which returns a `SessionContext`
@@ -379,7 +379,7 @@ only its local session is closed.
 
 Now we will show how to run a new group session and
 how to enable group communication on top of SLIM. The full code can be found in
-[group.py](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/bindings/python/examples/group.py)
+[group.py](https://github.com/agntcy/slim/tree/slim-v1.1.0/data-plane/bindings/python/examples/group.py)
 in the SLIM repo. To run the example, follow the steps listed here:
 
 #### Run SLIM
@@ -448,7 +448,7 @@ In this example, we use two participants: `agntcy/ns/client-1` and `agntcy/ns/cl
 First, clone the SLIM repository and install the dependencies:
 
 ```bash
-git clone --branch slim-v1.0.0 https://github.com/agntcy/slim.git
+git clone --branch slim-v1.1.0 https://github.com/agntcy/slim.git
 cd slim/data-plane/bindings/python
 task python:bindings:build
 task python:bindings:install-examples
@@ -531,7 +531,7 @@ With the controller, you do not need to set up a moderator in your application. 
 ### Run the Group Communication Example
 
 Now we will show how to set up a group using the SLIM Controller. The reference code for the
-application is still [group.py](https://github.com/agntcy/slim/tree/slim-v1.0.0/data-plane/bindings/python/examples/group.py). To run this example, follow the steps listed here.
+application is still [group.py](https://github.com/agntcy/slim/tree/slim-v1.1.0/data-plane/bindings/python/examples/group.py). To run this example, follow the steps listed here.
 
 #### Run the SLIM Controller
 
@@ -697,7 +697,7 @@ At this point all applications are waiting for a new session.
 
 Use `slimctl` (see [SLIM Controller](./slim-controller.md)) to send administrative commands to the controller.
 
-First, you need to run `slimctl`. To install it see the related [documentation](https://github.com/agntcy/slim/tree/slim-v1.0.0/control-plane/slimctl/README.md)
+First, you need to run `slimctl`. To install it see the [slimctl documentation](./slim-controller.md#installing-slimctl).
 
 To verify that `slimctl` was downloaded successfully, run the following command:
 
