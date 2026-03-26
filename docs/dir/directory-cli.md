@@ -79,9 +79,9 @@ The following example demonstrates how to store, publish, search, and retrieve a
     
     The CLI supports Docker-style name references in addition to CIDs. Records can be pulled using formats like `name`, `name:version`, or `name:version@cid` for hash-verified lookups. See [Name Verification](#name-verification) for details.
 
-!!! note "Authentication for federation"
+!!! note "Authentication for remote Directory servers"
     
-    When accessing Directory federation nodes, authenticate first with `dirctl auth login`. See [Authentication](#authentication) for details.
+    When accessing a remote Directory server, authenticate first with `dirctl auth login`. See [Authentication](#authentication) for details.
 
 ## Common Workflows
 
@@ -309,33 +309,40 @@ dirctl routing list -o json | jq -r '.[].cid' | xargs -I {} dirctl pull {}
 
 ## Authentication
 
-Authentication is required when accessing Directory federation nodes. The CLI supports multiple authentication modes, with GitHub OAuth recommended for interactive use.
+Authentication is required when accessing remote Directory servers. The CLI supports OIDC-based authentication for humans, service users, and CI workflows.
 
 | Command | Description |
 |---------|-------------|
-| `dirctl auth login` | Authenticate with GitHub |
+| `dirctl auth login` | Authenticate as a human user via OIDC PKCE |
+| `dirctl auth machine` | Authenticate as a service user via OIDC client credentials |
 | `dirctl auth logout` | Clear cached authentication credentials |
 | `dirctl auth status` | Show current authentication status |
 
-### GitHub OAuth Authentication
+### OIDC Authentication
 
-GitHub OAuth (Device Flow) enables secure, interactive authentication for accessing federation nodes.
+OIDC is the default authentication model for remote Directory access. Supported patterns:
 
-#### `dirctl auth login`
+- Human interactive login (PKCE) via `dirctl auth login`
+- Service user/machine login (client credentials) via `dirctl auth machine`
+- GitHub Actions token forwarding via `--oidc-token` / `DIRECTORY_CLIENT_OIDC_TOKEN`
 
-Authenticate with GitHub using the OAuth 2.0 Device Flow. No prerequisites.
+#### Human interactive login (`dirctl auth login`)
+
+Authenticate as a human user using OIDC Authorization Code + PKCE.
 
 ```bash
-# Start login (shows a code and link)
-dirctl auth login
+# Interactive login
+dirctl auth login \
+  --oidc-issuer "https://prod.idp.ads.outshift.io" \
+  --oidc-client-id "<human-native-client-id>"
 ```
 
 What happens:
 
-1. The CLI displays a short-lived **code** (e.g. `9190-173C`) and the URL **https://github.com/login/device**
-2. You open that URL (on this machine or any device), enter the code, and authorize the application
-3. After you authorize, the CLI receives a token and caches it at `~/.config/dirctl/auth-token.json`
-4. Subsequent commands automatically use the cached token (no `--auth-mode` flag needed)
+1. The CLI opens browser-based login against your OIDC issuer
+2. You authenticate and approve the OIDC client
+3. The CLI caches the token at `~/.config/dirctl/auth-token.json`
+4. Subsequent commands can reuse the cached token (auto-detect or `--auth-mode=oidc`)
 
 ```bash
 # Force re-login even if already authenticated
@@ -345,8 +352,19 @@ dirctl auth login --force
 dirctl auth login --no-browser
 ```
 
-!!! note "Custom OAuth App (optional)"
-    To use your own GitHub OAuth App instead of the default, create an OAuth App in [GitHub Developer Settings](https://github.com/settings/developers) with Device Flow support and set `DIRECTORY_CLIENT_GITHUB_CLIENT_ID` (and optionally `DIRECTORY_CLIENT_GITHUB_CLIENT_SECRET`). For normal use, leave these unset.
+#### Service user / machine login (`dirctl auth machine`)
+
+Authenticate non-interactively with OIDC client credentials.
+
+```bash
+dirctl auth machine \
+  --oidc-issuer "https://prod.idp.ads.outshift.io" \
+  --oidc-machine-client-id "<machine-client-id>" \
+  --oidc-machine-client-secret-file "/path/to/secret.txt" \
+  --oidc-machine-scope "openid profile email"
+```
+
+The token is cached and reused by regular commands. If the cached token expires and machine credentials are configured, `dirctl` can automatically mint a new token during command execution.
 
 #### `dirctl auth status`
 
@@ -356,7 +374,7 @@ Check your current authentication status.
 # Show authentication status
 dirctl auth status
 
-# Validate token with GitHub API
+# Validate current token
 dirctl auth status --validate
 ```
 
@@ -364,11 +382,13 @@ Example output:
 
 ```
 Status: Authenticated
-  User: your-username
-  Organizations: agntcy, your-org
+  Provider: oidc
+  Subject: 365801818803934264
+  Issuer: https://prod.idp.ads.outshift.io
+  Principal type: user
   Cached at: 2025-12-22T10:30:00Z
   Token: Valid ✓
-  Estimated expiry: 2025-12-22T18:30:00Z
+  Expires: 2025-12-22T18:30:00Z
   Cache file: /Users/you/.config/dirctl/auth-token.json
 ```
 
@@ -382,41 +402,53 @@ dirctl auth logout
 
 #### Using Authenticated Commands
 
-Once authenticated via `dirctl auth login`, your cached credentials are automatically detected and used:
+Once authenticated (human or machine), cached credentials are automatically detected and used:
 
 ```bash
-# Push to federation (auto-detects and uses cached GitHub credentials)
+# Push to remote Directory server (auto-detects and uses cached OIDC credentials)
 dirctl push my-agent.json
 
-# Search federation nodes (auto-detects authentication)
-dirctl --server-addr=federation.agntcy.org:443 search --skill "natural_language_processing"
+# Search remote Directory server (auto-detects authentication)
+dirctl --server-addr=prod.gateway.ads.outshift.io:443 search --skill "natural_language_processing"
 
-# Pull from federation (auto-detects authentication)
+# Pull from remote Directory server (auto-detects authentication)
 dirctl pull baeareihdr6t7s6sr2q4zo456sza66eewqc7huzatyfgvoupaqyjw23ilvi
 ```
 
 **Authentication mode behavior:**
 
-- **No `--auth-mode` flag (default)**: Auto-detects authentication in this order: SPIFFE (if available in Kubernetes/SPIRE environment), cached GitHub credentials (if `dirctl auth login` was run), then insecure (for local development).
-- **Explicit `--auth-mode=github`**: Forces GitHub authentication (e.g. to bypass SPIFFE in a SPIRE environment).
+- **No `--auth-mode` flag (default)**: Auto-detects authentication in this order: SPIFFE (if available in Kubernetes/SPIRE environment), OIDC (explicit token, cached token, or machine credentials), then insecure (for local development).
+- **Explicit `--auth-mode=oidc`**: Forces OIDC authentication.
 - **Other modes**: Use `--auth-mode=x509`, `--auth-mode=jwt`, or `--auth-mode=tls` for specific authentication methods.
 
 ```bash
-# Force GitHub auth even if SPIFFE is available
-dirctl --auth-mode=github push my-agent.json
+# Force OIDC auth even if SPIFFE is available
+dirctl --auth-mode=oidc push my-agent.json
+```
+
+#### GitHub Actions OIDC (CI)
+
+In CI, obtain an OIDC token from GitHub Actions and pass it to `dirctl`.
+
+```bash
+dirctl search --name "*" \
+  --server-addr "prod.gateway.ads.outshift.io:443" \
+  --auth-mode=oidc \
+  --oidc-token "<github-oidc-jwt>" \
+  --output json
 ```
 
 ### Other Authentication Modes
 
 | Mode | Description | Use Case |
 |------|-------------|----------|
-| `github` | GitHub OAuth (explicit) | Force GitHub auth, bypass SPIFFE auto-detect |
+| `oidc` | OIDC bearer/JWT auth | Human login, machine auth, and CI workload identity |
 | `x509` | SPIFFE X.509 certificates | Kubernetes workloads with SPIRE |
 | `jwt` | SPIFFE JWT tokens | Service-to-service authentication |
 | `token` | SPIFFE token file | Pre-provisioned credentials |
 | `tls` | mTLS with certificates | Custom PKI environments |
 | `insecure` / `none` | No auth, skip auto-detect | Testing, local development |
-| (empty) | Auto-detect: SPIFFE → cached GitHub → insecure | Default behavior (recommended) |
+| (empty) | Auto-detect: SPIFFE → OIDC → insecure | Default behavior (recommended) |
 
 ## Configuration
 
@@ -442,7 +474,7 @@ dirctl --spiffe-socket-path /run/spire/sockets/agent.sock routing list
 
 The CLI follows a clear service-based organization:
 
-- **Auth**: GitHub OAuth authentication (`auth login`, `auth logout`, `auth status`).
+- **Auth**: OIDC authentication (`auth login`, `auth machine`, `auth logout`, `auth status`).
 - **Storage**: Direct record management (`push`, `pull`, `delete`, `info`).
 - **Import**: Batch imports from external registries (`import`).
 - **Routing**: Network announcement and discovery (`routing publish`, `routing list`, `routing search`).
