@@ -1,5 +1,89 @@
 # Directory CLI Command Reference
 
+## Daemon Operations
+
+The daemon commands run a self-contained local directory server that bundles the gRPC apiserver and reconciler into a single process with embedded SQLite and a filesystem OCI store. All state is stored under `~/.agntcy/dir/` by default.
+
+### `dirctl daemon start`
+
+Starts the local directory daemon in the foreground. The process blocks until `SIGINT` or `SIGTERM` is received.
+
+The daemon starts a gRPC apiserver on `localhost:8888` and runs all reconciler tasks (regsync, indexer, name resolution, signature verification) in-process. It uses SQLite for persistence and a local filesystem OCI store, so no external dependencies (PostgreSQL, container registry, etc.) are required.
+
+A PID file is written to the data directory to prevent multiple instances from running simultaneously.
+
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--data-dir` | Data directory for daemon state | `~/.agntcy/dir/` |
+
+??? example
+
+    ```bash
+    # Start the daemon (foreground, blocks until signal)
+    dirctl daemon start
+
+    # Start with a custom data directory
+    dirctl daemon start --data-dir /path/to/data
+
+    # Run in the background using shell job control
+    dirctl daemon start &
+    ```
+
+**Data directory layout:**
+
+```
+~/.agntcy/dir/
+├── dir.db          # SQLite database
+├── store/          # Filesystem OCI store
+├── routing/        # DHT routing datastore
+└── daemon.pid      # PID file for lifecycle management
+```
+
+### `dirctl daemon stop`
+
+Stops a running daemon by sending `SIGTERM` to the process recorded in the PID file. The command waits for the process to exit gracefully and cleans up the PID file.
+
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--data-dir` | Data directory for daemon state | `~/.agntcy/dir/` |
+
+??? example
+
+    ```bash
+    # Stop the running daemon
+    dirctl daemon stop
+
+    # Stop a daemon using a custom data directory
+    dirctl daemon stop --data-dir /path/to/data
+    ```
+
+### `dirctl daemon status`
+
+Checks whether the daemon is currently running by inspecting the PID file.
+
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--data-dir` | Data directory for daemon state | `~/.agntcy/dir/` |
+
+??? example
+
+    ```bash
+    # Check daemon status
+    dirctl daemon status
+    ```
+
+    Example output when running:
+
+    ```
+    Daemon is running (PID 12345)
+    ```
+
+    Example output when stopped:
+
+    ```
+    Daemon is not running
+    ```
+
 ## Storage Operations
 
 ### `dirctl push <file>`
