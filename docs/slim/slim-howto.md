@@ -418,9 +418,6 @@ task data-plane:build
 
 # Build the control plane (Go)
 task control-plane:build
-
-# Build both components
-task build
 ```
 
 For more information on the build system and development workflow, see the [SLIM repository](https://github.com/agntcy/slim).
