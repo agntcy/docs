@@ -40,6 +40,27 @@ tasks:
     cmds:
       - pushd mkdocs && uv run mkdocs serve
 
+  mike:deploy-local:
+    desc: Deploy current docs to local gh-pages as dev + latest (no git push)
+    deps:
+      - deps/patch
+    dir: mkdocs
+    cmds:
+      - git fetch origin gh-pages --depth=1 2>/dev/null || true
+      - uv run mike deploy dev latest --update-aliases
+      - uv run mike set-default latest
+      - uv run mike list
+      - echo "Local gh-pages updated (dev/latest). Run task mike:serve and open http://127.0.0.1:8000/"
+
+  mike:serve:
+    desc: Serve versioned site from local gh-pages (run task mike:deploy-local first)
+    deps:
+      - deps/patch
+    dir: mkdocs
+    cmds:
+      # Bind to 127.0.0.1 so the URL is stable (avoids reverse-DNS localhost like 1.0.0.127.in-addr.arpa)
+      - uv run mike serve -a 127.0.0.1:8000
+
   ##
   ## Testing and Linting
   ##
