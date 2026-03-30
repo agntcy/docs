@@ -37,17 +37,15 @@ jobs:
   docs:
     name: Build and deploy
     runs-on: ubuntu-latest
+    env:
+      # Use Node 24 for JS-based actions (checkout, etc.); see GitHub deprecation of Node 20 on runners
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: 'recursive'
-
-      - name: Setup Golang
-        uses: actions/setup-go@v5
-        with:
-          go-version: '1.23.1'
 
       - name: Setup Taskfile
         shell: bash
