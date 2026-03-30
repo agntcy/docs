@@ -10,12 +10,13 @@ edit_uri: edit/main/docs/
 extra:
   version:
     provider: mike
-  # Shared Jinja variables for mkdocs-macros (use as {{ var.docs_url }}, etc.)
+  # Shared Jinja variables for mkdocs-macros (use as [[[ var.docs_url ]]], etc.)
   var:
     docs_url: https://docs.agntcy.org/
     repo_url: https://github.com/agntcy/docs
     repo_slug: agntcy/docs
-    org: agntcy
+    org: AGNTCY
+
   copyright: >
     © Copyright AGNTCY Contributors.
     <a href="#__consent">Change cookie settings</a>

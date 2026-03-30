@@ -159,3 +159,25 @@ Is displayed as:
     This is a note.
 
 For more information on formatting, see the [Material for MkDocs reference](https://squidfunk.github.io/mkdocs-material/reference/).
+
+## Variables
+
+Variable tags are used to display variables in the docs such as version numbers and component names.
+
+[mkdocs-macros-plugin](https://mkdocs-macros-plugin.readthedocs.io/) expands `[[[ ... ]]]` on the whole page source before Markdown runs, so substitutions work inside fenced code blocks as well as in prose:
+
+````markdown
+```bash
+curl "[[[ var.docs_url ]]]"
+```
+````
+
+To show the literal characters `[[[ var.org ]]]` in the docs (e.g. in a macro how-to), wrap that part in a Jinja raw block (block delimiters stay the default `{%` / `%}`):
+
+````markdown
+{% raw %}
+```text
+[[[ var.org ]]]
+```
+{% endraw %}
+````
