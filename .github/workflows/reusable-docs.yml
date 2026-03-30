@@ -31,13 +31,11 @@ on:
         default: dev
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 jobs:
-  build:
-    name: Build artifacts
+  docs:
+    name: Build and deploy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -45,10 +43,6 @@ jobs:
         with:
           fetch-depth: 0
           submodules: 'recursive'
-
-      - name: Setup Pages
-        id: pages
-        uses: actions/configure-pages@v5
 
       - name: Setup Golang
         uses: actions/setup-go@v5
@@ -76,24 +70,24 @@ jobs:
         run: |
           task build
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v4
-        with:
-          name: docs-website
-          path: ./.build/site
+      - name: Configure Git for mike
+        if: ${{ inputs.deploy == true || inputs.deploy == 'true' }}
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email github-actions[bot]@users.noreply.github.com
 
-  deploy:
-    name: Deploy artifacts
-    if: ${{ inputs.deploy == true || inputs.deploy == 'true' }}
-    needs:
-      - build
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-        with:
-          artifact_name: docs-website
+      - name: Fetch gh-pages
+        if: ${{ inputs.deploy == true || inputs.deploy == 'true' }}
+        continue-on-error: true
+        run: git fetch origin gh-pages --depth=1
+
+      - name: Deploy versioned docs (mike)
+        if: ${{ inputs.deploy == true || inputs.deploy == 'true' }}
+        shell: bash
+        working-directory: mkdocs
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          MIKE_VERSION="${VERSION#v}"
+          uv run mike deploy --push --update-aliases "$MIKE_VERSION" latest
+          uv run mike set-default --push latest

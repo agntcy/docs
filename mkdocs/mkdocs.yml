@@ -8,6 +8,8 @@ repo_url: https://github.com/agntcy/docs
 edit_uri: edit/main/docs/
 
 extra:
+  version:
+    provider: mike
   copyright: >
     © Copyright AGNTCY Contributors.
     <a href="#__consent">Change cookie settings</a>
@@ -50,6 +52,8 @@ hooks:
 
 plugins:
   search:
+  mike:
+    alias_type: redirect
   redirects:
     redirect_maps:
       'how-to-guides/identity-quickstart/index.md': 'identity/identity-quickstart.md'
