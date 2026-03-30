@@ -36,4 +36,5 @@ dependencies = [
     "mkdocs-htmlproofer-plugin>=1.0.0",
     "certifi>=2025.1.31",
     "mike>=2.1.4",
+    "mkdocs-macros-plugin>=1.5.0",
 ]

@@ -152,3 +152,28 @@ html [data-md-color-primary=black] .md-nav--primary .md-nav__title[for=__drawer]
 [data-md-color-scheme="default"] code {
   background-color: rgb(246, 248, 250) !important;
 }
+
+/* mkdocs-macros: {{ var_tag('NAME') }} */
+.doc-var-tag {
+  display: inline-flex;
+  align-items: center;
+  margin: 0 0.15em;
+  vertical-align: baseline;
+  border-radius: 0.25rem;
+  padding: 0.05em 0.35em;
+  font-size: 0.92em;
+  line-height: 1.35;
+  border: 1px solid var(--md-default-fg-color--lighter);
+  background-color: var(--md-default-bg-color--lightest);
+}
+
+.doc-var-tag code {
+  background-color: transparent !important;
+  padding: 0 !important;
+  font-size: inherit !important;
+}
+
+[data-md-color-scheme="slate"] .doc-var-tag {
+  border-color: var(--md-default-fg-color--lightest);
+  background-color: var(--md-code-bg-color);
+}

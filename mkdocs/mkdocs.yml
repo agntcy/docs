@@ -10,6 +10,12 @@ edit_uri: edit/main/docs/
 extra:
   version:
     provider: mike
+  # Shared Jinja variables for mkdocs-macros (use as {{ var.docs_url }}, etc.)
+  var:
+    docs_url: https://docs.agntcy.org/
+    repo_url: https://github.com/agntcy/docs
+    repo_slug: agntcy/docs
+    org: agntcy
   copyright: >
     © Copyright AGNTCY Contributors.
     <a href="#__consent">Change cookie settings</a>
@@ -75,6 +81,12 @@ plugins:
     filename: ".index"
     collapse_single_pages: true
     strict: false
+  macros:
+    # main.py in this directory defines env.variables and @env.macro helpers
+    module_name: main
+    # Avoid clashing with GitHub Actions (${{ }}) and JSX ({{ }}) in fenced examples
+    j2_variable_start_string: "[[["
+    j2_variable_end_string: "]]]"
   mkdocstrings:
     handlers:
       python:
