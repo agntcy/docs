@@ -1,41 +1,34 @@
 # SPDX-FileCopyrightText: Copyright (c) 2026 Cisco and/or its affiliates.
 # SPDX-License-Identifier: Apache-2.0
+#
+# Build-only documentation check. Versioned publish (mike), tagging, and releases
+# use .github/workflows/docs-release.yml
 
 name: Documentation
 
 on:
   workflow_call:
     inputs:
-      deploy:
-        description: 'Deploy documentation artifacts'
-        required: true
-        type: boolean
-        default: false
       version:
-        description: 'Version to use for documentation artifacts'
+        description: 'MkDocs macros VERSION (docs_build_version)'
         required: true
         type: string
         default: dev
 
   workflow_dispatch:
     inputs:
-      deploy:
-        description: 'Deploy documentation artifacts'
-        required: true
-        type: boolean
-        default: false
       version:
-        description: 'Version to use for documentation artifacts'
-        required: true
+        description: 'MkDocs macros VERSION'
+        required: false
         type: string
         default: dev
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   docs:
-    name: Build and deploy
+    name: Build docs
     runs-on: ubuntu-latest
     env:
       # Use Node 24 for JS-based actions (checkout, etc.); see GitHub deprecation of Node 20 on runners
@@ -63,29 +56,7 @@ jobs:
 
       - name: Build docs
         shell: bash
-        env:
-          VERSION: ${{ inputs.version }}
         run: |
+          V="${{ inputs.version }}"
+          export VERSION="${V:-dev}"
           task build
-
-      - name: Configure Git for mike
-        if: ${{ inputs.deploy == true || inputs.deploy == 'true' }}
-        run: |
-          git config user.name github-actions[bot]
-          git config user.email github-actions[bot]@users.noreply.github.com
-
-      - name: Fetch gh-pages
-        if: ${{ inputs.deploy == true || inputs.deploy == 'true' }}
-        continue-on-error: true
-        run: git fetch origin gh-pages --depth=1
-
-      - name: Deploy versioned docs (mike)
-        if: ${{ inputs.deploy == true || inputs.deploy == 'true' }}
-        shell: bash
-        working-directory: mkdocs
-        env:
-          VERSION: ${{ inputs.version }}
-        run: |
-          MIKE_VERSION="${VERSION#v}"
-          uv run mike deploy --push --update-aliases "$MIKE_VERSION" latest
-          uv run mike set-default --push latest
