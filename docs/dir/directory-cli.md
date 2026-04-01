@@ -309,12 +309,11 @@ dirctl routing list -o json | jq -r '.[].cid' | xargs -I {} dirctl pull {}
 
 ## Authentication
 
-Authentication is required when accessing remote Directory servers. The CLI supports OIDC-based authentication for humans, service users, and CI workflows.
+Authentication is required when accessing remote Directory servers. The CLI supports OIDC-based authentication for humans and CI workflows, with pre-issued tokens for service users and automation.
 
 | Command | Description |
 |---------|-------------|
-| `dirctl auth login` | Authenticate as a human user via OIDC PKCE |
-| `dirctl auth machine` | Authenticate as a service user via OIDC client credentials |
+| `dirctl auth login` | Authenticate via OIDC (browser PKCE, headless, or device flow) |
 | `dirctl auth logout` | Clear cached authentication credentials |
 | `dirctl auth status` | Show current authentication status |
 
@@ -322,25 +321,31 @@ Authentication is required when accessing remote Directory servers. The CLI supp
 
 OIDC is the default authentication model for remote Directory access. Supported patterns:
 
-- Human interactive login (PKCE) via `dirctl auth login`
-- Service user/machine login (client credentials) via `dirctl auth machine`
-- GitHub Actions token forwarding via `--oidc-token` / `DIRECTORY_CLIENT_OIDC_TOKEN`
+- **Interactive login** (PKCE) via `dirctl auth login`
+- **Headless login** via `dirctl auth login --no-browser`
+- **Device flow** via `dirctl auth login --device` (no browser needed on this machine)
+- **Pre-issued token** via `--auth-token` / `DIRECTORY_CLIENT_AUTH_TOKEN` (CI, scripts, service users)
 
-#### Human interactive login (`dirctl auth login`)
+#### Interactive login (`dirctl auth login`)
 
 Authenticate as a human user using OIDC Authorization Code + PKCE.
 
 ```bash
-# Interactive login
+# Using flags
 dirctl auth login \
   --oidc-issuer "https://prod.idp.ads.outshift.io" \
-  --oidc-client-id "<human-native-client-id>"
+  --oidc-client-id "dirctl"
+
+# Or using environment variables
+export DIRECTORY_CLIENT_OIDC_ISSUER="https://prod.idp.ads.outshift.io"
+export DIRECTORY_CLIENT_OIDC_CLIENT_ID="dirctl"
+dirctl auth login
 ```
 
 What happens:
 
 1. The CLI opens browser-based login against your OIDC issuer
-2. You authenticate and approve the OIDC client
+2. You authenticate with your credentials
 3. The CLI caches the token at `~/.config/dirctl/auth-token.json`
 4. Subsequent commands can reuse the cached token (auto-detect or `--auth-mode=oidc`)
 
@@ -348,34 +353,35 @@ What happens:
 # Force re-login even if already authenticated
 dirctl auth login --force
 
-# Show code and URL only (do not open browser automatically)
+# Headless: show URL only, do not open browser automatically
 dirctl auth login --no-browser
 ```
 
-#### Service user / machine login (`dirctl auth machine`)
+#### Device flow login (`dirctl auth login --device`)
 
-Authenticate non-interactively with OIDC client credentials.
+Authenticate without a browser on the current machine. Useful for SSH sessions, containers, or remote servers.
 
 ```bash
-dirctl auth machine \
+dirctl auth login --device \
   --oidc-issuer "https://prod.idp.ads.outshift.io" \
-  --oidc-machine-client-id "<machine-client-id>" \
-  --oidc-machine-client-secret-file "/path/to/secret.txt" \
-  --oidc-machine-scope "openid profile email"
+  --oidc-client-id "dirctl"
 ```
 
-The token is cached and reused by regular commands. If the cached token expires and machine credentials are configured, `dirctl` can automatically mint a new token during command execution.
+The same environment variables from interactive login apply (`DIRECTORY_CLIENT_OIDC_ISSUER`, `DIRECTORY_CLIENT_OIDC_CLIENT_ID`).
+
+What happens:
+
+1. The CLI displays a code and a URL
+2. You open the URL on any device (phone, another computer) and enter the code
+3. You authenticate with your credentials
+4. The CLI polls until authorization completes, then caches the token
 
 #### `dirctl auth status`
 
 Check your current authentication status.
 
 ```bash
-# Show authentication status
 dirctl auth status
-
-# Validate current token
-dirctl auth status --validate
 ```
 
 Example output:
@@ -383,13 +389,13 @@ Example output:
 ```
 Status: Authenticated
   Provider: oidc
-  Subject: 365801818803934264
+  Subject: johndoe
   Issuer: https://prod.idp.ads.outshift.io
-  Principal type: user
-  Cached at: 2025-12-22T10:30:00Z
+  Email: johndoe@example.com
+  Cached at: 2026-01-15T10:30:00+00:00
   Token: Valid ✓
-  Expires: 2025-12-22T18:30:00Z
-  Cache file: /Users/you/.config/dirctl/auth-token.json
+  Expires: 2026-01-15T11:30:00+00:00
+  Cache file: /home/johndoe/.config/dirctl/auth-token.json
 ```
 
 #### `dirctl auth logout`
@@ -402,7 +408,7 @@ dirctl auth logout
 
 #### Using Authenticated Commands
 
-Once authenticated (human or machine), cached credentials are automatically detected and used:
+Once authenticated, cached credentials are automatically detected and used:
 
 ```bash
 # Push to remote Directory server (auto-detects and uses cached OIDC credentials)
@@ -417,7 +423,7 @@ dirctl pull baeareihdr6t7s6sr2q4zo456sza66eewqc7huzatyfgvoupaqyjw23ilvi
 
 **Authentication mode behavior:**
 
-- **No `--auth-mode` flag (default)**: Auto-detects authentication in this order: SPIFFE (if available in Kubernetes/SPIRE environment), OIDC (explicit token, cached token, or machine credentials), then insecure (for local development).
+- **No `--auth-mode` flag (default)**: Auto-detects authentication in this order: SPIFFE (if available in Kubernetes/SPIRE environment), OIDC (explicit token or cached token), then insecure (for local development).
 - **Explicit `--auth-mode=oidc`**: Forces OIDC authentication.
 - **Other modes**: Use `--auth-mode=x509`, `--auth-mode=jwt`, or `--auth-mode=tls` for specific authentication methods.
 
@@ -426,23 +432,29 @@ dirctl pull baeareihdr6t7s6sr2q4zo456sza66eewqc7huzatyfgvoupaqyjw23ilvi
 dirctl --auth-mode=oidc push my-agent.json
 ```
 
-#### GitHub Actions OIDC (CI)
+#### Pre-issued Tokens (CI and Service Users)
 
-In CI, obtain an OIDC token from GitHub Actions and pass it to `dirctl`.
+For CI/CD pipelines and automation, pass a pre-issued JWT token directly:
 
 ```bash
+# GitHub Actions OIDC
 dirctl search --name "*" \
   --server-addr "prod.gateway.ads.outshift.io:443" \
   --auth-mode=oidc \
-  --oidc-token "<github-oidc-jwt>" \
+  --auth-token "<github-oidc-jwt>" \
   --output json
+
+# Service user with pre-generated token
+export DIRECTORY_CLIENT_AUTH_TOKEN="<service-user-jwt>"
+export DIRECTORY_CLIENT_SERVER_ADDRESS="prod.gateway.ads.outshift.io:443"
+dirctl search --auth-mode=oidc
 ```
 
 ### Other Authentication Modes
 
 | Mode | Description | Use Case |
 |------|-------------|----------|
-| `oidc` | OIDC bearer/JWT auth | Human login, machine auth, and CI workload identity |
+| `oidc` | OIDC bearer/JWT auth | Human login, pre-issued tokens, and CI workload identity |
 | `x509` | SPIFFE X.509 certificates | Kubernetes workloads with SPIRE |
 | `jwt` | SPIFFE JWT tokens | Service-to-service authentication |
 | `token` | SPIFFE token file | Pre-provisioned credentials |
@@ -466,7 +478,16 @@ dirctl routing list
 ### Authentication
 
 ```bash
-# Use SPIFFE Workload API
+# OIDC authentication (most common)
+export DIRECTORY_CLIENT_OIDC_ISSUER="https://prod.idp.ads.outshift.io"
+export DIRECTORY_CLIENT_OIDC_CLIENT_ID="dirctl"
+dirctl auth login
+
+# Pre-issued token (CI/service users)
+export DIRECTORY_CLIENT_AUTH_TOKEN="<jwt>"
+dirctl --auth-mode=oidc routing list
+
+# SPIFFE Workload API (Kubernetes)
 dirctl --spiffe-socket-path /run/spire/sockets/agent.sock routing list
 ```
 
@@ -474,7 +495,7 @@ dirctl --spiffe-socket-path /run/spire/sockets/agent.sock routing list
 
 The CLI follows a clear service-based organization:
 
-- **Auth**: OIDC authentication (`auth login`, `auth machine`, `auth logout`, `auth status`).
+- **Auth**: OIDC authentication (`auth login`, `auth logout`, `auth status`).
 - **Storage**: Direct record management (`push`, `pull`, `delete`, `info`).
 - **Import**: Batch imports from external registries (`import`).
 - **Routing**: Network announcement and discovery (`routing publish`, `routing list`, `routing search`).
