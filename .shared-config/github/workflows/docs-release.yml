@@ -1,0 +1,229 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 Cisco and/or its affiliates.
+# SPDX-License-Identifier: Apache-2.0
+#
+# Ordered release pipeline:
+#   1. Build docs — validate MkDocs output
+#   2. Mike — push versioned site to gh-pages (from mkdocs/mike_versions.ini [versions] release)
+#   3. Git tag — create v* tag on the commit that was published
+#   4. Finalize — optional GitHub Release
+#
+# Copy to .github/workflows/ at repo root. Requires .shared-config/, mkdocs/, and mkdocs/pyproject.toml or uv.lock.
+
+name: Docs release
+
+on:
+  workflow_dispatch:
+    inputs:
+      create_github_release:
+        description: 'After tagging, create a GitHub Release for the same tag'
+        type: choice
+        options:
+          - 'no'
+          - 'yes'
+        default: 'no'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: docs-release
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: '1. Build docs'
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Setup Taskfile
+        shell: bash
+        run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
+
+      - name: Setup UV
+        shell: bash
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      - name: Update PATH
+        shell: bash
+        run: echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Install AGNTCY theme into docs/ (shared-config)
+        shell: bash
+        run: |
+          chmod +x .shared-config/install.sh
+          ./.shared-config/install.sh
+          ./.shared-config/install.sh --with-mike-macros
+
+      - name: Sync Python environment (mkdocs)
+        shell: bash
+        run: |
+          if [ -f mkdocs/pyproject.toml ] || [ -f mkdocs/uv.lock ]; then
+            (cd mkdocs && uv sync)
+          else
+            python3 -m pip install -r .shared-config/requirements-agntcy-docs-theme.txt
+          fi
+
+      - name: Build
+        shell: bash
+        run: |
+          if [ -f mkdocs/uv.lock ] || [ -f mkdocs/pyproject.toml ]; then
+            export VERSION="$(cd mkdocs && uv run python mike_version.py release)"
+          else
+            export VERSION="$(cd mkdocs && python mike_version.py release)"
+          fi
+          task -t .shared-config/Taskfile.yml build
+
+  mike:
+    name: '2. Mike (gh-pages)'
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Setup Taskfile
+        shell: bash
+        run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
+
+      - name: Setup UV
+        shell: bash
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      - name: Update PATH
+        shell: bash
+        run: echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Install AGNTCY theme into docs/ (shared-config)
+        shell: bash
+        run: |
+          chmod +x .shared-config/install.sh
+          ./.shared-config/install.sh
+          ./.shared-config/install.sh --with-mike-macros
+
+      - name: Sync Python environment (mkdocs)
+        shell: bash
+        run: |
+          if [ -f mkdocs/pyproject.toml ] || [ -f mkdocs/uv.lock ]; then
+            (cd mkdocs && uv sync)
+          else
+            python3 -m pip install -r .shared-config/requirements-agntcy-docs-theme.txt
+          fi
+
+      - name: Configure Git for mike
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email github-actions[bot]@users.noreply.github.com
+
+      - name: Fetch gh-pages
+        continue-on-error: true
+        run: git fetch origin gh-pages --depth=1
+
+      - name: Mike deploy
+        shell: bash
+        run: task -t .shared-config/Taskfile.yml mike:deploy
+
+  git-tag:
+    name: '3. Git tag'
+    needs: mike
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Setup UV
+        shell: bash
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      - name: Update PATH
+        shell: bash
+        run: echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Sync Python environment (mkdocs)
+        shell: bash
+        run: |
+          if [ -f mkdocs/pyproject.toml ] || [ -f mkdocs/uv.lock ]; then
+            (cd mkdocs && uv sync)
+          else
+            python3 -m pip install -r .shared-config/requirements-agntcy-docs-theme.txt
+          fi
+
+      - name: Create and push tag
+        shell: bash
+        env:
+          TAG_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          if [ -f mkdocs/uv.lock ] || [ -f mkdocs/pyproject.toml ]; then
+            VER="$(cd mkdocs && uv run python mike_version.py release)"
+          else
+            VER="$(cd mkdocs && python mike_version.py release)"
+          fi
+          TAG="v${VER}"
+          if git ls-remote --tags origin "refs/tags/${TAG}" | grep -q .; then
+            echo "::error::Tag ${TAG} already exists on origin. Bump [versions] release in mkdocs/mike_versions.ini or delete the remote tag."
+            exit 1
+          fi
+          git tag -a "${TAG}" -m "Documentation release ${TAG}" "${TAG_SHA}"
+          git push origin "${TAG}"
+
+  finalize:
+    name: '4. Deploy / release'
+    needs: git-tag
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup UV
+        shell: bash
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      - name: Update PATH
+        shell: bash
+        run: echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Sync Python environment (mkdocs)
+        shell: bash
+        run: |
+          if [ -f mkdocs/pyproject.toml ] || [ -f mkdocs/uv.lock ]; then
+            (cd mkdocs && uv sync)
+          else
+            python3 -m pip install -r .shared-config/requirements-agntcy-docs-theme.txt
+          fi
+
+      - name: GitHub Release
+        if: ${{ github.event.inputs.create_github_release == 'yes' }}
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if [ -f mkdocs/uv.lock ] || [ -f mkdocs/pyproject.toml ]; then
+            VER="$(cd mkdocs && uv run python mike_version.py release)"
+          else
+            VER="$(cd mkdocs && python mike_version.py release)"
+          fi
+          TAG="v${VER}"
+          gh release create "${TAG}" --title "Documentation ${TAG}" --notes "Published from workflow [${{ github.run_id }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}). Site is served from the gh-pages branch."
+
+      - name: Pages note
+        if: ${{ github.event.inputs.create_github_release != 'yes' }}
+        run: |
+          echo "::notice::GitHub Pages (if configured from gh-pages) is already serving the mike version from step 2. Set **create_github_release** to **yes** to open a GitHub Release on the new tag."

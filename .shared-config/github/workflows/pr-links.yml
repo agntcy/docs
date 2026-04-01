@@ -1,0 +1,135 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 Cisco and/or its affiliates.
+# SPDX-License-Identifier: Apache-2.0
+#
+# PR: lychee on changed docs pages only. Copy to .github/workflows/ at repo root.
+#
+# Optional: if your docs reference a fixed production URL, add a --remap line below
+# (see https://lychee.cli.rs/recipes/remapping/) so those links resolve to .build/site.
+
+name: Check links in diffs
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  check-links:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps:
+      - name: Clone repository (PR)
+        if: github.event_name == 'pull_request'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          submodules: recursive
+
+      - name: Clone repository (manual)
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Setup Golang
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23.1'
+
+      - name: Setup Task
+        uses: arduino/setup-task@v2
+        with:
+          version: '3.48.0'
+
+      - name: Setup UV
+        shell: bash
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      - name: Update GITHUB_PATH
+        shell: bash
+        run: echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Install AGNTCY theme into docs/ (shared-config)
+        shell: bash
+        run: |
+          chmod +x .shared-config/install.sh
+          ./.shared-config/install.sh
+          ./.shared-config/install.sh --with-mike-macros
+
+      - name: Sync Python environment (mkdocs)
+        shell: bash
+        run: |
+          if [ -f mkdocs/pyproject.toml ] || [ -f mkdocs/uv.lock ]; then
+            (cd mkdocs && uv sync)
+          else
+            python3 -m pip install -r .shared-config/requirements-agntcy-docs-theme.txt
+          fi
+
+      - name: Build docs
+        shell: bash
+        run: task -t .shared-config/Taskfile.yml build
+
+      - name: Fetch base branch
+        if: github.event_name == 'pull_request'
+        run: |
+          git remote add upstream https://github.com/${{ github.repository }}.git 2>/dev/null || true
+          git fetch upstream ${{ github.event.pull_request.base.ref }}
+
+      - name: Get paths to check
+        id: get_paths
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "paths=.build/site" >> $GITHUB_OUTPUT
+            echo "has_paths=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          BASE=$(git merge-base FETCH_HEAD HEAD)
+          changed=$(git diff --name-only $BASE...HEAD -- docs/)
+          paths=""
+          for f in $changed; do
+            [ -z "$f" ] && continue
+            case "$f" in *.md) ;; *) continue ;; esac
+            if [ "$f" = "docs/index.md" ]; then
+              paths="$paths .build/site/index.html"
+            else
+              path="${f#docs/}"
+              path="${path%.md}"
+              paths="$paths .build/site/${path}/"
+            fi
+          done
+          paths=$(echo $paths)
+          echo "paths=$paths" >> $GITHUB_OUTPUT
+          [ -n "$paths" ] && echo "has_paths=true" >> $GITHUB_OUTPUT || echo "has_paths=false" >> $GITHUB_OUTPUT
+
+      - name: Remove paths lychee cannot parse
+        if: steps.get_paths.outputs.has_paths == 'true'
+        run: |
+          find .build/site -name '.index' -type f -delete
+          find .build/site -depth -name '.index' -type d -exec rm -rf {} \;
+
+      - name: Check links
+        if: steps.get_paths.outputs.has_paths == 'true'
+        uses: lycheeverse/lychee-action@v2.0.2
+        with:
+          lycheeVersion: "v0.22.0"
+          args: |
+            --no-progress
+            --config .shared-config/lychee.toml
+            --root-dir $PWD/.build/site
+            --exclude-all-private
+            ${{ steps.get_paths.outputs.paths }}
+          fail: true
+          output: lychee/out.md
+
+      - name: Suggestions
+        if: failure()
+        run: |
+          echo -e "\nPlease review the links reported in the Check links step above."
+          echo -e "If a link is valid but fails due to a CAPTCHA challenge, IP blocking, login requirements, etc.,"
+          echo -e "consider adding such links to .shared-config/lychee.toml exclude list to bypass future checks.\n"
+          exit 1

@@ -1,0 +1,71 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 Cisco and/or its affiliates.
+# SPDX-License-Identifier: Apache-2.0
+#
+# Scheduled / manual full-site link check on built HTML. Copy to .github/workflows/ at repo root.
+
+name: Links
+
+on:
+  repository_dispatch:
+  workflow_dispatch:
+  schedule:
+    - cron: "00 06 * * *"
+
+jobs:
+  linkChecker:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Setup Golang
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23.1'
+
+      - name: Setup Task
+        uses: arduino/setup-task@v2
+        with:
+          version: '3.48.0'
+
+      - name: Setup UV
+        shell: bash
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      - name: Update GITHUB_PATH
+        shell: bash
+        run: echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Install AGNTCY theme into docs/ (shared-config)
+        shell: bash
+        run: |
+          chmod +x .shared-config/install.sh
+          ./.shared-config/install.sh
+          ./.shared-config/install.sh --with-mike-macros
+
+      - name: Sync Python environment (mkdocs)
+        shell: bash
+        run: |
+          if [ -f mkdocs/pyproject.toml ] || [ -f mkdocs/uv.lock ]; then
+            (cd mkdocs && uv sync)
+          else
+            python3 -m pip install -r .shared-config/requirements-agntcy-docs-theme.txt
+          fi
+
+      - name: Build docs
+        shell: bash
+        run: task -t .shared-config/Taskfile.yml build
+
+      - name: Link Checker
+        id: lychee
+        uses: lycheeverse/lychee-action@v2.0.2
+        with:
+          args: '--config .shared-config/lychee.toml --exclude-path "(^|/)404\\.html$" .build/site'
+          fail: true
