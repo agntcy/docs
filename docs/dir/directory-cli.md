@@ -50,9 +50,12 @@ The fastest way to get a fully functional local directory is to run the built-in
 ```bash
 # Start the daemon (runs apiserver + reconciler in one process)
 dirctl daemon start
+
+# Or start with a custom config file
+dirctl daemon start --config /path/to/config.yaml
 ```
 
-This starts a gRPC server on `localhost:8888` with embedded SQLite and a filesystem OCI store. All data is stored under `~/.agntcy/dir/` by default. No PostgreSQL, Docker, or external registry required.
+This starts a gRPC server on `localhost:8888` with embedded SQLite and a filesystem OCI store. All data is stored under `~/.agntcy/dir/` by default. No PostgreSQL, Docker, or external registry required. Without `--config`, built-in defaults are used; when provided, the file is read as the complete configuration.
 
 Once the daemon is running, use any `dirctl` command against it:
 
