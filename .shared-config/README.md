@@ -114,6 +114,7 @@ Re-run after updating `.shared-config` from upstream.
    ```
 
 3. Copy `.shared-config/mkdocs/mkdocs.template.yml` to `mkdocs/mkdocs.yml` and set `site_name`, `site_url`, `repo_*`, `edit_uri`, `extra.var`, `extra.analytics.property`, and edit `plugins.redirects` as needed. Remove plugins you do not use (for example `mkdocstrings` if you have no API pages).
+
 4. Install deps and serve:
 
    ```bash

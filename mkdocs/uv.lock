@@ -82,7 +82,7 @@ requires-dist = [
     { name = "llama-index-core", specifier = ">=0.12.38,<0.13" },
     { name = "markdown", specifier = ">=3.2" },
     { name = "mike", specifier = ">=2.1.4" },
-    { name = "mkdocs", specifier = ">=1.3.0" },
+    { name = "mkdocs", specifier = ">=1.3.0,<2" },
     { name = "mkdocs-autorefs", specifier = "==1.4.1" },
     { name = "mkdocs-awesome-pages-plugin", specifier = "==2.10.1" },
     { name = "mkdocs-exclude", specifier = "==1.0.2" },
