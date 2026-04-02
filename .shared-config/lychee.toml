@@ -1,0 +1,25 @@
+# https://github.com/lycheeverse/lychee
+max_concurrency = 10
+timeout = 10
+accept = [200, 201, 204, 403, 429, 503]
+
+exclude = [
+    'localhost',
+    'http://127\\.0\\.0\\.1',
+    'https://127\\.0\\.0\\.1',
+    'http://0\\.0\\.0\\.0',
+    'host\\.docker\\.internal',
+    '\\.well-known',
+    'example\\.com',
+    'your-username',
+    'company\\.com',
+    'w3\\.org',
+    'gnu\\.org',
+]
+
+exclude_path = ['overrides', '\\.index(/|$)', '(^|/)404\\.html$']
+cache = true
+max_retries = 3
+method = "get"
+include_verbatim = false
+user_agent = "lychee/agntcy-docs-theme"
