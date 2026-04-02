@@ -43,6 +43,34 @@ The Directory CLI can be installed in the following ways:
 
 ## Quick Start
 
+### Local Daemon (No External Dependencies)
+
+The fastest way to get a fully functional local directory is to run the built-in daemon:
+
+```bash
+# Start the daemon (runs apiserver + reconciler in one process)
+dirctl daemon start
+
+# Or start with a custom config file
+dirctl daemon start --config /path/to/config.yaml
+```
+
+This starts a gRPC server on `localhost:8888` with embedded SQLite and a filesystem OCI store. All data is stored under `~/.agntcy/dir/` by default. No PostgreSQL, Docker, or external registry required. Without `--config`, built-in defaults are used; when provided, the file is read as the complete configuration.
+
+Once the daemon is running, use any `dirctl` command against it:
+
+```bash
+dirctl --server-addr localhost:8888 push my-agent.json
+```
+
+To stop the daemon:
+
+```bash
+dirctl daemon stop
+```
+
+### Using an Existing Server
+
 The following example demonstrates how to store, publish, search, and retrieve a record using the Directory CLI:
 
 1. Store a record
@@ -442,6 +470,7 @@ dirctl --spiffe-socket-path /run/spire/sockets/agent.sock routing list
 
 The CLI follows a clear service-based organization:
 
+- **Daemon**: Local directory server (`daemon start`, `daemon stop`, `daemon status`).
 - **Auth**: GitHub OAuth authentication (`auth login`, `auth logout`, `auth status`).
 - **Storage**: Direct record management (`push`, `pull`, `delete`, `info`).
 - **Import**: Batch imports from external registries (`import`).
