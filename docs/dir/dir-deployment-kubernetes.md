@@ -331,13 +331,3 @@ Directory API services can be deployed either using the Taskfile, Docker Compose
     ```
 
 For more configuration options, see [Validation](validation.md).
-
-## Directory MCP Server
-
-The Directory services are also accessible through the Directory MCP Server. It provides a standardized interface for AI assistants and tools to interact with the Directory system and work with OASF agent records. See the [MCP Server documentation](directory-mcp.md) for more information.
-
-## Next Steps
-
-- Connect to the public Directory: federate with the public Directory network at `prod.api.ads.outshift.io` to discover and publish agents. See [Running a Federated Directory Instance](partner-prod-federation.md).
-- Use the [Directory CLI](directory-cli.md) to create and query records.
-- Explore [Features and Usage Scenarios](scenarios.md): build, store, sign, discover, search.
