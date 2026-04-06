@@ -502,4 +502,4 @@ DIRECTORY_SERVER_EVENTS_LOG_PUBLISHED_EVENTS=false
 - [Events API Reference](https://buf.build/agntcy/dir/docs/main:agntcy.dir.events.v1) - Protocol buffer definitions and message formats
 - [CLI Reference](directory-cli.md) - Complete CLI command documentation
 - [SDK Reference](directory-sdk.md) - Language-specific SDK usage guides
-- [Getting Started](getting-started.md) - Initial setup and deployment guide
+- [Getting Started](dir-getting-started.md) - Initial setup and deployment guide
