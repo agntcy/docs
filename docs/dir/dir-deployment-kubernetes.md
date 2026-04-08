@@ -1,6 +1,9 @@
-# Getting Started
+# Kubernetes Deployment
 
 Deploy Directory with SPIRE in a Kind cluster for development and testing. Uses `example.org` as the trust domain (local only—cannot federate with the public network).
+
+For production AWS EKS deployment, see
+[Production Deployment](prod-deployment.md).
 
 ## Prerequisites
 
@@ -293,51 +296,3 @@ The Agent Directory Service can be deployed using Helm or GitOps / Argo CD. Helm
 
     !!! important "Trust domain"
         This Quick Start uses `example.org` for local testing only. To federate with the public Directory network, you need a unique trust domain. See [Production Deployment](prod-deployment.md) and [Running a Federated Directory Instance](partner-prod-federation.md).
-
-## Deployment
-
-Directory API services can be deployed either using the Taskfile, Docker Compose, or directly via the released Helm chart.
-
-=== "Taskfile"
-
-    Start the necessary components (such as storage and API services):
-
-    ```bash
-    DIRECTORY_SERVER_OASF_API_VALIDATION_SCHEMA_URL=https://schema.oasf.outshift.com task server:start
-    ```
-
-    !!! note
-
-        MacOS users may encounter a "port 5000 already in use" error. This is likely caused by the AirPlay Receiver feature. You can disable it in your System Settings.
-
-=== "Docker Compose"
-
-    This method deploys Directory services using Docker Compose.
-      
-    While the Directory server has a default OASF schema URL, Docker Compose deployments may require explicitly setting the `DIRECTORY_SERVER_OASF_API_VALIDATION_SCHEMA_URL` environment variable:
-
-    ```bash
-    cd install/docker
-    export DIRECTORY_SERVER_OASF_API_VALIDATION_SCHEMA_URL=https://schema.oasf.outshift.com
-    docker compose up -d
-    ```
-
-    Alternatively, you can disable API validation (not recommended for production):
-
-    ```bash
-    cd install/docker
-    export DIRECTORY_SERVER_OASF_API_VALIDATION_DISABLE=true
-    docker compose up -d
-    ```
-
-For more configuration options, see [Validation](validation.md).
-
-## Directory MCP Server
-
-The Directory services are also accessible through the Directory MCP Server. It provides a standardized interface for AI assistants and tools to interact with the Directory system and work with OASF agent records. See the [MCP Server documentation](directory-mcp.md) for more information.
-
-## Next Steps
-
-- Connect to the public Directory: federate with the public Directory network at `prod.api.ads.outshift.io` to discover and publish agents. See [Running a Federated Directory Instance](partner-prod-federation.md).
-- Use the [Directory CLI](directory-cli.md) to create and query records.
-- Explore [Features and Usage Scenarios](scenarios.md): build, store, sign, discover, search.

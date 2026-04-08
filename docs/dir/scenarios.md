@@ -16,7 +16,7 @@ The following prerequisites are required to follow the examples below:
 - Locally available Directory CLI client
 - Running instance of Directory API server
 
-To deploy the necessary components, please refer to the [Getting Started](getting-started.md)
+To deploy the necessary components, please refer to the [Getting Started](dir-getting-started.md)
 guide.
 
 ## Build

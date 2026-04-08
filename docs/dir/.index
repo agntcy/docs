@@ -1,6 +1,9 @@
 nav:
   - Overview: overview.md
-  - Getting Started: getting-started.md
+  - Getting Started:
+    - dir-getting-started.md
+    - Local Deployment: dir-deployment-local.md
+    - Kubernetes Deployment: dir-deployment-kubernetes.md
   - Features and Usage Scenarios: scenarios.md
   - Production Deployment: prod-deployment.md
   - CLI Guide: directory-cli.md
