@@ -7,7 +7,7 @@ your use case. Choose the approach that best fits your environment and goals.
 
 | Mode | Components | Best for |
 |------|-----------|----------|
-| [**dirctl daemon**](dir-deployment-local.md#recommended-default-dirctl-daemon) | Single process (apiserver + reconciler + SQLite + local OCI store) | Quick local setup, single-user development, lightweight testing |
+| [**dirctl daemon**](dir-deployment-local.md#dirctl-daemon-recommended-local-mode) | Single process (apiserver + reconciler + SQLite + local OCI store) | Quick local setup, single-user development, lightweight testing |
 | [**Docker Compose**](dir-deployment-local.md#docker-compose-deployment) | Separate containers (apiserver, reconciler, Zot registry, PostgreSQL) | Multi-service local development, closer to production topology |
 | [**Helm / Kubernetes**](dir-deployment-kubernetes.md) | Full Kubernetes deployment with SPIRE identity | Dev/staging clusters, team environments, pre-production |
 

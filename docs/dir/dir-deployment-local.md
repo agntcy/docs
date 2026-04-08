@@ -4,12 +4,12 @@ Run the Agent Directory on your own machine for development, testing, or as a st
 
 ## Deployment Modes
 
-Directory offers three local deployment modes with different trade-offs.
+Directory offers the following local deployment modes with different trade-offs:
 
 | Mode | Components | Requires Docker | Best for |
 |------|-----------|:-:|----------|
-| **dirctl daemon** | Single process (apiserver + reconciler + SQLite + local OCI store) | No | Quick setup, single-user development, lightweight testing |
-| **Docker Compose** | Separate containers (apiserver, reconciler, Zot registry, PostgreSQL) | Yes | Multi-service development, closer to production topology |
+| dirctl daemon | Single process (apiserver + reconciler + SQLite + local OCI store) | No | Quick setup, single-user development, lightweight testing |
+| Docker Compose | Separate containers (apiserver, reconciler, Zot registry, PostgreSQL) | Yes | Multi-service development, closer to production topology |
 
 ## Platform Support Matrix
 
@@ -45,7 +45,7 @@ The `dirctl` CLI binary is available for all platforms regardless of which deplo
 
 ### dirctl daemon
 
-- **dirctl binary** — install via Homebrew or download from [GitHub Releases](https://github.com/agntcy/dir/releases):
+- dirctl binary: install via Homebrew or download from [GitHub Releases](https://github.com/agntcy/dir/releases):
 
 === "Homebrew (macOS / Linux)"
 
@@ -65,8 +65,8 @@ The `dirctl` CLI binary is available for all platforms regardless of which deplo
 
 ### Docker Compose
 
-- **Docker** with the Compose plugin (v2)
-- **Docker Desktop** (macOS / Windows) or **Docker Engine** (Linux)
+- Docker with the Compose plugin (v2)
+- Docker Desktop (macOS / Windows) or Docker Engine (Linux)
 
 ### Taskfile (contributors)
 

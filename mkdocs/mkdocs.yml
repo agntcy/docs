@@ -54,6 +54,7 @@ plugins:
     redirect_maps:
       'how-to-guides/identity-quickstart/index.md': 'identity/identity-quickstart.md'
       'how-to-guides/agent-directory/index.md': 'dir/dir-getting-started.md'
+      'dir/getting-started.md': 'dir/dir-getting-started.md'
       'messaging/slim-core.md': 'slim/overview.md'
       'messaging/slim-a2a.md': 'slim/slim-a2a.md'
       'messaging/slim-authentication.md': 'slim/slim-authentication.md'
