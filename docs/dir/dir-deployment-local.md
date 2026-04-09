@@ -101,3 +101,120 @@ docker compose up -d
 ```
 
 This is closer to the production topology and is useful for testing multi-service interactions. See the [Kubernetes Deployment](dir-deployment-kubernetes.md) guide for deploying with Helm in a Kind cluster.
+
+## Connecting to a Remote Directory
+
+A local daemon can connect to a remote Directory for peer discovery and artifact synchronization. Before configuring the daemon, it is important to understand how Directory federation works and what access your local node requires.
+
+### Federation
+
+The Directory is a federated network. To connect a local daemon to a remote Directory node, the local node must join the federation. This involves establishing a SPIFFE-based trust relationship with the remote node so the two can authenticate each other for routing, discovery, and sync operations.
+
+For the full federation setup — SPIRE configuration, trust domain bundle exchange, authorization policies, and public network onboarding — see:
+
+- [Running a Federated Directory Instance](partner-prod-federation.md)
+- [Federation Profiles](federation-profiles.md)
+- [Trust Model](trust-model.md)
+- [Directory Federation Hands-On: SPIRE and SPIFFE in a Local Kind Environment](https://blogs.agntcy.org/technical/security/directory/2026/02/25/directory-federation.html)
+
+### Remote Connection Prerequisites
+
+In addition to the [daemon prerequisites](#dirctl-daemon) above, you need:
+
+- `regsync` binary (required only for sync):
+
+```bash
+brew install regclient
+which regsync
+```
+
+- The remote Directory's **bootstrap peer multiaddress**
+- **Federation membership** — SPIFFE trust domain federation with the remote node (see [Running a Federated Directory Instance](partner-prod-federation.md))
+
+### Remote Daemon Configuration
+
+Create a configuration file that enables remote connectivity. Save it as `daemon-remote.yaml`:
+
+```yaml
+server:
+  listen_address: "localhost:8888"
+  store:
+    provider: "oci"
+    oci:
+      registry_address: "localhost:5000"
+      repository_name: "dir"
+      auth_config:
+        insecure: true
+    verification:
+      enabled: true
+  routing:
+    listen_address: "/ip4/0.0.0.0/tcp/8999"
+    key_path: "node.key"
+    datastore_dir: "routing"
+    bootstrap_peers:
+      - "/dns4/remote-dir.example.com/tcp/8999/p2p/<remote-peer-id>"
+    gossipsub:
+      enabled: true
+  database:
+    type: "sqlite"
+    sqlite:
+      path: "dir.db"
+
+reconciler:
+  local_registry:
+    registry_address: "localhost:5000"
+    repository_name: "dir"
+    auth_config:
+      insecure: true
+  regsync:
+    enabled: true
+    interval: 30s
+    binary_path: "<path-to-regsync-binary>"
+  indexer:
+    enabled: true
+    interval: 1h
+  signature:
+    enabled: true
+    interval: 1m
+    ttl: 168h
+    record_timeout: 30s
+  name:
+    enabled: true
+    interval: 1h
+    ttl: 168h
+    record_timeout: 30s
+```
+
+Replace the placeholder values before proceeding:
+
+| Placeholder | Description | How to obtain |
+|-------------|-------------|---------------|
+| `<remote-peer-id>` | The libp2p peer ID of the remote bootstrap node | Provided by the remote Directory operator |
+| `remote-dir.example.com` | Hostname or IP of the remote Directory | Provided by the remote Directory operator |
+| `<path-to-regsync-binary>` | Path to the regsync binary on your system | Run `which regsync` |
+
+### Starting a Local OCI Registry
+
+The daemon needs an OCI registry to store artifacts. You can either start a local registry or connect to a remote one such as GitHub Container Registry or Docker Hub. For supported registries and configuration details, see [Supported Registries](scenarios.md#supported-registries).
+
+To start a local Zot registry with Docker:
+
+```bash
+docker run -d --name dir-registry -p 5000:5000 ghcr.io/project-zot/zot:v2.1.15
+```
+
+!!! warning "Filesystem OCI Store"
+    If you do not need sync and only want routing/discovery, you can skip the registry and use the default filesystem store by setting `server.store.oci.local_dir: "store"` and removing the `reconciler.local_registry` section. Sync is **not supported** with the local OCI store — synced records will not be visible to the daemon.
+
+### Starting the Daemon with Remote Connectivity
+
+```bash
+dirctl daemon start --config daemon-remote.yaml
+```
+
+On first start, the daemon:
+
+1. Creates the data directory (`~/.agntcy/dir/` by default, override with `--data-dir`)
+1. Generates an Ed25519 peer identity at the configured `key_path` if one does not exist
+1. Connects to the routing bootstrap peers listed in `server.routing.bootstrap_peers`
+1. Starts the gRPC apiserver, reconciler, and routing service
