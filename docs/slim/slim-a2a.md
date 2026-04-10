@@ -8,7 +8,7 @@ SLIMRPC is a framework that enables Protocol Buffers (protobuf) Remote Procedure
 
 To compile a protobuf file and generate the clients and service stub you can use the [SLIMRPC compiler](./slim-slimrpc-compiler.md). This works in a similar way to the protoc compiler.
 
-For SLIM A2A we compiled the [a2a.proto](https://github.com/a2aproject/A2A/blob/v0.3.0/specification/grpc/a2a.proto) file using the SLIMRPC compiler. The generated code is in [a2a_pb2_slimrpc.py](https://github.com/agntcy/slim-a2a-python/blob/main/slima2a/types/a2a_pb2_slimrpc.py).
+For SLIM A2A we compiled the [a2a.proto](https://github.com/a2aproject/A2A/blob/v0.3.0/specification/grpc/a2a.proto) file using the SLIMRPC compiler. The generated code is in [a2a_pb2_slimrpc.py](https://github.com/agntcy/slim-a2a-python/blob/main/slima2a/types/v1/a2a_pb2_slimrpc.py).
 
 ## How to use SLIMA2A
 
