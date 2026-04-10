@@ -1,8 +1,8 @@
 # SPDX-FileCopyrightText: Copyright (c) 2026 Cisco and/or its affiliates.
 # SPDX-License-Identifier: Apache-2.0
 #
-# Build-only documentation check. Versioned publish (mike), tagging, and releases
-# use .github/workflows/docs-release.yml
+# Build-only documentation check. Copy to .github/workflows/ at repo root.
+# Versioned publish (mike), tagging, and releases: docs-release.yml in this folder.
 
 name: Documentation
 
@@ -31,32 +31,45 @@ jobs:
     name: Build docs
     runs-on: ubuntu-latest
     env:
-      # Use Node 24 for JS-based actions (checkout, etc.); see GitHub deprecation of Node 20 on runners
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          submodules: 'recursive'
+          submodules: recursive
 
       - name: Setup Taskfile
         shell: bash
-        run: |
-          sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
+        run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
 
       - name: Setup UV
         shell: bash
-        run: |
-          curl -LsSf https://astral.sh/uv/install.sh | sh
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
 
       - name: Update GITHUB_PATH
         shell: bash
-        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+        run: echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Install AGNTCY theme into docs/ (shared-config)
+        shell: bash
+        run: |
+          chmod +x .shared-config/install.sh
+          ./.shared-config/install.sh
+          ./.shared-config/install.sh --with-mike-macros
+
+      - name: Sync Python environment (mkdocs)
+        shell: bash
+        run: |
+          if [ -f mkdocs/pyproject.toml ] || [ -f mkdocs/uv.lock ]; then
+            (cd mkdocs && uv sync)
+          else
+            python3 -m pip install -r .shared-config/requirements-agntcy-docs-theme.txt
+          fi
 
       - name: Build docs
         shell: bash
         run: |
           V="${{ inputs.version }}"
           export VERSION="${V:-dev}"
-          task build
+          task -t .shared-config/Taskfile.yml build

@@ -1,0 +1,119 @@
+# Minimal MkDocs config for a new repo (install.sh copies this to mkdocs/mkdocs.yml when missing).
+# For full parity with agntcy/docs (redirects, macros, API docs, Swagger), use mkdocs.template.yml instead.
+
+site_name: MY_PROJECT_DOCS
+site_url: https://example.org/
+
+docs_dir: ../docs
+
+repo_name: org/repo
+repo_url: https://github.com/org/repo
+edit_uri: edit/main/docs/
+
+extra:
+  version:
+    provider: mike
+  var:
+    docs_url: https://example.org/
+    repo_url: https://github.com/org/repo
+    repo_slug: org/repo
+    org: AGNTCY
+
+  copyright: >
+    © Copyright AGNTCY Contributors.
+    <a href="#__consent">Change cookie settings</a>
+  analytics:
+    provider: google
+    property: G-XXXXXXXXXX
+  consent:
+    title: Cookie consent
+    description: >-
+      We use cookies to recognize your repeated visits and preferences, as well
+      as to measure the effectiveness of our documentation and whether users
+      find what they are searching for. With your consent, you're helping us to
+      make our documentation better.
+    actions:
+      - accept
+      - reject
+
+extra_css:
+  - stylesheets/agntcy-docs.css
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - md_in_html
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+hooks:
+  - ../.shared-config/mkdocs/hooks.py
+
+plugins:
+  search:
+  mike:
+    alias_type: redirect
+  redirects:
+    redirect_maps: {}
+  awesome-pages:
+    filename: ".index"
+    collapse_single_pages: true
+    strict: false
+
+theme:
+  name: material
+  custom_dir: ../.shared-config/mkdocs/overrides
+
+  features:
+    - announce.dismiss
+    - content.action.edit
+    - content.action.view
+    - content.code.annotate
+    - content.code.copy
+    - content.tabs.link
+    - content.tooltips
+    - navigation.footer
+    - navigation.indexes
+    - navigation.top
+    - navigation.tracking
+    - search.highlight
+    - search.share
+    - search.suggest
+    - toc.follow
+
+  palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/link
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: indigo
+      toggle:
+        icon: material/toggle-switch-off
+        name: Switch to system preference
+  font:
+    text: Roboto
+    code: Roboto Mono
+  favicon: assets/agntcy/favicon.ico
+  logo_light: assets/agntcy/img/logo-light.svg
+  logo_dark: assets/agntcy/img/logo-dark.svg

@@ -1,0 +1,18 @@
+# Python deps for mkdocs/mkdocs.template.yml (Material, mike, macros, redirects, nav, API docs, swagger, includes).
+mkdocs>=1.6,<2
+mkdocs-material>=9.5
+pymdown-extensions>=9.4
+markdown>=3.2
+mkdocs-material-extensions>=1.0.3
+certifi>=2024.0.0
+mike>=2.1
+mkdocs-macros-plugin>=1.5
+mkdocs-redirects>=1.2
+mkdocs-awesome-pages-plugin>=2.10
+mkdocs-autorefs>=1.4
+mkdocstrings-python>=1.16
+griffe>=1.7
+griffe-pydantic>=1.1
+mkdocs-swagger-ui-tag>=0.7
+mkdocs-include-markdown-plugin>=7.2
+pygments>=2.12

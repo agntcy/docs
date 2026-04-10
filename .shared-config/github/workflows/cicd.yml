@@ -1,5 +1,7 @@
 # SPDX-FileCopyrightText: Copyright (c) 2026 Cisco and/or its affiliates.
 # SPDX-License-Identifier: Apache-2.0
+#
+# CI: build docs on PR/push when docs or mkdocs change. Copy to .github/workflows/ at repo root.
 
 name: CI/CD Pipeline
 
@@ -10,11 +12,13 @@ on:
     paths:
       - 'docs/**'
       - 'mkdocs/**'
+      - '.shared-config/**'
 
   pull_request:
     paths:
       - 'docs/**'
       - 'mkdocs/**'
+      - '.shared-config/**'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
