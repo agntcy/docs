@@ -158,3 +158,11 @@ On first start, the daemon:
 1. Generates an Ed25519 peer identity at the configured `key_path` if one does not exist
 1. Connects to the routing bootstrap peers listed in `server.routing.bootstrap_peers`
 1. Starts the gRPC apiserver, reconciler, and routing service
+
+### Searching for a Skill in the Network
+
+Once the daemon is running and connected, you can search for skills announced across the network:
+
+```bash
+dirctl routing search --skill "retrieval_augmented_generation/retrieval_of_information"
+```
