@@ -101,3 +101,68 @@ docker compose up -d
 ```
 
 This is closer to the production topology and is useful for testing multi-service interactions. See the [Kubernetes Deployment](dir-deployment-kubernetes.md) guide for deploying with Helm in a Kind cluster.
+
+## Connecting to a Remote Directory
+
+A local daemon can connect to a remote Directory node by adding its bootstrap peer multiaddress to the configuration. Once connected, the local daemon joins the peer network and can discover records announced by other peers as well as announce its own records to the network. The bootstrap peer multiaddress is provided by the remote Directory operator.
+
+### Remote Daemon Configuration
+
+Create a configuration file that enables remote connectivity. Save it as `daemon-remote.yaml`:
+
+```yaml
+server:
+  listen_address: "localhost:8888"
+  routing:
+    listen_address: "/ip4/0.0.0.0/tcp/8999"
+    key_path: "node.key"
+    datastore_dir: "routing"
+    bootstrap_peers:
+      - "/dns4/remote-dir.example.com/tcp/8999/p2p/<remote-peer-id>"
+    gossipsub:
+      enabled: true
+  database:
+    type: "sqlite"
+    sqlite:
+      path: "dir.db"
+
+reconciler:
+  signature:
+    enabled: true
+    interval: 1m
+    ttl: 168h
+    record_timeout: 30s
+  name:
+    enabled: true
+    interval: 1h
+    ttl: 168h
+    record_timeout: 30s
+```
+
+Replace the placeholder values before proceeding:
+
+| Placeholder | Description | How to obtain |
+|-------------|-------------|---------------|
+| `<remote-peer-id>` | The libp2p peer ID of the remote bootstrap node | Provided by the remote Directory operator |
+| `remote-dir.example.com` | Hostname or IP of the remote Directory | Provided by the remote Directory operator |
+
+### Starting the Daemon with Remote Connectivity
+
+```bash
+dirctl daemon start --config daemon-remote.yaml
+```
+
+On first start, the daemon:
+
+1. Creates the data directory (`~/.agntcy/dir/` by default, override with `--data-dir`)
+1. Generates an Ed25519 peer identity at the configured `key_path` if one does not exist
+1. Connects to the routing bootstrap peers listed in `server.routing.bootstrap_peers`
+1. Starts the gRPC apiserver, reconciler, and routing service
+
+### Searching for a Skill in the Network
+
+Once the daemon is running and connected, you can search for skills announced across the network:
+
+```bash
+dirctl routing search --skill "retrieval_augmented_generation/retrieval_of_information"
+```
