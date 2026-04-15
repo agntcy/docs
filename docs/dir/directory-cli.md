@@ -420,6 +420,7 @@ Status: Authenticated
   Subject: johndoe
   Issuer: https://prod.idp.ads.outshift.io
   Email: johndoe@example.com
+  Principal type: human
   Cached at: 2026-01-15T10:30:00+00:00
   Token: Valid ✓
   Expires: 2026-01-15T11:30:00+00:00
