@@ -109,7 +109,7 @@ The following example demonstrates how to store, publish, search, and retrieve a
 
 !!! note "Authentication for remote Directory servers"
     
-    When accessing a remote Directory server, authenticate first with `dirctl auth login`. See [Authentication](#authentication) for details.
+    When accessing a remote Directory server, authenticate first with `dirctl auth login`. For the overall auth model, IdP options, and how OIDC relates to SPIFFE/SPIRE, see [OIDC Authentication for Directory](directory-oidc-authentication.md). See [Authentication](#authentication) below for CLI command usage.
 
 ## Common Workflows
 
@@ -337,7 +337,9 @@ dirctl routing list -o json | jq -r '.[].cid' | xargs -I {} dirctl pull {}
 
 ## Authentication
 
-Authentication is required when accessing remote Directory servers. The CLI supports OIDC-based authentication for humans and CI workflows, with pre-issued tokens for service users and automation.
+Authentication is required when accessing remote Directory servers. This section focuses on how `dirctl` authenticates and how to use the relevant CLI commands.
+
+For the broader model, including `Envoy` and `ext-authz`, IdP-agnostic OIDC support, Dex as an optional broker, and how external OIDC access differs from internal SPIFFE/SPIRE trust, see [OIDC Authentication for Directory](directory-oidc-authentication.md).
 
 | Command | Description |
 |---------|-------------|
@@ -347,7 +349,7 @@ Authentication is required when accessing remote Directory servers. The CLI supp
 
 ### OIDC Authentication
 
-OIDC is the default authentication model for remote Directory access. Supported patterns:
+OIDC is the default authentication model for remote Directory access. The main CLI usage patterns are:
 
 - **Interactive login** (PKCE) via `dirctl auth login`
 - **Headless login** via `dirctl auth login --no-browser`

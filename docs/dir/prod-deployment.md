@@ -142,6 +142,8 @@ Create DNS records for your domain. Example with `your-domain.com`:
 | **SPIRE Federation** | spire.your-domain.com | 443 (TLS termination) |
 | **SPIRE OIDC** | oidc-discovery.spire.your-domain.com | 443 (TLS termination) |
 
+If you also want authenticated access for external users, `dirctl`, or automation, pair the production deployment with the optional OIDC gateway pattern described in [OIDC Authentication for Directory](directory-oidc-authentication.md). This is separate from SPIRE OIDC discovery used for federation.
+
 ## Verification
 
 ### SSL Passthrough
@@ -216,5 +218,6 @@ kubectl rollout restart deployment/<your-apiserver-deployment> -n <your-dir-name
 ## Reference
 
 - [dir-staging](https://github.com/agntcy/dir-staging) – Example deployment with ArgoCD and SPIRE (uses `prod.*.ads.outshift.io` for the public Directory)
+- [OIDC Authentication for Directory](directory-oidc-authentication.md) – External OIDC auth model, IdP options, and edge authorization flow
 - [Running a Federated Directory Instance](partner-prod-federation.md) – Federation setup for connecting to the public network
 - [Federation Profiles](federation-profiles.md) – Profile comparison and configuration
