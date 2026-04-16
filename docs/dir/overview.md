@@ -140,5 +140,6 @@ sequenceDiagram
 Ready to get started? Choose your path:
 
 - Run a local instance: get Directory running locally in seconds or deploy in a Kind cluster. See [Getting Started](dir-getting-started.md).
+- Configure external user or automation access with OIDC: see [OIDC Authentication for Directory](directory-oidc-authentication.md).
 - Connect to the public Directory: use the existing network at `prod.api.ads.outshift.io` to discover and publish agents. See [Running a Federated Directory Instance](partner-prod-federation.md).
 - Deploy for production: run your own Directory instance on AWS EKS and optionally federate with the network. See [Production Deployment](prod-deployment.md).
