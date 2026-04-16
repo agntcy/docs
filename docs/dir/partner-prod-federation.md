@@ -1,6 +1,6 @@
 # Running a Federated Directory Instance
 
-This guide explains how to federate your Directory instance (`partner.io`) with the public production Directory at `prod.ads.outshift.io`. The prod instance uses the `https_web` bundle endpoint profile (Let's Encrypt, standard HTTPS). Your instance must use `https_web` as well for compatibility.
+This guide explains how to federate your Directory instance (`partner.io`) with the public production Directory at `prod.ads.outshift.io`. The prod instance uses the `https_web` bundle endpoint profile (Let's Encrypt, standard HTTPS). Your instance must use `https_web` as well for compatibility. If you want a single AWS EKS happy path instead of a generic federation reference, start with [Federation on Amazon EKS](federation-aws-eks.md).
 
 Partnering with the Production Directory involves two trust domains. `partner.io` is your instance's trust domain and `prod.ads.outshift.io` is the production Directory's trust domain.
 
@@ -74,6 +74,8 @@ Assumptions:
                   nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
                   nginx.ingress.kubernetes.io/proxy-ssl-server-name: "on"
                   nginx.ingress.kubernetes.io/proxy-ssl-name: "spire.partner.io"
+                  # SPIRE serves its own self-signed cert on the backend; the
+                  # ingress controller cannot validate it.
                   nginx.ingress.kubernetes.io/proxy-ssl-verify: "off"
             controllerManager:
               watchClassless: true
@@ -105,20 +107,31 @@ Assumptions:
 
 2. Deploy the Directory
 
-    Deploy the Directory chart with SPIRE enabled and federation to prod. The dir chart creates `ClusterFederatedTrustDomain` resources from `apiserver.spire.federation`; the SPIRE server will fetch prod's bundle from the configured endpoint (prod uses `https_web`—standard HTTPS, no bootstrap bundle required).
+    Generate credentials before deploying. Never use static default passwords:
+
+    ```bash
+    export OCI_ADMIN_PASSWORD="$(openssl rand -base64 24)"
+    export SYNC_PASSWORD="$(openssl rand -base64 24)"
+    export DB_PASSWORD="$(openssl rand -base64 24)"
+
+    htpasswd -nbB admin "${OCI_ADMIN_PASSWORD}" > zot.htpasswd
+    htpasswd -nbB user "${SYNC_PASSWORD}" >> zot.htpasswd
+    ```
+
+    Deploy the Directory chart with SPIRE enabled and federation to prod. The dir chart creates `ClusterFederatedTrustDomain` resources from `apiserver.spire.federation`; the SPIRE server will fetch prod's bundle from the configured endpoint (prod uses `https_web`—standard HTTPS, no bootstrap bundle required). Replace the `<GENERATED_*>` placeholders below with the values from the step above.
 
     ??? example "Deploy Directory using the chart"
 
         ```bash
         helm install dir oci://ghcr.io/agntcy/dir/helm-charts/dir \
-          --version v1.0.0 \
+          --version v1.2.0 \
           --namespace dir \
           --create-namespace \
           -f - <<EOF
         apiserver:
           image:
             repository: ghcr.io/agntcy/dir-apiserver
-            tag: v1.0.0
+            tag: v1.2.0
             pullPolicy: IfNotPresent
           spire:
             enabled: true
@@ -147,11 +160,13 @@ Assumptions:
             store:
               provider: "oci"
               oci:
-                registry_address: "dir-zot.dir.svc.cluster.local:5000"
+                # Use the external Zot address so remote peers can resolve it
+                # during sync via RequestRegistryCredentials.
+                registry_address: "zot.partner.io"
                 auth_config:
-                  insecure: "true"
+                  insecure: "false"
                   username: "admin"
-                  password: "admin"
+                  password: "<GENERATED_OCI_ADMIN_PASSWORD>"
             routing:
               listen_address: "/ip4/0.0.0.0/tcp/5555"
               datastore_dir: /etc/routing/datastore
@@ -161,7 +176,7 @@ Assumptions:
             sync:
               auth_config:
                 username: "user"
-                password: "user"
+                password: "<GENERATED_SYNC_PASSWORD>"
             database:
               type: "postgres"
               postgres:
@@ -171,7 +186,6 @@ Assumptions:
                 ssl_mode: "disable"
           authz_policies_csv: |
             p,partner.io,*
-            p,prod.ads.outshift.io,*
             p,*,/agntcy.dir.store.v1.StoreService/Pull
             p,*,/agntcy.dir.store.v1.StoreService/PullReferrer
             p,*,/agntcy.dir.store.v1.StoreService/Lookup
@@ -179,12 +193,12 @@ Assumptions:
           secrets:
             ociAuth:
               username: "admin"
-              password: "admin"
+              password: "<GENERATED_OCI_ADMIN_PASSWORD>"
           postgresql:
             enabled: true
             auth:
               username: "dir"
-              password: "dir"
+              password: "<GENERATED_DB_PASSWORD>"
               database: "dir"
           strategy:
             type: Recreate
@@ -194,67 +208,61 @@ Assumptions:
             annotations:
               nginx.ingress.kubernetes.io/ssl-passthrough: "true"
               nginx.ingress.kubernetes.io/backend-protocol: "GRPCS"
-              cert-manager.io/cluster-issuer: letsencrypt-prod
               external-dns.alpha.kubernetes.io/hostname: api.partner.io
             hosts:
               - host: api.partner.io
-                http:
-                  paths:
-                    - path: /
-                      pathType: ImplementationSpecific
-                      backend:
-                        service:
-                          name: dir-apiserver
-                          port:
-                            number: 8888
-            tls:
-              - hosts:
-                  - api.partner.io
-        zot:
-          mountSecret: true
-          authHeader: "admin:admin"
-          secretFiles:
-            htpasswd: |-
-              admin:\$2y\$05\$vmiurPmJvHylk78HHFWuruFFVePlit9rZWGA/FbZfTEmNRneGJtha
-              user:\$2y\$05\$L86zqQDfH5y445dcMlwu6uHv.oXFgT6AiJCwpv3ehr7idc0rI3S2G
-          mountConfig: true
-          configFiles:
-            config.json: |-
-              {
-                "distSpecVersion": "1.1.1",
-                "storage": {"rootDirectory": "/var/lib/registry"},
-                "http": {
-                  "address": "0.0.0.0",
-                  "port": "5000",
-                  "auth": {"htpasswd": {"path": "/secret/htpasswd"}},
-                  "accessControl": {
-                    "adminPolicy": {"users": ["admin"], "actions": ["read", "create", "update", "delete"]},
-                    "repositories": {"**": {"anonymousPolicy": [], "defaultPolicy": ["read"]}}
-                  }
-                },
-                "log": {"level": "info"},
-                "extensions": {"search": {"enable": true}, "trust": {"enable": true, "cosign": true, "notation": false}}
-              }
-          ingress:
-            enabled: true
-            className: nginx
-            hosts:
-              - host: zot.partner.io
                 paths:
                   - path: /
                     pathType: ImplementationSpecific
             tls:
-              - secretName: zot-partner-tls
-                hosts:
-                  - zot.partner.io
-            annotations:
-              cert-manager.io/cluster-issuer: letsencrypt-prod
-              external-dns.alpha.kubernetes.io/hostname: zot.partner.io
+              - hosts:
+                  - api.partner.io
+          zot:
+            mountSecret: true
+            authHeader: "admin:<GENERATED_OCI_ADMIN_PASSWORD>"
+            secretFiles:
+              # Generate with: htpasswd -nbB admin <password>
+              htpasswd: |-
+                admin:<BCRYPT_HASH_FOR_ADMIN>
+                user:<BCRYPT_HASH_FOR_SYNC_USER>
+            mountConfig: true
+            configFiles:
+              config.json: |-
+                {
+                  "distSpecVersion": "1.1.1",
+                  "storage": {"rootDirectory": "/var/lib/registry"},
+                  "http": {
+                    "address": "0.0.0.0",
+                    "port": "5000",
+                    "auth": {"htpasswd": {"path": "/secret/htpasswd"}},
+                    "accessControl": {
+                      "adminPolicy": {"users": ["admin"], "actions": ["read", "create", "update", "delete"]},
+                      "repositories": {"**": {"anonymousPolicy": [], "defaultPolicy": ["read"]}}
+                    }
+                  },
+                  "log": {"level": "info"},
+                  "extensions": {"search": {"enable": true}, "trust": {"enable": true, "cosign": true, "notation": false}}
+                }
+            ingress:
+              enabled: true
+              className: nginx
+              hosts:
+                - host: zot.partner.io
+                  paths:
+                    - path: /
+                      pathType: ImplementationSpecific
+              tls:
+                - secretName: zot-partner-tls
+                  hosts:
+                    - zot.partner.io
+              annotations:
+                cert-manager.io/cluster-issuer: letsencrypt-prod
+                external-dns.alpha.kubernetes.io/hostname: zot.partner.io
         EOF
         ```
 
     !!! note
-        The ingress structure may vary by chart version. Adjust service names (e.g. `dir-apiserver`) to match your chart's defaults.
+        The ingress structure may vary by chart version. The simplified format shown here omits `backend` because the Helm chart wires the backend service automatically. If your chart version requires explicit backend references, add them to match your release's service names and ports.
 
 3. Verify federation
 
