@@ -2,7 +2,7 @@
 
 Directory supports an optional OIDC-based authentication layer for users and automation that access the API from outside the cluster. This keeps external access standards-based while preserving SPIFFE/SPIRE as the primary trust model for in-cluster workloads and service-to-service communication.
 
-The key idea is:
+At a high level:
 
 - Directory is OIDC IdP agnostic for external access.
 - `Envoy` and `ext-authz` form the authentication and authorization layer at the edge.
@@ -13,14 +13,22 @@ The key idea is:
 
 The default Directory deployment model is a strong fit for in-cluster workloads that already use SPIFFE/SPIRE. OIDC becomes useful when you also need authenticated access from outside the cluster, for example:
 
-- developers using `dirctl` from a laptop or workstation
-- service users and scheduled jobs running outside Kubernetes
-- CI workflows such as GitHub Actions
-- enterprise users authenticating through an existing IdP
+- Developers using `dirctl` from a laptop or workstation.
+- Service users and scheduled jobs running outside Kubernetes.
+- CI workflows such as GitHub Actions.
+- Enterprise users authenticating through an existing IdP.
 
 This OIDC layer is optional. If you only need in-cluster, SPIFFE-native access, you do not need to enable it.
 
-## External OIDC Versus Internal SPIFFE Trust
+### What This Is Not
+
+To avoid confusion with other documentation in this section:
+
+- This page is about external OIDC authentication for Directory API access.
+- It is not the same as SPIRE OIDC discovery used in federation-related docs.
+- It does not replace SPIFFE/SPIRE for internal workload trust.
+
+## External OIDC Compared to Internal SPIFFE Trust
 
 These two layers solve different problems and should be described separately:
 
@@ -29,10 +37,10 @@ These two layers solve different problems and should be described separately:
 
 Directory does not need to choose one or the other globally. A common deployment pattern is:
 
-- remote callers authenticate with OIDC
+- Remote callers authenticate with OIDC
 - Envoy validates tokens and calls `ext-authz`
-- authorized requests are forwarded to the Directory API
-- backend services continue using SPIFFE-aware trust and identity
+- Authorized requests are forwarded to the Directory API
+- Backend services continue using SPIFFE-aware trust and identity
 
 ## Architecture Overview
 
@@ -72,10 +80,10 @@ Service users, bots, and external automation can pass a pre-issued bearer token 
 
 This pattern is a good fit for:
 
-- cron jobs
-- external controllers
+- Cron jobs
+- External controllers
 - MCP agents
-- service integrations running outside the cluster
+- Service integrations running outside the cluster
 
 ### GitHub Actions Workload Identity
 
@@ -87,46 +95,46 @@ This should be treated as workload identity, not human login federation.
 
 Directory does not depend on a single identity provider. The OIDC layer is designed to work with standards-compliant providers as long as you configure trusted issuers, audiences, and claim mappings appropriately.
 
-Examples include:
+Supported IdPs include the following:
 
-- Zitadel
-- Keycloak
-- Auth0
-- Okta
-- Microsoft Entra ID
-- Dex
+- [Zitadel](https://zitadel.com/)
+- [Keycloak](https://www.keycloak.org/)
+- [Auth0](https://auth0.com/)
+- [Okta](https://www.okta.com/)
+- [Microsoft Entra ID](https://www.microsoft.com/en-us/security/business/identity-access/azure-active-directory)
+- [Dex](https://github.com/dexidp/dex)
 
-The important point is that Directory trusts OIDC tokens at the edge through configuration and policy. It does not require a Directory-specific identity system.
+Directory trusts OIDC tokens at the edge through configuration and policy. It does not require a Directory-specific identity system.
 
-## Where Dex Fits
+### Where Dex Fits in the Architecture
 
 Dex is best understood as an optional broker or convenience layer, especially when you want a lightweight way to support human login and upstream federation.
 
-Dex can be a good choice when:
+Dex can be a good choice when you want:
 
-- you want GitHub-backed login for human users
-- you want a simple OIDC facade in front of upstream identity sources
-- you want a lightweight IdP component for a demo, lab, or small deployment
+- GitHub-backed login for human users.
+- A simple OIDC facade in front of upstream identity sources.
+- A lightweight IdP component for a demo, lab, or small deployment.
 
-Dex is not required when:
+Dex is not required if you:
 
-- you already have an enterprise OIDC provider
-- you want Directory to trust an existing IdP directly
-- your main use case is machine-to-machine or workload identity from another standard issuer
+- Already have an enterprise OIDC provider.
+- Want Directory to trust an existing IdP directly.
+- Mainly need machine-to-machine or workload identity from another standard issuer.
 
-## Choosing Direct IdP Integration Versus Dex
+### Choosing Direct IdP Integration Versus Dex
 
 Use direct IdP integration when:
 
-- your organization already standardizes on an OIDC provider
-- you want fewer identity components in the deployment
-- you want Directory to consume tokens issued by your enterprise platform directly
+- Your organization already standardizes on an OIDC provider.
+- Want fewer identity components in the deployment.
+- Want Directory to consume tokens issued by your enterprise platform directly.
 
-Use Dex when:
+Use Dex when you want:
 
-- you want a broker in front of upstream identity systems
-- you want GitHub federation for human login
-- you want a simpler lab or reference deployment pattern that is easy to explain and reproduce
+- A broker in front of upstream identity systems.
+- GitHub federation for human login.
+- A simpler lab or reference deployment pattern that is easy to explain and reproduce.
 
 In both cases, the Directory-facing model is the same: the edge validates OIDC tokens, `ext-authz` evaluates policy, and the Directory API receives only authorized requests.
 
@@ -149,148 +157,150 @@ The staging example in [`dir-staging/applications/dir/dev/values.yaml`](https://
 
 The configuration is split into four main areas:
 
-1. feature enablement
-2. Envoy edge behavior
-3. `ext-authz` claim and role mapping
-4. external ingress exposure
+- Feature enablement
+- Envoy edge behavior
+- `ext-authz` claim and role mapping
+- External ingress exposure
 
-### 1. Enable the Add-On
+To configure `envoy-authz`:
 
-The top-level switch is:
+1. Enable the Add-On
 
-```yaml
-apiserver:
-  envoyAuthz:
-    enabled: true
-```
+    The top-level switch is:
 
-Keep this disabled when you only need in-cluster SPIFFE-based access. Enable it when external users or automation need to reach Directory through the OIDC-aware gateway.
-
-### 2. Configure Envoy as the OIDC-Aware Edge
-
-The `apiserver.envoy-authz.envoy` block defines how Envoy fronts the internal Directory API:
-
-```yaml
-apiserver:
-  envoy-authz:
-    envoy:
-      backend:
-        address: "dir-apiserver.dir.svc.cluster.local"
-        port: 8888
-      oidc:
-        dex:
-          enabled: true
-          issuer: "https://dex.example.com"
-          jwksUri: "https://dex.example.com/keys"
-        github:
-          enabled: true
-          issuer: "https://token.actions.githubusercontent.com"
-          jwksUri: "https://token.actions.githubusercontent.com/.well-known/jwks"
-      spiffe:
+    ```yaml
+    apiserver:
+      envoyAuthz:
         enabled: true
-```
+    ```
 
-This block does four important things:
+    Keep this disabled when you only need in-cluster SPIFFE-based access. Enable it when external users or automation need to reach Directory through the OIDC-aware gateway.
 
-- `backend.*` points Envoy at the internal Kubernetes Service for the Directory API, not at the public ingress hostname.
-- `oidc.dex.*` enables JWT validation for human or device-flow tokens issued by Dex.
-- `oidc.github.*` enables JWT validation for GitHub Actions workload identity tokens.
-- `spiffe.*` keeps Envoy-to-Directory traffic anchored in SPIFFE/SPIRE-based service trust.
+2. Configure Envoy as the OIDC-Aware Edge
 
-If you use a different IdP such as Zitadel, Keycloak, Auth0, Okta, or Entra ID, the Dex-specific issuer and JWKS values would be replaced with the corresponding issuer metadata for that provider.
+    The `apiserver.envoy-authz.envoy` block defines how Envoy fronts the internal Directory API:
 
-### 3. Map Claims to Principals in `ext-authz`
+    ```yaml
+    apiserver:
+      envoy-authz:
+        envoy:
+          backend:
+            address: "dir-apiserver.dir.svc.cluster.local"
+            port: 8888
+          oidc:
+            dex:
+              enabled: true
+              issuer: "https://dex.example.com"
+              jwksUri: "https://dex.example.com/keys"
+            github:
+              enabled: true
+              issuer: "https://token.actions.githubusercontent.com"
+              jwksUri: "https://token.actions.githubusercontent.com/.well-known/jwks"
+          spiffe:
+            enabled: true
+    ```
 
-After Envoy validates the token, `apiserver.envoy-authz.authServer.oidc` controls how `ext-authz` interprets claims and turns them into principals:
+    This block does four important things:
 
-```yaml
-apiserver:
-  envoy-authz:
-    authServer:
-      oidc:
-        claims:
-          userID: "sub"
-          emailPath: "email"
-        issuers: []
-        principalType:
-          mode: "auto"
-          machineIdentityClaim: "client_id"
-```
+    - `backend.*` points Envoy at the internal Kubernetes Service for the Directory API, not at the public ingress hostname.
+    - `oidc.dex.*` enables JWT validation for human or device-flow tokens issued by Dex.
+    - `oidc.github.*` enables JWT validation for GitHub Actions workload identity tokens.
+    - `spiffe.*` keeps Envoy-to-Directory traffic anchored in SPIFFE/SPIRE-based service trust.
 
-This is where you define the trust boundary for authorization:
+    If you use a different IdP such as Zitadel, Keycloak, Auth0, Okta, or Entra ID, the Dex-specific issuer and JWKS values would be replaced with the corresponding issuer metadata for that provider.
 
-- `claims.userID` selects which claim identifies a human user. `sub` is the safest generic default.
-- `claims.emailPath` tells `ext-authz` where to read email-like identity metadata when present.
-- `issuers` maps trusted issuers to principal types such as `user`, `client`, or `github`.
-- `principalType.mode` controls whether principal classification is inferred automatically or forced to a specific type.
-- `machineIdentityClaim` tells `ext-authz` which claim to use for service-client identities.
+3. Map Claims to Principals in `ext-authz`
 
-A typical issuer mapping looks like this:
+    After Envoy validates the token, `apiserver.envoy-authz.authServer.oidc` controls how `ext-authz` interprets claims and turns them into principals:
 
-```yaml
-issuers:
-  - provider: "https://dex.example.com"
-    principalType: "user"
-  - provider: "https://token.actions.githubusercontent.com"
-    principalType: "github"
-```
+    ```yaml
+    apiserver:
+      envoy-authz:
+        authServer:
+          oidc:
+            claims:
+              userID: "sub"
+              emailPath: "email"
+            issuers: []
+            principalType:
+              mode: "auto"
+              machineIdentityClaim: "client_id"
+    ```
 
-This is the bridge between a validated token and the principal form used by policy, such as:
+    This is where you define the trust boundary for authorization:
 
-- `user:<issuer>:<subject>`
-- `client:<issuer>:<client_id>`
-- `ghwf:repo:<owner>/<repo>:workflow:<workflow-file>:ref:<git-ref>`
+    - `claims.userID` selects which claim identifies a human user. `sub` is the safest generic default.
+    - `claims.emailPath` tells `ext-authz` where to read email-like identity metadata when present.
+    - `issuers` maps trusted issuers to principal types such as `user`, `client`, or `github`.
+    - `principalType.mode` controls whether principal classification is inferred automatically or forced to a specific type.
+    - `machineIdentityClaim` tells `ext-authz` which claim to use for service-client identities.
 
-### 4. Map Principals to Roles and Allowed Methods
+    A typical issuer mapping looks like this:
 
-The `roles` section is where the high-level access model becomes concrete:
+    ```yaml
+    issuers:
+      - provider: "https://dex.example.com"
+        principalType: "user"
+      - provider: "https://token.actions.githubusercontent.com"
+        principalType: "github"
+    ```
 
-```yaml
-roles:
-  admin:
-    allowedMethods: ["*"]
-    users: []
-    clients: []
-    githubWorkflows: []
+    This is the bridge between a validated token and the principal form used by policy, such as:
 
-  viewer:
-    allowedMethods:
-      - "/agntcy.dir.store.v1.StoreService/Pull"
-      - "/agntcy.dir.search.v1.SearchService/SearchRecords"
-```
+    - `user:<issuer>:<subject>`
+    - `client:<issuer>:<client_id>`
+    - `ghwf:repo:<owner>/<repo>:workflow:<workflow-file>:ref:<git-ref>`
 
-This section answers two questions:
+4. Map Principals to Roles and Allowed Methods
 
-- which principals belong to a role
-- which gRPC methods that role may call
+    The `roles` section is where the high-level access model becomes concrete:
 
-In the staging example, roles are separated for broad admin access, read-oriented access, and CI-oriented write access. That is the part you tune most often for real deployments.
+    ```yaml
+    roles:
+      admin:
+        allowedMethods: ["*"]
+        users: []
+        clients: []
+        githubWorkflows: []
 
-Practical guidance:
+      viewer:
+        allowedMethods:
+          - "/agntcy.dir.store.v1.StoreService/Pull"
+          - "/agntcy.dir.search.v1.SearchService/SearchRecords"
+    ```
 
-- keep roles least-privilege
-- grant write methods only where needed
-- list specific GitHub workflow principals rather than trusting all workflows
-- prefer explicit users or clients over broad catch-all mappings
+    This section answers two questions:
 
-### 5. Expose the Gateway Externally
+    - which principals belong to a role
+    - which gRPC methods that role may call
 
-The `apiserver.envoy-authz.ingress` block controls whether the OIDC-aware gateway is reachable from outside the cluster:
+    In the staging example, roles are separated for broad admin access, read-oriented access, and CI-oriented write access. That is the part you tune most often for real deployments.
 
-```yaml
-apiserver:
-  envoy-authz:
-    ingress:
-      enabled: true
-      className: nginx
-      host: "gateway.example.com"
-      annotations:
-        nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
-      tls:
-        enabled: true
-```
+    Practical guidance:
 
-This is the hostname that remote `dirctl` users, SDK clients, or CI workflows target. When ingress is disabled, the OIDC layer may still exist in-cluster, but it is not exposed for external callers.
+    - keep roles least-privilege
+    - grant write methods only where needed
+    - list specific GitHub workflow principals rather than trusting all workflows
+    - prefer explicit users or clients over broad catch-all mappings
+
+5. Expose the Gateway Externally
+
+    The `apiserver.envoy-authz.ingress` block controls whether the OIDC-aware gateway is reachable from outside the cluster:
+
+    ```yaml
+    apiserver:
+      envoy-authz:
+        ingress:
+          enabled: true
+          className: nginx
+          host: "gateway.example.com"
+          annotations:
+            nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
+          tls:
+            enabled: true
+    ```
+
+    This is the hostname that remote `dirctl` users, SDK clients, or CI workflows target. When ingress is disabled, the OIDC layer may still exist in-cluster, but it is not exposed for external callers.
 
 ### Recommended Mental Model for the YAML
 
@@ -305,17 +315,9 @@ When reading or editing the staging values, use this sequence:
 
 That sequence mirrors the actual request path:
 
-client token -> Envoy validation -> `ext-authz` principal mapping -> role check -> Directory API
+Client token -> Envoy validation -> `ext-authz` principal mapping -> role check -> Directory API.
 
-## What This Is Not
-
-To avoid confusion with other documentation in this section:
-
-- this page is about external OIDC authentication for Directory API access
-- it is not the same as SPIRE OIDC discovery used in federation-related docs
-- it does not replace SPIFFE/SPIRE for internal workload trust
-
-## Next Reading
+## Further Reading
 
 - [CLI Guide](directory-cli.md) for command-level usage
 - [Getting Started](dir-getting-started.md) for deployment entry points
