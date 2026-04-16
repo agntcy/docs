@@ -1,6 +1,6 @@
 # Production Deployment
 
-This guide documents production deployment of Directory on AWS EKS. For local development and testing with Kind, see [Getting Started](dir-getting-started.md). For connecting to the public Directory network or federating your instance, see [Running a Federated Directory Instance](partner-prod-federation.md).
+This guide documents production deployment of Directory on AWS EKS. For a single opinionated AWS walkthrough that carries the deployment all the way into public federation, see [Federation on Amazon EKS](federation-aws-eks.md). For local development and testing with Kind, see [Getting Started](dir-getting-started.md). For connecting to the public Directory network or federating your instance, see [Running a Federated Directory Instance](partner-prod-federation.md).
 
 !!! important "Trust Domain Selection"
     Choose your **trust domain** carefully before deployment—it cannot be changed later. A trust domain is a permanent identifier for your SPIRE deployment (e.g., `acme.com`, `engineering.acme.com`).
@@ -26,17 +26,27 @@ Production deployment uses:
 ```mermaid
 flowchart TB
   Clients[External Clients]
-  DNS[Route53 DNS<br/>api.your-domain.com<br/>zot.your-domain.com<br/>spire.your-domain.com]
-  LB[AWS Network LB<br/>Layer 3/4 TCP]
+  DNS[Route53 DNS]
+  LB[AWS NLB<br/>Ingress 443]
+  RoutingNLB[AWS NLB<br/>P2P Routing 5555]
   NGINX[NGINX Ingress Controller<br/>SSL Passthrough API / TLS Termination Zot]
   Dir[dir-apiserver SPIFFE]
+  Reconciler[Reconciler]
   Zot[Zot Registry]
-  Admin[dir-admin CronJobs]
+  PG[PostgreSQL]
+  EBS[EBS Volumes]
 
-  Clients --> DNS --> LB --> NGINX
+  Clients --> DNS
+  DNS --> LB --> NGINX
+  DNS --> RoutingNLB -->|TCP 5555| Dir
   NGINX --> Dir
   NGINX --> Zot
-  Dir --> Admin
+  Dir --> PG
+  Dir --> EBS
+  Reconciler --> PG
+  Reconciler --> Zot
+  PG --> EBS
+  Zot --> EBS
 ```
 
 ## Prerequisites
@@ -54,8 +64,8 @@ flowchart TB
 ### Network
 
 - **Route53 Hosted Zone** – For your domains (e.g., `*.your-domain.com`)
-- **AWS Network Load Balancer** – Layer 3/4 TCP passthrough
-- **Security Groups** – Allow cluster NAT Gateway IP for ingress
+- **AWS Network Load Balancer** – Layer 3/4 TCP passthrough for both ingress (443) and P2P routing (5555)
+- **Security Groups** – Allow inbound TCP 443 (HTTPS) and TCP 5555 (P2P routing) from the internet on the load balancers; allow egress to Let's Encrypt, Route53, and federation endpoints
 
 ### Storage
 
@@ -111,7 +121,6 @@ The Directory API uses SPIFFE mTLS. Ingress must:
 annotations:
   nginx.ingress.kubernetes.io/ssl-passthrough: "true"
   nginx.ingress.kubernetes.io/backend-protocol: "GRPCS"
-  nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 
 tls:
   - hosts:
@@ -125,12 +134,13 @@ tls:
 
 Create DNS records for your domain. Example with `your-domain.com`:
 
-| Service | Hostname |
-|---------|----------|
-| **Directory API** | api.your-domain.com |
-| **Zot Registry** | zot.your-domain.com |
-| **SPIRE Federation** | spire.your-domain.com |
-| **SPIRE OIDC** | oidc-discovery.spire.your-domain.com |
+| Service | Hostname | Port |
+|---------|----------|------|
+| **Directory API** | api.your-domain.com | 443 (SSL passthrough) |
+| **Zot Registry** | zot.your-domain.com | 443 (TLS termination) |
+| **P2P Routing** | routing.your-domain.com | 5555 (TCP via NLB) |
+| **SPIRE Federation** | spire.your-domain.com | 443 (TLS termination) |
+| **SPIRE OIDC** | oidc-discovery.spire.your-domain.com | 443 (TLS termination) |
 
 ## Verification
 
@@ -152,6 +162,22 @@ kubectl logs -n <your-dir-namespace> -l app.kubernetes.io/name=apiserver | \
   grep "Successfully obtained valid X509-SVID"
 ```
 
+### P2P Routing Service
+
+```bash
+# Verify the NLB and DNS record exist
+dig +short routing.your-domain.com
+
+# Verify TCP connectivity on port 5555
+nc -zv routing.your-domain.com 5555
+
+# Check the apiserver logs for the published multiaddr
+kubectl logs -n <your-dir-namespace> -l app.kubernetes.io/name=apiserver | \
+  grep "multiaddr"
+```
+
+If the routing service is unreachable, peer discovery and publication will fail silently while the rest of the deployment appears healthy.
+
 ### CronJobs
 
 ```bash
@@ -171,6 +197,13 @@ kubectl get pods -n <your-dir-admin-namespace> --sort-by=.metadata.creationTimes
 - DNS may point to wrong LoadBalancer
 - Ensure Ingress TLS section has `hosts` but **no** `secretName`
 - Verify NGINX has `--enable-ssl-passthrough=true`
+
+### Peer Discovery or Publication Fails Silently
+
+- Verify `routing.your-domain.com` resolves and TCP 5555 is reachable from outside the cluster
+- Check that the security group for the routing NLB allows inbound TCP 5555
+- Confirm ExternalDNS created the routing DNS record: `kubectl get svc -n <your-dir-namespace>` should show an `EXTERNAL-IP` for the routing `LoadBalancer` service
+- Check apiserver logs for multiaddr registration errors
 
 ### ConfigMap Changes Not Taking Effect
 

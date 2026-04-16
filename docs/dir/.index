@@ -9,6 +9,7 @@ nav:
   - CLI Guide: directory-cli.md
   - MCP Server: directory-mcp.md
   - Federation:
+    - Federation on Amazon EKS: federation-aws-eks.md
     - Running a Federated Directory Instance: partner-prod-federation.md
     - Profiles: federation-profiles.md
     - Best Practices and Troubleshooting: federation-troubleshooting.md
