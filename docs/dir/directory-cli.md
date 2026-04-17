@@ -252,6 +252,39 @@ dirctl import --type=mcp \
 dirctl search --query "module=runtime/mcp"
 ```
 
+### Export Workflow
+
+Export records from the Directory into formats consumable by external tools and agentic CLIs:
+
+```bash
+# 1. Export a single record as an A2A AgentCard
+dirctl export my-agent:1.0 --format=a2a --output-file=./agent-card.json
+
+# 2. Export a single record as a SKILL.md for Cursor, Claude Code, etc.
+dirctl export my-agent:1.0 --format=agent-skill --output-file=./SKILL.md
+
+# 3. Export a single record as a GitHub Copilot MCP config
+dirctl export my-agent:1.0 --format=mcp-ghcopilot --output-file=./mcp.json
+```
+
+Batch export uses `--output-dir` with search filters to export multiple records at once. Each format handles batch output differently:
+
+```bash
+# Batch export A2A records — one JSON file per record
+dirctl export --output-dir=./exports/ --format=a2a --module "integration/a2a"
+# Result: ./exports/my-agent.json, ./exports/other-agent.json, ...
+
+# Batch export skills — one subdirectory per skill with SKILL.md
+dirctl export --output-dir=./exports/ --format=agent-skill --module "core/language_model/agentskills"
+# Result: ./exports/code-review/SKILL.md, ./exports/testing/SKILL.md, ...
+
+# Batch export MCP servers — all merged into a single config file
+dirctl export --output-dir=./exports/ --format=mcp-ghcopilot --module "integration/mcp"
+# Result: ./exports/mcp.json (contains all matched servers)
+```
+
+By default, when multiple versions of the same record exist, only the latest semver version is exported. Use `--all-versions` to export every version (the version is appended to the filename to avoid collisions).
+
 ### Event Streaming Workflow
 
 Listen to directory events and process them (e.g. filter by type or labels):
@@ -474,6 +507,7 @@ The CLI follows a clear service-based organization:
 - **Auth**: GitHub OAuth authentication (`auth login`, `auth logout`, `auth status`).
 - **Storage**: Direct record management (`push`, `pull`, `delete`, `info`).
 - **Import**: Batch imports from external registries (`import`).
+- **Export**: Export records to external formats (`export`).
 - **Routing**: Network announcement and discovery (`routing publish`, `routing list`, `routing search`).
 - **Search**: General content search (`search`).
 - **Security**: Signing, verification, and validation (`sign`, `verify`, `validate`, `naming verify`).
