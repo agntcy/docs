@@ -130,7 +130,7 @@ kubectl port-forward svc/dir-apiserver 8888:8888
 
 Run a production node on AWS EKS and optionally join the federated public network.
 
-→ [Production Deployment](https://docs.agntcy.org/prod-deployment/) · [Running a Federated Instance](https://docs.agntcy.org/partner-prod-federation/)
+→ → Production Deployment · Running a Federated Instance (see [docs.agntcy.org](https://docs.agntcy.org))
 
 ---
 
@@ -191,7 +191,7 @@ ADS is an open source project under Apache 2.0. Contributions are welcome across
 
 - **Issues and PRs:** [github.com/agntcy/dir/issues](https://github.com/agntcy/dir/issues)
 - **Specification:** [spec.dir.agntcy.org](https://spec.dir.agntcy.org) (Internet Draft — feedback welcome via the spec repo)
-- **Contributing guide:** [AGNTCY Contributing Guide](https://github.com/agntcy/.github/blob/main/CONTRIBUTING.md)
+- **Contributing guide:** AGNTCY Contributing Guide
 - **Code of Conduct:** [github.com/agntcy/governance](https://github.com/agntcy/governance)
 
 The CI pipeline runs unit tests, end-to-end tests, and CSIT (Continuous System Integration Testing) across versions and environments on every pull request.
