@@ -13,7 +13,7 @@ dependencies = [
     "mkdocs-material-extensions>=1.0.3",
     "mkdocs-autorefs==1.4.1",
     "pygments>=2.20.0",
-    "pymdown-extensions>=9.4",
+    "pymdown-extensions>=10.21.2",
     "mkdocs-git-revision-date-plugin==0.3.2",
     "mkdocstrings-python==1.16.10",
     "griffe-pydantic==1.1.4",
