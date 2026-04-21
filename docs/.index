@@ -1,11 +1,7 @@
 nav:
   - Introduction: index.md
-  - OASF: oasf
-  - Agent Directory Service: dir
-  - Secure Low-Latency Interactive Messaging (SLIM): slim
-  - Identity: identity
+  - Getting Started: coffee-agntcy
   - Observability and Evaluation: obs-and-eval
   - CSIT: csit
-  - Getting Started: coffee-agntcy
   - Glossary: glossary.md
   - How to Contribute: contributing.md
