@@ -1,5 +1,6 @@
 nav:
-  - Introduction: index.md
+  - Home: index.md
+  - Introduction: introduction.md
   - Getting Started: coffee-agntcy
   - Observability and Evaluation: obs-and-eval
   - CSIT: csit

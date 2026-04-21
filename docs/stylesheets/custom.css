@@ -179,3 +179,110 @@ html [data-md-color-primary=black] .md-nav--primary .md-nav__title[for=__drawer]
   border-color: var(--md-default-fg-color--lightest);
   background-color: var(--md-code-bg-color);
 }
+
+/* Landing hero cards (docs home) */
+.docs-hero-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0 2rem;
+}
+
+.docs-hero-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1.1rem 1.15rem;
+  border-radius: 0.35rem;
+  text-decoration: none !important;
+  color: inherit !important;
+  border: 1px solid var(--md-default-fg-color--lighter);
+  box-shadow: 0 0.05rem 0.1rem #0000000d;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.14s ease,
+    background 0.22s ease;
+}
+
+/* Light mode: soft, airy gradient (see palette `scheme: default`) */
+[data-md-color-scheme="default"] .docs-hero-card {
+  background: linear-gradient(
+    160deg,
+    rgb(255 255 255) 0%,
+    rgb(248 250 254) 38%,
+    rgb(241 245 252) 72%,
+    rgb(236 242 250) 100%
+  );
+  border-color: rgba(2, 81, 175, 0.12);
+}
+
+[data-md-color-scheme="default"] .docs-hero-card:hover {
+  background: linear-gradient(
+    160deg,
+    rgb(255 255 255) 0%,
+    rgb(250 252 255) 40%,
+    rgb(244 248 253) 100%
+  );
+}
+
+/* Dark mode: lighter stops than before so cards don’t read as heavy slabs */
+[data-md-color-scheme="slate"] .docs-hero-card {
+  border-color: var(--md-default-fg-color--lightest);
+  background: linear-gradient(
+    160deg,
+    rgb(18 62 98) 0%,
+    rgb(10 44 78) 48%,
+    rgb(6 32 58) 100%
+  );
+}
+
+[data-md-color-scheme="slate"] .docs-hero-card:hover {
+  background: linear-gradient(
+    160deg,
+    rgb(24 72 112) 0%,
+    rgb(14 52 88) 48%,
+    rgb(8 38 68) 100%
+  );
+}
+
+.docs-hero-card:hover {
+  border-color: var(--md-accent-fg-color);
+  box-shadow: 0 0.15rem 0.35rem #00000014;
+  transform: translateY(-2px);
+}
+
+.docs-hero-card[target="_blank"] .docs-hero-card__title::after {
+  content: "↗";
+  display: inline-block;
+  margin-left: 0.3em;
+  font-size: 0.75em;
+  font-weight: 600;
+  opacity: 0.75;
+}
+
+.docs-hero-card__label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--md-typeset-a-color);
+  opacity: 0.95;
+}
+
+.docs-hero-card__title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.docs-hero-card__desc {
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--md-default-fg-color--light);
+  margin: 0;
+}
+
+[data-md-color-scheme="slate"] .docs-hero-card__desc {
+  color: var(--md-default-fg-color--lighter);
+}
