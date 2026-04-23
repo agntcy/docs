@@ -65,18 +65,15 @@ You can switch between different AI models to power the chat experience:
 
 You can find the latest build artifacts for each platform below:
 
-*   **Windows**: [Download Windows App](https://github.com/agntcy/dir/releases/download/gui/v1.0.0/agntcy-directory-windows.zip)
-*   **macOS**: [Download macOS App](https://github.com/agntcy/dir/releases/download/gui/v1.0.0/AGNTCY-Directory.dmg)
+*   **Windows**: [Download Windows App](https://github.com/agntcy/dir-gui/releases/download/v1.0.1/dir-gui-windows-amd64.zip)
+*   **macOS**: [Download macOS App](https://github.com/agntcy/dir-gui/releases/download/v1.0.1/dir-gui-darwin-universal.dmg)
 
-or check the [Release Page](https://github.com/agntcy/dir/releases/tag/gui%2Fv1.0.0).
+or check the [Release Page](https://github.com/agntcy/dir-gui/releases).
 
 ## Source Code
 
-The source code for the GUI is available in the `gui` folder of the [dir
-repository](https://github.com/agntcy/dir/tree/main/gui).
-
-Build and release workflows are defined in
-[gui-ci.yaml](https://github.com/agntcy/dir/blob/main/.github/workflows/gui-ci.yaml).
+The source code for the GUI is available in the [dir-gui
+repository](https://github.com/agntcy/dir-gui).
 
 ## macOS Troubleshooting
 
