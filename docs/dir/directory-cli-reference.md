@@ -463,6 +463,78 @@ dirctl import --type=mcp \
   --enrich-rate-limit=30
 ```
 
+## Export Operations
+
+Export records from the Directory into formats consumable by external tools and agentic CLIs. Supports single-record export by CID/name and batch export from search results.
+
+### `dirctl export <cid-or-name[:version][@digest]> [flags]`
+
+Pull a record and transform it to the requested format.
+
+**Supported Formats:**
+
+| Format | Output | Description |
+|--------|--------|-------------|
+| `oasf` | `.json` | Raw OASF record JSON (default) |
+| `a2a` | `.json` | A2A AgentCard JSON for Agent-to-Agent protocol interop |
+| `agent-skill` | `.md` | SKILL.md artifact for agentic CLI consumption (Cursor, Claude Code, etc.) |
+| `mcp-ghcopilot` | `.json` | GitHub Copilot MCP configuration JSON |
+
+**Single-record Flags:**
+
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--format` | Export format (see table above) | `oasf` |
+| `--output-file` | File path to write the exported data (default: stdout) | - |
+
+**Batch Export Flags:**
+
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--output-dir` | Directory for batch export from search results | - |
+| `--all-versions` | Keep all versions (default: only latest semver per name) | `false` |
+| `--limit` | Maximum number of records to export | `100` |
+
+When `--output-dir` is used, at least one search filter is required. All standard search filters are available (`--name`, `--version`, `--module`, `--skill`, `--author`, etc.).
+
+!!! note "Batch behaviour varies by format"
+
+    For different export formats, the batch behaviour varies:
+
+    - **a2a / oasf**: One file per record (`<name>.json`).
+    - **agent-skill**: One subdirectory per skill (`<name>/SKILL.md`).
+    - **mcp-ghcopilot**: All matched MCP servers are merged into a single `mcp.json` with combined `servers` and `inputs` maps.
+
+??? example
+
+    ```bash
+    # Export a single record as A2A AgentCard to stdout
+    dirctl export baeareihdr6t7s6... --format=a2a
+
+    # Export to a file (auto-appends extension if omitted)
+    dirctl export my-agent:1.0 --format=a2a --output-file=./agent-card.json
+    dirctl export my-agent:1.0 --format=agent-skill --output-file=./SKILL.md
+
+    # Batch export A2A records to a directory
+    dirctl export --output-dir=./exports/ --format=a2a --module "integration/a2a"
+
+    # Batch export skills (creates subdirectories with SKILL.md)
+    dirctl export --output-dir=./exports/ --format=agent-skill \
+      --module "core/language_model/agentskills"
+
+    # Batch export MCP servers (merged into a single config)
+    dirctl export --output-dir=./exports/ --format=mcp-ghcopilot \
+      --module "integration/mcp"
+
+    # Export all versions instead of only the latest
+    dirctl export --output-dir=./exports/ --format=a2a \
+      --name "my-agent" --all-versions
+
+    # Combine multiple search filters
+    dirctl export --output-dir=./exports/ --format=a2a \
+      --author "acme" --skill "natural_language_processing"
+    ```
+
 ## Routing Operations
 
 The routing commands manage record announcement and discovery across the peer-to-peer network.
