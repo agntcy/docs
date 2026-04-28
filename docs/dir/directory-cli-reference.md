@@ -499,6 +499,8 @@ When `--output-dir` is used, at least one search filter is required. All standar
 
 !!! note "Batch behaviour varies by format"
 
+    For different export formats, the batch behaviour varies:
+
     - **a2a / oasf**: One file per record (`<name>.json`).
     - **agent-skill**: One subdirectory per skill (`<name>/SKILL.md`).
     - **mcp-ghcopilot**: All matched MCP servers are merged into a single `mcp.json` with combined `servers` and `inputs` maps.

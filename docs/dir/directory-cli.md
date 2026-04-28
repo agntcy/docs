@@ -283,7 +283,8 @@ dirctl export --output-dir=./exports/ --format=mcp-ghcopilot --module "integrati
 # Result: ./exports/mcp.json (contains all matched servers)
 ```
 
-By default, when multiple versions of the same record exist, only the latest semver version is exported. Use `--all-versions` to export every version (the version is appended to the filename to avoid collisions).
+!!! note
+    By default, when multiple versions of the same record exist, only the latest semver version is exported. Use `--all-versions` to export every version (the version is appended to the filename to avoid collisions).
 
 ### Event Streaming Workflow
 
