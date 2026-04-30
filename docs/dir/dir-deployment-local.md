@@ -88,9 +88,6 @@ DIRECTORY_DAEMON_SERVER_LISTEN_ADDRESS="localhost:9999" dirctl daemon start
 
 When `--config` is provided, the file replaces built-in defaults entirely. See the [reference configuration](https://github.com/agntcy/dir/blob/main/cli/cmd/daemon/daemon.config.yaml) for all available options.
 
-!!! warning "Sync is not supported with the local OCI store"
-    The default daemon configuration uses a filesystem-based OCI Image Layout (`server.store.oci.local_dir`). Records synced from a remote peer via regsync are not visible to the daemon in this mode because the in-memory tag cache is not refreshed when an external process writes to the store. To use sync, configure a remote OCI registry (e.g., Zot) instead.
-
 ## Docker Compose deployment
 
 The Docker Compose stack runs separate containers for the apiserver, reconciler, Zot OCI registry, and PostgreSQL:
