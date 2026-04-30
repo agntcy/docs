@@ -8,7 +8,7 @@ The daemon commands run a self-contained local directory server that bundles the
 
 Starts the local directory daemon in the foreground. The process blocks until `SIGINT` or `SIGTERM` is received.
 
-The daemon starts a gRPC apiserver on `localhost:8888` and runs all reconciler tasks (regsync, indexer, name resolution, signature verification) in-process. It uses SQLite for persistence and a local filesystem OCI store, so no external dependencies (PostgreSQL, container registry, etc.) are required.
+The daemon starts a gRPC apiserver on `localhost:8888` and runs all reconciler tasks (regsync, indexer, name resolution, signature verification) in-process. It uses SQLite for persistence and a local persistent OCI store, so no external dependencies (PostgreSQL, container registry, etc.) are required.
 
 A PID file is written to the data directory to prevent multiple instances from running simultaneously.
 
@@ -40,7 +40,7 @@ Without `--config`, built-in defaults are used. When `--config` is provided, the
 ```
 ~/.agntcy/dir/
 ├── dir.db          # SQLite database
-├── store/          # Filesystem OCI store
+├── store/          # Persistent OCI store
 ├── routing/        # DHT routing datastore
 └── daemon.pid      # PID file for lifecycle management
 ```
@@ -60,6 +60,8 @@ The daemon ships with sensible built-in defaults. To customize, pass a YAML conf
         provider: "oci"
         oci:
           local_dir: "store"
+          registry_address: "localhost:5000"
+          repository_name: "dir"
         verification:
           enabled: true
       routing:
@@ -83,12 +85,14 @@ The daemon ships with sensible built-in defaults. To customize, pass a YAML conf
       naming:
         ttl: 168h
 
+
     reconciler:
       regsync:
-        enabled: false
+        enabled: true
+        interval: 1m
       indexer:
         enabled: true
-        interval: 1h
+        interval: 1m
       signature:
         enabled: true
         interval: 1m
@@ -96,9 +100,18 @@ The daemon ships with sensible built-in defaults. To customize, pass a YAML conf
         record_timeout: 30s
       name:
         enabled: true
-        interval: 1h
+        interval: 1m
         ttl: 168h
         record_timeout: 30s
+      local_registry:
+        registry_address: "localhost:5001"
+        repository_name: "dir"
+        auth_config:
+          insecure: true
+      database:
+        type: "sqlite"
+        sqlite:
+          path: "dir.db"
     ```
 
 ### `dirctl daemon stop`

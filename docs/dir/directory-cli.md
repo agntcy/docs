@@ -31,7 +31,7 @@ The Directory CLI can be installed in the following ways:
     ```bash
     git clone https://github.com/agntcy/dir
     cd dir
-    task build-dirctl
+    task cli:compile
     ```
 
 === "Using Container Image"
