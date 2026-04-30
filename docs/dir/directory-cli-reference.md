@@ -62,6 +62,8 @@ The daemon ships with sensible built-in defaults. To customize, pass a YAML conf
           local_dir: "store"
           registry_address: "localhost:5000"
           repository_name: "dir"
+          auth_config:
+            insecure: true
         verification:
           enabled: true
       routing:
