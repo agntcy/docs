@@ -104,7 +104,7 @@ The daemon ships with sensible built-in defaults. To customize, pass a YAML conf
         ttl: 168h
         record_timeout: 30s
       local_registry:
-        registry_address: "localhost:5001"
+        registry_address: "localhost:5000"
         repository_name: "dir"
         auth_config:
           insecure: true
