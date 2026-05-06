@@ -373,7 +373,7 @@ dirctl routing list -o json | jq -r '.[].cid' | xargs -I {} dirctl pull {}
 
 Authentication is required when accessing remote Directory servers. This section focuses on how `dirctl` authenticates and how to use the relevant CLI commands.
 
-For the broader model, including `Envoy` and `ext-authz`, IdP-agnostic OIDC support, Dex as an optional broker, and how external OIDC access differs from internal SPIFFE/SPIRE trust, see [OIDC Authentication for Directory](directory-oidc-authentication.md).
+For the broader model, including `Envoy` and `ext_authz`, IdP-agnostic OIDC support, Dex as an optional broker, and how external OIDC access differs from internal SPIFFE/SPIRE trust, see [OIDC Authentication for Directory](directory-oidc-authentication.md).
 
 | Command | Description |
 |---------|-------------|
@@ -495,6 +495,27 @@ dirctl pull baeareihdr6t7s6sr2q4zo456sza66eewqc7huzatyfgvoupaqyjw23ilvi
 ```bash
 # Force OIDC auth even if SPIFFE is available
 dirctl --auth-mode=oidc push my-agent.json
+```
+
+#### Choosing the Gateway Endpoint
+
+With `oidc-gateway` v1.1.0, operators may expose two hostnames from one gateway deployment:
+
+- an OIDC/JWT hostname (`ingress.oidc`) for `--auth-mode=oidc`, `--auth-mode=jwt`, cached OIDC login, pre-issued OIDC tokens, and GitHub Actions OIDC tokens
+- an mTLS hostname (`ingress.mtls`) for `--auth-mode=x509` or `--auth-mode=tls`, where the gateway must see the client certificate
+
+Use the hostname that matches the credential you send. Bearer JWT traffic should target the OIDC/JWT endpoint; X.509-SVID mTLS traffic should target the mTLS endpoint.
+
+```bash
+# OIDC/JWT endpoint: Envoy validates the bearer token with jwt_authn
+dirctl --server-addr "prod.gateway.ads.outshift.io:443" \
+  --auth-mode=oidc \
+  search --skill "natural_language_processing"
+
+# mTLS endpoint: Envoy validates the client certificate and ext_authz authorizes the SPIFFE principal
+dirctl --server-addr "prod.gateway-mtls.ads.outshift.io:443" \
+  --auth-mode=x509 \
+  search --skill "natural_language_processing"
 ```
 
 #### Pre-issued Tokens (CI and Service Users)
