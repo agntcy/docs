@@ -75,6 +75,10 @@ With `oidc-gateway` v1.1.1, the recommended production shape is a single gateway
 
 This keeps token handling and policy enforcement at the edge rather than spreading it across clients and backend services.
 
+!!! note "v1.1.1 mTLS gRPC compatibility"
+
+    `oidc-gateway` v1.1.1 fixes downstream gRPC interoperability for the SPIFFE X.509-SVID mTLS listener by advertising HTTP/2 (`h2`) with ALPN in Envoy's downstream TLS configuration. If mTLS clients fail during the TLS handshake with an error similar to `credentials: cannot check peer: missing selected ALPN property`, upgrade the gateway to v1.1.1 or verify that the rendered Envoy listener includes `alpn_protocols: ["h2"]`.
+
 ## Supported Identity Patterns
 
 ### Human Interactive Login
@@ -227,7 +231,7 @@ To configure `oidc-gateway`:
     This block does these important things:
 
     - `endpoints.oidc` exposes the listener that accepts OIDC JWT, GitHub OIDC, and SPIFFE JWT-SVID bearer tokens.
-    - `endpoints.mtls` exposes the listener that accepts SPIFFE X.509-SVID client certificates over downstream mTLS.
+    - `endpoints.mtls` exposes the listener that accepts SPIFFE X.509-SVID client certificates over downstream mTLS. In v1.1.1, downstream TLS listeners advertise HTTP/2 (`h2`) with ALPN for gRPC clients.
     - `backend.*` points Envoy at the internal Kubernetes Service for the Directory API, not at either public ingress hostname.
     - `oidc.issuers[]` creates Envoy `jwt_authn` providers and JWKS clusters for bearer JWT validation.
     - `oidc.github.*` enables JWT validation for GitHub Actions workload identity tokens.
