@@ -7,7 +7,7 @@ At a high level:
 - Directory is OIDC IdP agnostic for external access.
 - `Envoy` and `ext_authz` form the authentication and authorization layer at the edge.
 - `Dex` is one useful deployment pattern, not a requirement.
-- `oidc-gateway` v1.1.0 accepts OIDC JWT, SPIFFE JWT-SVID, and SPIFFE X.509-SVID identities, and can expose OIDC/JWT and X.509-SVID mTLS traffic on separate hostnames from one gateway deployment.
+- `oidc-gateway` v1.1.1 accepts OIDC JWT, SPIFFE JWT-SVID, and SPIFFE X.509-SVID identities, and can expose OIDC/JWT and X.509-SVID mTLS traffic on separate hostnames from one gateway deployment.
 - Internal backend trust can remain SPIFFE-based even when external callers use OIDC bearer tokens.
 
 ## Why Use OIDC
@@ -68,10 +68,10 @@ At the edge:
 3. `ext_authz` maps trusted identity data to a canonical principal and role policy.
 4. Only authorized requests reach the Directory API.
 
-With `oidc-gateway` v1.1.0, the recommended production shape is a single gateway deployment with two optional downstream endpoints:
+With `oidc-gateway` v1.1.1, the recommended production shape is a single gateway deployment with two optional downstream endpoints:
 
 - `envoy.endpoints.oidc` plus `ingress.oidc` for human users, CI, and automation that present bearer JWTs.
-- `envoy.endpoints.mtls` plus `ingress.mtls` for SPIFFE X.509-SVID clients. This listener typically requires a client certificate and does not run Envoy `jwt_authn`; `ext_authz` authorizes the SPIFFE principal derived from the TLS session.
+- `envoy.endpoints.mtls` plus `ingress.mtls` for SPIFFE X.509-SVID clients. This listener typically requires a client certificate and does not run Envoy `jwt_authn`; `ext_authz` authorizes the SPIFFE principal derived from the TLS session. The downstream TLS listener advertises HTTP/2 (`h2`) with ALPN for gRPC client compatibility.
 
 This keeps token handling and policy enforcement at the edge rather than spreading it across clients and backend services.
 

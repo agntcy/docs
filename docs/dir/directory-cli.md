@@ -499,12 +499,12 @@ dirctl --auth-mode=oidc push my-agent.json
 
 #### Choosing the Gateway Endpoint
 
-With `oidc-gateway` v1.1.0, operators may expose two hostnames from one gateway deployment:
+With `oidc-gateway` v1.1.1, operators may expose two hostnames from one gateway deployment:
 
 - an OIDC/JWT hostname (`ingress.oidc`) for `--auth-mode=oidc`, `--auth-mode=jwt`, cached OIDC login, pre-issued OIDC tokens, and GitHub Actions OIDC tokens
 - an mTLS hostname (`ingress.mtls`) for `--auth-mode=x509` or `--auth-mode=tls`, where the gateway must see the client certificate
 
-Use the hostname that matches the credential you send. Bearer JWT traffic should target the OIDC/JWT endpoint; X.509-SVID mTLS traffic should target the mTLS endpoint.
+Use the hostname that matches the credential you send. Bearer JWT traffic should target the OIDC/JWT endpoint; X.509-SVID mTLS traffic should target the mTLS endpoint. In v1.1.1, the downstream mTLS listener advertises HTTP/2 (`h2`) with ALPN so modern gRPC clients can complete the TLS handshake.
 
 ```bash
 # OIDC/JWT endpoint: Envoy validates the bearer token with jwt_authn
