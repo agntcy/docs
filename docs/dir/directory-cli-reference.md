@@ -161,6 +161,156 @@ Checks whether the daemon is currently running by inspecting the PID file.
     Daemon is not running
     ```
 
+## Context Operations
+
+Starting with Directory v1.4.0, the context commands manage reusable `dirctl` client contexts. Contexts describe Directory endpoints and their client-side authentication, TLS, and SPIFFE settings.
+
+The default config file is `~/.config/dirctl/config.yaml`, or `$XDG_CONFIG_HOME/dirctl/config.yaml` when `XDG_CONFIG_HOME` is set.
+
+```yaml
+current_context: prod
+contexts:
+  prod:
+    server_address: prod.gateway.example.com:443
+    auth_mode: oidc
+    oidc_issuer: https://prod.idp.example.com
+    oidc_client_id: dirctl
+  staging:
+    server_address: staging.gateway.example.com:443
+    auth_mode: oidc
+    oidc_issuer: https://staging.idp.example.com
+    oidc_client_id: dirctl
+```
+
+Regular `dirctl` commands select a context in this order:
+
+1. `--context <name>`
+2. `DIRECTORY_CLIENT_CONTEXT`
+3. `current_context` from the config file
+
+After context selection, environment variables and explicit root flags such as `--server-addr`, `--auth-mode`, `--oidc-issuer`, and `--auth-token` override the selected context for that invocation.
+
+!!! note "Sensitive values"
+
+    `dirctl context show` redacts `auth_token` and `spiffe_token` values. Prefer environment variables or a secret manager for bearer tokens instead of storing long-lived tokens in `config.yaml`.
+
+### `dirctl context list`
+
+Lists configured contexts in sorted order and marks the persisted `current_context` with `*`. This command reads local config only; it does not contact a Directory server.
+
+??? example
+
+    ```bash
+    dirctl context list
+    ```
+
+    Example output:
+
+    ```text
+    * prod
+      staging
+    ```
+
+### `dirctl context current`
+
+Prints the persisted `current_context` from the config file. It intentionally ignores one-off overrides such as `--context` and `DIRECTORY_CLIENT_CONTEXT`, so it matches the marker shown by `dirctl context list`.
+
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--quiet` | Print only the context name; print nothing when no context is set | `false` |
+| `--json` | Print current context details as JSON | `false` |
+
+??? example
+
+    ```bash
+    # Print the current context with a trailing newline
+    dirctl context current
+
+    # Prompt-friendly output
+    dirctl context current --quiet
+
+    # Machine-readable output
+    dirctl context current --json
+    ```
+
+    Example JSON output:
+
+    ```json
+    {
+      "name": "prod",
+      "source": "current_context",
+      "path": "/home/user/.config/dirctl/config.yaml"
+    }
+    ```
+
+### `dirctl context set <name>`
+
+Sets the persisted active context by updating `current_context` in the client config file. The target context must already exist.
+
+??? example
+
+    ```bash
+    # Persist prod as the active context
+    dirctl context set prod
+
+    # Run one command against staging without changing current_context
+    dirctl --context staging info <record-cid>
+    ```
+
+### `dirctl context show [name]`
+
+Shows the effective client configuration for a context with sensitive values redacted. If `[name]` is omitted, the command uses the same context selection rules as other `dirctl` commands. Environment variables and explicitly changed root flags are included in the effective output.
+
+??? example
+
+    ```bash
+    # Show the active effective context
+    dirctl context show
+
+    # Show a specific context
+    dirctl context show prod
+
+    # Preview a context with a one-off server override
+    dirctl --server-addr localhost:8888 context show prod
+    ```
+
+    Example output:
+
+    ```yaml
+    name: prod
+    source: current_context
+    path: /home/user/.config/dirctl/config.yaml
+    config:
+      auth_mode: oidc
+      oidc_client_id: dirctl
+      oidc_issuer: https://prod.idp.example.com
+      server_address: prod.gateway.example.com:443
+      tls_skip_verify: false
+    ```
+
+### `dirctl context validate [name]`
+
+Validates stored context definitions without applying environment variable overrides. It catches missing required fields, unsupported auth modes, and auth-mode-specific configuration mistakes before a context is used.
+
+If `[name]` is provided, only that context is validated. If omitted, all configured contexts are validated in sorted order.
+
+??? example
+
+    ```bash
+    # Validate all contexts
+    dirctl context validate
+
+    # Validate one context
+    dirctl context validate prod
+    ```
+
+    Example output:
+
+    ```text
+    prod: ok
+    staging: ok
+    ```
+
 ## Storage Operations
 
 ### `dirctl push <file>`

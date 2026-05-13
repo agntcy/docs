@@ -313,6 +313,55 @@ dirctl events listen --labels /skills/AI --output jsonl | \
 dirctl events listen --output raw | tee event-cids.txt
 ```
 
+### Context Workflow
+
+Starting with Directory v1.4.0, `dirctl` can store reusable client contexts for multiple Directory endpoints. A context bundles the server address, authentication mode, OIDC settings, and TLS/SPIFFE settings that would otherwise be repeated with flags or environment variables.
+
+Contexts live in `~/.config/dirctl/config.yaml` by default, or under `$XDG_CONFIG_HOME/dirctl/config.yaml` when `XDG_CONFIG_HOME` is set.
+
+```yaml
+current_context: dev
+contexts:
+  dev:
+    server_address: dev.gateway.example.com:443
+    auth_mode: oidc
+    oidc_issuer: https://dev.idp.example.com
+    oidc_client_id: dirctl
+  prod:
+    server_address: prod.gateway.example.com:443
+    auth_mode: oidc
+    oidc_issuer: https://prod.idp.example.com
+    oidc_client_id: dirctl
+```
+
+Use `dirctl context` to inspect and switch the persisted active context:
+
+```bash
+# List configured contexts; the active persisted context is marked with '*'
+dirctl context list
+
+# Print the persisted active context
+dirctl context current
+
+# Switch the persisted active context
+dirctl context set prod
+
+# Show the effective context with sensitive values redacted
+dirctl context show
+
+# Validate one or all configured contexts
+dirctl context validate
+dirctl context validate prod
+```
+
+For one command, use `--context` instead of changing `current_context`:
+
+```bash
+dirctl --context prod search --skill "natural_language_processing"
+```
+
+Context values can still be overridden by environment variables or explicit root flags such as `--server-addr`, `--auth-mode`, or `--oidc-issuer`. Prefer environment variables or a secret manager for bearer tokens instead of storing long-lived `auth_token` values in the config file.
+
 ## Output Formats
 
 All `dirctl` commands support multiple output formats via the `--output` (or `-o`) flag, making it easy to switch between human-readable output and machine-processable formats.
@@ -373,7 +422,7 @@ dirctl routing list -o json | jq -r '.[].cid' | xargs -I {} dirctl pull {}
 
 Authentication is required when accessing remote Directory servers. This section focuses on how `dirctl` authenticates and how to use the relevant CLI commands.
 
-For the broader model, including `Envoy` and `ext-authz`, IdP-agnostic OIDC support, Dex as an optional broker, and how external OIDC access differs from internal SPIFFE/SPIRE trust, see [OIDC Authentication for Directory](directory-oidc-authentication.md).
+For the broader model, including `Envoy` and `ext_authz`, IdP-agnostic OIDC support, Dex as an optional broker, and how external OIDC access differs from internal SPIFFE/SPIRE trust, see [OIDC Authentication for Directory](directory-oidc-authentication.md).
 
 | Command | Description |
 |---------|-------------|
@@ -497,6 +546,27 @@ dirctl pull baeareihdr6t7s6sr2q4zo456sza66eewqc7huzatyfgvoupaqyjw23ilvi
 dirctl --auth-mode=oidc push my-agent.json
 ```
 
+#### Choosing the Gateway Endpoint
+
+With `oidc-gateway` v1.1.1, operators may expose two hostnames from one gateway deployment:
+
+- an OIDC/JWT hostname (`ingress.oidc`) for `--auth-mode=oidc`, `--auth-mode=jwt`, cached OIDC login, pre-issued OIDC tokens, and GitHub Actions OIDC tokens
+- an mTLS hostname (`ingress.mtls`) for `--auth-mode=x509` or `--auth-mode=tls`, where the gateway must see the client certificate
+
+Use the hostname that matches the credential you send. Bearer JWT traffic should target the OIDC/JWT endpoint; X.509-SVID mTLS traffic should target the mTLS endpoint. In v1.1.1, the downstream mTLS listener advertises HTTP/2 (`h2`) with ALPN so modern gRPC clients can complete the TLS handshake.
+
+```bash
+# OIDC/JWT endpoint: Envoy validates the bearer token with jwt_authn
+dirctl --server-addr "prod.gateway.ads.outshift.io:443" \
+  --auth-mode=oidc \
+  search --skill "natural_language_processing"
+
+# mTLS endpoint: Envoy validates the client certificate and ext_authz authorizes the SPIFFE principal
+dirctl --server-addr "prod.gateway-mtls.ads.outshift.io:443" \
+  --auth-mode=x509 \
+  search --skill "natural_language_processing"
+```
+
 #### Pre-issued Tokens (CI and Service Users)
 
 For CI/CD pipelines and automation, pass a pre-issued JWT token directly:
@@ -538,6 +608,9 @@ dirctl --server-addr localhost:8888 routing list
 # Use environment variable
 export DIRECTORY_CLIENT_SERVER_ADDRESS=localhost:8888
 dirctl routing list
+
+# Use a reusable client context
+dirctl --context dev routing list
 ```
 
 ### Authentication
@@ -562,6 +635,7 @@ The CLI follows a clear service-based organization:
 
 - **Daemon**: Local directory server (`daemon start`, `daemon stop`, `daemon status`).
 - **Auth**: OIDC authentication (`auth login`, `auth logout`, `auth status`).
+- **Context**: Reusable client contexts (`context list`, `context current`, `context set`, `context show`, `context validate`).
 - **Storage**: Direct record management (`push`, `pull`, `delete`, `info`).
 - **Import**: Batch imports from external registries (`import`).
 - **Export**: Export records to external formats (`export`).
