@@ -444,7 +444,8 @@ Fetch and import records from external registries.
 | `--url` | - | Registry base URL | Yes | - |
 | `--filter` | - | Registry-specific filters (key=value, repeatable) | No | - |
 | `--limit` | - | Maximum records to import (0 = no limit) | No | 0 |
-| `--dry-run` | - | Preview without importing | No | false |
+| `--dry-run` | - | Preview without importing; transformed records are written to `--output-dir` (one JSON file per record) so they can be reviewed and re-imported later via `dirctl push` or `dirctl import` | No | false |
+| `--output-dir` | - | Directory to write per-record JSON files when `--dry-run` is set. Each record is written as `<cid>.record.json` | No | `./import-dry-run-<timestamp>` in the current working directory |
 | `--debug` | - | Enable debug output (shows MCP source and OASF record for failures) | No | false |
 | `--force` | - | Force reimport of existing records (skip deduplication) | No | false |
 | `--enrich-config` | - | Path to MCPHost configuration file (mcphost.json) | No | importer/enricher/mcphost.json |
@@ -496,9 +497,18 @@ Fetch and import records from external registries.
       --limit=50
 
     # Preview without importing (dry run)
+    # Records are written as <cid>.record.json into a timestamped directory
+    # (default: ./import-dry-run-<timestamp>) so they can be reviewed and
+    # re-imported later via `dirctl push` or `dirctl import`.
     dirctl import --type=mcp \
       --url=https://registry.modelcontextprotocol.io/v0.1 \
       --dry-run
+
+    # Dry run with a custom output directory
+    dirctl import --type=mcp \
+      --url=https://registry.modelcontextprotocol.io/v0.1 \
+      --dry-run \
+      --output-dir=./out
 
     # Import and sign records with OIDC (opens browser for authentication)
     dirctl import --type=mcp \
@@ -599,6 +609,37 @@ The default prompt templates are available at `importer/enricher/enricher.skills
       --enrich-domains-prompt=/path/to/custom-domains-prompt.md \
       --debug
     ```
+
+### Dry Run Output Directory
+
+When `--dry-run` is set, the importer does **not** push records to the Directory node. Instead, every transformed record is written to disk as a separate JSON file, one per record. This produces a reviewable artifact set that is drop-in compatible with the existing import / push commands, so users who do not want the importer to push directly to a Directory node can review or modify the records first and upload them later.
+
+**Output layout:**
+
+- Target directory: value of `--output-dir`, or — when not set — `./import-dry-run-<timestamp>/` in the current working directory.
+- The directory is created if it does not exist.
+- Each record is written as `<cid>.record.json`, where `<cid>` is the record's content identifier. The naming scheme is deterministic and filesystem-safe so files can be diffed, signed, or selectively re-imported.
+
+**Typical workflow:**
+
+```bash
+# 1. Dry run — write transformed records to ./out
+dirctl import --type=mcp \
+  --url=https://registry.modelcontextprotocol.io/v0.1 \
+  --dry-run \
+  --output-dir=./out
+
+# 2. Review / diff / sign the per-record files on disk
+ls ./out
+# bafkrei...record.json
+# bafkrei...record.json
+# ...
+
+# 3. Re-import the artifacts later via dirctl push (or another import flow)
+for f in ./out/*.record.json; do
+  dirctl push "$f"
+done
+```
 
 ### Signing Records During Import
 
