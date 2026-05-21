@@ -19,10 +19,10 @@ Docker-style name references (`name`, `name:version`, `name:version@cid`).
 Directory supports OCI-compatible registries including [Zot](https://github.com/project-zot/zot)
 (default for local deployments), GitHub Container Registry, and Docker Hub. The server selects
 the backend via store configuration (see [Local Deployment](dir-deployment-local.md) and
-[Production Deployment](prod-deployment.md)).
+[Production Deployment](dir-prod-deployment.md)).
 
 ## Related documentation
 
-- [Records](records-validation.md) — OASF record model, CIDs, and validation
-- [Features and Usage Scenarios — Store](scenarios.md#store) — CLI examples and registry configuration
-- [CLI Reference — Storage Operations](directory-cli-reference.md#storage-operations) — `push`, `pull`, `delete`, `info`
+- [Records](dir-component-records-validation.md) — OASF record model, CIDs, and validation
+- [Features and Usage Scenarios — Store](dir-features-scenarios.md#store) — CLI examples and registry configuration
+- [CLI Reference — Storage Operations](dir-cli-reference.md#storage-operations) — `push`, `pull`, `delete`, `info`

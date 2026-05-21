@@ -85,7 +85,7 @@ This keeps token handling and policy enforcement at the edge rather than spreadi
 
 Human users typically authenticate with `dirctl auth login`, using browser-based PKCE, headless login, or device flow. This is the best fit for operators and developers who need interactive CLI access to a remote Directory.
 
-Use the [CLI Reference](directory-cli-reference.md#global-options) for command examples and token cache behavior.
+Use the [CLI Reference](dir-cli-reference.md#global-options) for command examples and token cache behavior.
 
 ### Service Users and Non-Interactive Automation
 
@@ -155,7 +155,7 @@ In both cases, the Directory-facing model is the same: the edge validates tokens
 
 The two main operator touchpoints are:
 
-- [CLI Reference](directory-cli-reference.md#global-options) for `dirctl auth login`, `dirctl auth status`, `--auth-mode=oidc`, and pre-issued token usage
+- [CLI Reference](dir-cli-reference.md#global-options) for `dirctl auth login`, `dirctl auth status`, `--auth-mode=oidc`, and pre-issued token usage
 - deployment configuration for Envoy and the `ext_authz` layer that trusts one or more issuers and maps verified identities to principals and roles
 
 When documenting or configuring this feature, it helps to think in three layers:
@@ -369,7 +369,7 @@ Client identity -> Envoy validation -> `ext_authz` canonical principal mapping -
 
 ## Further Reading
 
-- [CLI Reference](directory-cli-reference.md) for command-level usage
-- [Quickstart](quickstart.md) and [Deploy](dir-deployment-local.md) for deployment entry points
-- [Production Deployment](prod-deployment.md) for production topology and external endpoints
-- [Running a Federated Directory Instance](partner-prod-federation.md) for network federation guidance
+- [CLI Reference](dir-cli-reference.md) for command-level usage
+- [Quickstart](dir-quickstart.md) and [Deploy](dir-deployment-local.md) for deployment entry points
+- [Production Deployment](dir-prod-deployment.md) for production topology and external endpoints
+- [Running a Federated Directory Instance](dir-federation-setup.md) for network federation guidance

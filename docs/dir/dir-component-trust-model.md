@@ -108,7 +108,7 @@ flowchart LR
 - SPIRE Servers exchange bundles to establish federation
 - Enables secure, authenticated communication between workloads in different domains
 
-For step-by-step federation setup with the public Directory network, see [Running a Federated Directory Instance](partner-prod-federation.md). For technical details on federation profiles (https_web vs https_spiffe), see [Federation Profiles](federation-profiles.md).
+For step-by-step federation setup with the public Directory network, see [Running a Federated Directory Instance](dir-federation-setup.md). For technical details on federation profiles (https_web vs https_spiffe), see [Federation Profiles](dir-federation-profiles.md).
 
 ```mermaid
 flowchart TD
@@ -147,11 +147,11 @@ as a standalone service, providing flexibility for different infrastructure setu
 - **Federation Support**: Federation is enabled to allow cross-domain
 trust relationships between different SPIRE deployments.
 If the federation is not required, it can be left disabled.
-See [Running a Federated Directory Instance](partner-prod-federation.md) for configuration.
+See [Running a Federated Directory Instance](dir-federation-setup.md) for configuration.
 
 - **Bundle Endpoint**: Exposes a bundle endpoint that enables federation
 by allowing other SPIRE servers to exchange trust bundles.
-See [Federation Profiles](federation-profiles.md) for profile options (https_web, https_spiffe).
+See [Federation Profiles](dir-federation-profiles.md) for profile options (https_web, https_spiffe).
 
 ```bash
 # Set the trust domain
@@ -285,7 +285,7 @@ task test:spire:cleanup
 
 For more details, see:
 
-- [Running a Federated Directory Instance](partner-prod-federation.md) - Connect to the public Directory network
-- [Federation Profiles](federation-profiles.md) - https_web vs https_spiffe configuration
+- [Running a Federated Directory Instance](dir-federation-setup.md) - Connect to the public Directory network
+- [Federation Profiles](dir-federation-profiles.md) - https_web vs https_spiffe configuration
 - [SPIRE Documentation](https://spiffe.io/docs/latest/spiffe-about/overview/)
 - [SPIRE Federation Guide](https://spiffe.io/docs/latest/spire-helm-charts-hardened-advanced/federation/)

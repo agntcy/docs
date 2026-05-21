@@ -64,7 +64,7 @@ ADS leverages [Content Identifiers](https://github.com/multiformats/cid) for
 naming directory records. CIDs provide a self-describing, content-addressed
 naming scheme that ensures data integrity and immutability.
 
-In addition to CID-based addressing, ADS supports verifiable domain-based names that enable human-readable references while maintaining cryptographic verification. See [Features and Usage Scenarios — Name Verification](scenarios.md#name-verification) and the [CLI Reference](directory-cli-reference.md#security-verification) for details.
+In addition to CID-based addressing, ADS supports verifiable domain-based names that enable human-readable references while maintaining cryptographic verification. See [Features and Usage Scenarios — Name Verification](dir-features-scenarios.md#name-verification) and the [CLI Reference](dir-cli-reference.md#security-verification) for details.
 
 ## Content Routing
 
@@ -141,7 +141,7 @@ sequenceDiagram
 
 Ready to get started? Choose your path:
 
-- Run a local instance: follow the [Quickstart](quickstart.md) or see [Local Deployment](dir-deployment-local.md) and [Kubernetes Deployment](dir-deployment-kubernetes.md).
-- Configure external user or automation access with OIDC: see [OIDC Authentication for Directory](directory-oidc-authentication.md).
-- Connect to the public Directory: use the existing network at `ads.outshift.io` to discover and publish agents. See [Running a Federated Directory Instance](partner-prod-federation.md).
-- Deploy for production: run your own Directory instance on AWS EKS and optionally federate with the network. See [Production Deployment](prod-deployment.md).
+- Run a local instance: follow the [Quickstart](dir-quickstart.md) or see [Local Deployment](dir-deployment-local.md) and [Kubernetes Deployment](dir-deployment-kubernetes.md).
+- Configure external user or automation access with OIDC: see [OIDC Authentication for Directory](dir-component-oidc-authentication.md).
+- Connect to the public Directory: use the existing network at `ads.outshift.io` to discover and publish agents. See [Running a Federated Directory Instance](dir-federation-setup.md).
+- Deploy for production: run your own Directory instance on AWS EKS and optionally federate with the network. See [Production Deployment](dir-prod-deployment.md).

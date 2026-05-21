@@ -3,7 +3,7 @@
 Deploy Directory with SPIRE in a Kind cluster for development and testing. Uses `example.org` as the trust domain (local only—cannot federate with the public network).
 
 For production AWS EKS deployment, see
-[Production Deployment](prod-deployment.md).
+[Production Deployment](dir-prod-deployment.md).
 
 ## Prerequisites
 
@@ -295,4 +295,4 @@ The Agent Directory Service can be deployed using Helm or GitOps / Argo CD. Helm
     See [dir-staging](https://github.com/agntcy/dir-staging) for full configuration and customization options.
 
     !!! important "Trust domain"
-        This Quick Start uses `example.org` for local testing only. To federate with the public Directory network, you need a unique trust domain. See [Production Deployment](prod-deployment.md) and [Running a Federated Directory Instance](partner-prod-federation.md).
+        This Quick Start uses `example.org` for local testing only. To federate with the public Directory network, you need a unique trust domain. See [Production Deployment](dir-prod-deployment.md) and [Running a Federated Directory Instance](dir-federation-setup.md).

@@ -1,6 +1,6 @@
 # Production Deployment
 
-This guide documents production deployment of Directory on AWS EKS. For a single opinionated AWS walkthrough that carries the deployment all the way into public federation, see [Federation on Amazon EKS](federation-aws-eks.md). For local development and testing, see [Quickstart](quickstart.md) and [Local Deployment](dir-deployment-local.md). For connecting to the public Directory network or federating your instance, see [Federation](federation-overview.md) and [Running a Federated Directory Instance](partner-prod-federation.md).
+This guide documents production deployment of Directory on AWS EKS. For a single opinionated AWS walkthrough that carries the deployment all the way into public federation, see [Federation on Amazon EKS](dir-federation-aws-eks.md). For local development and testing, see [Quickstart](dir-quickstart.md) and [Local Deployment](dir-deployment-local.md). For connecting to the public Directory network or federating your instance, see [Federation](dir-federation-overview.md) and [Running a Federated Directory Instance](dir-federation-setup.md).
 
 !!! important "Trust Domain Selection"
     Choose your **trust domain** carefully before deployment—it cannot be changed later. A trust domain is a permanent identifier for your SPIRE deployment (e.g., `acme.com`, `engineering.acme.com`).
@@ -142,7 +142,7 @@ Create DNS records for your domain. Example with `your-domain.com`:
 | **SPIRE Federation** | spire.your-domain.com | 443 (TLS termination) |
 | **SPIRE OIDC** | oidc-discovery.spire.your-domain.com | 443 (TLS termination) |
 
-If you also want authenticated access for external users, `dirctl`, or automation, pair the production deployment with the optional OIDC gateway pattern described in [OIDC Authentication for Directory](directory-oidc-authentication.md). This is separate from SPIRE OIDC discovery used for federation.
+If you also want authenticated access for external users, `dirctl`, or automation, pair the production deployment with the optional OIDC gateway pattern described in [OIDC Authentication for Directory](dir-component-oidc-authentication.md). This is separate from SPIRE OIDC discovery used for federation.
 
 ## Verification
 
@@ -218,6 +218,6 @@ kubectl rollout restart deployment/<your-apiserver-deployment> -n <your-dir-name
 ## Reference
 
 - [dir-staging](https://github.com/agntcy/dir-staging) – Example deployment with ArgoCD and SPIRE (uses `prod.*.ads.outshift.io` for the public Directory)
-- [OIDC Authentication for Directory](directory-oidc-authentication.md) – External OIDC auth model, IdP options, and edge authorization flow
-- [Running a Federated Directory Instance](partner-prod-federation.md) – Federation setup for connecting to the public network
-- [Federation Profiles](federation-profiles.md) – Profile comparison and configuration
+- [OIDC Authentication for Directory](dir-component-oidc-authentication.md) – External OIDC auth model, IdP options, and edge authorization flow
+- [Running a Federated Directory Instance](dir-federation-setup.md) – Federation setup for connecting to the public network
+- [Federation Profiles](dir-federation-profiles.md) – Profile comparison and configuration

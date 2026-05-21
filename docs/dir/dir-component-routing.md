@@ -24,8 +24,8 @@ reflect cached announcements and may be stale or incomplete until peers replicat
 
 ## Related documentation
 
-- [Architecture](architecture.md) — full system design and diagram
-- [Records](records-validation.md) — skill taxonomy and record structure
-- [Features and Usage Scenarios — Announce / Discover](scenarios.md#announce) — CLI walkthroughs
-- [CLI Reference — Routing Operations](directory-cli-reference.md#routing-operations) — `routing publish`, `list`, `search`
-- [Federation](federation-overview.md) — multi-instance routing across federated directories
+- [Architecture](dir-architecture.md) — full system design and diagram
+- [Records](dir-component-records-validation.md) — skill taxonomy and record structure
+- [Features and Usage Scenarios — Announce / Discover](dir-features-scenarios.md#announce) — CLI walkthroughs
+- [CLI Reference — Routing Operations](dir-cli-reference.md#routing-operations) — `routing publish`, `list`, `search`
+- [Federation](dir-federation-overview.md) — multi-instance routing across federated directories

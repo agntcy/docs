@@ -7,13 +7,13 @@ scenarios. All code snippets below are tested against the Directory `v1.0.0` rel
     Although the following example is shown for a CLI-based usage scenario, the same
     functionality can be performed using language-specific SDKs.
 
-The Agent Directory Service is also accessible through the Directory MCP Server. It provides a standardized interface for AI assistants and tools to interact with the Directory system and work with OASF agent records. See the [MCP Server documentation](directory-mcp.md) for more information.
+The Agent Directory Service is also accessible through the Directory MCP Server. It provides a standardized interface for AI assistants and tools to interact with the Directory system and work with OASF agent records. See the [MCP Server documentation](dir-component-mcp-server.md) for more information.
 
 ## Prerequisites
 
 The following prerequisites are required to follow the examples below:
 
-- Directory CLI (`dirctl`) — install via [Quickstart](quickstart.md)
+- Directory CLI (`dirctl`) — install via [Quickstart](dir-quickstart.md)
 - Running Directory API server — start with `dirctl daemon start` or see
   [Local Deployment](dir-deployment-local.md) / [Kubernetes Deployment](dir-deployment-kubernetes.md)
 
@@ -653,7 +653,7 @@ dirctl export --output-dir=./exports/ --format=a2a --module "integration/a2a"
 ```
 
 By default, only the latest semver version is exported; use `--all-versions` to export every
-version. See [CLI Reference — Export Operations](directory-cli-reference.md#export-operations).
+version. See [CLI Reference — Export Operations](dir-cli-reference.md#export-operations).
 
 ## gRPC Error Codes
 

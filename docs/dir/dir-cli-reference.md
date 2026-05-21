@@ -1,7 +1,7 @@
 # Directory CLI Command Reference
 
-Command-line reference for `dirctl`. Install the CLI in the [Quickstart](quickstart.md)
-only; workflow examples live in [Features and Usage Scenarios](scenarios.md).
+Command-line reference for `dirctl`. Install the CLI in the [Quickstart](dir-quickstart.md)
+only; workflow examples live in [Features and Usage Scenarios](dir-features-scenarios.md).
 
 ## Global options
 
@@ -37,7 +37,7 @@ dirctl --context dev routing list   # see Context Operations below
 
 For remote servers, authenticate with OIDC before running commands. The full auth model,
 gateway endpoints, and SPIFFE/SPIRE integration are documented in
-[OIDC Authentication](directory-oidc-authentication.md).
+[OIDC Authentication](dir-component-oidc-authentication.md).
 
 | Command | Description |
 |---------|-------------|

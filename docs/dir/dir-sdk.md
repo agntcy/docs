@@ -12,8 +12,8 @@ After pointing the client at a running Directory (`localhost:8888` for the local
 2. **Publish** the CID to the routing layer for network discovery.
 3. **Search** by skill and **pull** matching records.
 
-Use [Quickstart](quickstart.md) to run `dirctl daemon start` locally. Remote servers require
-[OIDC](directory-oidc-authentication.md) or SPIFFE configuration per SDK docs below.
+Use [Quickstart](dir-quickstart.md) to run `dirctl daemon start` locally. Remote servers require
+[OIDC](dir-component-oidc-authentication.md) or SPIFFE configuration per SDK docs below.
 
 Protocol definitions: [buf.build/agntcy/dir](https://buf.build/agntcy/dir) and
 [API Reference](dir-api-reference.md).

@@ -1,32 +1,32 @@
 nav:
   - Get Started:
-    - Overview: overview.md
-    - Features and Usage Scenarios: scenarios.md
-    - Quickstart: quickstart.md
+    - Overview: dir-overview.md
+    - Features and Usage Scenarios: dir-features-scenarios.md
+    - Quickstart: dir-quickstart.md
   - Concepts:
-    - Architecture: architecture.md
-    - Records: records-validation.md
-    - Store: store.md
-    - Routing: routing.md
-    - Trust Model: trust-model.md
-    - Federation: federation-overview.md
+    - Architecture: dir-architecture.md
+    - Records: dir-component-records-validation.md
+    - Store: dir-component-store.md
+    - Routing: dir-component-routing.md
+    - Trust Model: dir-component-trust-model.md
+    - Federation: dir-federation-overview.md
     - Extensions:
-      - Runtime Discovery: runtime.md
-      - Event Streaming: events.md
-      - MCP Server: directory-mcp.md
-      - GUI: directory-gui.md
+      - Runtime Discovery: dir-component-runtime-discovery.md
+      - Event Streaming: dir-component-event-streaming.md
+      - MCP Server: dir-component-mcp-server.md
+      - GUI: dir-component-gui.md
   - Deploy:
     - Local Deployment: dir-deployment-local.md
     - Kubernetes Deployment: dir-deployment-kubernetes.md
-    - Production Deployment: prod-deployment.md
+    - Production Deployment: dir-prod-deployment.md
     - Federation Deployment:
-      - Federation on Amazon EKS: federation-aws-eks.md
-      - Running a Federated Directory Instance: partner-prod-federation.md
-      - Profiles: federation-profiles.md
-      - Best Practices and Troubleshooting: federation-troubleshooting.md
-    - OIDC Authentication: directory-oidc-authentication.md
+      - Federation on Amazon EKS: dir-federation-aws-eks.md
+      - Running a Federated Directory Instance: dir-federation-setup.md
+      - Profiles: dir-federation-profiles.md
+      - Best Practices and Troubleshooting: dir-federation-troubleshooting.md
+    - OIDC Authentication: dir-component-oidc-authentication.md
   - SDKs:
-    - SDK Overview: directory-sdk.md
+    - SDK Overview: dir-sdk.md
   - Reference:
-    - CLI Reference: directory-cli-reference.md
+    - CLI Reference: dir-cli-reference.md
     - API Reference: dir-api-reference.md

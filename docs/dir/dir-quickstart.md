@@ -103,7 +103,7 @@ dirctl pull "$CID"
 ```
 
 For local-only listings, use `dirctl routing list`. See
-[Features and Usage Scenarios](scenarios.md) for signing, sync, import, export, and other
+[Features and Usage Scenarios](dir-features-scenarios.md) for signing, sync, import, export, and other
 workflows.
 
 ## Authenticate to a remote Directory
@@ -116,16 +116,16 @@ dirctl auth login \
   --oidc-client-id "dirctl"
 ```
 
-See [OIDC Authentication](directory-oidc-authentication.md) for the auth model and
-[CLI Reference](directory-cli-reference.md#global-options) for command details.
+See [OIDC Authentication](dir-component-oidc-authentication.md) for the auth model and
+[CLI Reference](dir-cli-reference.md#global-options) for command details.
 
 ## Next steps
 
-- [Features and Usage Scenarios](scenarios.md) — capability tour and CLI workflows
-- [Architecture](architecture.md) — how Directory fits together
+- [Features and Usage Scenarios](dir-features-scenarios.md) — capability tour and CLI workflows
+- [Architecture](dir-architecture.md) — how Directory fits together
 - [Local](dir-deployment-local.md) / [Kubernetes](dir-deployment-kubernetes.md) /
-  [Production](prod-deployment.md) deployment
-- [Federation](federation-overview.md) — join or run a federated network
-- [SDKs](directory-sdk.md) — Go, Python, and JavaScript clients
-- [CLI Reference](directory-cli-reference.md) — full `dirctl` command reference
+  [Production](dir-prod-deployment.md) deployment
+- [Federation](dir-federation-overview.md) — join or run a federated network
+- [SDKs](dir-sdk.md) — Go, Python, and JavaScript clients
+- [CLI Reference](dir-cli-reference.md) — full `dirctl` command reference
 - [API Reference](dir-api-reference.md) — gRPC/protobuf protocol surface

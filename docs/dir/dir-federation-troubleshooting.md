@@ -1,6 +1,6 @@
 # Federation Best Practices and Troubleshooting
 
-This page covers operational best practices and troubleshooting for Directory federation. It applies to both [https_web and https_spiffe](federation-profiles.md#profile-comparison) profiles. For profile selection and configuration details, see [Federation Bundle Profiles](federation-profiles.md).
+This page covers operational best practices and troubleshooting for Directory federation. It applies to both [https_web and https_spiffe](dir-federation-profiles.md#profile-comparison) profiles. For profile selection and configuration details, see [Federation Bundle Profiles](dir-federation-profiles.md).
 
 ## Operational Best Practices
 
@@ -205,7 +205,7 @@ kubectl logs -n dir-spire -l app.kubernetes.io/name=server -c spire-server | \
 
 **Root Cause:** Bootstrap bundle is missing, stale, or incorrectly formatted.
 
-**Resolution:** Obtain a fresh bundle from your federation partner, validate it, and update `trustDomainBundle` in your federation resource. See [Bootstrap Bundle Exchange Process](federation-profiles.md#bootstrap-bundle-exchange-process-https_spiffe) for extraction and validation steps:
+**Resolution:** Obtain a fresh bundle from your federation partner, validate it, and update `trustDomainBundle` in your federation resource. See [Bootstrap Bundle Exchange Process](dir-federation-profiles.md#bootstrap-bundle-exchange-process-https_spiffe) for extraction and validation steps:
 
 ```bash
 # Obtain fresh bundle from federation partner

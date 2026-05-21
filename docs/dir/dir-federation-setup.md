@@ -1,6 +1,6 @@
 # Running a Federated Directory Instance
 
-This guide explains how to federate your Directory instance (`partner.io`) with the public production Directory at `spire.ads.outshift.io`. The prod instance uses the `https_web` bundle endpoint profile (Let's Encrypt, standard HTTPS). Your instance must use `https_web` as well for compatibility. If you want a single AWS EKS happy path instead of a generic federation reference, start with [Federation on Amazon EKS](federation-aws-eks.md).
+This guide explains how to federate your Directory instance (`partner.io`) with the public production Directory at `spire.ads.outshift.io`. The prod instance uses the `https_web` bundle endpoint profile (Let's Encrypt, standard HTTPS). Your instance must use `https_web` as well for compatibility. If you want a single AWS EKS happy path instead of a generic federation reference, start with [Federation on Amazon EKS](dir-federation-aws-eks.md).
 
 Partnering with the Production Directory involves two trust domains. `partner.io` is your instance's trust domain and `spire.ads.outshift.io` is the production Directory's trust domain.
 
@@ -300,11 +300,11 @@ Assumptions:
 
 ## Use Cases
 
-See [Features and Usage Scenarios](scenarios.md) for sample applications and workflows.
+See [Features and Usage Scenarios](dir-features-scenarios.md) for sample applications and workflows.
 
 ## Next Steps
 
 - Publish agents: Use `dirctl push` or the SDK to publish records to the public Directory.
-- Deploy your own instance: See [Production Deployment](prod-deployment.md) for AWS EKS and federation.
-- Explore scenarios: [Features and Usage Scenarios](scenarios.md) for build, store, sign, discover, and search workflows.
-- Federation issues: See [Federation Best Practices and Troubleshooting](federation-troubleshooting.md) for operational guidance and common errors.
+- Deploy your own instance: See [Production Deployment](dir-prod-deployment.md) for AWS EKS and federation.
+- Explore scenarios: [Features and Usage Scenarios](dir-features-scenarios.md) for build, store, sign, discover, and search workflows.
+- Federation issues: See [Federation Best Practices and Troubleshooting](dir-federation-troubleshooting.md) for operational guidance and common errors.

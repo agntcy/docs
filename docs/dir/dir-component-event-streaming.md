@@ -500,6 +500,6 @@ DIRECTORY_SERVER_EVENTS_LOG_PUBLISHED_EVENTS=false
 ## See Also
 
 - [Events API Reference](https://buf.build/agntcy/dir/docs/main:agntcy.dir.events.v1) - Protocol buffer definitions and message formats
-- [CLI Reference](directory-cli-reference.md) — `dirctl events listen` and related commands
-- [SDK Overview](directory-sdk.md) — language-specific SDK usage
-- [Quickstart](quickstart.md) — install CLI and start a local Directory
+- [CLI Reference](dir-cli-reference.md) — `dirctl events listen` and related commands
+- [SDK Overview](dir-sdk.md) — language-specific SDK usage
+- [Quickstart](dir-quickstart.md) — install CLI and start a local Directory

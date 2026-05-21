@@ -17,10 +17,10 @@ It makes the following choices for you:
 
 If you want the reference material behind this guide, see the following guides:
 
- - [Production Deployment](prod-deployment.md)
- - [Running a Federated Directory Instance](partner-prod-federation.md)
- - [Federation Bundle Profiles](federation-profiles.md)
- - [Federation Best Practices and Troubleshooting](federation-troubleshooting.md)
+ - [Production Deployment](dir-prod-deployment.md)
+ - [Running a Federated Directory Instance](dir-federation-setup.md)
+ - [Federation Bundle Profiles](dir-federation-profiles.md)
+ - [Federation Best Practices and Troubleshooting](dir-federation-troubleshooting.md)
 
 This document is intentionally narrow. It does not try to cover GitOps, Azure, GCP, on-premises deployment, or the `https_spiffe` profile. The goal is to give first-time operators one concrete path that they can follow end to end.
 
@@ -658,7 +658,7 @@ This guide does not try to provision the AWS infrastructure from zero in the mai
     # Expected: Error: record not found
     ```
 
-    If you want a fuller post-deployment smoke test against your own Directory, use the CLI workflows in [Features and Usage Scenarios](scenarios.md) and the [CLI Reference](directory-cli-reference.md):
+    If you want a fuller post-deployment smoke test against your own Directory, use the CLI workflows in [Features and Usage Scenarios](dir-features-scenarios.md) and the [CLI Reference](dir-cli-reference.md):
 
     - `dirctl push record.json`
     - `dirctl info <cid>`
@@ -675,7 +675,7 @@ If you get stuck, check these first:
 - `Pending` PVCs: your EBS CSI setup or StorageClass defaulting is incomplete.
 - prod rejects your trust domain after local federation works: your `dir-staging` onboarding pull request has not been merged or rolled out yet.
 
-For in-depth troubleshooting, see [Federation Best Practices and Troubleshooting](federation-troubleshooting.md).
+For in-depth troubleshooting, see [Federation Best Practices and Troubleshooting](dir-federation-troubleshooting.md).
 
 ## Appendix: Best-Effort AWS Provisioning Notes
 

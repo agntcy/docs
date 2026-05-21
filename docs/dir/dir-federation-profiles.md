@@ -2,7 +2,7 @@
 
 Directory supports two federation bundle profiles for secure trust bundle exchange between SPIRE servers. Each profile implements distinct security models, infrastructure requirements, and operational characteristics. This document provides technical guidance to assist in profile selection and implementation.
 
-For step-by-step federation setup with the public Directory network, see [Running a Federated Directory Instance](partner-prod-federation.md).
+For step-by-step federation setup with the public Directory network, see [Running a Federated Directory Instance](dir-federation-setup.md).
 
 ## Profile Comparison
 

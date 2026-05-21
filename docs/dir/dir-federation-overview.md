@@ -20,17 +20,17 @@ Federation is configured at deploy time. Choose the guide that matches your envi
 
 | Guide | Use case |
 |-------|----------|
-| [Federation on Amazon EKS](federation-aws-eks.md) | End-to-end AWS deployment into the public network |
-| [Running a Federated Directory Instance](partner-prod-federation.md) | Connect an existing instance to production federation |
-| [Profiles](federation-profiles.md) | Federation profile configuration |
-| [Best Practices and Troubleshooting](federation-troubleshooting.md) | Operations and debugging |
+| [Federation on Amazon EKS](dir-federation-aws-eks.md) | End-to-end AWS deployment into the public network |
+| [Running a Federated Directory Instance](dir-federation-setup.md) | Connect an existing instance to production federation |
+| [Profiles](dir-federation-profiles.md) | Federation profile configuration |
+| [Best Practices and Troubleshooting](dir-federation-troubleshooting.md) | Operations and debugging |
 
-Also see [Production Deployment](prod-deployment.md) and
-[OIDC Authentication](directory-oidc-authentication.md) for gateway and external access when
+Also see [Production Deployment](dir-prod-deployment.md) and
+[OIDC Authentication](dir-component-oidc-authentication.md) for gateway and external access when
 federating user-facing endpoints.
 
 ## Concepts
 
-- [Trust Model](trust-model.md) — signing, verification, and SPIFFE/SPIRE identity
-- [Routing](routing.md) — how skill-based discovery works within and across peers
-- [Architecture](architecture.md) — Directory components and trust boundaries
+- [Trust Model](dir-component-trust-model.md) — signing, verification, and SPIFFE/SPIRE identity
+- [Routing](dir-component-routing.md) — how skill-based discovery works within and across peers
+- [Architecture](dir-architecture.md) — Directory components and trust boundaries

@@ -265,7 +265,7 @@ Discovered workloads have a `services` field that holds metadata extracted by re
 
 The OASF resolver requires Directory client configuration via environment variables.
 These are the same as those used by the Directory client library, e.g. `DIRECTORY_CLIENT_SERVER_ADDRESS`.
-Refer to the [Directory Go SDK](./directory-sdk.md#go-sdk) for all available options.
+Refer to the [Directory Go SDK](./dir-sdk.md#go-sdk) for all available options.
 
 When a workload has the configured OASF resolver label, the resolver attempts to fetch the corresponding record from Directory and validate its signature before attaching it to the workload.
 
