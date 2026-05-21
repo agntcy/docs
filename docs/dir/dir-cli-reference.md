@@ -1,5 +1,82 @@
 # Directory CLI Command Reference
 
+Command-line reference for `dirctl`. Install the CLI in the [Quickstart](quickstart.md)
+only; workflow examples live in [Features and Usage Scenarios](scenarios.md).
+
+## Global options
+
+### Output formats
+
+All commands support `--output` / `-o`:
+
+| Format | Description | Use case |
+|--------|-------------|----------|
+| `human` | Formatted tables and colors (default) | Interactive use |
+| `json` | Pretty-printed JSON | Debugging, single-record scripts |
+| `jsonl` | One JSON object per line | Streaming, batch processing |
+| `raw` | Values only (CIDs, IDs) | Shell pipelines |
+
+Structured formats send data to **stdout** and messages to **stderr**, so piping to `jq`
+works cleanly.
+
+```bash
+CID=$(dirctl push record.json -o raw)
+dirctl routing search --skill "AI" -o json | jq '.[] | .record_ref.cid'
+dirctl events listen -o jsonl | jq -c 'select(.type == "EVENT_TYPE_RECORD_PUSHED")'
+```
+
+### Server connection
+
+```bash
+dirctl --server-addr localhost:8888 routing list
+export DIRECTORY_CLIENT_SERVER_ADDRESS=localhost:8888
+dirctl --context dev routing list   # see Context Operations below
+```
+
+### Authentication
+
+For remote servers, authenticate with OIDC before running commands. The full auth model,
+gateway endpoints, and SPIFFE/SPIRE integration are documented in
+[OIDC Authentication](directory-oidc-authentication.md).
+
+| Command | Description |
+|---------|-------------|
+| `dirctl auth login` | OIDC login (PKCE, `--no-browser`, or `--device`) |
+| `dirctl auth logout` | Clear cached credentials |
+| `dirctl auth status` | Show current auth state |
+
+```bash
+dirctl auth login --oidc-issuer "https://prod.idp.ads.outshift.io" --oidc-client-id "dirctl"
+dirctl --auth-mode=oidc --server-addr prod.gateway.ads.outshift.io:443 search --skill "AI"
+```
+
+Pre-issued tokens: `--auth-token` or `DIRECTORY_CLIENT_AUTH_TOKEN` for CI and automation.
+Other modes: `--auth-mode=x509`, `jwt`, `tls`, or `insecure` for local development. Default
+(empty) auto-detects SPIFFE → OIDC → insecure.
+
+### Command groups
+
+| Group | Commands |
+|-------|----------|
+| Daemon | `daemon start`, `stop`, `status` |
+| Auth | `auth login`, `logout`, `status` |
+| Context | `context list`, `current`, `set`, `show`, `validate` |
+| Storage | `push`, `pull`, `delete`, `info` |
+| Import / Export | `import`, `export` |
+| Routing | `routing publish`, `list`, `search` |
+| Search | `search` |
+| Security | `sign`, `verify`, `validate`, `naming verify` |
+| Sync | `sync create`, `status`, `list`, `delete` |
+| Events | `events listen` |
+
+### Getting help
+
+```bash
+dirctl --help
+dirctl routing --help
+dirctl routing search --help
+```
+
 ## Daemon Operations
 
 The daemon commands run a self-contained local directory server that bundles the gRPC apiserver and reconciler into a single process with embedded SQLite and a filesystem OCI store. All state is stored under `~/.agntcy/dir/` by default.
@@ -935,7 +1012,7 @@ Record name verification proves that the signing key is authorized by the domain
     dirctl sign <cid> --key private.key
     ```
 
-3. Check verification status using [`dirctl naming verify`](./directory-cli.md#dirctl-naming-verify-reference).
+3. Check verification status using [`dirctl naming verify`](#dirctl-naming-verify-reference).
 
 ### `dirctl sign <cid> [flags]`
 

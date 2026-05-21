@@ -1,25 +1,32 @@
 nav:
-  - Overview: overview.md
-  - Getting Started:
-    - dir-getting-started.md
+  - Get Started:
+    - Overview: overview.md
+    - Features and Usage Scenarios: scenarios.md
+    - Quickstart: quickstart.md
+  - Concepts:
+    - Architecture: architecture.md
+    - Records: records-validation.md
+    - Store: store.md
+    - Routing: routing.md
+    - Trust Model: trust-model.md
+    - Federation: federation-overview.md
+    - Extensions:
+      - Runtime Discovery: runtime.md
+      - Event Streaming: events.md
+      - MCP Server: directory-mcp.md
+      - GUI: directory-gui.md
+  - Deploy:
     - Local Deployment: dir-deployment-local.md
     - Kubernetes Deployment: dir-deployment-kubernetes.md
-  - OIDC Authentication: directory-oidc-authentication.md
-  - Features and Usage Scenarios: scenarios.md
-  - Production Deployment: prod-deployment.md
-  - CLI Guide: directory-cli.md
-  - MCP Server: directory-mcp.md
-  - Federation:
-    - Federation on Amazon EKS: federation-aws-eks.md
-    - Running a Federated Directory Instance: partner-prod-federation.md
-    - Profiles: federation-profiles.md
-    - Best Practices and Troubleshooting: federation-troubleshooting.md
+    - Production Deployment: prod-deployment.md
+    - Federation Deployment:
+      - Federation on Amazon EKS: federation-aws-eks.md
+      - Running a Federated Directory Instance: partner-prod-federation.md
+      - Profiles: federation-profiles.md
+      - Best Practices and Troubleshooting: federation-troubleshooting.md
+    - OIDC Authentication: directory-oidc-authentication.md
+  - SDKs:
+    - SDK Overview: directory-sdk.md
   - Reference:
     - CLI Reference: directory-cli-reference.md
     - API Reference: dir-api-reference.md
-  - Architecture: architecture.md
-  - Components:
-    - Runtime Discovery: runtime.md
-    - Event Streaming: events.md
-    - Records and Validation: records-validation.md
-  - Trust Model: trust-model.md

@@ -13,11 +13,9 @@ The Agent Directory Service is also accessible through the Directory MCP Server.
 
 The following prerequisites are required to follow the examples below:
 
-- Locally available Directory CLI client
-- Running instance of Directory API server
-
-To deploy the necessary components, please refer to the [Getting Started](dir-getting-started.md)
-guide.
+- Directory CLI (`dirctl`) — install via [Quickstart](quickstart.md)
+- Running Directory API server — start with `dirctl daemon start` or see
+  [Local Deployment](dir-deployment-local.md) / [Kubernetes Deployment](dir-deployment-kubernetes.md)
 
 ## Build
 
@@ -635,6 +633,27 @@ dirctl import --type=mcp \
 ```
 
 For comprehensive documentation including all configuration options, filtering capabilities, LLM enrichment setup, and advanced usage examples, see the [CLI Import Workflow documentation](https://github.com/agntcy/dir/tree/main/cli#-import-workflow).
+
+## Export
+
+Export records from Directory into formats for external tools and agentic CLIs:
+
+```bash
+# Single record as A2A AgentCard
+dirctl export my-agent:1.0 --format=a2a --output-file=./agent-card.json
+
+# SKILL.md for Cursor, Claude Code, etc.
+dirctl export my-agent:1.0 --format=agent-skill --output-file=./SKILL.md
+
+# GitHub Copilot MCP config
+dirctl export my-agent:1.0 --format=mcp-ghcopilot --output-file=./mcp.json
+
+# Batch export by module
+dirctl export --output-dir=./exports/ --format=a2a --module "integration/a2a"
+```
+
+By default, only the latest semver version is exported; use `--all-versions` to export every
+version. See [CLI Reference — Export Operations](directory-cli-reference.md#export-operations).
 
 ## gRPC Error Codes
 

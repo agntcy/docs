@@ -658,7 +658,7 @@ This guide does not try to provision the AWS infrastructure from zero in the mai
     # Expected: Error: record not found
     ```
 
-    If you want a fuller post-deployment smoke test against your own Directory, use the normal Directory CLI workflows from [Directory CLI Guide](directory-cli.md):
+    If you want a fuller post-deployment smoke test against your own Directory, use the CLI workflows in [Features and Usage Scenarios](scenarios.md) and the [CLI Reference](directory-cli-reference.md):
 
     - `dirctl push record.json`
     - `dirctl info <cid>`

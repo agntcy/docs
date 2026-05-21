@@ -26,6 +26,8 @@ leveraged for content routing in the distributed network of directory servers.
 The ADS specification is under active development and is published as an
 Internet Draft at [ADS Spec](https://spec.dir.agntcy.org). The source code is
 available in the [ADS Spec sources](https://github.com/agntcy/dir-spec).
+Directory gRPC APIs and protobuf definitions are published on
+[buf.build/agntcy/dir](https://buf.build/agntcy/dir).
 The current reference implementation, written in Go, provides server and client
 nodes with gRPC and protocol buffer interfaces. The directory record storage is
 built on [ORAS](https://oras.land) (OCI Registry As Storage), while data
@@ -62,7 +64,7 @@ ADS leverages [Content Identifiers](https://github.com/multiformats/cid) for
 naming directory records. CIDs provide a self-describing, content-addressed
 naming scheme that ensures data integrity and immutability.
 
-In addition to CID-based addressing, ADS supports verifiable domain-based names that enable human-readable references while maintaining cryptographic verification. See the [Directory CLI documentation](directory-cli.md#name-verification) for details.
+In addition to CID-based addressing, ADS supports verifiable domain-based names that enable human-readable references while maintaining cryptographic verification. See [Features and Usage Scenarios — Name Verification](scenarios.md#name-verification) and the [CLI Reference](directory-cli-reference.md#security-verification) for details.
 
 ## Content Routing
 
@@ -139,7 +141,7 @@ sequenceDiagram
 
 Ready to get started? Choose your path:
 
-- Run a local instance: get Directory running locally in seconds or deploy in a Kind cluster. See [Getting Started](dir-getting-started.md).
+- Run a local instance: follow the [Quickstart](quickstart.md) or see [Local Deployment](dir-deployment-local.md) and [Kubernetes Deployment](dir-deployment-kubernetes.md).
 - Configure external user or automation access with OIDC: see [OIDC Authentication for Directory](directory-oidc-authentication.md).
 - Connect to the public Directory: use the existing network at `ads.outshift.io` to discover and publish agents. See [Running a Federated Directory Instance](partner-prod-federation.md).
 - Deploy for production: run your own Directory instance on AWS EKS and optionally federate with the network. See [Production Deployment](prod-deployment.md).

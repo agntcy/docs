@@ -1,6 +1,22 @@
 # Directory SDK
 
-The Directory SDK provides comprehensive libraries and tools for interacting with the Directory system, including storage, routing, search, and security operations.
+Libraries for interacting with Directory over gRPC: push records to the store, publish for
+routing, and search or pull by skill. All three SDKs target the same workflow; pick the
+language that fits your stack.
+
+## Publish and discover (all SDKs)
+
+After pointing the client at a running Directory (`localhost:8888` for the local daemon):
+
+1. **Push** an OASF record JSON to obtain a CID.
+2. **Publish** the CID to the routing layer for network discovery.
+3. **Search** by skill and **pull** matching records.
+
+Use [Quickstart](quickstart.md) to run `dirctl daemon start` locally. Remote servers require
+[OIDC](directory-oidc-authentication.md) or SPIFFE configuration per SDK docs below.
+
+Protocol definitions: [buf.build/agntcy/dir](https://buf.build/agntcy/dir) and
+[API Reference](dir-api-reference.md).
 
 ## JavaScript SDK
 

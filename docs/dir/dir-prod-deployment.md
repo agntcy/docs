@@ -1,6 +1,6 @@
 # Production Deployment
 
-This guide documents production deployment of Directory on AWS EKS. For a single opinionated AWS walkthrough that carries the deployment all the way into public federation, see [Federation on Amazon EKS](federation-aws-eks.md). For local development and testing with Kind, see [Getting Started](dir-getting-started.md). For connecting to the public Directory network or federating your instance, see [Running a Federated Directory Instance](partner-prod-federation.md).
+This guide documents production deployment of Directory on AWS EKS. For a single opinionated AWS walkthrough that carries the deployment all the way into public federation, see [Federation on Amazon EKS](federation-aws-eks.md). For local development and testing, see [Quickstart](quickstart.md) and [Local Deployment](dir-deployment-local.md). For connecting to the public Directory network or federating your instance, see [Federation](federation-overview.md) and [Running a Federated Directory Instance](partner-prod-federation.md).
 
 !!! important "Trust Domain Selection"
     Choose your **trust domain** carefully before deployment—it cannot be changed later. A trust domain is a permanent identifier for your SPIRE deployment (e.g., `acme.com`, `engineering.acme.com`).
