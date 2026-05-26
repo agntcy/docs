@@ -21,8 +21,8 @@ This table compares validation outcomes between the OASF API validator and JSON 
 | 2. Version Incompatibility (Initial Dev) | `schema_version: "0.1.0"` when server is `0.8.0`                      | ERROR (`version_incompatible_initial_development`)       | PASS        | JSON Schema validates format only, not SemVer rules <a href="#note-1"><sup>1</sup></a>                             |
 | 3. Version Incompatibility (Prerelease)  | `schema_version: "0.8.0-alpha"` when server is `0.8.0`                | ERROR (`version_incompatible_prerelease`)                | PASS        | JSON Schema validates format only, not prerelease compatibility <a href="#note-1"><sup>1</sup></a>                 |
 | 4. Version Earlier (Compatible)          | `schema_version: "0.7.0"` when server is `0.8.0`                      | WARNING (`version_earlier`)                              | PASS        | JSON Schema validates format only, not version comparison <a href="#note-1"><sup>1</sup></a>                       |
-| 5. Regex Pattern Mismatch                | `previous_record_cid: "invalid"` (doesn't match CID regex)            | WARNING (`attribute_value_regex_not_matched`)            | PASS        | JSON Schema may export regex but validation is lenient; API treats as warning                                      |
-| 6. Regex Pattern Mismatch (Super Type)   | String doesn't match super type regex                                 | WARNING (`attribute_value_super_type_regex_not_matched`) | PASS        | Same as above for super types                                                                                      |
+| 5. Regex Pattern Mismatch                | `previous_record_cid: "invalid"` (doesn't match CID regex)            | WARNING (`attribute_value_regex_not_matched`)            | FAIL        | JSON Schema emits `pattern` from dictionary type regex; API treats as warning but JSON Schema rejects              |
+| 6. Regex Pattern Mismatch (Super Type)   | String doesn't match super type regex                                 | WARNING (`attribute_value_super_type_regex_not_matched`) | FAIL        | JSON Schema emits `pattern` from super type regex; API treats as warning but JSON Schema rejects                   |
 | 7. Using Base Class                      | `skills: [{"name": "base_skill"}]` or `skills: [{"id": 0}]`           | ERROR (`base_class_used`)                                | FAIL        | Both catch base classes (base_skill, base_domain, base_module); JSON Schema `oneOf` doesn't include parent classes |
 | 8. Using Deprecated Class                | Using a deprecated skill/domain/module                                | WARNING (`class_deprecated`)                             | PASS        | JSON Schema doesn't track deprecation                                                                              |
 | 9. Using Deprecated Attribute            | Using a deprecated attribute                                          | WARNING (`attribute_deprecated`)                         | PASS        | JSON Schema doesn't track deprecation                                                                              |
@@ -39,7 +39,7 @@ This table compares validation outcomes between the OASF API validator and JSON 
 | 20. Unknown Enum Value                   | Enum value not in allowed list                                        | ERROR (`attribute_enum_value_unknown`)                   | FAIL        | JSON Schema uses `enum` constraint                                                                                 |
 | 21. Unknown Enum Array Value             | Enum array value not in allowed list                                  | ERROR (`attribute_enum_array_value_unknown`)             | FAIL        | JSON Schema validates array items                                                                                  |
 | 22. Value Outside Range                  | Number outside type's range                                           | ERROR (`attribute_value_exceeds_range`)                  | FAIL        | JSON Schema uses `minimum`/`maximum`                                                                               |
-| 23. Value Exceeds Max Length             | String exceeds type's max length                                      | ERROR (`attribute_value_exceeds_max_len`)                | FAIL        | JSON Schema uses `maxLength`                                                                                       |
+| 23. Value Exceeds Max Length             | String exceeds type's max length                                      | ERROR (`attribute_value_exceeds_max_len`)                | FAIL        | JSON Schema uses `maxLength` (including inherited `max_len` from super types)                                      |
 | 24. Value Not in Type Values             | Value not in type's allowed values list                               | ERROR (`attribute_value_not_in_type_values`)             | FAIL        | JSON Schema uses `enum` constraint                                                                                 |
 | 25. Unknown Class ID                     | `id: 99999` doesn't exist                                             | ERROR (`id_unknown`)                                     | FAIL        | JSON Schema uses `oneOf` with `const` values                                                                       |
 | 26. Unknown Class Name                   | `name: "nonexistent"` doesn't exist                                   | ERROR (`name_unknown`)                                   | FAIL        | JSON Schema uses `oneOf` with `const` values                                                                       |
@@ -65,13 +65,16 @@ This table compares validation outcomes between the OASF API validator and JSON 
 2. Enum array sibling validation (missing, incorrect)
 3. Unknown profile (for classes)
 
+### API WARNING, JSON Schema FAILS (JSON Schema Stricter)
+
+1. Regex pattern mismatches (JSON Schema emits `pattern` from dictionary types and super types)
+
 ### API WARNING, JSON Schema PASSES (Non-blocking Issues)
 
 1. Version earlier (compatible)
-2. Regex pattern mismatches
-3. All deprecation warnings (class, attribute, object, enum values)
-4. Enum sibling mismatches
-5. Missing recommended attributes
+2. All deprecation warnings (class, attribute, object, enum values)
+3. Enum sibling mismatches
+4. Missing recommended attributes
 
 ### Both FAIL (Both Catch the Issue)
 
@@ -93,15 +96,15 @@ This table compares validation outcomes between the OASF API validator and JSON 
 ## Key Insights
 
 1. JSON Schema is comprehensive for structural and value validation
-2. Main gaps in JSON Schema:
+2. JSON Schema is stricter than the API validator for regex pattern mismatches: the API treats these as warnings (non-blocking), while JSON Schema `pattern` constraints cause hard failures
+3. Main gaps in JSON Schema:
 
     - Semantic version compatibility (only validates format)
     - Enum array sibling validation
     - Deprecation tracking
-    - Regex validation (treated as warnings, not errors)
     - Profile existence (for classes)
 
-3. Both validators catch most structural and type validation issues, including:
+4. Both validators catch most structural and type validation issues, including:
 
     - Base classes (now errors in API validator, matching JSON Schema behavior)
     - Array duplicates (both use duplicate detection)
