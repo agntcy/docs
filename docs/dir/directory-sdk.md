@@ -4,7 +4,7 @@ The Directory SDK provides comprehensive libraries and tools for interacting wit
 
 ## JavaScript SDK
 
-Documentation for the JavaScript SDK can be found on [GitHub](https://github.com/agntcy/dir/tree/main/sdk/dir-js). The SDK supports both JavaScript and TypeScript applications. The package is published on [npm](https://www.npmjs.com/package/agntcy-dir).
+Documentation for the JavaScript SDK can be found on [GitHub](https://github.com/agntcy/dir-sdk-javascript). The SDK supports both JavaScript and TypeScript applications. The package is published on [npm](https://www.npmjs.com/package/agntcy-dir).
 
 !!! note
 
@@ -57,7 +57,7 @@ const spiffeClient = new Client(config, transport);
 
 ## Python SDK
 
-Documentation for the Python SDK can be found on [GitHub](https://github.com/agntcy/dir/tree/main/sdk/dir-py). 
+Documentation for the Python SDK can be found on [GitHub](https://github.com/agntcy/dir-sdk-python). 
 The SDK supports Python 3.10+ applications. The package is published on [PyPI](https://pypi.org/project/agntcy-dir/).
 
 ### Installation

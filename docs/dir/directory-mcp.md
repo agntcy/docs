@@ -105,4 +105,4 @@ Using the Directory MCP Server, you can access the following tools:
 - `agntcy_dir_verify_record` - Verifies the digital signature of a record in the Directory by its CID (server-side integrity and authenticity).
 - `agntcy_dir_verify_name` - Verifies that a record's name is owned by the domain it claims (by CID or name; optional version). Checks that the record was signed with a key published in the domain's well-known JWKS file.
 
-For a full list of tools and usage examples, see the [Directory MCP Server documentation](https://github.com/agntcy/dir/blob/main/mcp/README.md).
+For a full list of tools and usage examples, see the [Directory MCP Server documentation](https://github.com/agntcy/dir-mcp/blob/main/README.md).
