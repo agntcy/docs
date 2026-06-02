@@ -67,6 +67,10 @@ exclude = [
 
     # Video file path (structure differs in build vs source)
     '.*assets/dir-gui\.mov',
+
+    # Google Fonts (injected by mkdocs-material; root URL returns 404 to HEAD/GET)
+    'fonts\.googleapis\.com',
+    'fonts\.gstatic\.com',
 ]
 
 # Exclude paths (regex patterns relative to the input)
