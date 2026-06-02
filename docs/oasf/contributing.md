@@ -48,7 +48,7 @@ contribute to the development of OASF Schemas and the framework itself.
 
 1. Determine where in the taxonomy of the class family you would want to add the
    new `class`.
-2. Create a new file → `<class_name.json>` inside the appropriate subdirectory
+2. Create a new file called `<class_name.json>` inside the appropriate subdirectory
    in the [/schema](https://github.com/agntcy/oasf/tree/main/schema) folder.
    The directory structure reflects the taxonomy hierarchy (e.g., classes that
    extend a category should be placed in that category's subdirectory).
@@ -401,9 +401,10 @@ on what type of extension is desired:
 | `objects`         | Create it to define new objects.                                     |
 | `profiles`        | Create it to define new profiles.                                   |
 
-**Note:** Categories are no longer defined in separate category files. Instead,
-mark any class as a category by adding `"category": true` to its JSON file.
-Categories can be nested at any level by having one category extend another.
+!!! note
+    Categories are no longer defined in separate category files. Instead,
+    mark any class as a category by adding `"category": true` to its JSON file.
+    Categories can be nested at any level by having one category extend another.
 
 ## Reporting Issues
 
@@ -464,7 +465,7 @@ Here is what you can do:
   _[Reporting Issues](#reporting-issues)_ section, providing feedback to the
   issue's author on what might be missing.
 - Review and update the existing content of our
-  [docs](https://docs.agntcy.org/oasf/open-agentic-schema-framework/) with
+  [docs](./open-agentic-schema-framework.md) with
   up-to-date instructions and code samples.
 - Review existing pull requests, and testing patches against real existing
   applications that use `OASF`.
