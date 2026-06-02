@@ -19,10 +19,11 @@ dependencies = [
     "griffe-pydantic==1.1.4",
     "griffe==1.7.2",
     "agntcy-acp>=1.5.2",  # 1.5.x allows langgraph 0.4+ so we can use langgraph-checkpoint>=3.0
-    "agntcy-iomapper==0.2.2",
+    "agntcy-iomapper>=0.2.3",
     "langgraph-checkpoint>=3.0.0",  # JsonPlusSerializer RCE in "json" mode
-    "llama-index>=0.12.38",  # JSONReader DoS (uncontrolled recursion) fixed in 0.12.38
-    "llama-index-core>=0.12.38,<0.13",  # pin to 0.12.x so resolver does not pick 0.13.0 on Python 3.12.4+
+    "llama-index>=0.14.22,<0.15",
+    "llama-index-core>=0.14.22,<0.15",
+    "pypdf>=6.10.2",  # CVE-2026-*: decompression-bomb / RAM exhaustion in PDF parsing
     "nltk>=3.9.4",  # CVE-2025-14009: zip slip / RCE in downloader
     "orjson>=3.11.6",  # CVE-2025-67221: recursion limit for deeply nested JSON
     "pillow>=12.2.0",  # CVE-2025-48379, CVE-2026-25990
@@ -35,4 +36,11 @@ dependencies = [
     "pymarkdownlnt>=0.9.0",
     "mkdocs-htmlproofer-plugin>=1.0.0",
     "certifi>=2025.1.31",
+]
+
+[tool.uv]
+override-dependencies = [
+    # agntcy-iomapper 0.2.x still declares llama-index<0.13; override for pypdf>=6.10.2
+    "llama-index>=0.14.22,<0.15",
+    "llama-index-core>=0.14.22,<0.15",
 ]
