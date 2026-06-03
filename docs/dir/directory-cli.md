@@ -328,9 +328,9 @@ contexts:
     oidc_issuer: https://dev.idp.example.com
     oidc_client_id: dirctl
   prod:
-    server_address: prod.gateway.example.com:443
+    server_address: gateway.example.com:443
     auth_mode: oidc
-    oidc_issuer: https://prod.idp.example.com
+    oidc_issuer: https://idp.example.com
     oidc_client_id: dirctl
 ```
 
@@ -529,7 +529,7 @@ Once authenticated, cached credentials are automatically detected and used:
 dirctl push my-agent.json
 
 # Search remote Directory server (auto-detects authentication)
-dirctl --server-addr=prod.gateway.ads.outshift.io:443 search --skill "natural_language_processing"
+dirctl --server-addr=ads.outshift.io:443 search --skill "natural_language_processing"
 
 # Pull from remote Directory server (auto-detects authentication)
 dirctl pull baeareihdr6t7s6sr2q4zo456sza66eewqc7huzatyfgvoupaqyjw23ilvi
@@ -557,13 +557,8 @@ Use the hostname that matches the credential you send. Bearer JWT traffic should
 
 ```bash
 # OIDC/JWT endpoint: Envoy validates the bearer token with jwt_authn
-dirctl --server-addr "prod.gateway.ads.outshift.io:443" \
+dirctl --server-addr "ads.outshift.io:443" \
   --auth-mode=oidc \
-  search --skill "natural_language_processing"
-
-# mTLS endpoint: Envoy validates the client certificate and ext_authz authorizes the SPIFFE principal
-dirctl --server-addr "prod.gateway-mtls.ads.outshift.io:443" \
-  --auth-mode=x509 \
   search --skill "natural_language_processing"
 ```
 
@@ -574,14 +569,14 @@ For CI/CD pipelines and automation, pass a pre-issued JWT token directly:
 ```bash
 # GitHub Actions OIDC
 dirctl search --name "*" \
-  --server-addr "prod.gateway.ads.outshift.io:443" \
+  --server-addr "ads.outshift.io:443" \
   --auth-mode=oidc \
   --auth-token "<github-oidc-jwt>" \
   --output json
 
 # Service user with pre-generated token
 export DIRECTORY_CLIENT_AUTH_TOKEN="<service-user-jwt>"
-export DIRECTORY_CLIENT_SERVER_ADDRESS="prod.gateway.ads.outshift.io:443"
+export DIRECTORY_CLIENT_SERVER_ADDRESS="ads.outshift.io:443"
 dirctl search --auth-mode=oidc
 ```
 

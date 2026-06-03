@@ -43,7 +43,7 @@ the Directory system and work with OASF agent records. See the
 ## Next Steps
 
 - Connect to the public Directory: federate with the public Directory network
-  at `prod.api.ads.outshift.io` to discover and publish agents. See
+  at `ads.outshift.io` to discover and publish agents. See
   [Running a Federated Directory Instance](partner-prod-federation.md).
 - Enable external authenticated access for users or automation with OIDC. See
   [OIDC Authentication for Directory](directory-oidc-authentication.md).

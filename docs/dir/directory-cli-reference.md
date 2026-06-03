@@ -171,9 +171,9 @@ The default config file is `~/.config/dirctl/config.yaml`, or `$XDG_CONFIG_HOME/
 current_context: prod
 contexts:
   prod:
-    server_address: prod.gateway.example.com:443
+    server_address: gateway.example.com:443
     auth_mode: oidc
-    oidc_issuer: https://prod.idp.example.com
+    oidc_issuer: https://idp.example.com
     oidc_client_id: dirctl
   staging:
     server_address: staging.gateway.example.com:443
@@ -283,8 +283,8 @@ Shows the effective client configuration for a context with sensitive values red
     config:
       auth_mode: oidc
       oidc_client_id: dirctl
-      oidc_issuer: https://prod.idp.example.com
-      server_address: prod.gateway.example.com:443
+      oidc_issuer: https://idp.example.com
+      server_address: gateway.example.com:443
       tls_skip_verify: false
     ```
 

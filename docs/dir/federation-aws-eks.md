@@ -255,7 +255,7 @@ This guide does not try to provision the AWS infrastructure from zero in the mai
           clusterSPIFFEIDs:
             default:
               federatesWith:
-                - prod.ads.outshift.io
+                - spire.ads.outshift.io
 
     spiffe-oidc-discovery-provider:
       ingress:
@@ -342,7 +342,7 @@ This guide does not try to provision the AWS infrastructure from zero in the mai
           - ${DIR_API_HOST}
         federation:
           - className: dir-spire
-            trustDomain: prod.ads.outshift.io
+                trustDomain: spire.ads.outshift.io
             bundleEndpointURL: https://spire.ads.outshift.io
             bundleEndpointProfile:
               type: https_web
@@ -600,7 +600,7 @@ This guide does not try to provision the AWS infrastructure from zero in the mai
 
     ```bash
     kubectl exec -n "${SPIRE_NAMESPACE}" spire-server-0 -c spire-server -- \
-      spire-server bundle list -id spiffe://prod.ads.outshift.io -format spiffe
+      spire-server bundle list -id spiffe://spire.ads.outshift.io -format spiffe
     ```
 
     If the bundle is missing:
@@ -653,7 +653,7 @@ This guide does not try to provision the AWS infrastructure from zero in the mai
 
     ```bash
     dirctl pull bafytest123 \
-      --server-addr prod.api.ads.outshift.io \
+      --server-addr ads.outshift.io:443 \
       --spiffe-socket-path "${DIRECTORY_CLIENT_SPIFFE_SOCKET_PATH}"
     # Expected: Error: record not found
     ```
@@ -663,7 +663,7 @@ This guide does not try to provision the AWS infrastructure from zero in the mai
     - `dirctl push record.json`
     - `dirctl info <cid>`
     - `dirctl search --name <name>`
-    - `dirctl sync create https://prod.api.ads.outshift.io:443`
+    - `dirctl sync create https://ads.outshift.io:443`
 
 ## Troubleshooting
 
