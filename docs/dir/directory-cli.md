@@ -446,11 +446,11 @@ Authenticate as a human user using OIDC Authorization Code + PKCE.
 ```bash
 # Using flags
 dirctl auth login \
-  --oidc-issuer "https://prod.idp.ads.outshift.io" \
+  --oidc-issuer "https://idp.ads.outshift.io" \
   --oidc-client-id "dirctl"
 
 # Or using environment variables
-export DIRECTORY_CLIENT_OIDC_ISSUER="https://prod.idp.ads.outshift.io"
+export DIRECTORY_CLIENT_OIDC_ISSUER="https://idp.ads.outshift.io"
 export DIRECTORY_CLIENT_OIDC_CLIENT_ID="dirctl"
 dirctl auth login
 ```
@@ -476,7 +476,7 @@ Authenticate without a browser on the current machine. Useful for SSH sessions, 
 
 ```bash
 dirctl auth login --device \
-  --oidc-issuer "https://prod.idp.ads.outshift.io" \
+  --oidc-issuer "https://idp.ads.outshift.io" \
   --oidc-client-id "dirctl"
 ```
 
@@ -503,7 +503,7 @@ Example output:
 Status: Authenticated
   Provider: oidc
   Subject: johndoe
-  Issuer: https://prod.idp.ads.outshift.io
+  Issuer: https://idp.ads.outshift.io
   Email: johndoe@example.com
   Principal type: human
   Cached at: 2026-01-15T10:30:00+00:00
@@ -617,7 +617,7 @@ dirctl --context dev routing list
 
 ```bash
 # OIDC authentication (most common)
-export DIRECTORY_CLIENT_OIDC_ISSUER="https://prod.idp.ads.outshift.io"
+export DIRECTORY_CLIENT_OIDC_ISSUER="https://idp.ads.outshift.io"
 export DIRECTORY_CLIENT_OIDC_CLIENT_ID="dirctl"
 dirctl auth login
 
