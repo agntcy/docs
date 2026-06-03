@@ -343,7 +343,7 @@ This guide does not try to provision the AWS infrastructure from zero in the mai
         federation:
           - className: dir-spire
             trustDomain: prod.ads.outshift.io
-            bundleEndpointURL: https://prod.spire.ads.outshift.io
+            bundleEndpointURL: https://spire.ads.outshift.io
             bundleEndpointProfile:
               type: https_web
 
@@ -606,7 +606,7 @@ This guide does not try to provision the AWS infrastructure from zero in the mai
     If the bundle is missing:
 
     - check that your SPIRE federation endpoint is externally reachable
-    - check that `https://prod.spire.ads.outshift.io` is reachable from the cluster
+    - check that `https://spire.ads.outshift.io` is reachable from the cluster
     - check cert-manager and DNS for `${SPIRE_FEDERATION_HOST}`
 
 10. Onboard Your Trust Domain into `dir-staging`
@@ -671,7 +671,7 @@ If you get stuck, check these first:
 
 - `certificate is valid for ingress.local`: SSL passthrough is not working, or the API ingress is configured with a terminating TLS secret.
 - `certificate signed by unknown authority` on the federation endpoint: cert-manager or the ClusterIssuer is misconfigured.
-- missing prod bundle in SPIRE: your cluster cannot reach `https://prod.spire.ads.outshift.io`, or your SPIRE federation controller settings are wrong.
+- missing prod bundle in SPIRE: your cluster cannot reach `https://spire.ads.outshift.io`, or your SPIRE federation controller settings are wrong.
 - `Pending` PVCs: your EBS CSI setup or StorageClass defaulting is incomplete.
 - prod rejects your trust domain after local federation works: your `dir-staging` onboarding pull request has not been merged or rolled out yet.
 
@@ -722,7 +722,7 @@ If you do not already have the platform prerequisites, these are the usual AWS b
 
     - Let's Encrypt
     - Route53 APIs, if used by your controller setup
-    - `https://prod.spire.ads.outshift.io`
+    - `https://spire.ads.outshift.io`
 
 3. If your company routes outbound traffic through a NAT or firewall, confirm that cert-manager and SPIRE can still complete their external calls.
 

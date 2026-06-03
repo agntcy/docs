@@ -118,7 +118,7 @@ echo $DIRECTORY_CLIENT_SERVER_ADDRESS $DIRECTORY_CLIENT_SPIFFE_SOCKET_PATH
 spire-server federation show --trustDomain prod.ads.outshift.io
 
 # Test bundle endpoint
-curl https://prod.spire.ads.outshift.io/
+curl https://spire.ads.outshift.io/
 ```
 
 ### Common Errors

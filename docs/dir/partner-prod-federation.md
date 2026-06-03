@@ -20,7 +20,7 @@ Assumptions:
 
 1. Deploy SPIRE with https_web federation
 
-    SPIRE must use the `https_web` profile so it can fetch prod's bundle over standard HTTPS (Let's Encrypt). The prod federation endpoint is `https://prod.spire.ads.outshift.io`.
+    SPIRE must use the `https_web` profile so it can fetch prod's bundle over standard HTTPS (Let's Encrypt). The prod federation endpoint is `https://spire.ads.outshift.io`.
 
     ??? example "Deploy SPIRE with https_web federation"
 
@@ -141,7 +141,7 @@ Assumptions:
             federation:
               - className: dir-spire
                 trustDomain: prod.ads.outshift.io
-                bundleEndpointURL: https://prod.spire.ads.outshift.io
+                bundleEndpointURL: https://spire.ads.outshift.io
                 bundleEndpointProfile:
                   type: https_web
           config:
@@ -272,7 +272,7 @@ Assumptions:
       spire-server bundle list -id spiffe://prod.ads.outshift.io -format spiffe
     ```
 
-    The prod's trust bundle is listed. If the bundle is missing, check that `ClusterFederatedTrustDomain` for prod exists and that the SPIRE server can reach `https://prod.spire.ads.outshift.io`.
+    The prod's trust bundle is listed. If the bundle is missing, check that `ClusterFederatedTrustDomain` for prod exists and that the SPIRE server can reach `https://spire.ads.outshift.io`.
 
 4. Contribute to `dir-staging` for prod federation
 
