@@ -217,7 +217,7 @@ kubectl rollout restart deployment/<your-apiserver-deployment> -n <your-dir-name
 
 ## Reference
 
-- [dir-staging](https://github.com/agntcy/dir-staging) – Example deployment with ArgoCD and SPIRE (uses `prod.*.ads.outshift.io` for the public Directory)
+- [dir-staging](https://github.com/agntcy/dir-staging) – Example deployment with ArgoCD and SPIRE (uses `ads.outshift.io` and related hosts for the public Directory)
 - [OIDC Authentication for Directory](dir-component-oidc-authentication.md) – External OIDC auth model, IdP options, and edge authorization flow
 - [Running a Federated Directory Instance](dir-federation-setup.md) – Federation setup for connecting to the public network
 - [Federation Profiles](dir-federation-profiles.md) – Profile comparison and configuration

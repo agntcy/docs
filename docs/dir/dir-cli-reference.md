@@ -46,8 +46,8 @@ gateway endpoints, and SPIFFE/SPIRE integration are documented in
 | `dirctl auth status` | Show current auth state |
 
 ```bash
-dirctl auth login --oidc-issuer "https://prod.idp.ads.outshift.io" --oidc-client-id "dirctl"
-dirctl --auth-mode=oidc --server-addr prod.gateway.ads.outshift.io:443 search --skill "AI"
+dirctl auth login --oidc-issuer "https://idp.ads.outshift.io" --oidc-client-id "dirctl"
+dirctl --auth-mode=oidc --server-addr ads.outshift.io:443 search --skill "AI"
 ```
 
 Pre-issued tokens: `--auth-token` or `DIRECTORY_CLIENT_AUTH_TOKEN` for CI and automation.

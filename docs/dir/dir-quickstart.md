@@ -112,7 +112,7 @@ For production or federated gateways, log in with OIDC before using remote serve
 
 ```bash
 dirctl auth login \
-  --oidc-issuer "https://prod.idp.ads.outshift.io" \
+  --oidc-issuer "https://idp.ads.outshift.io" \
   --oidc-client-id "dirctl"
 ```
 

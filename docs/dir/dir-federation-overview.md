@@ -8,7 +8,7 @@ policies.
 ## When to federate
 
 - **Join the public network** — connect to the production Directory at
-  `prod.api.ads.outshift.io` to discover agents published by other participants.
+  `ads.outshift.io` to discover agents published by other participants.
 - **Run a private federated instance** — deploy your own Directory and peer with selected
   partners while keeping operational control.
 - **Multi-cloud or multi-region** — link EKS (or other) clusters so teams share a consistent
