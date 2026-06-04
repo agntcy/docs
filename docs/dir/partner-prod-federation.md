@@ -1,8 +1,8 @@
 # Running a Federated Directory Instance
 
-This guide explains how to federate your Directory instance (`partner.io`) with the public production Directory at `prod.ads.outshift.io`. The prod instance uses the `https_web` bundle endpoint profile (Let's Encrypt, standard HTTPS). Your instance must use `https_web` as well for compatibility. If you want a single AWS EKS happy path instead of a generic federation reference, start with [Federation on Amazon EKS](federation-aws-eks.md).
+This guide explains how to federate your Directory instance (`partner.io`) with the public production Directory at `spire.ads.outshift.io`. The prod instance uses the `https_web` bundle endpoint profile (Let's Encrypt, standard HTTPS). Your instance must use `https_web` as well for compatibility. If you want a single AWS EKS happy path instead of a generic federation reference, start with [Federation on Amazon EKS](federation-aws-eks.md).
 
-Partnering with the Production Directory involves two trust domains. `partner.io` is your instance's trust domain and `prod.ads.outshift.io` is the production Directory's trust domain.
+Partnering with the Production Directory involves two trust domains. `partner.io` is your instance's trust domain and `spire.ads.outshift.io` is the production Directory's trust domain.
 
 Assumptions:
 
@@ -20,7 +20,7 @@ Assumptions:
 
 1. Deploy SPIRE with https_web federation
 
-    SPIRE must use the `https_web` profile so it can fetch prod's bundle over standard HTTPS (Let's Encrypt). The prod federation endpoint is `https://prod.spire.ads.outshift.io`.
+    SPIRE must use the `https_web` profile so it can fetch prod's bundle over standard HTTPS (Let's Encrypt). The prod federation endpoint is `https://spire.ads.outshift.io`.
 
     ??? example "Deploy SPIRE with https_web federation"
 
@@ -86,7 +86,7 @@ Assumptions:
                 clusterSPIFFEIDs:
                   default:
                     federatesWith:
-                      - prod.ads.outshift.io
+                      - spire.ads.outshift.io
 
           spiffe-oidc-discovery-provider:
             ingress:
@@ -140,8 +140,8 @@ Assumptions:
             useCSIDriver: true
             federation:
               - className: dir-spire
-                trustDomain: prod.ads.outshift.io
-                bundleEndpointURL: https://prod.spire.ads.outshift.io
+                trustDomain: spire.ads.outshift.io
+                bundleEndpointURL: https://spire.ads.outshift.io
                 bundleEndpointProfile:
                   type: https_web
           config:
@@ -269,10 +269,10 @@ Assumptions:
     ```bash
     # On your cluster – prod's bundle should appear in SPIRE
     kubectl exec -n spire spire-server-0 -c spire-server -- \
-      spire-server bundle list -id spiffe://prod.ads.outshift.io -format spiffe
+      spire-server bundle list -id spiffe://spire.ads.outshift.io -format spiffe
     ```
 
-    The prod's trust bundle is listed. If the bundle is missing, check that `ClusterFederatedTrustDomain` for prod exists and that the SPIRE server can reach `https://prod.spire.ads.outshift.io`.
+    The prod's trust bundle is listed. If the bundle is missing, check that `ClusterFederatedTrustDomain` for prod exists and that the SPIRE server can reach `https://spire.ads.outshift.io`.
 
 4. Contribute to `dir-staging` for prod federation
 
