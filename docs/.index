@@ -1,7 +1,7 @@
 nav:
   - Introduction: index.md
   - OASF: oasf
-  - Agent Directory Service: dir
+  - Agent Directory Service: https://agntcy.github.io/dir/
   - Secure Low-Latency Interactive Messaging (SLIM): slim
   - Identity: identity
   - Observability and Evaluation: obs-and-eval
