@@ -30,6 +30,9 @@ exclude = [
     # Agent Directory docs (hosted separately; may not be deployed yet)
     'https://agntcy\.github\.io/dir/.*',
 
+    # SLIM docs (hosted separately)
+    'https://agntcy\.github\.io/slim/.*',
+
     # GitHub raw URLs that are generated but may not exist
     'https://github\.com/agntcy/docs/raw/main/docs/.*',
 
