@@ -1,6 +1,6 @@
 # Continuous System Integration Testing
 
-The Agncty Continuous System Integration Testing (CSIT) system design needs to meet the continuously expanding requirements of Agntcy projects, such as the [Agent Directory Service](https://agntcy.github.io/dir/latest/dir-overview/).
+The Agncty Continuous System Integration Testing (CSIT) system design needs to meet the continuously expanding requirements of Agntcy projects, such as the [Agent Directory Service](https://dir.agntcy.org/latest/).
 
 Tests can be run locally using taskfile or in GitHub Actions.
 
