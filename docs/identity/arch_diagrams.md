@@ -28,7 +28,7 @@ AGNTCY plans to contribute open-source code to automate the process of creating 
 
 ![Verification Architecture Diagram](../assets/identity/verification.png)
 
-The above diagram depicts an example process enabling the lookup, identification and use of `ResolverMetadata` as well as verifying an Agent Badge associated to an Agent subject. The example process uses AGNTCY's [Agent Discovery Service](https://agntcy.github.io/dir/latest/dir-overview/) as the means to discover an Agent with specific skills, and automatically identify and resolve the associated Agent Badge, irrespective of the type of identity used by the owner of the Agent (e.g., an Okta, Duo, AD, DID, or A2A ID).
+The above diagram depicts an example process enabling the lookup, identification and use of `ResolverMetadata` as well as verifying an Agent Badge associated to an Agent subject. The example process uses AGNTCY's [Agent Discovery Service](https://dir.agntcy.org/latest/) as the means to discover an Agent with specific skills, and automatically identify and resolve the associated Agent Badge, irrespective of the type of identity used by the owner of the Agent (e.g., an Okta, Duo, AD, DID, or A2A ID).
 
 A similar process can be followed in the case of MCP Servers or A2A Agents, but in those cases the discovery service may rely on the use of well-known addresses (URLs), or other hubs, external directories, or discovery services.
 
