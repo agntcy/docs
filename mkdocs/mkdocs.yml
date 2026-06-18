@@ -55,6 +55,7 @@ plugins:
       'how-to-guides/identity-quickstart/index.md': 'identity/identity-quickstart.md'
       'how-to-guides/agent-directory/index.md': 'https://dir.agntcy.org/latest/dir/dir-getting-started/'
       'dir/getting-started.md': 'https://dir.agntcy.org/latest/dir/dir-quickstart/'
+      'dir/dir-quickstart.md': 'https://dir.agntcy.org/latest/dir/dir-quickstart/'
       'dir/architecture.md': 'https://dir.agntcy.org/latest/dir/dir-architecture/'
       'dir/dir-api-reference.md': 'https://dir.agntcy.org/latest/dir/dir-api-reference/'
       'dir/dir-deployment-kubernetes.md': 'https://dir.agntcy.org/latest/dir/dir-deployment-kubernetes/'
