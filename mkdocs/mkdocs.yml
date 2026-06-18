@@ -63,6 +63,7 @@ plugins:
       'dir/dir-getting-started.md': 'https://dir.agntcy.org/latest/dir/dir-quickstart/'
       'dir/directory-cli-reference.md': 'https://dir.agntcy.org/latest/dir/dir-cli-reference/'
       'dir/directory-cli.md': 'https://dir.agntcy.org/latest/dir/dir-cli-reference/'
+      'dir/dir-cli-reference.md': 'https://dir.agntcy.org/latest/dir/dir-cli-reference/'
       'dir/directory-gui.md': 'https://dir.agntcy.org/latest/dir/dir-component-gui/'
       'dir/directory-mcp.md': 'https://dir.agntcy.org/latest/dir/dir-component-mcp-server/'
       'dir/directory-oidc-authentication.md': 'https://dir.agntcy.org/latest/dir/dir-component-oidc-authentication/'
