@@ -94,7 +94,7 @@ plugins:
       'messaging/slim-otel.md': 'https://slim.agntcy.org/latest/slim/slim-otel/'
       'messaging/slim-rpc.md': 'https://slim.agntcy.org/latest/slim/slim-rpc/'
       'messaging/slim-session.md': 'https://slim.agntcy.org/latest/slim/slim-session/'
-      'messaging/slim-slimrpc-compiler.md': 'https://slim.agntcy.org/latest/slim/slim-slimrpc-compiler/'
+      'messaging/slim-slimrpc-compiler.md': 'https://slim.agntcy.org/latest/slim/slim-rpc/'
       'slim/overview.md': 'https://slim.agntcy.org/latest/slim/slim-overview/'
       'slim/slim-a2a.md': 'https://slim.agntcy.org/latest/slim/slim-a2a/'
       'slim/slim-authentication.md': 'https://slim.agntcy.org/latest/slim/slim-authentication/'
@@ -109,7 +109,7 @@ plugins:
       'slim/slim-otel.md': 'https://slim.agntcy.org/latest/slim/slim-otel/'
       'slim/slim-rpc.md': 'https://slim.agntcy.org/latest/slim/slim-rpc/'
       'slim/slim-session.md': 'https://slim.agntcy.org/latest/slim/slim-session/'
-      'slim/slim-slimrpc-compiler.md': 'https://slim.agntcy.org/latest/slim/slim-slimrpc-compiler/'
+      'slim/slim-slimrpc-compiler.md': 'https://slim.agntcy.org/latest/slim/slim-rpc/'
   awesome-pages:
     filename: ".index"
     collapse_single_pages: true
