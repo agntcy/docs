@@ -1,5 +1,5 @@
 nav:
-  - Introduction: index.md
+  - Home: index.md
   - OASF: oasf
   - Agent Directory Service: https://dir.agntcy.org/latest/
   - Secure Low-Latency Interactive Messaging (SLIM): https://slim.agntcy.org/latest/

@@ -105,6 +105,14 @@
   color: var(--md-typeset-a-color);
 }
 
+.md-copyright--centered,
+.md-copyright--centered .md-copyright__highlight {
+  width: 100%;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--md-default-fg-color--light);
+}
+
 html [data-md-color-primary=black] .md-nav--primary .md-nav__title[for=__drawer] {
   background-color: var(--md-default-bg-color);
 }
