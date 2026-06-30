@@ -1,0 +1,336 @@
+/* Copyright AGNTCY Contributors (https://github.com/agntcy) */
+/* SPDX-License-Identifier: Apache-2.0 */
+
+/* Landing page (home). Adapted from dir.agntcy.org — hero + documentation cards only. */
+
+:root {
+  --agntcy-dark: rgb(0, 20, 43);
+  --agntcy-yellow: rgb(251, 175, 69);
+  --agntcy-text-strong: rgb(0, 20, 43);
+  --agntcy-text-inverse: rgb(232, 233, 234);
+  --agntcy-border: rgb(213, 223, 247);
+  --agntcy-card-bg: rgb(255, 255, 255);
+  --agntcy-card-border: rgb(213, 223, 247);
+  --agntcy-card-shadow:
+    0 4px 24px rgba(2, 81, 175, 0.1),
+    0 1px 4px rgba(0, 20, 43, 0.06);
+  --agntcy-card-shadow-hover:
+    0 14px 36px rgba(2, 81, 175, 0.16),
+    0 4px 10px rgba(0, 20, 43, 0.08);
+  --agntcy-card-btn-bg: rgb(239, 243, 252);
+  --agntcy-card-btn-color: rgb(2, 81, 175);
+  --agntcy-card-btn-border: rgb(213, 223, 247);
+  --agntcy-card-btn-bg-hover: rgb(2, 81, 175);
+  --agntcy-card-btn-color-hover: rgb(255, 255, 255);
+  --agntcy-hero-gradient: linear-gradient(
+    101.5deg,
+    rgb(251, 171, 44) 0%,
+    rgb(24, 122, 220) 53%,
+    rgb(0, 20, 43) 100%
+  );
+  --agntcy-hero-chrome-top: var(--md-header-height);
+  --agntcy-hero-pad-block: 3.75rem;
+}
+
+[data-md-color-scheme="slate"] {
+  --agntcy-card-bg: rgb(0, 42, 77);
+  --agntcy-card-border: rgb(13, 39, 77);
+  --agntcy-card-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.35),
+    0 1px 3px rgba(0, 0, 0, 0.2);
+  --agntcy-card-shadow-hover:
+    0 14px 36px rgba(0, 0, 0, 0.45),
+    0 4px 10px rgba(0, 0, 0, 0.25);
+  --agntcy-card-btn-bg: rgb(3, 20, 43);
+  --agntcy-card-btn-color: rgb(251, 175, 70);
+  --agntcy-card-btn-border: rgb(13, 39, 77);
+  --agntcy-card-btn-bg-hover: rgb(251, 175, 70);
+  --agntcy-card-btn-color-hover: rgb(3, 20, 43);
+}
+
+/* Home page only: MkDocs chrome adjustments for full-bleed hero. */
+body:has(.agntcy-landing) .md-content__button {
+  display: none;
+}
+
+.md-main__inner:has(.agntcy-landing) {
+  margin-top: 0;
+}
+
+.md-content:has(.agntcy-landing) .md-content__inner {
+  padding-top: 0;
+}
+
+.md-content:has(.agntcy-landing) .md-content__inner::before {
+  display: none;
+}
+
+.md-main:has(.agntcy-landing) {
+  overflow-x: hidden;
+}
+
+body:has(.agntcy-landing) .md-footer nav.md-footer__inner {
+  display: none;
+}
+
+.agntcy-resources {
+  margin: 0 auto 3.5rem;
+}
+
+.md-typeset .agntcy-section-title {
+  font-weight: 300;
+  font-size: 1.6rem;
+  line-height: 1.25;
+  text-align: left;
+  margin: 0 0 1.75rem;
+  color: var(--md-default-fg-color);
+}
+
+/* Hero */
+.md-typeset .agntcy-hero,
+.agntcy-landing .agntcy-hero {
+  position: relative;
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  margin-top: calc(-1 * var(--agntcy-hero-chrome-top) - 1px);
+  margin-bottom: 3rem;
+  border-radius: 0;
+  background: var(--agntcy-hero-gradient);
+  padding: calc(var(--agntcy-hero-chrome-top) + 1px) 0 0;
+  overflow: hidden;
+}
+
+.agntcy-hero__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.5rem;
+  max-width: 58rem;
+  margin: 0 auto;
+  padding-block: var(--agntcy-hero-pad-block);
+  padding-inline: 2rem;
+}
+
+.md-typeset .agntcy-hero__title {
+  margin: 0;
+  font-weight: 300;
+  font-size: 2.5rem;
+  line-height: 1.1;
+  color: var(--agntcy-text-inverse);
+}
+
+.agntcy-hero__partner {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.agntcy-hero__partner-text {
+  font-size: 0.9rem;
+  color: var(--agntcy-text-inverse);
+}
+
+.md-typeset .agntcy-hero__partner-logo {
+  display: block;
+  width: auto;
+  max-width: none;
+  height: 1rem;
+}
+
+.md-typeset .agntcy-hero__tagline {
+  margin: 0;
+  font-weight: 300;
+  font-size: 1.4rem;
+  line-height: 1.3;
+  color: var(--agntcy-text-inverse);
+}
+
+.md-typeset .agntcy-hero__lede {
+  margin: 0;
+  max-width: 52rem;
+  font-weight: 300;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--agntcy-text-inverse);
+}
+
+.md-typeset .agntcy-hero__lede a {
+  color: var(--agntcy-yellow);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.md-typeset .agntcy-hero__lede a:hover {
+  color: rgb(255, 255, 255);
+}
+
+@media screen and (max-width: 59.9375em) {
+  :root {
+    --agntcy-hero-pad-block: 2.75rem;
+  }
+
+  .agntcy-hero__inner {
+    padding-inline: 1.25rem;
+  }
+
+  .md-typeset .agntcy-hero__title {
+    font-size: 2rem;
+  }
+
+  .md-typeset .agntcy-hero__tagline {
+    font-size: 1.2rem;
+  }
+
+  .md-typeset .agntcy-hero__partner-logo {
+    height: 1.7rem;
+  }
+}
+
+/* ----------------------------------------------------------------------------
+   Documentation cards
+---------------------------------------------------------------------------- */
+.md-typeset .agntcy-resources .grid.cards > ul {
+  gap: 0.9rem;
+  grid-template-columns: repeat(auto-fit, minmax(13.5rem, 1fr));
+}
+
+.md-typeset .agntcy-resources .grid.cards > ul > li {
+  display: flex;
+  flex-direction: column;
+  min-height: 10.5rem;
+  margin: 0;
+  padding: 1.1rem 1.1rem 1rem;
+  border-radius: 10px;
+  background: var(--agntcy-card-bg);
+  border: 1px solid var(--agntcy-card-border);
+  box-shadow: var(--agntcy-card-shadow);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.md-typeset .agntcy-resources .grid.cards > ul > li:hover {
+  transform: translateY(-4px);
+  border-color: rgba(2, 81, 175, 0.28);
+  box-shadow: var(--agntcy-card-shadow-hover);
+}
+
+[data-md-color-scheme="slate"]
+  .md-typeset
+  .agntcy-resources
+  .grid.cards
+  > ul
+  > li:hover {
+  border-color: rgba(251, 175, 70, 0.45);
+}
+
+.md-typeset .agntcy-resources .grid.cards > ul > li > p {
+  margin: 0;
+}
+
+.md-typeset .agntcy-resources .grid.cards > ul > li > p:first-child {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.875rem;
+  line-height: 1.3;
+}
+
+.md-typeset .agntcy-resources .grid.cards > ul > li > p:first-child .twemoji svg {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.md-typeset .agntcy-resources .grid.cards > ul > li > hr {
+  margin: 0.55rem 0;
+  border: 0;
+  border-top: 1px solid var(--agntcy-card-border);
+  opacity: 0.85;
+}
+
+.md-typeset .agntcy-resources .grid.cards > ul > li > p:nth-child(3) {
+  flex: 1 1 auto;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--md-default-fg-color--light);
+}
+
+[data-md-color-scheme="slate"]
+  .md-typeset
+  .agntcy-resources
+  .grid.cards
+  > ul
+  > li
+  > p:nth-child(3) {
+  color: rgba(227, 227, 227, 0.82);
+}
+
+.md-typeset .agntcy-resources .grid.cards > ul > li > p:last-child {
+  margin-top: auto;
+  padding-top: 0.85rem;
+}
+
+.md-typeset .agntcy-resources .grid.cards > ul > li > p:last-child a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 1.1rem;
+  border-radius: 50px;
+  background: var(--agntcy-card-btn-bg);
+  color: var(--agntcy-card-btn-color) !important;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.2;
+  text-decoration: none;
+  border: 1px solid var(--agntcy-card-btn-border);
+  box-shadow: 0 1px 2px rgba(0, 20, 43, 0.06);
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+}
+
+.md-typeset .agntcy-resources .grid.cards > ul > li > p:last-child a:hover,
+.md-typeset .agntcy-resources .grid.cards > ul > li > p:last-child a:focus-visible {
+  background: var(--agntcy-card-btn-bg-hover);
+  color: var(--agntcy-card-btn-color-hover) !important;
+  border-color: var(--agntcy-card-btn-bg-hover);
+  box-shadow: 0 4px 12px rgba(2, 81, 175, 0.22);
+  transform: translateY(-1px);
+}
+
+[data-md-color-scheme="slate"]
+  .md-typeset
+  .agntcy-resources
+  .grid.cards
+  > ul
+  > li
+  > p:last-child
+  a:hover,
+[data-md-color-scheme="slate"]
+  .md-typeset
+  .agntcy-resources
+  .grid.cards
+  > ul
+  > li
+  > p:last-child
+  a:focus-visible {
+  box-shadow: 0 4px 12px rgba(251, 175, 70, 0.25);
+}
+
+.md-typeset .agntcy-resources .grid.cards > ul > li > p:last-child a:focus-visible {
+  outline: 2px solid var(--agntcy-card-btn-bg-hover);
+  outline-offset: 2px;
+}
+
+.md-typeset .agntcy-resources .grid.cards > ul > li > p:last-child a .twemoji svg {
+  fill: currentColor;
+  width: 1em;
+  height: 1em;
+}
