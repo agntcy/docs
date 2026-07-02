@@ -3,6 +3,10 @@
 Thanks for your interest in contributing to the AGNTCY documentation! Here are a few general guidelines on contributing and
 reporting bugs that we ask you to review.
 
+## Community
+
+Join the [AGNTCY Slack workspace](https://join.slack.com/t/agntcy/shared_invite/zt-3xozr6nzq-i6LXv2P8l2kVW4_Prnny2w) to ask questions, get help, and connect with other contributors.
+
 ## Reporting Issues
 
 Before reporting a new issue, please ensure that the issue was not already reported or fixed by searching through our

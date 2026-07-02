@@ -22,6 +22,14 @@
   --agntcy-card-btn-border: rgb(213, 223, 247);
   --agntcy-card-btn-bg-hover: rgb(2, 81, 175);
   --agntcy-card-btn-color-hover: rgb(255, 255, 255);
+  --agntcy-connect-btn-bg: rgb(255, 255, 255);
+  --agntcy-connect-btn-color: rgb(2, 81, 175);
+  --agntcy-connect-btn-border: rgb(2, 81, 175);
+  --agntcy-connect-btn-bg-hover: rgb(2, 81, 175);
+  --agntcy-connect-btn-color-hover: rgb(255, 255, 255);
+  --agntcy-connect-btn-border-hover: rgb(2, 81, 175);
+  --agntcy-connect-btn-shadow: 0 1px 4px rgba(2, 81, 175, 0.12);
+  --agntcy-connect-btn-shadow-hover: 0 3px 10px rgba(2, 81, 175, 0.18);
   --agntcy-hero-gradient: linear-gradient(
     101.5deg,
     rgb(251, 171, 44) 0%,
@@ -46,6 +54,14 @@
   --agntcy-card-btn-border: rgb(13, 39, 77);
   --agntcy-card-btn-bg-hover: rgb(251, 175, 70);
   --agntcy-card-btn-color-hover: rgb(3, 20, 43);
+  --agntcy-connect-btn-bg: rgb(0, 42, 77);
+  --agntcy-connect-btn-color: rgb(251, 175, 70);
+  --agntcy-connect-btn-border: rgba(251, 175, 70, 0.55);
+  --agntcy-connect-btn-bg-hover: rgb(251, 175, 70);
+  --agntcy-connect-btn-color-hover: rgb(3, 20, 43);
+  --agntcy-connect-btn-border-hover: rgb(251, 175, 70);
+  --agntcy-connect-btn-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  --agntcy-connect-btn-shadow-hover: 0 3px 10px rgba(0, 0, 0, 0.28);
 }
 
 /* Home page only: MkDocs chrome adjustments for full-bleed hero. */
@@ -333,4 +349,62 @@ body:has(.agntcy-landing) .md-footer nav.md-footer__inner {
   fill: currentColor;
   width: 1em;
   height: 1em;
+}
+
+/* ----------------------------------------------------------------------------
+   Connect with AGNTCY
+---------------------------------------------------------------------------- */
+.agntcy-connect__links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: 2.5rem 0 4rem;
+}
+
+.md-typeset .agntcy-connect__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 1.15rem;
+  border-radius: 50px;
+  background: var(--agntcy-connect-btn-bg);
+  color: var(--agntcy-connect-btn-color) !important;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.2;
+  text-decoration: none;
+  border: 1px solid var(--agntcy-connect-btn-border);
+  box-shadow: var(--agntcy-connect-btn-shadow);
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+}
+
+.md-typeset .agntcy-connect__link:hover,
+.md-typeset .agntcy-connect__link:focus-visible {
+  background: var(--agntcy-connect-btn-bg-hover);
+  color: var(--agntcy-connect-btn-color-hover) !important;
+  border-color: var(--agntcy-connect-btn-border-hover);
+  box-shadow: var(--agntcy-connect-btn-shadow-hover);
+  transform: translateY(-1px);
+}
+
+[data-md-color-scheme="slate"] .md-typeset .agntcy-connect__link:hover,
+[data-md-color-scheme="slate"] .md-typeset .agntcy-connect__link:focus-visible {
+  box-shadow: var(--agntcy-connect-btn-shadow-hover);
+}
+
+.md-typeset .agntcy-connect__link:focus-visible {
+  outline: 2px solid var(--agntcy-connect-btn-bg-hover);
+  outline-offset: 2px;
+}
+
+.agntcy-connect__icon {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
 }
