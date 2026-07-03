@@ -75,6 +75,8 @@ This will generate the HTML documentation in the *.build/site* directory.
 
 See the [How to Contribute](/docs/contributing.md) page for more information.
 
+Join the [AGNTCY Slack workspace](https://join.slack.com/t/agntcy/shared_invite/zt-3xozr6nzq-i6LXv2P8l2kVW4_Prnny2w) to ask questions, get help, and connect with other contributors.
+
 ## Release guide
 
 ### Prerequisites
