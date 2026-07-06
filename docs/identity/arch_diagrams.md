@@ -34,8 +34,8 @@ A similar process can be followed in the case of MCP Servers or A2A Agents, but 
 
 The following steps summarize the process:
 
-1. An Agent Consumer may search for an Agent with given skills, e.g., using an ADS client, such as a CLI, a UI, or a headless interface in case the consumer is an agent itself.
-2. A lookup is performed using the ADS.
+1. An Agent Consumer may search for an Agent with given skills, e.g., using an Agent Directory Service client, such as a CLI, a UI, or a headless interface in case the consumer is an agent itself.
+2. A lookup is performed using the Agent Directory Service.
 3. A list of potential candidates are presented to the Agent Consumer.
 4. The Agent Consumer selects the desired Agent.
 5. This now triggers the lookup of the selected Agent's definition (e.g., a definition based on an OASF schema), which contains the Agent ID (e.g., an Okta, Duo, AD, DID, or A2A ID).
@@ -48,7 +48,7 @@ The following steps summarize the process:
     - It decrypts the ProofValue and verifies the Agent Badge integrity, since, as shown in the examples [here](./vc_agent_badge.md), the proof type is a `"DataIntegrityProof"`. This may include the computation of a digest, and comparison with a digest obtained after decryption.
     - It outputs the verification result and logs it.
 
-10. The Verified Agent Badge is returned to the ADS client.
+10. The Verified Agent Badge is returned to the Agent Directory Service client.
 11. This is forwarded to the Agent Consumer.
 
 AGNTCY plans to contribute open-source code to automate the process of resolving and verifying Agent Badges and MCP Server Badges, leveraging `ResolverMetadata` objects.

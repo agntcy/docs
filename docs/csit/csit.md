@@ -12,8 +12,8 @@ csit
 │   ├── agntcy-slim                               # Benchmark tests for SLIM
 │   │   ├── Taskfile.yml                          # Tasks for SLIM benchmark tests
 │   │   └── tests
-│   ├── agntcy-dir                                # Benchmark tests for ADS
-│   │   ├── Taskfile.yml                          # Tasks for ADS benchmark tests
+│   ├── agntcy-dir                                # Benchmark tests for Agent Directory Service
+│   │   ├── Taskfile.yml                          # Tasks for Agent Directory Service benchmark tests
 │   │   └── tests
 │   ├── go.mod
 │   ├── go.sum
@@ -31,7 +31,7 @@ csit
 │   │   ├── components
 │   │   ├── examples
 │   │   ├── manifests
-│   │   ├── Taskfile.yml                          # Tasks for ADS integration tests
+│   │   ├── Taskfile.yml                          # Tasks for Agent Directory Service integration tests
 │   │   └── tests
 │   ├── environment                               # Test environment helpers
 │   │   └── kind
@@ -71,8 +71,8 @@ The following tasks are defined:
 
 ```bash
 task: Available tasks for this project:
-* benchmarks:directory:test:                              All ADS benchmark test
-* benchmarks:slim:test:                                   All SLIM benchmark test
+* benchmarks:directory:test:                              All Agent Directory Service benchmark tests
+* benchmarks:slim:test:                                   All SLIM benchmark tests
 * integrations:apps:download:wfsm-bin:                    Get wfsm binary from GitHub
 * integrations:apps:get-marketing-campaign-cfgs:          Populate marketing campaign config file
 * integrations:apps:init-submodules:                      Initialize submodules
