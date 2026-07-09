@@ -20,24 +20,24 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.ref }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
-          submodules: 'recursive'
+          submodules: "recursive"
 
       - name: Clone repository (manual)
         if: github.event_name == 'workflow_dispatch'
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          submodules: 'recursive'
+          submodules: "recursive"
 
       - name: Setup Golang
         uses: actions/setup-go@v5
         with:
-          go-version: '1.23.1'
+          go-version: "1.23.1"
 
       - name: Setup Task
-        uses: arduino/setup-task@v2
+        uses: go-task/setup-task@v2
         with:
-          version: '3.48.0'
+          version: "3.48.0"
 
       - name: Setup UV
         shell: bash
@@ -93,9 +93,9 @@ jobs:
 
       - name: Check links
         if: steps.get_paths.outputs.has_paths == 'true'
-        uses: lycheeverse/lychee-action@v2.0.2  # CVE-2024-48908: pin >=2.0.2
+        uses: lycheeverse/lychee-action@v2.0.2 # CVE-2024-48908: pin >=2.0.2
         with:
-          lycheeVersion: "v0.22.0"  # v0.16.x (action default) does not support --root-dir; added in v0.18
+          lycheeVersion: "v0.22.0" # v0.16.x (action default) does not support --root-dir; added in v0.18
           args: |
             --no-progress
             --config lychee.toml

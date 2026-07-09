@@ -7,12 +7,12 @@ on:
   workflow_call:
     inputs:
       deploy:
-        description: 'Deploy documentation artifacts'
+        description: "Deploy documentation artifacts"
         required: true
         type: boolean
         default: false
       version:
-        description: 'Version to use for documentation artifacts'
+        description: "Version to use for documentation artifacts"
         required: true
         type: string
         default: dev
@@ -20,12 +20,12 @@ on:
   workflow_dispatch:
     inputs:
       deploy:
-        description: 'Deploy documentation artifacts'
+        description: "Deploy documentation artifacts"
         required: true
         type: boolean
         default: false
       version:
-        description: 'Version to use for documentation artifacts'
+        description: "Version to use for documentation artifacts"
         required: true
         type: string
         default: dev
@@ -44,7 +44,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          submodules: 'recursive'
+          submodules: "recursive"
 
       - name: Setup Pages
         id: pages
@@ -53,12 +53,12 @@ jobs:
       - name: Setup Golang
         uses: actions/setup-go@v5
         with:
-          go-version: '1.23.1'
+          go-version: "1.23.1"
 
-      - name: Setup Taskfile
-        shell: bash
-        run: |
-          sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
+      - name: Setup Task
+        uses: go-task/setup-task@v2
+        with:
+          version: "3.48.0"
 
       - name: Setup UV
         shell: bash
