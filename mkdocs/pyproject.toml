@@ -26,7 +26,7 @@ dependencies = [
     "pypdf>=6.13.3",  # CVE-2026-*: decompression-bomb / RAM exhaustion in PDF parsing
     "nltk>=3.10.0",  # CVE-2025-14009: zip slip / RCE in downloader
     "orjson>=3.11.6",  # CVE-2025-67221: recursion limit for deeply nested JSON
-    "pillow>=12.2.0",  # CVE-2025-48379, CVE-2026-25990
+    "pillow>=12.3.0",  # CVE-2025-48379, CVE-2026-25990
     "beautifulsoup4>=4.13.3",
     "mkdocs-swagger-ui-tag==0.7.1",
     "mkdocs-include-markdown-plugin>=7.2.0",
