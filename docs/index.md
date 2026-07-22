@@ -54,7 +54,7 @@ hide:
 
     Federated registry for publishing, verifying, and discovering agents and multi-agent applications.
 
-    [:octicons-arrow-right-24: Directory docs](https://dir.agntcy.org/latest/){:target="_blank"}
+    [:octicons-arrow-right-24: Directory docs]([[ agntcy.dir_url ]])
 
 - :material-message-fast-outline:{ .lg .middle } **Secure Low-Latency Interactive Messaging (SLIM)**
 
@@ -62,7 +62,7 @@ hide:
 
     Secure network-level messaging for multi-agent applications with pub/sub, streaming, and MLS encryption.
 
-    [:octicons-arrow-right-24: SLIM docs](https://slim.agntcy.org/latest/){:target="_blank"}
+    [:octicons-arrow-right-24: SLIM docs]([[ agntcy.slim_url ]])
 
 - :material-database-outline:{ .lg .middle } **Open Agent Schema Framework (OASF)**
 
