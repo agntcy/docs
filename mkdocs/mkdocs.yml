@@ -8,6 +8,9 @@ repo_url: https://github.com/agntcy/docs
 edit_uri: edit/main/docs/
 
 extra:
+  agntcy:
+    dir_url: https://dir.agntcy.org/latest/
+    slim_url: https://slim.agntcy.org/latest/
   copyright: "© 2026, Agntcy, a Series of LF Projects, LLC. All rights reserved."
   analytics:
     provider: google
@@ -124,6 +127,16 @@ plugins:
                 schema: true
   swagger-ui-tag:
   include-markdown:
+  macros:
+    # Shared variable values (e.g. agntcy.dir_url) are defined under `extra:` above.
+    # This section configures the Jinja tag delimiters only; use `[[ ... ]]` in markdown.
+    # Avoid conflict with React/JSX-style {{ }} in markdown (e.g. identity_service_settings.md).
+    j2_variable_start_string: "[["
+    j2_variable_end_string: "]]"
+    j2_block_start_string: "[[%"
+    j2_block_end_string: "%]]"
+    j2_comment_start_string: "[[#"
+    j2_comment_end_string: "#]]"
 
 theme:
   name: material
