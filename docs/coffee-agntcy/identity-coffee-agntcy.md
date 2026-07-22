@@ -75,4 +75,4 @@ sequenceDiagram
     Supervisor Agent (A2A)->>User: Return order details
 ```
 
-For more information on Identity in AGNTCY, see the [Identity documentation.](../identity/identity.md)
+For more information on Identity in AGNTCY, see the [Identity documentation.](https://spec.identity.agntcy.org/docs/intro)

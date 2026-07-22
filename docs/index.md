@@ -78,7 +78,7 @@ hide:
 
     Decentralized identity for agents and tools—identifiers, verifiable credentials, and policy-based access.
 
-    [:octicons-arrow-right-24: Identity overview](identity/identity.md)
+    [:octicons-arrow-right-24: Identity overview]([[ agntcy.identity_url ]])
 
 - :material-chart-line:{ .lg .middle } **Observability and Evaluation**
 
