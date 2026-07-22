@@ -18,15 +18,15 @@ dependencies = [
     "mkdocstrings-python==1.16.10",
     "griffe-pydantic==1.1.4",
     "griffe==1.7.2",
-    "agntcy-acp>=1.5.2",  # 1.5.x allows langgraph 0.4+ so we can use langgraph-checkpoint>=3.0
+    "agntcy-acp>=1.5.2", # 1.5.x allows langgraph 0.4+ so we can use langgraph-checkpoint>=3.0
     "agntcy-iomapper>=0.2.3",
-    "langgraph-checkpoint>=4.1.1",  # JsonPlusSerializer RCE in "json" mode
+    "langgraph-checkpoint>=4.1.1", # JsonPlusSerializer RCE in "json" mode
     "llama-index>=0.14.22,<0.15",
     "llama-index-core>=0.14.22,<0.15",
-    "pypdf>=6.13.3",  # CVE-2026-*: decompression-bomb / RAM exhaustion in PDF parsing
-    "nltk>=3.10.0",  # CVE-2025-14009: zip slip / RCE in downloader
-    "orjson>=3.11.6",  # CVE-2025-67221: recursion limit for deeply nested JSON
-    "pillow>=12.3.0",  # CVE-2025-48379, CVE-2026-25990
+    "pypdf>=6.13.3", # CVE-2026-*: decompression-bomb / RAM exhaustion in PDF parsing
+    "nltk>=3.10.0", # CVE-2025-14009: zip slip / RCE in downloader
+    "orjson>=3.11.6", # CVE-2025-67221: recursion limit for deeply nested JSON
+    "pillow>=12.3.0", # CVE-2025-48379, CVE-2026-25990
     "beautifulsoup4>=4.13.3",
     "mkdocs-swagger-ui-tag==0.7.1",
     "mkdocs-include-markdown-plugin>=7.2.0",
@@ -36,6 +36,7 @@ dependencies = [
     "pymarkdownlnt>=0.9.0",
     "mkdocs-htmlproofer-plugin>=1.0.0",
     "certifi>=2025.1.31",
+    "mkdocs-macros-plugin>=1.5.0",
 ]
 
 [tool.uv]
