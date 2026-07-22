@@ -29,6 +29,8 @@ extra:
 extra_css:
   - stylesheets/custom.css
   - stylesheets/landing.css
+extra_javascript:
+  - javascripts/external-links.js
 
 markdown_extensions:
   - admonition
