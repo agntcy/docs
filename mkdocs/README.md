@@ -30,6 +30,7 @@ Available variables:
 | --- | --- |
 | `agntcy.dir_url` | Agent Directory Service docs base URL |
 | `agntcy.slim_url` | SLIM docs base URL |
+| `agntcy.identity_url` | Identity spec docs base URL |
 
 Built-in objects such as `config`, `page`, and `navigation` use the same `[[ ... ]]` syntax, e.g. `[[ config.site_name ]]`.
 

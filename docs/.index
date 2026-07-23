@@ -3,7 +3,7 @@ nav:
   - OASF: oasf
   - Agent Directory Service: https://dir.agntcy.org/latest/
   - Secure Low-Latency Interactive Messaging (SLIM): https://slim.agntcy.org/latest/
-  - Identity: identity
+  - Identity: https://spec.identity.agntcy.org/docs/intro
   - Observability and Evaluation: obs-and-eval
   - CSIT: csit
   - Getting Started: coffee-agntcy

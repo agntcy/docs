@@ -11,6 +11,7 @@ extra:
   agntcy:
     dir_url: https://dir.agntcy.org/latest/
     slim_url: https://slim.agntcy.org/latest/
+    identity_url: https://spec.identity.agntcy.org/docs/intro
   copyright: "© 2026, Agntcy, a Series of LF Projects, LLC. All rights reserved."
   analytics:
     provider: google
@@ -28,6 +29,8 @@ extra:
 extra_css:
   - stylesheets/custom.css
   - stylesheets/landing.css
+extra_javascript:
+  - javascripts/external-links.js
 
 markdown_extensions:
   - admonition
@@ -54,7 +57,29 @@ plugins:
   search:
   redirects:
     redirect_maps:
-      'how-to-guides/identity-quickstart/index.md': 'identity/identity-quickstart.md'
+      'how-to-guides/identity-quickstart/index.md': 'https://spec.identity.agntcy.org/docs/intro'
+      'identity/identity.md': 'https://spec.identity.agntcy.org/docs/intro'
+      'identity/identifiers.md': 'https://spec.identity.agntcy.org/docs/id/definitions'
+      'identity/identifier_examples.md': 'https://spec.identity.agntcy.org/docs/id/examples'
+      'identity/credentials.md': 'https://spec.identity.agntcy.org/docs/vc/intro'
+      'identity/vc_agent_badge.md': 'https://spec.identity.agntcy.org/docs/vc/agent-badge'
+      'identity/vc_mcp.md': 'https://spec.identity.agntcy.org/docs/vc/mcp'
+      'identity/arch_diagrams.md': 'https://spec.identity.agntcy.org/docs/specs/architecture/issuing'
+      'identity/flow.md': 'https://spec.identity.agntcy.org/docs/specs/flows/identity'
+      'identity/openapi.md': 'https://spec.identity.agntcy.org/openapi/node/v1alpha1'
+      'identity/verify_identity.md': 'https://spec.identity.agntcy.org/docs/specs/architecture/verification'
+      'identity/identity-quickstart.md': 'https://spec.identity.agntcy.org/docs/intro'
+      'identity/identity_service.md': 'https://spec.identity.agntcy.org/docs/intro'
+      'identity/connecting_idp.md': 'https://spec.identity.agntcy.org/docs/intro'
+      'identity/creating_identities.md': 'https://spec.identity.agntcy.org/docs/intro'
+      'identity/creating_policies.md': 'https://spec.identity.agntcy.org/docs/intro'
+      'identity/identity_service_api_access.md': 'https://spec.identity.agntcy.org/docs/intro'
+      'identity/identity_service_api.md': 'https://spec.identity.agntcy.org/openapi/node/v1alpha1'
+      'identity/identity_service_protofiles.md': 'https://spec.identity.agntcy.org/protodocs/agntcy/identity/core/v1alpha1/id.proto'
+      'identity/identity_service_settings.md': 'https://spec.identity.agntcy.org/docs/intro'
+      'identity/identity_service_sdk.md': 'https://spec.identity.agntcy.org/docs/intro'
+      'identity/identity_service_development.md': 'https://spec.identity.agntcy.org/docs/intro'
+      'identity/identity_service_contributing.md': 'https://spec.identity.agntcy.org/docs/intro'
       'how-to-guides/agent-directory/index.md': 'https://dir.agntcy.org/latest/dir/dir-getting-started/'
       'dir/getting-started.md': 'https://dir.agntcy.org/latest/dir/dir-quickstart/'
       'dir/dir-quickstart.md': 'https://dir.agntcy.org/latest/dir/dir-quickstart/'
