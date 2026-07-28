@@ -5,7 +5,7 @@ description = "Agntcy documentation"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "mkdocs-material==9.6.12",
+    "mkdocs-material==9.7.7",
     "mkdocs-exclude==1.0.2",
     "mkdocs-awesome-pages-plugin==2.10.1",
     "markdown>=3.2",
@@ -13,7 +13,7 @@ dependencies = [
     "mkdocs-material-extensions>=1.0.3",
     "mkdocs-autorefs==1.4.1",
     "pygments>=2.20.0",
-    "pymdown-extensions>=10.21.3",
+    "pymdown-extensions>=10.21.3,<11",
     "mkdocs-git-revision-date-plugin==0.3.2",
     "mkdocstrings-python==1.16.10",
     "griffe-pydantic==1.1.4",
