@@ -79,10 +79,24 @@ tasks:
       - uv run pymarkdown --config ../.pymarkdown scan ../docs
 
   lint:links:
-    desc: Check for broken links in markdown documentation
+    desc: Check for broken links in built documentation site
     internal: true
+    deps:
+      - build
     cmds:
-      - lychee --config lychee.toml docs/
+      - find .build/site -name '.index' -type f -delete
+      - find .build/site -depth -name '.index' -type d -exec rm -rf {} \; 2>/dev/null || true
+      - |
+        set -euo pipefail
+        if [ -z "${GITHUB_TOKEN:-}" ] && command -v gh >/dev/null 2>&1; then
+          GITHUB_TOKEN="$(gh auth token 2>/dev/null || true)"
+          export GITHUB_TOKEN
+        fi
+        lychee \
+          --config lychee.toml \
+          --exclude-path "(^|/)404\\.html$" \
+          --exclude-all-private \
+          .build/site
 
   lint:fix:
     desc: Auto-fix spelling and markdown issues where possible

@@ -8,7 +8,7 @@ max_concurrency = 10
 timeout = 10
 
 # Accept these HTTP status codes as valid
-accept = [200, 201, 204, 403, 429, 503]
+accept = [200, 201, 204, 403, 406, 429, 503]
 
 # Exclude URL patterns (regex)
 exclude = [

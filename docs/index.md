@@ -1,7 +1,9 @@
 ---
 hide:
+
   - navigation
   - toc
+
 ---
 
 <div class="agntcy-landing">
