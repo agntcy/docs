@@ -82,6 +82,14 @@ hide:
 
     [:octicons-arrow-right-24: Identity overview]([[ agntcy.identity_url ]])
 
+- :material-shield-home-outline:{ .lg .middle } **SHADI**
+
+    ---
+
+    Secure Host for Agentic AI Dynamic Instantiation — a hardened runtime with verified identity, gated secrets, OS sandboxing, and encrypted local memory.
+
+    [:octicons-arrow-right-24: SHADI docs]([[ agntcy.shadi_url ]])
+
 - :material-chart-line:{ .lg .middle } **Observability and Evaluation**
 
     ---
@@ -105,14 +113,6 @@ hide:
     Reference implementation demonstrating how to build multi-agent applications with AGNTCY components.
 
     [:octicons-arrow-right-24: Get started](coffee-agntcy/get-started.md)
-
-- :material-book-open-page-variant-outline:{ .lg .middle } **Glossary**
-
-    ---
-
-    Definitions for terms used across AGNTCY documentation.
-
-    [:octicons-arrow-right-24: Glossary](glossary.md)
 
 - :material-hand-heart-outline:{ .lg .middle } **How to Contribute**
 
