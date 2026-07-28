@@ -8,7 +8,7 @@ max_concurrency = 10
 timeout = 10
 
 # Accept these HTTP status codes as valid
-accept = [200, 201, 204, 403, 429, 503]
+accept = [200, 201, 204, 403, 406, 429, 503]
 
 # Exclude URL patterns (regex)
 exclude = [
@@ -27,11 +27,16 @@ exclude = [
     # Self-referential docs URLs (may not exist yet)
     'https://docs\.agntcy\.org/.*',
 
-    # Agent Directory docs (hosted separately; may not be deployed yet)
+    # Agent Directory docs (hosted separately; may block or reset CI connections)
     'https://agntcy\.github\.io/dir/.*',
+    'https://dir\.agntcy\.org/.*',
 
     # SLIM docs (hosted separately)
     'https://agntcy\.github\.io/slim/.*',
+    'https://slim\.agntcy\.org/.*',
+
+    # Identity spec docs (hosted separately)
+    'https://spec\.identity\.agntcy\.org/.*',
 
     # GitHub raw URLs that are generated but may not exist
     'https://github\.com/agntcy/docs/raw/main/docs/.*',
