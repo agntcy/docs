@@ -2,7 +2,17 @@
   Copyright AGNTCY Contributors (https://github.com/agntcy)
   SPDX-License-Identifier: Apache-2.0
 -#}
-{% extends "main.html" %}
+{% extends "base.html" %}
+{% block htmltitle %}
+  <title>Page not found — {{ config.site_name }}</title>
+{% endblock %}
+{% block extrahead %}
+  <meta name="robots" content="noindex">
+{% endblock %}
+{% block site_nav %}{% endblock %}
+{% block footer %}
+  {% include "partials/footer.html" %}
+{% endblock %}
 {% block content %}
   <div class="agntcy-not-found">
     <p class="agntcy-not-found__code" aria-hidden="true">404</p>

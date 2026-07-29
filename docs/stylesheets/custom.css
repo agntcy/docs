@@ -165,11 +165,6 @@ html [data-md-color-primary=black] .md-nav--primary .md-nav__title[for=__drawer]
    404 page (Material override)
 ---------------------------------------------------------------------------- */
 
-body:has(.agntcy-not-found) .md-sidebar--primary,
-body:has(.agntcy-not-found) .md-sidebar--secondary {
-  display: none;
-}
-
 body:has(.agntcy-not-found) .md-content {
   max-width: none;
 }

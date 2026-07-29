@@ -38,7 +38,7 @@ tasks:
     deps:
       - deps/patch
     cmds:
-      - pushd mkdocs && uv run mkdocs serve
+      - pushd mkdocs && uv run mkdocs serve --watch-theme
 
   ##
   ## Testing and Linting
