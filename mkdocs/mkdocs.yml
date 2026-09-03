@@ -12,6 +12,7 @@ extra:
     dir_url: https://dir.agntcy.org/latest/
     slim_url: https://slim.agntcy.org/latest/
     identity_url: https://spec.identity.agntcy.org/docs/intro
+    shadi_url: https://shadi.agntcy.org/
   copyright: "© 2026, Agntcy, a Series of LF Projects, LLC. All rights reserved."
   analytics:
     provider: google

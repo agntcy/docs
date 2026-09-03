@@ -145,6 +145,24 @@ html [data-md-color-primary=black] .md-nav--primary .md-nav__title[for=__drawer]
   background-color: rgb(12, 31, 54);
 }
 
+/* External site links in the primary nav — external-link indicator */
+.md-nav--primary .md-nav__link[href^="http"]::after {
+  content: "↗";
+  flex-shrink: 0;
+  align-self: center;
+  margin-inline-start: auto;
+  padding-inline-start: 0.25rem;
+  font-size: 0.8em;
+  line-height: 1;
+  opacity: 0.55;
+  transition: opacity 125ms;
+}
+
+.md-nav--primary .md-nav__link[href^="http"]:hover::after,
+.md-nav--primary .md-nav__link[href^="http"]:focus-visible::after {
+  opacity: 0.85;
+}
+
 .md-nav__title {
   font-size: 0 !important;
 }
