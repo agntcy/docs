@@ -1,5 +1,6 @@
 site_name: Agntcy
 site_url: https://docs.agntcy.org/
+site_description: Open infrastructure for the Internet of Agents.
 
 docs_dir: ../docs
 
@@ -56,6 +57,43 @@ hooks:
 
 plugins:
   search:
+  llmstxt:
+    preprocess: agent_markdown.py
+    markdown_description: |
+      This site is the AGNTCY documentation hub. Product documentation lives on
+      separate hosts; use the canonical links below for their current guides.
+
+      ## Product Documentation
+
+      - [Agent Directory Service](https://dir.agntcy.org/latest/): Discover, publish, and verify agents and multi-agent applications.
+      - [SLIM](https://slim.agntcy.org/latest/): Secure messaging and transport for agents.
+      - [Identity](https://spec.identity.agntcy.org/docs/intro): Identify and verify agents and tools.
+      - [SHADI](https://shadi.agntcy.org/): Run agents in a hardened environment.
+    sections:
+      AGNTCY Hub:
+        - index.md: Overview of AGNTCY and its components.
+        - contributing.md: How to contribute to the documentation.
+        - glossary.md: Messaging terminology.
+      CoffeeAGNTCY:
+        - coffee-agntcy/get-started.md: Set up the CoffeeAGNTCY reference multi-agent application.
+        - coffee-agntcy/identity-coffee-agntcy.md: Understand identity and access control in CoffeeAGNTCY.
+        - coffee-agntcy/slim-coffee-agntcy.md: Understand SLIM messaging in CoffeeAGNTCY.
+      Open Agentic Schema Framework:
+        - oasf/agent-record-guide.md: Create an OASF agent record.
+        - oasf/contributing.md: Contribute to OASF schemas and services.
+        - oasf/decoding.md: Decode and inspect OASF records.
+        - oasf/oasf-sdk.md: Use the OASF SDK.
+        - oasf/oasf-server.md: Deploy and use the OASF server.
+        - oasf/open-agentic-schema-framework.md: Understand the OASF data model and components.
+        - oasf/translation.md: Translate between OASF and other agent formats.
+        - oasf/validation-comparison.md: Compare OASF validation approaches.
+        - oasf/validation.md: Validate OASF records.
+      Observability and Evaluation:
+        - obs-and-eval/evaluation.md: Evaluate agent workflows and results.
+        - obs-and-eval/observe-and-eval.md: Explore AGNTCY observability and evaluation.
+        - obs-and-eval/observe-sdk.md: Instrument agents with the Observe SDK.
+      Continuous System Integration Testing:
+        - csit/csit.md: Run continuous system integration tests for agent workflows.
   redirects:
     redirect_maps:
       'how-to-guides/identity-quickstart/index.md': 'https://spec.identity.agntcy.org/docs/intro'

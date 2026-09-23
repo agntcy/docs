@@ -37,6 +37,7 @@ dependencies = [
     "mkdocs-htmlproofer-plugin>=1.0.0",
     "certifi>=2026.7.22",
     "mkdocs-macros-plugin>=1.5.0",
+    "mkdocs-llmstxt==0.5.0",
 ]
 
 [tool.uv]

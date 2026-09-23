@@ -30,6 +30,7 @@ tasks:
       BUILD_SITE_DIR: "{{.BUILD_DIR}}/site"
     cmds:
       - pushd mkdocs && uv run mkdocs build --site-dir {{.BUILD_SITE_DIR}} && popd
+      - python3 mkdocs/check_agent_docs.py {{.BUILD_SITE_DIR}} docs
       - |
         echo "Docs available at: file://{{.BUILD_SITE_DIR}}/index.html"
 
