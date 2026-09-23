@@ -1,0 +1,18 @@
+{# Copyright AGNTCY Contributors (https://github.com/agntcy) #}
+{# SPDX-License-Identifier: CC-BY-4.0 #}
+{% extends "base.html" %}
+
+{% block extrahead %}
+  {{ super() }}
+  <link rel="describedby" type="text/plain" href="{{ 'llms.txt' | url }}">
+  {% if page and page.file %}
+    <link rel="alternate" type="text/markdown" href="{{ config.site_url }}{{ page.file.dest_uri | replace('.html', '.md') }}">
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  {{ super() }}
+  <p class="agntcy-agent-entry">
+    Agent-readable documentation: <a href="{{ 'llms.txt' | url }}">llms.txt</a>
+  </p>
+{% endblock %}

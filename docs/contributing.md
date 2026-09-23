@@ -61,6 +61,12 @@ To run the documentation site locally, use `task run`. This will start a live-re
 
 To lint and check for errors in the documentation, use `task lint`. This checks for broken links, spelling errors, and markdown syntax errors.
 
+## Agent-Readable Documentation
+
+The MkDocs build generates `/llms.txt` and a Markdown version of each page listed under the `llmstxt` plugin in `mkdocs/mkdocs.yml`. The generated Markdown comes from rendered page content, so macros and included content are resolved. Product documentation on other hosts is linked from `/llms.txt` rather than copied into this repository.
+
+When adding a page, place it in the appropriate `llmstxt` section, or confirm that a section's file pattern already includes it. Run `task build` and check that the new Markdown page and its link in `.build/site/llms.txt` are present. Do not edit generated files directly.
+
 ## Markdown and Writing Style
 
 For a general overview of Markdown, see the following resources:

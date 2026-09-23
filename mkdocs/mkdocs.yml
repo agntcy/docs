@@ -1,5 +1,6 @@
 site_name: Agntcy
 site_url: https://docs.agntcy.org/
+site_description: Open infrastructure for the Internet of Agents.
 
 docs_dir: ../docs
 
@@ -56,6 +57,31 @@ hooks:
 
 plugins:
   search:
+  llmstxt:
+    preprocess: agent_markdown.py
+    markdown_description: |
+      This site is the AGNTCY documentation hub. Product documentation lives on
+      separate hosts; use the canonical links below for their current guides.
+
+      ## Product Documentation
+
+      - [Agent Directory Service](https://dir.agntcy.org/latest/): Discover, publish, and verify agents and multi-agent applications.
+      - [SLIM](https://slim.agntcy.org/latest/): Secure messaging and transport for agents.
+      - [Identity](https://spec.identity.agntcy.org/docs/intro): Identify and verify agents and tools.
+      - [SHADI](https://shadi.agntcy.org/): Run agents in a hardened environment.
+    sections:
+      AGNTCY Hub:
+        - index.md: Overview of AGNTCY and its components.
+        - contributing.md: How to contribute to the documentation.
+        - glossary.md: Messaging terminology.
+      CoffeeAGNTCY:
+        - coffee-agntcy/*.md
+      Open Agentic Schema Framework:
+        - oasf/*.md
+      Observability and Evaluation:
+        - obs-and-eval/*.md
+      Continuous System Integration Testing:
+        - csit/*.md
   redirects:
     redirect_maps:
       'how-to-guides/identity-quickstart/index.md': 'https://spec.identity.agntcy.org/docs/intro'
