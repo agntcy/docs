@@ -12,7 +12,7 @@ from urllib.parse import unquote, urlsplit
 
 SITE_HOST = "docs.agntcy.org"
 MAX_INDEX_LENGTH = 50_000
-LINK = re.compile(r"(?m)^- \[[^\]]+\]\(([^)]+)\)")
+LINK = re.compile(r"(?m)^- \[[^\]]+\]\(([^)]+)\): (\S[^\n]*)$")
 UNRESOLVED_MACRO = re.compile(r"\[\[\s*agntcy\.")
 
 
@@ -36,11 +36,11 @@ def check(site: Path, docs: Path) -> None:
         raise ValueError("llms.txt exceeds the 50,000-character limit")
 
     links = LINK.findall(index)
-    if not links:
-        raise ValueError("llms.txt contains no links")
+    if not links or len(links) != len(re.findall(r"(?m)^- \[", index)):
+        raise ValueError("Every index link needs a one-line description")
 
     linked_pages: set[Path] = set()
-    for link in links:
+    for link, _description in links:
         parsed = urlsplit(link)
         if parsed.scheme != "https" or not parsed.netloc:
             raise ValueError(f"Index link must be an absolute HTTPS URL: {link}")
