@@ -40,7 +40,8 @@ markdown_extensions:
   - def_list
   - md_in_html
   - pymdownx.details
-  - pymdownx.highlight
+  - pymdownx.highlight:
+      pygments_lang_class: true
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid

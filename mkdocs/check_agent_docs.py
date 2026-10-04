@@ -6,7 +6,6 @@
 from __future__ import annotations
 
 import re
-import sys
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
@@ -23,8 +22,10 @@ def expected_markdown_path(source: Path) -> Path:
     return source.with_suffix("") / "index.md"
 
 
-def check(site: Path, docs: Path) -> None:
-    """Validate the index and every generated Markdown page."""
+def check(site: Path, expected_pages: set[Path]) -> None:
+    """Validate the index and Markdown twins of the navigated pages."""
+    if not expected_pages:
+        raise ValueError("No navigated pages were found")
     index_path = site / "llms.txt"
     if not index_path.is_file():
         raise ValueError("Missing llms.txt")
@@ -54,10 +55,6 @@ def check(site: Path, docs: Path) -> None:
                 raise ValueError(f"Index link has no generated page: {link}")
             linked_pages.add(local_path)
 
-    expected_pages = {
-        expected_markdown_path(source.relative_to(docs))
-        for source in docs.rglob("*.md")
-    }
     if linked_pages != expected_pages:
         missing = sorted(expected_pages - linked_pages)
         extra = sorted(linked_pages - expected_pages)
@@ -75,10 +72,3 @@ def check(site: Path, docs: Path) -> None:
                 raise ValueError(f"Generated Markdown links to a missing page: {link}")
 
     print(f"Validated llms.txt and {len(expected_pages)} Markdown pages")
-
-
-if __name__ == "__main__":
-    try:
-        check(Path(sys.argv[1]), Path(sys.argv[2]))
-    except (IndexError, OSError, ValueError) as error:
-        sys.exit(f"Agent-readable documentation check failed: {error}")

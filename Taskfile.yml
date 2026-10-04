@@ -30,7 +30,6 @@ tasks:
       BUILD_SITE_DIR: "{{.BUILD_DIR}}/site"
     cmds:
       - pushd mkdocs && uv run mkdocs build --site-dir {{.BUILD_SITE_DIR}} && popd
-      - python3 mkdocs/check_agent_docs.py {{.BUILD_SITE_DIR}} docs
       - |
         echo "Docs available at: file://{{.BUILD_SITE_DIR}}/index.html"
 
@@ -49,8 +48,15 @@ tasks:
     deps:
       - deps/patch
     cmds:
+      - task: test:agent-docs
       - task: lint
       - echo "All documentation tests passed!"
+
+  test:agent-docs:
+    desc: Test agent-readable documentation validation
+    dir: mkdocs
+    cmds:
+      - uv run python -m unittest discover -s tests -v
 
   lint:
     desc: Run all linting checks (spelling, markdown, links)

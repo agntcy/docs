@@ -20,6 +20,11 @@ def preprocess(soup: BeautifulSoup, output: str) -> None:
         for element in soup.select(selector):
             element.decompose()
 
+    # Superfences renders Mermaid blocks as <pre class="mermaid"><code>.
+    # Markdownify inspects the <pre> class to choose the fence language.
+    for block in soup.select("pre.mermaid"):
+        block["class"] = [*(block.get("class") or []), "language-mermaid"]
+
     # The plugin already maps links ending in "/" to index.md. A fragment
     # prevents that conversion, so normalize those links before it runs.
     for anchor in soup.find_all("a", href=True):
