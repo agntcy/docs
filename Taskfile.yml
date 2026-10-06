@@ -92,9 +92,8 @@ tasks:
           GITHUB_TOKEN="$(gh auth token 2>/dev/null || true)"
           export GITHUB_TOKEN
         fi
-        lychee \
+        uv run --project mkdocs lychee \
           --config lychee.toml \
-          --exclude-path "(^|/)404\\.html$" \
           --exclude-all-private \
           .build/site
 

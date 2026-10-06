@@ -5,7 +5,7 @@ The documentation sources are written in Markdown.
 
 ## Table of Contents
 
-- [Documentation Repository Internet of Agent](#documentation-repository-internet-of-agent)
+- [Documentation Repository for AGNTCY](#documentation-repository-for-agntcy)
   - [Table of Contents](#table-of-contents)
   - [Installation](#installation)
     - [macOS](#macos)
@@ -23,10 +23,11 @@ The documentation sources are written in Markdown.
 
 To build the documentation locally, you need to install the following dependencies:
 
-- Python 3.10 or later
 - [Taskfile](https://taskfile.dev/)
 - [Uv](https://docs.astral.sh/uv/getting-started/installation/)
 - [Golang](https://go.dev/doc/devel/release#go1.24.0)
+
+uv provisions Python automatically, using the version pinned in *mkdocs/.python-version* (currently 3.13).
 
 ### macOS
 

@@ -34,6 +34,7 @@ dependencies = [
     # Linting and testing tools
     "codespell>=2.4.3",
     "pymarkdownlnt>=0.9.0",
+    "lychee-bin==0.24.2", # keep in sync with lycheeVersion in .github/workflows/*links.yml
     "mkdocs-htmlproofer-plugin>=1.0.0",
     "certifi>=2026.7.22",
     "mkdocs-macros-plugin>=1.5.0",
