@@ -54,8 +54,8 @@ To run the documentation site locally and lint the documentation, you need the f
 
 - [Taskfile](https://taskfile.dev/)
 - [Uv](https://docs.astral.sh/uv/getting-started/installation/)
-- [Python version 3.13 or higher](https://www.python.org/)
-- [Lychee](https://github.com/lycheeverse/lychee)
+
+`uv` provisions everything else automatically, so you do not need to install it yourself: [Python](https://www.python.org/) and [Lychee](https://github.com/lycheeverse/lychee) (pinned to the same version the CI link checks use).
 
 To run the documentation site locally, use `task run`. This will start a live-reloading server at `http://localhost:8000`, allowing you to view the documentation site in your browser in real time.
 
