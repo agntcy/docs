@@ -47,7 +47,7 @@ def on_nav(nav, **kwargs):
 def on_post_build(config, **kwargs):
     """Check agent-readable files after the llmstxt plugin writes them."""
     try:
-        check(Path(config.site_dir), _navigated_pages)
+        check(Path(config.site_dir), _navigated_pages, config.site_url)
     except (OSError, ValueError) as error:
         raise PluginError(
             f"Agent-readable documentation check failed: {error}"

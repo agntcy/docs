@@ -9,6 +9,7 @@ import re
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
+SITE_URL = "https://docs.agntcy.org/"
 SITE_HOST = "docs.agntcy.org"
 MAX_INDEX_LENGTH = 50_000
 LINK = re.compile(r"(?m)^- \[[^\]]+\]\(([^)]+)\): (\S[^\n]*)$")
@@ -22,7 +23,7 @@ def expected_markdown_path(source: Path) -> Path:
     return source.with_suffix("") / "index.md"
 
 
-def check(site: Path, expected_pages: set[Path]) -> None:
+def check(site: Path, expected_pages: set[Path], site_url: str = SITE_URL) -> None:
     """Validate the index and Markdown twins of the navigated pages."""
     if not expected_pages:
         raise ValueError("No navigated pages were found")
@@ -40,12 +41,24 @@ def check(site: Path, expected_pages: set[Path]) -> None:
     if not links or len(links) != len(re.findall(r"(?m)^- \[", index)):
         raise ValueError("Every index link needs a one-line description")
 
+    site_base = urlsplit(site_url or SITE_URL)
+    internal_origin = (site_base.scheme, site_base.netloc)
     linked_pages: set[Path] = set()
     for link, _description in links:
         parsed = urlsplit(link)
-        if parsed.scheme != "https" or not parsed.netloc:
-            raise ValueError(f"Index link must be an absolute HTTPS URL: {link}")
-        if parsed.netloc == SITE_HOST:
+        if not parsed.scheme or not parsed.netloc:
+            raise ValueError(f"Index link must be an absolute URL: {link}")
+        if parsed.netloc == SITE_HOST and parsed.scheme != "https":
+            raise ValueError(f"Production index link must use HTTPS: {link}")
+        if (
+            parsed.scheme != "https"
+            and (parsed.scheme, parsed.netloc) != internal_origin
+        ):
+            raise ValueError(f"External index link must use HTTPS: {link}")
+        if (
+            parsed.scheme,
+            parsed.netloc,
+        ) == internal_origin or parsed.netloc == SITE_HOST:
             local_path = Path(unquote(parsed.path.lstrip("/")))
             if local_path.is_absolute() or ".." in local_path.parts:
                 raise ValueError(f"Index link has an unsafe path: {link}")

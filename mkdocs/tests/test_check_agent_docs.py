@@ -25,9 +25,9 @@ class AgentDocsCheckTests(unittest.TestCase):
         self.site = self.root / "site"
         self.site.mkdir()
 
-    def write_index(self, *pages):
+    def write_index(self, *pages, site_url="https://docs.agntcy.org"):
         entries = "".join(
-            f"- [{title}](https://docs.agntcy.org/{path}): {description}\n"
+            f"- [{title}]({site_url}/{path}): {description}\n"
             for title, path, description in pages
         )
         (self.site / "llms.txt").write_text(
@@ -59,6 +59,29 @@ class AgentDocsCheckTests(unittest.TestCase):
         self.write_page("index.md", "See [[ agntcy.dir_url ]].\n")
 
         with self.assertRaisesRegex(ValueError, "Unresolved AGNTCY macro"):
+            check(self.site, {Path("index.md")})
+
+    def test_local_site_url_is_allowed_for_dev_server_links(self):
+        self.write_index(
+            ("Home", "index.md", "Start here."),
+            site_url="http://127.0.0.1:8012",
+        )
+        self.write_page("index.md")
+
+        check(
+            self.site,
+            {Path("index.md")},
+            site_url="http://127.0.0.1:8012/",
+        )
+
+    def test_production_site_url_must_use_https(self):
+        self.write_index(
+            ("Home", "index.md", "Start here."),
+            site_url="http://docs.agntcy.org",
+        )
+        self.write_page("index.md")
+
+        with self.assertRaisesRegex(ValueError, "Production index link must use HTTPS"):
             check(self.site, {Path("index.md")})
 
     def test_pretty_url_paths_match_mkdocs_output(self):
