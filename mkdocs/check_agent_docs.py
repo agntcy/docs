@@ -1,0 +1,87 @@
+# Copyright AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: CC-BY-4.0
+
+"""Check the agent-readable artifacts produced by the MkDocs build."""
+
+from __future__ import annotations
+
+import re
+from pathlib import Path
+from urllib.parse import unquote, urlsplit
+
+SITE_URL = "https://docs.agntcy.org/"
+SITE_HOST = "docs.agntcy.org"
+MAX_INDEX_LENGTH = 50_000
+LINK = re.compile(r"(?m)^- \[[^\]]+\]\(([^)]+)\): (\S[^\n]*)$")
+UNRESOLVED_MACRO = re.compile(r"\[\[\s*agntcy\.")
+
+
+def expected_markdown_path(source: Path) -> Path:
+    """Return the pretty-URL Markdown path for a source page."""
+    if source.name == "index.md":
+        return source
+    return source.with_suffix("") / "index.md"
+
+
+def check(site: Path, expected_pages: set[Path], site_url: str = SITE_URL) -> None:
+    """Validate the index and Markdown twins of the navigated pages."""
+    if not expected_pages:
+        raise ValueError("No navigated pages were found")
+    index_path = site / "llms.txt"
+    if not index_path.is_file():
+        raise ValueError("Missing llms.txt")
+
+    index = index_path.read_text(encoding="utf-8")
+    if not index.startswith("# Agntcy\n\n> "):
+        raise ValueError("llms.txt needs a title and a blockquote summary")
+    if len(index) > MAX_INDEX_LENGTH:
+        raise ValueError("llms.txt exceeds the 50,000-character limit")
+
+    links = LINK.findall(index)
+    if not links or len(links) != len(re.findall(r"(?m)^- \[", index)):
+        raise ValueError("Every index link needs a one-line description")
+
+    site_base = urlsplit(site_url or SITE_URL)
+    internal_origin = (site_base.scheme, site_base.netloc)
+    linked_pages: set[Path] = set()
+    for link, _description in links:
+        parsed = urlsplit(link)
+        if not parsed.scheme or not parsed.netloc:
+            raise ValueError(f"Index link must be an absolute URL: {link}")
+        if parsed.netloc == SITE_HOST and parsed.scheme != "https":
+            raise ValueError(f"Production index link must use HTTPS: {link}")
+        if (
+            parsed.scheme != "https"
+            and (parsed.scheme, parsed.netloc) != internal_origin
+        ):
+            raise ValueError(f"External index link must use HTTPS: {link}")
+        if (
+            parsed.scheme,
+            parsed.netloc,
+        ) == internal_origin or parsed.netloc == SITE_HOST:
+            local_path = Path(unquote(parsed.path.lstrip("/")))
+            if local_path.is_absolute() or ".." in local_path.parts:
+                raise ValueError(f"Index link has an unsafe path: {link}")
+            if local_path.suffix != ".md":
+                raise ValueError(f"Index link must point to Markdown: {link}")
+            if not (site / local_path).is_file():
+                raise ValueError(f"Index link has no generated page: {link}")
+            linked_pages.add(local_path)
+
+    if linked_pages != expected_pages:
+        missing = sorted(expected_pages - linked_pages)
+        extra = sorted(linked_pages - expected_pages)
+        raise ValueError(f"Index/page mismatch; missing: {missing}; extra: {extra}")
+
+    for relative_path in expected_pages:
+        content = (site / relative_path).read_text(encoding="utf-8")
+        if not content.strip():
+            raise ValueError(f"Generated Markdown is empty: {relative_path}")
+        if UNRESOLVED_MACRO.search(content):
+            raise ValueError(f"Unresolved AGNTCY macro in: {relative_path}")
+        for link in re.findall(r"\]\((https://docs\.agntcy\.org/[^)]+)\)", content):
+            path = Path(unquote(urlsplit(link).path.lstrip("/")))
+            if not (site / path).is_file():
+                raise ValueError(f"Generated Markdown links to a missing page: {link}")
+
+    print(f"Validated llms.txt and {len(expected_pages)} Markdown pages")
