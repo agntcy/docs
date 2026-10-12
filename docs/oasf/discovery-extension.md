@@ -16,7 +16,7 @@ vocabulary as OASF records.
 
 ```json
 {
-  "schema_version": "1.2.0",
+  "schema_version": "1.1.0",
   "skills": [{"name": "software_engineering/code_debugging/error_handling", "id": 60602}],
   "domains": [{"name": "technology/networking/network_security", "id": 10305}]
 }
@@ -33,7 +33,7 @@ Each host format names the extension in the form it expects:
 
 - **A2A Agent Card:** the URI `<schema_url>/<version>/objects/discovery` on
   the OASF schema server the payload validates against, for example
-  `https://schema.oasf.outshift.com/1.2.0/objects/discovery`.
+  `https://schema.oasf.outshift.com/1.1.0/objects/discovery`.
   A server running locally works the same way.
   A2A identifies an extension by a URI and recommends hosting the extension's
   specification at it; this URI is the object's page on the schema server.
@@ -72,10 +72,10 @@ payload is the `params` of an `AgentExtension` in `capabilities.extensions`:
   "capabilities": {
     "extensions": [
       {
-        "uri": "https://schema.oasf.outshift.com/1.2.0/objects/discovery",
+        "uri": "https://schema.oasf.outshift.com/1.1.0/objects/discovery",
         "description": "OASF skills and domains",
         "params": {
-          "schema_version": "1.2.0",
+          "schema_version": "1.1.0",
           "skills": [{"name": "software_engineering/code_debugging/error_handling", "id": 60602}],
           "domains": [{"name": "technology/networking/network_security", "id": 10305}]
         }
@@ -101,7 +101,7 @@ of the key in the entry's `extensions` map:
       "url": "https://agents.example.com/network-debugger/.well-known/agent-card.json",
       "extensions": {
         "org.agntcy.oasf.discovery.v1": {
-          "schema_version": "1.2.0",
+          "schema_version": "1.1.0",
           "skills": [{"name": "software_engineering/code_debugging/error_handling", "id": 60602}],
           "domains": [{"name": "technology/networking/network_security", "id": 10305}]
         }
