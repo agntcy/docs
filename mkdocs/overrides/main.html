@@ -1,0 +1,11 @@
+{# Copyright AGNTCY Contributors (https://github.com/agntcy) #}
+{# SPDX-License-Identifier: CC-BY-4.0 #}
+{% extends "base.html" %}
+
+{% block extrahead %}
+  {{ super() }}
+  <link rel="describedby" type="text/plain" href="{{ 'llms.txt' | url }}">
+  {% if page and page.file %}
+    <link rel="alternate" type="text/markdown" href="index.md">
+  {% endif %}
+{% endblock %}

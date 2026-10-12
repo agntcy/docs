@@ -48,8 +48,15 @@ tasks:
     deps:
       - deps/patch
     cmds:
+      - task: test:agent-docs
       - task: lint
       - echo "All documentation tests passed!"
+
+  test:agent-docs:
+    desc: Test agent-readable documentation validation
+    dir: mkdocs
+    cmds:
+      - uv run python -m unittest discover -s tests -v
 
   lint:
     desc: Run all linting checks (spelling, markdown, links)
