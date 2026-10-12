@@ -27,25 +27,34 @@ through `POST /api/validate/object/discovery` on the
 [OASF server](oasf-server.md).
 An unknown skill or domain fails with the same error as inside a record.
 
-## Extension Key
+## Extension Identifier
 
-The extension key is the reverse-DNS string `org.agntcy.discovery.v1`.
+Each host format names the extension in the form it expects:
 
-The key is permanent: once artifacts carry it, it is not renamed.
-A change to the payload that is not backward compatible gets a new key, such
-as `org.agntcy.discovery.v2`.
+- **A2A Agent Card:** the URI
+  `https://schema.oasf.outshift.com/objects/discovery`.
+  A2A identifies an extension by a URI and recommends hosting the extension's
+  specification at it; this URI is the object's page on the OASF schema
+  server.
+- **AI Catalog:** the reverse-DNS key `org.agntcy.discovery.v1`.
+  AI Catalog entries are long-lived, so the key does not depend on where the
+  schema is hosted.
+
+Both identifiers are permanent: once artifacts carry them, they are not
+renamed.
+A change to the payload that is not backward compatible gets new identifiers.
 
 ## Embedding
 
 The payload is the same in every host format.
 Only its placement differs, because each host format fixes how an extension is
 wrapped: the payload goes, unchanged, into the slot that the host format
-reserves for extension data under the key.
+reserves for extension data.
 
-| Host format    | Where the key goes                  | Where the payload goes     |
-|----------------|-------------------------------------|----------------------------|
-| A2A Agent Card | `uri` of an `AgentExtension`        | `params` of that extension |
-| AI Catalog     | key of the entry's `extensions` map | value of that key          |
+| Host format    | Identifier                                                  | Where the payload goes     |
+|----------------|-------------------------------------------------------------|----------------------------|
+| A2A Agent Card | `uri` of an `AgentExtension`, set to the URI                | `params` of that extension |
+| AI Catalog     | key of the entry's `extensions` map, set to the reverse-DNS | value of that key          |
 
 ### A2A Agent Card
 
@@ -57,7 +66,7 @@ payload is the `params` of an `AgentExtension` in `capabilities.extensions`:
   "capabilities": {
     "extensions": [
       {
-        "uri": "org.agntcy.discovery.v1",
+        "uri": "https://schema.oasf.outshift.com/objects/discovery",
         "description": "OASF skills and domains",
         "params": {
           "schema_version": "1.2.0",
