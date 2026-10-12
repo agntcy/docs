@@ -37,7 +37,9 @@ jobs:
       - name: Self-hosted Renovate
         uses: renovatebot/github-action@dcfba84a42d1b5d5e49bf131b1bf53511851a123 # v46.3.1
         with:
-          configurationFile: renovate.json
+          # renovate.json is picked up as the repo config automatically. Passing it
+          # via configurationFile would also load it as global config, which
+          # concatenates customManagers and runs the lychee manager twice.
           token: '${{ steps.app-token.outputs.token }}'
         env:
           RENOVATE_PLATFORM: 'github'
