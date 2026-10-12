@@ -1,0 +1,50 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 Cisco and/or its affiliates.
+# SPDX-License-Identifier: Apache-2.0
+
+---
+name: Dependencies
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: '0 */6 * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  renovate:
+    name: Renovate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Authenticate with GitHub App Bot
+        id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          client-id: ${{ secrets.PROJECT_APP_ID }}
+          private-key: ${{ secrets.PROJECT_APP_KEY }}
+
+      - name: Checkout Repo
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          persist-credentials: false
+
+      - name: Self-hosted Renovate
+        uses: renovatebot/github-action@dcfba84a42d1b5d5e49bf131b1bf53511851a123 # v46.3.1
+        with:
+          # renovate.json is picked up as the repo config automatically. Passing it
+          # via configurationFile would also load it as global config, which
+          # concatenates customManagers and runs the lychee manager twice.
+          token: '${{ steps.app-token.outputs.token }}'
+        env:
+          RENOVATE_PLATFORM: 'github'
+          RENOVATE_REPOSITORIES: '${{ github.repository }}'
+          GITHUB_COM_TOKEN: ${{ steps.app-token.outputs.token }}
+          # Remove unused fields from PR description
+          RENOVATE_PR_BODY_TEMPLATE: '{{{header}}}{{{table}}}{{{warnings}}}{{{notes}}}{{{changelogs}}}'
+          RENOVATE_DEPENDENCY_DASHBOARD_HEADER: ''
