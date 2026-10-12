@@ -83,6 +83,7 @@ plugins:
         - oasf/agent-record-guide.md: Create an OASF agent record.
         - oasf/contributing.md: Contribute to OASF schemas and services.
         - oasf/decoding.md: Decode and inspect OASF records.
+        - oasf/discovery-extension.md: Embed OASF skills and domains in A2A cards and AI Catalog entries.
         - oasf/oasf-sdk.md: Use the OASF SDK.
         - oasf/oasf-server.md: Deploy and use the OASF server.
         - oasf/open-agentic-schema-framework.md: Understand the OASF data model and components.
