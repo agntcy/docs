@@ -1,0 +1,108 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    "helpers:pinGitHubActionDigestsToSemver",
+    ":semanticCommitTypeAll(chore)",
+    ":dependencyDashboard"
+  ],
+  "configMigration": true,
+  "dependencyDashboardAutoclose": true,
+  "dependencyDashboardLabels": ["dependencies"],
+  "dependencyDashboardOSVVulnerabilitySummary": "all",
+  "enabled": true,
+  "minimumReleaseAge": "7 days",
+  "schedule": ["before 8am on Monday"],
+  "enabledManagers": [
+    "custom.regex",
+    "github-actions",
+    "pep621",
+    "pip_requirements"
+  ],
+  "labels": ["dependencies"],
+  "osvVulnerabilityAlerts": true,
+  "lockFileMaintenance": {
+    "enabled": true
+  },
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/^\\.github/workflows/.*links\\.yml$/"],
+      "matchStrings": [
+        "lycheeVersion:\\s*\"v(?<currentValue>[^\"\\s]+)\""
+      ],
+      "datasourceTemplate": "pypi",
+      "depNameTemplate": "lychee-bin",
+      "description": [
+        "Track the explicit lycheeVersion pin in the link-checker workflows.",
+        "Resolved against the lychee-bin PyPI package so it bumps in lockstep with the pyproject pin."
+      ]
+    }
+  ],
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["major"],
+      "enabled": false,
+      "description": ["Ignore major dependency updates."]
+    },
+    {
+      "matchManagers": ["pep621", "pip_requirements"],
+      "addLabels": ["python"],
+      "description": ["Add python label to PRs which bump Python dependencies."]
+    },
+    {
+      "groupName": "Python patches",
+      "groupSlug": "python-patches",
+      "matchManagers": ["pep621", "pip_requirements"],
+      "matchUpdateTypes": ["patch"],
+      "description": ["Group Python dependency patch updates in a single PR."]
+    },
+    {
+      "groupName": "Docs toolchain",
+      "groupSlug": "docs-toolchain",
+      "matchManagers": ["pep621"],
+      "matchPackageNames": ["mkdocs{/,}**", "mkdocstrings{/,}**", "pymdown-extensions", "griffe{/,}**"],
+      "description": ["Group MkDocs toolchain updates in a single PR."]
+    },
+    {
+      "groupName": "GitHub Actions",
+      "groupSlug": "github-actions",
+      "matchManagers": ["github-actions"],
+      "addLabels": ["ci"],
+      "description": [
+        "Add ci label to PRs which bump GitHub Actions, and group them in a single PR."
+      ]
+    },
+    {
+      "groupName": "lychee",
+      "groupSlug": "lychee",
+      "matchPackageNames": ["lychee-bin"],
+      "description": [
+        "Bump the lychee-bin pyproject pin and the lycheeVersion workflow pins together.",
+        "These must stay in sync; splitting them across PRs desyncs the link checker."
+      ]
+    },
+    {
+      "matchJsonata": [
+        "$exists(vulnerabilityFixVersion) or isVulnerabilityAlert = true"
+      ],
+      "enabled": true,
+      "description": [
+        "Always allow vulnerability/security fixes, even when other rules disable majors or specific dependencies."
+      ]
+    }
+  ],
+  "prConcurrentLimit": 10,
+  "prHourlyLimit": 5,
+  "printConfig": false,
+  "rebaseWhen": "behind-base-branch",
+  "reviewersFromCodeOwners": true,
+  "semanticCommits": "enabled",
+  "timezone": "Etc/UTC",
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "labels": ["security"],
+    "minimumReleaseAge": null,
+    "schedule": ["at any time"]
+  }
+}
