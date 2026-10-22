@@ -3,7 +3,7 @@ name = "agntcy-docs"
 version = "0.1.0"
 description = "Agntcy documentation"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11" # pillow 13 dropped 3.10; a 3.10 floor forks the lock onto vulnerable pillow 12.x
 dependencies = [
     "mkdocs-material==9.7.7",
     "mkdocs-exclude==1.0.2",
@@ -26,7 +26,7 @@ dependencies = [
     "pypdf>=6.15.0", # CVE-2026-*: decompression-bomb / RAM exhaustion in PDF parsing
     "nltk>=3.10.0", # CVE-2025-14009: zip slip / RCE in downloader
     "orjson>=3.11.9", # CVE-2025-67221: recursion limit for deeply nested JSON
-    "pillow>=12.3.0", # CVE-2025-48379, CVE-2026-25990
+    "pillow>=13.0.0", # CVE-2025-48379, CVE-2026-25990, CVE-2026-1123xx/1129xx TIFF+PDF batch
     "beautifulsoup4>=4.15.0",
     "mkdocs-swagger-ui-tag==0.8.1",
     "mkdocs-include-markdown-plugin>=7.2.0",
