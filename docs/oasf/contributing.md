@@ -63,7 +63,7 @@ contribute to the development of OASF Schemas and the framework itself.
    a new object containing all the module-specific attributes →
    [Defining an `object`](#defining-an-object).
 5. Finally, verify the changes are working as expected in your local
-   [oasf/server](https://github.com/agntcy/oasf/tree/main/server).
+   [OASF server](oasf-server.md#run-the-server-locally).
 
 ### Adding or Modifying an `attribute`
 
@@ -335,12 +335,10 @@ method to run the test suite:
 task test
 ```
 
-To test and verify changes with a local instance of the
-[oasf/server](https://github.com/agntcy/oasf/tree/main/server), follow the
-[instructions here](https://github.com/agntcy/oasf/blob/main/README.md#deploy-locally)
-to deploy in a local Kind cluster, or
-[here](https://github.com/agntcy/oasf/blob/main/server/README.md) to set your
-own local OASF server using Elixir tooling.
+`task test` also loads your schema with the pinned
+[oasf-server](https://github.com/agntcy/oasf-server) release.
+To browse your changes in a local server, run `task server:up`, as described in
+[Run the Server Locally](oasf-server.md#run-the-server-locally).
 
 Address the errors before submitting the changes, your server run should be
 completely error free.
