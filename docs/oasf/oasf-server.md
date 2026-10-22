@@ -51,11 +51,12 @@ The server serves the local `schema/` directory at
 Run `task server:reload` in another terminal to reload the schema whenever a
 file under `schema/` changes, and `task server:down` to stop the server.
 
-To run a released schema with Docker, copy the schema image into a volume and
-mount that volume in the server:
+To run a released schema with Docker, mount a new named volume at `/schema` in
+the schema image, which fills the volume with the schema, and then mount that
+volume in the server:
 
 ```shell
-docker run --rm -v oasf-schema:/app/schema ghcr.io/agntcy/oasf-schema:1.1.0 cp -R /schema/. /app/schema
+docker run --rm -v oasf-schema:/schema ghcr.io/agntcy/oasf-schema:1.1.0 true
 docker run --rm -p 8080:8080 -v oasf-schema:/app/schema:ro ghcr.io/agntcy/oasf-server:v2.0.0
 ```
 
