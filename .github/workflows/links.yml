@@ -16,18 +16,18 @@ jobs:
       issues: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           fetch-depth: 0
           submodules: "recursive"
 
       - name: Setup Golang
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5.6.0
         with:
-          go-version: "1.23.1"
+          go-version: "1.27.3"
 
       - name: Setup Task
-        uses: go-task/setup-task@v2
+        uses: go-task/setup-task@a00fbb05ce67b35648be3c78cbc9fd85354c757e # v2.2.0
         with:
           version: "3.48.0"
 
@@ -47,7 +47,7 @@ jobs:
 
       - name: Link Checker
         id: lychee
-        uses: lycheeverse/lychee-action@v2.9.0 # CVE-2024-48908: pin >=2.0.2
+        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0: pin >=2.0.2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           lycheeVersion: "v0.24.2" # pinned explicitly; must match pr-links.yml
