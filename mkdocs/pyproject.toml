@@ -5,13 +5,13 @@ description = "Agntcy documentation"
 readme = "README.md"
 requires-python = ">=3.11" # pillow 13 dropped 3.10; a 3.10 floor forks the lock onto vulnerable pillow 12.x
 dependencies = [
-    "mkdocs-material==9.7.7",
+    "mkdocs-material==9.8.0",
     "mkdocs-exclude==1.0.2",
     "mkdocs-awesome-pages-plugin==2.10.1",
     "markdown>=3.2",
     "mkdocs>=1.6,<2",
     "mkdocs-material-extensions>=1.0.3",
-    "mkdocs-autorefs==1.4.4",
+    "mkdocs-autorefs==1.4.5",
     "pygments>=2.20.0",
     "pymdown-extensions>=11.0.1,<12",
     "mkdocs-git-revision-date-plugin==0.3.2",
