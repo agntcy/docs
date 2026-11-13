@@ -3,7 +3,7 @@ name = "agntcy-docs"
 version = "0.1.0"
 description = "Agntcy documentation"
 readme = "README.md"
-requires-python = ">=3.11" # pillow 13 dropped 3.10; a 3.10 floor forks the lock onto vulnerable pillow 12.x
+requires-python = ">=3.11.5" # pillow 13 dropped 3.10, and soupsieve>=3 requires 3.11.5; a lower floor forks the lock onto vulnerable pillow 12.x / soupsieve 2.x
 dependencies = [
     "mkdocs-material==9.8.0",
     "mkdocs-exclude==1.0.2",
