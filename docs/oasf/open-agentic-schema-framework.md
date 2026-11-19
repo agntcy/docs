@@ -23,8 +23,8 @@ OASF is:
 - A schema for describing agentic resources, with a core
   [record object](https://schema.oasf.outshift.com/objects/record).
 - A set of taxonomies of skills and domains for annotating records.
-- A modular extension mechanism (modules) for adding detail to a record,
-  such as MCP servers or A2A card details.
+- A extension mechanism through modules for adding extra details about records,
+  such as discovery, indexing, or other relevant data.
 - A validation framework, so any record can be checked against the schema.
 
 OASF is not:
