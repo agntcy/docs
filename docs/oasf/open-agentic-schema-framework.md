@@ -56,7 +56,7 @@ OASF is not:
 At the core of OASF is the
 [record object](https://schema.oasf.outshift.com/objects/record), which serves
 as the primary data structure for representing collections of information and
-metadata relevant to agentic AI applications.
+metadata relevant to agentic resources.
 
 A record consists of:
 
