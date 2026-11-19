@@ -3,8 +3,8 @@
 The [Open Agentic Schema Framework (OASF)](https://schema.oasf.outshift.com/) is
 a common vocabulary for describing and discovering agentic resources.
 
-OASF defines a standard, extensible way to describe what an agentic resource,
-such as an agent or an MCP server, can do.
+OASF defines a standard, extensible way to describe what an agentic resource is,
+such as an agent or an MCP server, and what it can do.
 Other systems can then find, validate, and use that resource without custom
 integration work.
 Publishers describe resources as OASF records.
