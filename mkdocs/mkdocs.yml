@@ -193,6 +193,8 @@ plugins:
                 schema: true
   swagger-ui-tag:
   include-markdown:
+    # Cache remotely included files (e.g. csit/csit.md) for 10 minutes.
+    cache: 600
   macros:
     # Shared variable values (e.g. agntcy.dir_url) are defined under `extra:` above.
     # This section configures the Jinja tag delimiters only; use `[[ ... ]]` in markdown.
